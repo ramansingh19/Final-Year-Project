@@ -13,6 +13,9 @@ connectDB({
 })
 connectCloudinary()
 
+app.use(express.json())
+app.use(express.urlencoded({extended: true}))
+
 app.use("/api/admin", adminRouter)
 
 app.get('/', (req, res) => {
