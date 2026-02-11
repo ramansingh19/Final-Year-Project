@@ -1,6 +1,6 @@
 import express from 'express'
 import { upload } from '../middleware/multer.middleware.js'
-import { adminRegistration } from '../controllers/admin.controller.js'
+import { adminRegistration, adminVerification } from '../controllers/admin.controller.js'
 
 const adminRouter = express.Router()
 
@@ -10,5 +10,6 @@ adminRouter.post('/admin-registration', upload.fields([
       maxCount: 1,
   }
 ]), adminRegistration)
+adminRouter.post('/admin-verification', adminVerification)
 
 export { adminRouter }
