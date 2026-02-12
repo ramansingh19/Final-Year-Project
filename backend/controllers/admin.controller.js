@@ -59,6 +59,9 @@ export const adminRegistration = async (req, res) => {
     newAdmin.token = token;
     verifyEmail(email, token);
 
+    console.log(token);
+    
+
     await newAdmin.save();
 
 

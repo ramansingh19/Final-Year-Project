@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import connectDB from './config/mongoDB.config.js'
 import connectCloudinary from './config/cloudinary.config.js'
 import { adminRouter } from './routes/admin.routes.js'
+import router from './routes/city.routes.js'
 
 const app = express()
 
@@ -17,6 +18,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
 app.use("/api/admin", adminRouter)
+app.use("/api/city" , router)
 
 app.get('/', (req, res) => {
   res.send("backend server will be start")
