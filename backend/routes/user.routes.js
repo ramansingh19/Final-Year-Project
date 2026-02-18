@@ -9,6 +9,7 @@ import {
   verifyUserOtp,
   changePassword,
   userChangePassword,
+  updateUserProfile,
 } from "../controllers/user.controller.js";
 import { isAuthenticated, authorize } from "../middleware/auth.middleware.js";
 
@@ -31,5 +32,11 @@ userRouter.post("/forgot-user-password", forgotUserPassword);
 userRouter.post("/verify-user-otp/:email", verifyUserOtp);
 userRouter.post("/change-password/:email", changePassword);
 userRouter.post("/user-change-password",isAuthenticated, userChangePassword)
+userRouter.put('/update-user-profile', isAuthenticated, upload.fields([
+  {
+    name: "avatar",
+    maxCount:1
+  }
+]), updateUserProfile)
 
 export { userRouter };
