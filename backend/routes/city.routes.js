@@ -9,39 +9,40 @@ import {
 } from "../controllers/city.controller.js";
 import { isAuthenticated } from "../middleware/auth.middleware.js";
 import { authorize } from "../middleware/auth.middleware.js";
+import { upload } from "../middleware/multer.middleware.js";
 
-const router = express.Router();
+const cityRouter = express.Router();
 
 /* ------------ ADMIN ROUTES ------------ */
 
 // Admin creates city
-router.post(
-  "/",
-  isAuthenticated,
-  authorize("admin"),
+cityRouter.post(
+  "/", upload.array("images", 5),//whenever you use multer here you can remove this upload
+  // isAuthenticated,
+  // authorize("admin"),
   createCity
 );
 
 // Admin updates city
-router.put(
+cityRouter.put(
   "/:id",
-  isAuthenticated,
-  authorize("admin"),
+  // isAuthenticated,
+  // authorize("admin"),
   updateCity
 );
 
 // Super Admin deactivates city
-router.delete(
+cityRouter.delete(
   "/:id",
-  isAuthenticated,
-  authorize("superadmin"),
+  // isAuthenticated,
+  // authorize("superadmin"),
   deactivateCity
 );
 
 /* ------------ PUBLIC ROUTES ------------ */
 
-router.get("/", getActiveCities);
-router.get("/nearby", getNearbyCities);
-router.get("/:id", getCityById);
+cityRouter.get("/", getActiveCities);
+cityRouter.get("/nearby", getNearbyCities);
+cityRouter.get("/:id", getCityById);
 
-export default router;
+export default cityRouter;
