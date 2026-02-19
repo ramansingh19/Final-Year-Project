@@ -46,7 +46,7 @@ export const createHotel = async (req, res) => {
       city,
       address,
       pricePerNight,
-      facilities : facilitiesArray,
+      facilities: facilitiesArray,
       images: imageUrls,
       location,
     });
@@ -65,33 +65,74 @@ export const createHotel = async (req, res) => {
   }
 };
 
-export const getHotelbyid = async (req , res) => {
+export const getHotelbyid = async (req, res) => {
   try {
-    const {cityid} = req.query
+    const { cityid } = req.query;
 
     if (!cityid) {
       return res.status(400).json({
         success: false,
         message: "cityId is required",
-      })
+      });
     }
 
     const hotels = await Hotel.find({
-      city : cityid,
-      status : "Active"
-    })
+      city: cityid,
+      status: "Active",
+    });
     console.log(hotels);
-    
 
     return res.status(200).json({
       success: true,
       data: hotels,
     });
-
   } catch (error) {
     return res.status(500).json({
-      success : false,
-      message : error.message
-    })
+      success: false,
+      message: error.message,
+    });
   }
-}
+};
+
+//update is will handle by Admin.
+export const updateHotel = async (req, res) => {
+  try {
+    const { id } = req.params;
+    let updateData = { ...req.body };
+
+    if (req.body.location) {
+      try {
+        updateData.location = JSON.parse(req.body.location);
+      } catch (error) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid location format",
+        });
+      }
+    }
+
+    const updatehotel = await Hotel.findByIdAndUpdate(id, updateData, {
+      returnDocument: "after",
+      runValidators: true, //this is use to validate data
+    });
+    console.log(updatehotel);
+
+    if (!updatehotel) {
+      return res.status(404).json({
+        success: false,
+        message: "Hotel not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: updatehotel,
+      message: "Hotel update successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

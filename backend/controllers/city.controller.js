@@ -126,9 +126,25 @@ export const updateCity = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const updatedCity = await City.findByIdAndUpdate(id, req.body, {
+    let updatedata = {...req.body}
+
+    if (req.body.location) {
+      try {
+        updatedata.location = JSON.parse(req.body.location)
+      } catch (error) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid location format",
+        });
+      }
+    }
+
+    const updatedCity = await City.findByIdAndUpdate(id, updatedata ,{
       returnDocument: "after",
+      runValidators: true,
     });
+    console.log(updatedCity);
+    
 
     if (!updatedCity) {
       return res.status(404).json({
@@ -151,7 +167,7 @@ export const updateCity = async (req, res) => {
 };
 
 //access to admin also
-export const deactivateCity = async (req, res) => {
+export const deleteCity = async (req, res) => {
   try {
     const { id } = req.params;
 

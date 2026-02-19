@@ -4,7 +4,7 @@ import {
   getActiveCities,
   getCityById,
   updateCity,
-  deactivateCity,
+  deleteCity,
   getNearbyCities,
 } from "../controllers/city.controller.js";
 import { isAuthenticated } from "../middleware/auth.middleware.js";
@@ -28,6 +28,7 @@ cityRouter.put(
   "/:id",
   // isAuthenticated,
   // authorize("admin"),
+  upload.array("images" , 5),
   updateCity
 );
 
@@ -36,7 +37,7 @@ cityRouter.delete(
   "/:id",
   // isAuthenticated,
   // authorize("superadmin"),
-  deactivateCity
+  deleteCity
 );
 
 /* ------------ PUBLIC ROUTES ------------ */
