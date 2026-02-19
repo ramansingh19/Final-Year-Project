@@ -136,3 +136,60 @@ export const updateHotel = async (req, res) => {
     });
   }
 };
+
+export const deleteHotel = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const hotel = await Hotel.findByIdAndUpdate(
+      id,
+      { status: "inactive" },
+      { new: true },
+    );
+
+    if (!hotel) {
+      return res.status(404).json({
+        success: false,
+        message: "Hotel not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Hotel delete successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const getHotelsByCity = async (req, res) => {
+  try {
+    const { cityId } = req.query;
+
+    if (!cityId) {
+      return res.status(400).json({
+        success: false,
+        message: "cityId is required",
+      });
+    }
+
+    const hotels = await Hotel.find({
+      city: cityId,
+      status: "active",
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: hotels,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

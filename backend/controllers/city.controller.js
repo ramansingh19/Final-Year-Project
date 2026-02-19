@@ -186,7 +186,7 @@ export const deleteCity = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "City deactivated successfully",
+      message: "City delete successfully",
     });
   } catch (error) {
     return res.status(500).json({
