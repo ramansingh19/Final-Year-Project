@@ -18,9 +18,7 @@ const cityRouter = express.Router();
 cityRouter.post(
   "/",
   isAuthenticated,
-  authorize("super_admin" , "admin"),
-  "/", 
-  upload.array("images", 5),
+  authorize("super_admin" , "admin"), upload.array("images", 5),
   createCity,
 );
 
