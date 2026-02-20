@@ -17,25 +17,26 @@ const cityRouter = express.Router();
 
 // Admin creates city
 cityRouter.post(
-  "/", upload.array("images", 5),//whenever you use multer here you can remove this upload
-  // isAuthenticated,
-  // authorize("admin"),
+  "/",//whenever you use multer here you can remove this upload
+  isAuthenticated,
+  authorize("admin"),
+  upload.array("images", 5),
   createCity
 );
 
 // Admin updates city
 cityRouter.put(
   "/:id",
-  // isAuthenticated,
-  // authorize("admin"),
+  isAuthenticated,
+  authorize("admin"),
   updateCity
 );
 
 // Super Admin deactivates city
 cityRouter.delete(
   "/:id",
-  // isAuthenticated,
-  // authorize("superadmin"),
+  isAuthenticated,
+  authorize("super_admin"),
   deactivateCity
 );
 

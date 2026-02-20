@@ -53,10 +53,18 @@ export const createCity = async (req, res) => {
       }
     }
 
+    const exestingCity = await City.findOne({
+      name: name.toLowerCase(),
+      state: state.toLowerCase()
+    })
+    if(exestingCity){
+      return res.status(400).json({success: false, message: "city already exist"})
+    }
+
     const city = await City.create({
-      name,
-      state,
-      country,
+      name: name.toLowerCase(),
+      state: state.toLowerCase(),
+      country: country.toLowerCase(),
       description,
       famousFor,
       avgDailyBudget,
@@ -64,7 +72,7 @@ export const createCity = async (req, res) => {
       location,
       bestTimeToVisit,
     });
-    console.log(city);
+    // console.log(city);
 
     return res.status(201).json({
       success: true,
@@ -158,7 +166,7 @@ export const deactivateCity = async (req, res) => {
     const city = await City.findByIdAndUpdate(
       id,
       { status: "inactive" },
-      { new: true },
+      { returnDocument:"after", runValidators:true },
     );
 
     if (!city) {
