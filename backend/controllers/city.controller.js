@@ -74,7 +74,7 @@ export const createCity = async (req, res) => {
       location,
       bestTimeToVisit,
       status: "pending",
-      createdBy: req.user._id,
+      // createdBy: req.user._id,
     });
     // console.log(city);
 
@@ -99,7 +99,7 @@ export const approveCity = async (req, res) => {
   }
 
   city.status = "active";
-  city.approvedBy = req.user._id;
+  city.approvedBy = req.user._id; //super admin id
   await city.save();
 
   res.json({ success: true, message: "City approved" });
@@ -113,6 +113,7 @@ export const rejectCity = async (req, res) => {
   }
 
   city.status = "rejected";
+  city.approvedBy = null;
   await city.save();
 
   res.json({ success: true, message: "City rejected" });
@@ -267,3 +268,21 @@ export const getNearbyCities = async (req, res) => {
     });
   }
 };
+
+export const getPendingCities = async (req, res) => {
+  try {
+    const cities = await City.find({status : "pending"})
+  .populate("createdBy" , "userName email role")
+
+  return res.status(200).json({
+    success : true,
+    data : cities,
+    count : cities.length
+  })
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message  : error.message
+    })
+  }
+}

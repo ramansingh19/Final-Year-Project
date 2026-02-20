@@ -12,6 +12,7 @@ import {
   updateAdminProfile,
 } from "../controllers/user.controller.js";
 import { upload } from "../middleware/multer.middleware.js";
+import { approveCity, getPendingCities, rejectCity } from "../controllers/city.controller.js";
 
 const adminRouter = express.Router();
 
@@ -74,5 +75,14 @@ adminRouter.put(
   upload.fields([{ name: "avatar", maxCount: 1 }]),
   updateAdminProfile
 );
+
+//approved city
+adminRouter.patch("/city/:id/approve", isAuthenticated, authorize("super_admin"),  approveCity)
+
+//reject city
+adminRouter.patch("/city/:id/reject", isAuthenticated, authorize("super_admin"), rejectCity)
+
+//get pending cities
+adminRouter.get("/cities/pending", isAuthenticated, authorize("super_admin"), getPendingCities)
 
 export { adminRouter };

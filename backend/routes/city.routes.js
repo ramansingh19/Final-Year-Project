@@ -18,17 +18,18 @@ const cityRouter = express.Router();
 cityRouter.post(
   "/",
   isAuthenticated,
-  authorize("super_admin" , "admin"),
-  "/", 
+  authorize("admin"),
   upload.array("images", 5),
   createCity,
 );
+
+
 
 // Admin updates city
 cityRouter.put(
   "/:id",
   isAuthenticated,
-  authorize("admin", "super_admin"),
+  authorize("admin"),
   upload.array("images", 5),
   updateCity,
 );
@@ -37,7 +38,7 @@ cityRouter.put(
 cityRouter.delete(
   "/:id",
   isAuthenticated,
-  authorize("super_admin"),
+  authorize("admin"),
   deleteCity,
 );
 
