@@ -4,7 +4,7 @@ import {
   getActiveCities,
   getCityById,
   updateCity,
-  deactivateCity,
+  deleteCity,
   getNearbyCities,
 } from "../controllers/city.controller.js";
 import { isAuthenticated } from "../middleware/auth.middleware.js";
@@ -27,16 +27,16 @@ cityRouter.post(
 // Admin updates city
 cityRouter.put(
   "/:id",
-  isAuthenticated,
-  authorize("admin"),
+  // isAuthenticated,
+  // authorize("admin"),
   updateCity
 );
 
 // Super Admin deactivates city
 cityRouter.delete(
   "/:id",
-  isAuthenticated,
-  authorize("super_admin"),
+  // isAuthenticated,
+  // authorize("superadmin"),
   deactivateCity
 );
 
