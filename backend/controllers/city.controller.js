@@ -13,7 +13,6 @@ export const createCity = async (req, res) => {
       description,
       bestTimeToVisit,
       avgDailyBudget,
-      status
     } = req.body;
 
     let location;
@@ -33,8 +32,7 @@ export const createCity = async (req, res) => {
       !famousFor ||
       !bestTimeToVisit ||
       !avgDailyBudget ||
-      !location ||
-      !status
+      !location
     ) {
       return res.status(400).json({
         success: false,
@@ -57,10 +55,12 @@ export const createCity = async (req, res) => {
 
     const exestingCity = await City.findOne({
       name: name.toLowerCase(),
-      state: state.toLowerCase()
-    })
-    if(exestingCity){
-      return res.status(400).json({success: false, message: "city already exist"})
+      state: state.toLowerCase(),
+    });
+    if (exestingCity) {
+      return res
+        .status(400)
+        .json({ success: false, message: "city already exist" });
     }
 
     const city = await City.create({
@@ -73,7 +73,8 @@ export const createCity = async (req, res) => {
       images: imageUrls,
       location,
       bestTimeToVisit,
-      status
+      status: "pending",
+      createdBy: req.user._id,
     });
     // console.log(city);
 
@@ -88,6 +89,33 @@ export const createCity = async (req, res) => {
       message: error.message,
     });
   }
+};
+
+export const approveCity = async (req, res) => {
+  const city = await City.findById(req.params.id);
+
+  if (!city) {
+    return res.status(404).json({ message: "City not found" });
+  }
+
+  city.status = "active";
+  city.approvedBy = req.user._id;
+  await city.save();
+
+  res.json({ success: true, message: "City approved" });
+};
+
+export const rejectCity = async (req, res) => {
+  const city = await City.findById(req.params.id);
+
+  if (!city) {
+    return res.status(404).json({ message: "City not found" });
+  }
+
+  city.status = "rejected";
+  await city.save();
+
+  res.json({ success: true, message: "City rejected" });
 };
 
 export const getActiveCities = async (req, res) => {
@@ -112,7 +140,10 @@ export const getCityById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const city = await City.findById(id);
+    const city = await City.findOne({
+      _id: id,
+      status: "active",
+    });
 
     if (!city) {
       return res.status(404).json({
@@ -137,11 +168,13 @@ export const updateCity = async (req, res) => {
   try {
     const { id } = req.params;
 
-    let updatedata = {...req.body}
+    let updatedata = { ...req.body };
+    delete updatedata.status;
+    delete updatedata.approvedBy;
 
     if (req.body.location) {
       try {
-        updatedata.location = JSON.parse(req.body.location)
+        updatedata.location = JSON.parse(req.body.location);
       } catch (error) {
         return res.status(400).json({
           success: false,
@@ -150,12 +183,11 @@ export const updateCity = async (req, res) => {
       }
     }
 
-    const updatedCity = await City.findByIdAndUpdate(id, updatedata ,{
+    const updatedCity = await City.findByIdAndUpdate(id, updatedata, {
       returnDocument: "after",
       runValidators: true,
     });
     console.log(updatedCity);
-    
 
     if (!updatedCity) {
       return res.status(404).json({
@@ -185,7 +217,7 @@ export const deleteCity = async (req, res) => {
     const city = await City.findByIdAndUpdate(
       id,
       { status: "inactive" },
-      { returnDocument:"after", runValidators:true },
+      { returnDocument: "after", runValidators: true },
     );
 
     if (!city) {
