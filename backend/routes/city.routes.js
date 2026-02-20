@@ -1,14 +1,13 @@
 import express from "express";
 import {
   createCity,
+  deleteCity,
   getActiveCities,
   getCityById,
-  updateCity,
-  deleteCity,
   getNearbyCities,
+  updateCity,
 } from "../controllers/city.controller.js";
-import { isAuthenticated } from "../middleware/auth.middleware.js";
-import { authorize } from "../middleware/auth.middleware.js";
+import { authorize, isAuthenticated } from "../middleware/auth.middleware.js";
 import { upload } from "../middleware/multer.middleware.js";
 
 const cityRouter = express.Router();
@@ -20,25 +19,40 @@ cityRouter.post(
   "/",
   isAuthenticated,
   authorize("admin"),
+
+  "/", //whenever you use multer here you can remove this upload
+  isAuthenticated,
+  authorize("super_admin"),
+
   upload.array("images", 5),
-  createCity
+  createCity,
 );
 
 // Admin updates city
 cityRouter.put(
   "/:id",
+
   isAuthenticated,
   authorize("admin"),
-  upload.array("images" , 5),
-  updateCity
+  upload.array("images", 5),
+
+  // isAuthenticated,
+  // authorize("super_admin"),
+
+  updateCity,
 );
 
 // Super Admin deactivates city
 cityRouter.delete(
   "/:id",
+
   isAuthenticated,
   authorize("super_admin"),
-  deleteCity
+
+  // isAuthenticated,
+  // authorize("super_admin"),
+
+  deleteCity,
 );
 
 /* ------------ PUBLIC ROUTES ------------ */
