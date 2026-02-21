@@ -102,9 +102,9 @@ export const createHotel = async (req, res) => {
 
 export const getHotelbyid = async (req, res) => {
   try {
-    const { cityid } = req.query;
+    const { cityId } = req.query;
 
-    if (!cityid) {
+    if (!cityId) {
       return res.status(400).json({
         success: false,
         message: "cityId is required",
@@ -112,8 +112,8 @@ export const getHotelbyid = async (req, res) => {
     }
 
     const hotels = await Hotel.find({
-      city: cityid,
-      status: "Active",
+      city: cityId,
+      status: "active",
     });
     console.log(hotels);
 
@@ -146,10 +146,38 @@ export const updateHotel = async (req, res) => {
       }
     }
 
-    const updatehotel = await Hotel.findByIdAndUpdate(id, updateData, {
-      returnDocument: "after",
-      runValidators: true, //this is use to validate data
-    });
+    // if (updateData.location?.coordinates) {
+    //   const existingHotel = await Hotel.findOne({
+    //     _id: { $ne: id },
+    //     "location.coordinates": updateData.location.coordinates,
+    //   });
+
+    //   if (existingHotel) {
+    //     return res.status(409).json({
+    //       success: false,
+    //       message: "Another hotel already exists at this location",
+    //     });
+    //   }
+    // }
+
+    if (req.files && req.files.length > 0) {
+      let imageUrls = [];
+
+      for (const file of req.files) {
+        const uploadResult = await uploadCloudinary(file.path, "hotels");
+        imageUrls.push(uploadResult.secure_url);
+
+        if (fs.existsSync(file.path)) {
+          fs.unlinkSync(file.path);
+        }
+      }
+
+      updateData.images = imageUrls;
+    }
+
+    const updatehotel = await Hotel.findByIdAndUpdate(id, updateData, 
+      { new: true, runValidators: true } //this is use to validate data
+    );
     console.log(updatehotel);
 
     if (!updatehotel) {
@@ -248,7 +276,7 @@ export const approveHotel = async (req, res) => {
     hotel.approveBy = req.user?._id; // super admin
     await hotel.save();
 
-    return res.json({ success: true, message: "City approved" });
+    return res.json({ success: true, message: "Hotel approved" });
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -269,7 +297,7 @@ export const rejectHotel = async (req, res) => {
     hotel.approveBy = null;
     await hotel.save();
 
-    return res.json({ success: true, message: "City rejected" });
+    return res.json({ success: true, message: "Hotel rejected" });
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -307,3 +335,21 @@ export const getActiveHotels = async (req, res) => {
     });
   }
 };
+
+export const getPendingHotels = async (req, res) => {
+  try {
+    const hotels = await Hotel.find({status : "pending"})
+  .populate("createdBy" , "userName email role")
+
+  return res.status(200).json({
+    success : true,
+    data : hotels,
+    count : hotels.length
+  })
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message  : error.message
+    })
+  }
+}
