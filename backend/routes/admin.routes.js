@@ -13,6 +13,7 @@ import {
 } from "../controllers/user.controller.js";
 import { upload } from "../middleware/multer.middleware.js";
 import { approveCity, getPendingCities, rejectCity } from "../controllers/city.controller.js";
+import { approveHotel, rejectHotel } from "../controllers/hotel.controller.js";
 
 const adminRouter = express.Router();
 
@@ -76,11 +77,13 @@ adminRouter.put(
   updateAdminProfile
 );
 
-//approved city
+//approved 
 adminRouter.patch("/city/:id/approve", isAuthenticated, authorize("super_admin"),  approveCity)
+adminRouter.patch("/hotel/:id/approve", isAuthenticated, authorize("super_admin"), approveHotel)
 
-//reject city
+//reject 
 adminRouter.patch("/city/:id/reject", isAuthenticated, authorize("super_admin"), rejectCity)
+adminRouter.patch("/hotel/:id/reject", isAuthenticated, authorize("super_admin"), rejectHotel)
 
 //get pending cities
 adminRouter.get("/cities/pending", isAuthenticated, authorize("super_admin"), getPendingCities)

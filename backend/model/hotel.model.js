@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import { ref } from "process";
 
 const hotelSchema = mongoose.Schema({
   name: {
@@ -42,6 +43,16 @@ const hotelSchema = mongoose.Schema({
     max: 5,
   },
 
+  approveBy : {
+    type : mongoose.Schema.Types.ObjectId,
+    ref : "User"
+  },
+
+  createdBy : {
+    type : mongoose.Schema.Types.ObjectId,
+    ref : "User"
+  },
+
   location: {
     type: {
       type: String,
@@ -67,6 +78,6 @@ const hotelSchema = mongoose.Schema({
   },
 });
 
-hotelSchema.index({ location: "2dsphere" });
+hotelSchema.index({ location: "2dsphere" }, {unique : true});
 
 export const Hotel = mongoose.model("Hotel", hotelSchema);
