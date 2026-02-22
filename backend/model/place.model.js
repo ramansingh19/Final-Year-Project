@@ -81,7 +81,7 @@ const placeSchema = new mongoose.Schema({
 
     status : {
       type : String,
-      enum : ["active", "inactive" , "pending","rejected"],
+      enum : ["active", "inactive" , "pending", "rejected"],
       default : "pending"
     }
 

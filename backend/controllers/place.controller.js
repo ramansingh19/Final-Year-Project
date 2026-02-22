@@ -130,5 +130,67 @@ export const createPlace = async (req, res) => {
 };
 
 export const approvePlace = async (req, res) => {
-  
+  try {
+    const place = await Place.findById(req.params.id)
+    console.log(place);
+    if (!place) {
+      return res.status(400).json({
+        success : false,
+        message : "not found place "
+      })
+    }
+
+    place.status = "active";
+    place.approvedBy = req.user?._id //super admin
+    await place.save()
+
+    return res.status(200).json({
+      success : true,
+      message : "place approved"
+    })
+    
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : error.message
+    })
+  }
+}
+
+export const rejectPlace = async (req, res) => {
+  try {
+    const place = await Place.findById(req.params.id);
+
+    if (!place) {
+      return res.status(404).json({ message: "place not found" });
+    }
+
+    place.status = "rejected";
+    place.approveBy = null;
+    await place.save();
+
+    return res.json({ success: true, message: "place rejected" });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const pendingPlace = async(req, res) => {
+  try {
+    const place = await Place.find({status : "pending"}).populate("createdBy", "userName email role")
+
+    return res.status(200).json({
+      success : true,
+      data : place,
+      count : place.length
+    })
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : error.message
+    })
+  }
 }

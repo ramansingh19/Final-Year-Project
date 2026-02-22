@@ -269,7 +269,9 @@ export const approveHotel = async (req, res) => {
     const hotel = await Hotel.findById(req.params.id);
 
     if (!hotel) {
-      return res.status(404).json({ message: "Hotel not found" });
+      return res.status(404).json({
+        success : false,
+        message: "Hotel not found" });
     }
 
     hotel.status = "active";
