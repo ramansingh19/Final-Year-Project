@@ -18,31 +18,38 @@ const cityRouter = express.Router();
 cityRouter.post(
   "/",
   isAuthenticated,
+<<<<<<< HEAD
   authorize("super_admin" , "admin"), upload.array("images", 5),
+=======
+  authorize("admin"),
+  upload.array("images", 5),
+>>>>>>> f70fe36022f9f5638bc5129fa0d7d5dce86e41bd
   createCity,
 );
 
+
+
 // Admin updates city
 cityRouter.put(
-  "/:id",
+  "/updatecity/:id",
   isAuthenticated,
-  authorize("admin", "super_admin"),
+  authorize("admin"),
   upload.array("images", 5),
   updateCity,
 );
 
 // Super Admin deactivates city
 cityRouter.delete(
-  "/:id",
+  "/deletecity/:id",
   isAuthenticated,
-  authorize("super_admin"),
+  authorize("admin"),
   deleteCity,
 );
 
 /* ------------ PUBLIC ROUTES ------------ */
 
-cityRouter.get("/", getActiveCities);
+cityRouter.get("/activecity", getActiveCities);
 cityRouter.get("/nearby", getNearbyCities);
-cityRouter.get("/:id", getCityById);
+cityRouter.get("/getcity/:id", getCityById);
 
 export default cityRouter;

@@ -74,7 +74,7 @@ export const createCity = async (req, res) => {
       location,
       bestTimeToVisit,
       status: "pending",
-      createdBy: req.user._id,
+      // createdBy: req.user._id,
     });
     // console.log(city);
 
@@ -92,30 +92,45 @@ export const createCity = async (req, res) => {
 };
 
 export const approveCity = async (req, res) => {
-  const city = await City.findById(req.params.id);
-
-  if (!city) {
-    return res.status(404).json({ message: "City not found" });
+  try {
+    const city = await City.findById(req.params.id);
+  
+    if (!city) {
+      return res.status(404).json({ message: "City not found" });
+    }
+  
+    city.status = "active";
+    city.approvedBy = req.user._id; //super admin id
+    await city.save();
+  
+    return res.json({ success: true, message: "City approved" });
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : error.message
+    })
   }
-
-  city.status = "active";
-  city.approvedBy = req.user._id;
-  await city.save();
-
-  res.json({ success: true, message: "City approved" });
 };
 
 export const rejectCity = async (req, res) => {
-  const city = await City.findById(req.params.id);
-
-  if (!city) {
-    return res.status(404).json({ message: "City not found" });
+  try {
+    const city = await City.findById(req.params.id);
+  
+    if (!city) {
+      return res.status(404).json({ message: "City not found" });
+    }
+  
+    city.status = "rejected";
+    city.approvedBy = null;
+    await city.save();
+  
+    return res.json({ success: true, message: "City rejected" });
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : error.message
+    })
   }
-
-  city.status = "rejected";
-  await city.save();
-
-  res.json({ success: true, message: "City rejected" });
 };
 
 export const getActiveCities = async (req, res) => {
@@ -267,3 +282,21 @@ export const getNearbyCities = async (req, res) => {
     });
   }
 };
+
+export const getPendingCities = async (req, res) => {
+  try {
+    const cities = await City.find({status : "pending"})
+  .populate("createdBy" , "userName email role")
+
+  return res.status(200).json({
+    success : true,
+    data : cities,
+    count : cities.length
+  })
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message  : error.message
+    })
+  }
+}
