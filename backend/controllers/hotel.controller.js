@@ -1,7 +1,9 @@
+import mongoose from "mongoose";
 import { uploadCloudinary } from "../config/cloudinary.config.js";
 import { City } from "../model/city.model.js";
 import { Hotel } from "../model/hotel.model.js";
 import fs from "fs";
+import { Place } from "../model/place.model.js";
 
 export const createHotel = async (req, res) => {
   try {
@@ -104,6 +106,13 @@ export const getHotelbyid = async (req, res) => {
   try {
     const { id } = req.params;
 
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Hotel ID",
+      });
+    }
+
     const hotel = await Hotel.findById(id).populate("city" , "name state")
 
     if (!hotel) {
@@ -130,6 +139,13 @@ export const updateHotel = async (req, res) => {
   try {
     const { id } = req.params;
     let updateData = { ...req.body };
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid city ID",
+      });
+    }
 
     if (req.body.location) {
       try {
@@ -200,24 +216,20 @@ export const deleteHotel = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const hotel = await Hotel.findByIdAndUpdate(
-      id,
-      { status: "inactive" },
-      { new: true },
-    );
-
-    if (!hotel) {
-      return res.status(404).json({
-        success: false,
-        message: "Hotel not found",
-      });
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success : false,
+        message : "inavlid id"
+      })
     }
 
-    if (hotel.status === "inactive") {
-      return res.status(400).json({
-        success: false,
-        message: "Hotel is already inactive",
-      });
+    const deletedHotel = await Place.findByIdAndDelete(id)
+
+    if (!deletedHotel) {
+      return res.status(404).json({
+        success : false,
+        message : "Hotel not found"
+      })
     }
 
     return res.status(200).json({
@@ -235,6 +247,13 @@ export const deleteHotel = async (req, res) => {
 export const approveHotel = async (req, res) => {
   try {
     const hotel = await Hotel.findById(req.params.id);
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Hotel ID",
+      });
+    }
 
     if (!hotel) {
       return res.status(404).json({
@@ -258,6 +277,13 @@ export const approveHotel = async (req, res) => {
 export const rejectHotel = async (req, res) => {
   try {
     const hotel = await Hotel.findById(req.params.id);
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Hotel ID",
+      });
+    }
 
     if (!hotel) {
       return res.status(404).json({ message: "Hotel not found" });

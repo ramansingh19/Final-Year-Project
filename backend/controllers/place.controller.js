@@ -243,7 +243,6 @@ export const getplacebyid = async (req, res) => {
         message: "Place not found",
       });
     }
-    
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({
@@ -267,9 +266,8 @@ export const getplacebyid = async (req, res) => {
 
 export const updatePlace = async (req, res) => {
   try {
-
-    const {id} = req.params;
-    let updatedata = {...req.body};
+    const { id } = req.params;
+    let updatedata = { ...req.body };
 
     //converting into parsing location
     if (req.body.location) {
@@ -277,8 +275,8 @@ export const updatePlace = async (req, res) => {
         updatedata.location = JSON.parse(req.body.location);
       } catch (error) {
         return res.status(400).json({
-            success: false,
-            message: "Invalid location format",
+          success: false,
+          message: "Invalid location format",
         });
       }
     }
@@ -286,32 +284,35 @@ export const updatePlace = async (req, res) => {
     //prevent duplicate location
     if (updatedata.location?.coordinates) {
       const exitingPlace = await Place.findOne({
-        _id : {$ne : id},
-        "location.coordinates" : updatedata.location.coordinates
+        _id: { $ne: id },
+        "location.coordinates": updatedata.location.coordinates,
       });
       if (exitingPlace) {
         return res.status(409).json({
-          success : false,
-          message : "Another place already exists at these coordinates."
-        })
+          success: false,
+          message: "Another place already exists at these coordinates.",
+        });
       }
     }
 
-    if(req.files && req.files.length>0){
+    if (req.files && req.files.length > 0) {
       let imageUrls = [];
 
-      for(const file of req.files){
+      for (const file of req.files) {
         const uploadResult = await uploadCloudinary(file.path, "places");
-        imageUrls.push(uploadResult.secure_url)
+        imageUrls.push(uploadResult.secure_url);
 
         if (fs.existsSync(file.path)) {
-          fs.unlinkSync(file.path)
+          fs.unlinkSync(file.path);
         }
       }
-      updatedata.images = imageUrls
+      updatedata.images = imageUrls;
     }
 
-    const updatedPlace = await Place.findByIdAndUpdate(id , updatedata, {new : true, runValidators : true});
+    const updatedPlace = await Place.findByIdAndUpdate(id, updatedata, {
+      new: true,
+      runValidators: true,
+    });
     console.log(updatedPlace);
 
     if (!updatedPlace) {
@@ -322,11 +323,10 @@ export const updatePlace = async (req, res) => {
     }
 
     return res.status(200).json({
-      success : true,
-      data : updatedPlace,
-      message : "successfully updated place"
-    })
-
+      success: true,
+      data: updatedPlace,
+      message: "successfully updated place",
+    });
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -335,4 +335,34 @@ export const updatePlace = async (req, res) => {
   }
 };
 
-export const deletePlace = async (req, res) => {};
+export const deletePlace = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "invalid Place Id",
+      });
+    }
+
+    const deletedPlace = await Place.findByIdAndDelete(id);
+
+    if (!deletedPlace) {
+      return res.status(404).json({
+        success: false,
+        message: "Place not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "delete successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
