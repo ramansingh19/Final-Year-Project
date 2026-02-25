@@ -6,6 +6,7 @@ const restaurantSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      lowercase : true,
     },
 
     address: {
@@ -24,6 +25,7 @@ const restaurantSchema = new mongoose.Schema(
       type: String, 
       required: true,
       trim: true,
+      lowercase : true,
     },
 
     foodType: {
@@ -71,6 +73,10 @@ const restaurantSchema = new mongoose.Schema(
       type: String,
       enum: ["active", "inactive", "pending"],
       default: "pending",
+    },
+    approvedBy : {
+      type : mongoose.Schema.Types.ObjectId,
+      ref : "User"
     },
     createdBy : {
       type : mongoose.Schema.Types.ObjectId,

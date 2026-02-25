@@ -1,6 +1,6 @@
-import { uploadCloudinary } from "../config/cloudinary.config";
-import { City } from "../model/city.model";
-import { Restaurant } from "../model/restaurant.model";
+import { uploadCloudinary } from "../config/cloudinary.config.js";
+import { City } from "../model/city.model.js";
+import { Restaurant } from "../model/restaurant.model.js";
 import fs from "fs";
 
 export const createResturant = async (req, res) => {
@@ -15,10 +15,6 @@ export const createResturant = async (req, res) => {
       bestTime,
       isRecommended,
     } = req.body;
-
-    name = name?.trim().toLowerCase();
-    famousFood = famousFood?.trim().toLowerCase();
-    bestTime =  bestTime?.trim().toLowerCase();
 
     let location;
     try {
@@ -122,3 +118,5 @@ export const createResturant = async (req, res) => {
     });
   }
 };
+
+
