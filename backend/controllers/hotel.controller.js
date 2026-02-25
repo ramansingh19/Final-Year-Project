@@ -248,13 +248,6 @@ export const approveHotel = async (req, res) => {
   try {
     const hotel = await Hotel.findById(req.params.id);
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid Hotel ID",
-      });
-    }
-
     if (!hotel) {
       return res.status(404).json({
         success : false,
@@ -277,13 +270,6 @@ export const approveHotel = async (req, res) => {
 export const rejectHotel = async (req, res) => {
   try {
     const hotel = await Hotel.findById(req.params.id);
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid Hotel ID",
-      });
-    }
 
     if (!hotel) {
       return res.status(404).json({ message: "Hotel not found" });

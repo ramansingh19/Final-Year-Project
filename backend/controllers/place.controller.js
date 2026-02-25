@@ -62,7 +62,7 @@ export const createPlace = async (req, res) => {
     //verify place by city
     const existingPlace = await Place.findOne({
       name,
-      city : cityId,
+      city: cityId,
     });
     if (existingPlace) {
       return res.status(409).json({
@@ -118,7 +118,7 @@ export const createPlace = async (req, res) => {
     return res.status(201).json({
       success: true,
       data: place,
-      message : "place created successfully",
+      message: "place created successfully",
     });
   } catch (error) {
     return res.status(500).json({
@@ -132,6 +132,9 @@ export const approvePlace = async (req, res) => {
   try {
     const place = await Place.findById(req.params.id);
     console.log(place);
+
+    
+
     if (!place) {
       return res.status(400).json({
         success: false,
@@ -159,6 +162,7 @@ export const rejectPlace = async (req, res) => {
   try {
     const place = await Place.findById(req.params.id);
 
+    
     if (!place) {
       return res.status(404).json({ message: "place not found" });
     }
@@ -235,6 +239,13 @@ export const getplacebyid = async (req, res) => {
   try {
     const { id } = req.params;
 
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Place ID",
+      });
+    }
+
     const place = await Place.findById(id).populate("city", "name state");
 
     if (!place) {
@@ -268,6 +279,13 @@ export const updatePlace = async (req, res) => {
   try {
     const { id } = req.params;
     let updatedata = { ...req.body };
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Hotel ID",
+      });
+    }
 
     //converting into parsing location
     if (req.body.location) {
