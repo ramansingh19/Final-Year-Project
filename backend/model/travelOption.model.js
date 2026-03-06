@@ -37,7 +37,6 @@ const travelOptionSchema = new mongoose.Schema(
     isCheapest: { type: Boolean, default: false },
     isFastest: { type: Boolean, default: false },
 
-
     images: [String],
 
     rating: {
@@ -58,12 +57,17 @@ const travelOptionSchema = new mongoose.Schema(
         type: [Number], // [lng, lat]
         required: true,
       },
+<<<<<<< HEAD
+=======
+    },
+>>>>>>> 04ace6d77bb67081f9adbbe976b9f96424b92be0
 
     status: {
       type: String,
-      enum: ["active", "inactive", "pending", "rejected"],
+      enum: ["active", "inactive", "rejected", "pending"],
       default: "pending",
     },
+
     createdBy: {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -74,13 +78,15 @@ const travelOptionSchema = new mongoose.Schema(
       ref: "User",
     },
   },
-  
-}, {timestamps : true});
-
+  { timestamps: true }
+);
 
 travelOptionSchema.index({ location: "2dsphere" });
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 04ace6d77bb67081f9adbbe976b9f96424b92be0
 travelOptionSchema.pre("validate", function (next) {
   if (!this.toCity && !this.toPlace) {
     return next(new Error("Either toCity or toPlace is required"));
@@ -88,8 +94,4 @@ travelOptionSchema.pre("validate", function (next) {
   next();
 });
 
-
-export const TravelOption = mongoose.model(
-  "TravelOption",
-  travelOptionSchema
-);
+export const TravelOption = mongoose.model("TravelOption", travelOptionSchema);

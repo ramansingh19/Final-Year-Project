@@ -11,6 +11,7 @@ import travelOptionRouter from "./routes/travelOption.routes.js";
 import restaurantRouter from "./routes/restaurant.routes.js";
 import reviewRouter from "./routes/review.routes.js";
 import { driverRouter } from "./routes/driver.routes.js";
+import  cors  from 'cors'
 
 const app = express();
 
@@ -23,6 +24,11 @@ connectCloudinary();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors({
+ origin: "http://localhost:5174", // 👈 frontend URL ONLY
+    credentials: true,           // 👈 must be true
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+}))
 
 app.use("/api/user", userRouter);
 app.use("/api/admin", adminRouter)
