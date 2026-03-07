@@ -1,16 +1,22 @@
 import axios from 'axios';
 import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom'
+import { changePassword } from '../../features/auth/authSlice';
 
 
 function ChangePassword() {
 
   const { email } = useParams();
-  const[loading, setLoading] = useState(false);
   const[errorMessage, setErrorMessage] = useState("");
   const[successMessage, setSuccessMessage] = useState("");
   const[newPassword, setNewPassword] = useState("");
   const[confirmPassword, setConfirmPassword] = useState("");
+
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  const { loading, error } = useSelector((state) => state.auth)
 
   const handelChangePassword = async () => {
     setErrorMessage("");
@@ -27,21 +33,14 @@ function ChangePassword() {
     }
 
     try {
-      setLoading(true);
-      const response = await axios.post(`${backend_URL}/api/user/change-password/${email}`,{
-        newPassword,
-        confirmPassword
-      })
-      setSuccessMessage(response.data.message)
-      setTimeout(() => {
-        navigate('/login')
-      }, 2000)
+      const result = await dispatch(changePassword({email, newPassword, confirmPassword})).unwrap()
+      if(result.success){
+        navigate("/login")
+      }
     } catch (error) {
-      console.log(error)
-      setErrorMessage(error.response?.data?.message || 'somthing went wrong')
-    }finally{
-      setLoading(false)
+      console.log(error);
     }
+    
   }
   
   return (

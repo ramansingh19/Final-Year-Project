@@ -94,6 +94,17 @@ export const verifyOtp = createAsyncThunk("auth/verify-user-otp", async ({email,
   }
 })
 
+ /* ----------------- change password --------------------- */
+ export const changePassword = createAsyncThunk("auth/change-password", async ({email, newPassword, confirmPassword}, thunkAPI) => {
+  try {
+    const response = await apiClient.post(`/api/user/change-password/${email}`, {newPassword, confirmPassword})
+
+    return response;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response?.data?.message || "chane password failed")
+  }
+ })
+
 /* ------------- Slice -------------- */
 const authSlice = createSlice({
   name: "auth",
@@ -202,6 +213,23 @@ const authSlice = createSlice({
     });
     
     builder.addCase(verifyOtp.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+
+    /* ----------------- change password --------------------- */
+    builder.addCase(changePassword.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    
+    builder.addCase(changePassword.fulfilled, (state, action) => {
+      state.loading = false;
+      state.passwordChanged = true;
+      state.message = action.payload.message;
+    });
+    
+    builder.addCase(changePassword.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload;
     });
