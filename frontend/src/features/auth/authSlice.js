@@ -5,7 +5,7 @@ import axios from "axios";
 
 /* -------------- Initial State ---------------- */
 const initialState = {
-    token: localStorage.getItem("token"),
+    token: localStorage.getItem("token") || null,
     isAuthenticated: false,
     role: null,
     user: null,
@@ -43,24 +43,36 @@ export const verifyEmail = createAsyncThunk("auth/verifyEmail", async (token, th
 
 /* ------------------- userLogin ----------------------- */
 export const userLogin = createAsyncThunk(
-  "auth/userLogin",
+  "/api/user/user-login",
   async (userData, thunkAPI) => {
     try {
       const response = await apiClient.post("/api/user/user-login", userData);
 
-      console.log("FULL RESPONSE:", response); 
+      localStorage.setItem("token", response.accessToken);
 
       return response;
 
     } catch (error) {
       console.log("LOGIN ERROR:", error);
-
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Login Failed"
       );
+
     }
   }
 );
+
+/* ----------------- userLogout --------------------- */
+export const userLogout = createAsyncThunk("auth/userLogout", async (_, thunkAPI) => {
+  try {
+     await apiClient.delete("/api/user/user-logout")
+    localStorage.removeItem("token" )
+    return true
+  } catch (error) {
+    console.log("LOGOUT ERROR:", error.response);
+    return thunkAPI.rejectWithValue(error.response?.data?.message || "Logout failed")
+  }
+})
 
 /* ------------- Slice -------------- */
 const authSlice = createSlice({
@@ -121,11 +133,11 @@ const authSlice = createSlice({
     })
   
     .addCase(userLogin.fulfilled, (state, action) => {
+      state.loading = false;
       state.loginSuccess = true;
-      state.user = action.payload.user;
-      state.token = action.payload.token;
-      state.isAuthenticated = true;
-
+      state.error = null;
+      state.isAuthenticated = true;   // 🔥 important
+      state.token = action.payload.accessToken;
     })
   
     .addCase(userLogin.rejected, (state, action) => {
@@ -134,6 +146,12 @@ const authSlice = createSlice({
       state.loginSuccess = false;
     });
 
+    /* ---------------- userLogout ------------------- */
+    builder
+    .addCase(userLogout.fulfilled, (state) => {
+      state.token = null;
+      state.isAuthenticated = false;
+    })
 
   }
 })
