@@ -1,33 +1,53 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { userLogout } from "../features/auth/authSlice";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const [profileOpen, setProfileOpen] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [darkmode, setDarkMode] = useState(false);
 
-  const { token } = useSelector((state) => state.auth)
-  
+  useEffect(() => {
+    if (darkmode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [darkmode]);
+
+  const { token, user } = useSelector((state) => state.auth);
+
+  const getInitials = (name) => {
+    if (!name || typeof name !== "string") return "U";
+
+    const names = name.trim().split(" ");
+
+    return names
+      .map((n) => n.charAt(0))
+      .join("")
+      .toUpperCase();
+  };
+
   const toggleMenu = () => setIsOpen(!isOpen);
 
   const handelLogout = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      const result = await dispatch(userLogout())
-      if(result.success){
-        navigate('/')
+      const result = await dispatch(userLogout());
+      if (result.success) {
+        navigate("/");
       }
     } catch (error) {
-      
+      console.log(error);
     }
-  }
+  };
   return (
-    <nav className="bg-white/90 shadow-md sticky top-0 z-50">
+    <nav className="bg-white/90 dark:bg-gray-900 shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
-
           {/* Logo */}
           <Link
             to="/"
@@ -78,28 +98,80 @@ function Navbar() {
 
           {/* Desktop Auth */}
           <div className="hidden md:flex items-center space-x-4">
-            {
-            !token ? (
-            <>
-            <Link to="/login">
-              <button className="px-5 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-50 hover:border-gray-400 transition-all duration-200">
-                Login
-              </button>
-            </Link>
-            <Link to="/signUp">
-              <button className="px-5 py-2 text-sm font-medium text-white bg-linear-to-r from-blue-600 to-blue-700 rounded-full hover:from-blue-700 hover:to-blue-800 shadow-md hover:shadow-lg transition-all duration-200">
-                Register
-              </button>
-            </Link> 
-             </>
-             ) : (
-            <button onClick={handelLogout} className="px-5 py-2 text-sm font-medium text-white bg-linear-to-r from-blue-600 to-blue-700 rounded-full hover:from-blue-700 hover:to-blue-800 shadow-md hover:shadow-lg transition-all duration-200">
-                Logout
-              </button>
-             )
+            {!token ? (
+              <>
+                <Link to="/login">
+                  <button className="px-5 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-50 hover:border-gray-400 transition-all duration-200">
+                    Login
+                  </button>
+                </Link>
+                <Link to="/signUp">
+                  <button className="px-5 py-2 text-sm font-medium text-white bg-linear-to-r from-blue-600 to-blue-700 rounded-full hover:from-blue-700 hover:to-blue-800 shadow-md hover:shadow-lg transition-all duration-200">
+                    Register
+                  </button>
+                </Link>
+                <button
+                    onClick={() => setDarkMode(!darkmode)}
+                    className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700"
+                  >
+                    {darkmode ? "🌙" : "☀️"}
+                  </button>
+              </>
+            ) : (
+              <div className="relative">
+                {/* Avatar Button */}
+                <button
+                  type="button"
+                  onClick={() => setProfileOpen(!profileOpen)}
+                  className="w-10 h-10 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center"
+                >
+                  {getInitials(user?.name || "User")}
+                </button>
 
-            }
-            
+                {/* Dropdown */}
+                {profileOpen && (
+                  <div className="absolute right-0 mt-3 w-52 bg-white rounded-lg shadow-lg border">
+                    <Link
+                      to="/profile"
+                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    >
+                      My Profile
+                    </Link>
+
+                    <Link
+                      to="/trips"
+                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    >
+                      My Trips
+                    </Link>
+
+                    <Link
+                      to="/wishlist"
+                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    >
+                      Wishlist
+                    </Link>
+
+                    <Link
+                      to="/settings"
+                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    >
+                      Settings
+                    </Link>
+
+                    <div className="border-t"></div>
+
+                    <button
+                      type="button"
+                      onClick={handelLogout}
+                      className="w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Mobile hamburger button */}
@@ -114,13 +186,22 @@ function Navbar() {
               viewBox="0 0 24 24"
             >
               {isOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
               )}
             </svg>
           </button>
-
         </div>
       </div>
 
