@@ -96,8 +96,8 @@ function Navbar() {
           {/* Desktop Auth */}
           <div className="hidden md:flex items-center space-x-4">
             {
-             !token ? (
-             <>
+            !token ? (
+            <>
             <Link to="/login">
               <button className="px-5 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-50 hover:border-gray-400 transition-all duration-200">
                 Login

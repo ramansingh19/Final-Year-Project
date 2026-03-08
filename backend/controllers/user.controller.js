@@ -15,7 +15,7 @@ export const userRegistration = async (req, res) => {
 
     if (
       [userName, email, contactNumber, password].some(
-        (field) => !field || field.trim() === ""
+        (field) => !field || field.trim() === "",
       )
     ) {
       return res.status(400).json({
@@ -32,6 +32,8 @@ export const userRegistration = async (req, res) => {
       });
     }
 
+    console.log("FILES:", req.files);
+    console.log("BODY:", req.body);
     const avatarLocalPath = req.files?.avatar?.[0]?.path;
     if (!avatarLocalPath) {
       return res.status(400).json({
@@ -135,13 +137,13 @@ export const userLogin = async (req, res) => {
     const accessToken = jwt.sign(
       { id: registeredUser._id },
       process.env.SECRET_KET,
-      { expiresIn: "7d" }
+      { expiresIn: "7d" },
     );
 
     const refreshToken = jwt.sign(
       { id: registeredUser._id },
       process.env.SECRET_KET,
-      { expiresIn: "10d" }
+      { expiresIn: "10d" },
     );
 
     registeredUser.isLoggedIn = true;
@@ -169,7 +171,7 @@ export const userLogout = async (req, res) => {
     await User.findByIdAndUpdate(
       userId,
       { isLoggedIn: false },
-      { returnDocument: "after" }
+      { returnDocument: "after" },
     );
     return res
       .status(200)
@@ -195,40 +197,50 @@ export const getUserProfile = async (req, res) => {
 export const updateUserProfile = async (req, res) => {
   try {
     const userId = req.user?.id;
-    if(!userId){
-      return res.status(400).json({success: false, message:'Unauthorize user'})
+    if (!userId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Unauthorize user" });
     }
 
-    const {userName, contactNumber} = req.body;
-    const updateData = {}
-    
-    if(userName?.trim()) updateData.userName = userName;
-    if(contactNumber?.trim()) updateData.contactNumber = contactNumber;
+    const { userName, contactNumber } = req.body;
+    const updateData = {};
 
-    if(req.files?.avatar?.[0]?.path){
+    if (userName?.trim()) updateData.userName = userName;
+    if (contactNumber?.trim()) updateData.contactNumber = contactNumber;
+
+    if (req.files?.avatar?.[0]?.path) {
       const avatar = await uploadCloudinary(req.files.avatar[0].path);
-      if(!avatar){
-        return res.status(400).json({success: false, message: 'Avatar upload failed'})
+      if (!avatar) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Avatar upload failed" });
       }
       updateData.avatar.url;
     }
 
-    if(Object.keys(updateData).length === 0){
-      return res.status(400).json({success: false, message: 'Nothing is updated'})
+    if (Object.keys(updateData).length === 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Nothing is updated" });
     }
 
-    const updatedUser = await User.findByIdAndUpdate(userId, updateData,
-    {returnDocument: 'after', runValidators: true}) ;
+    const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
+      returnDocument: "after",
+      runValidators: true,
+    });
 
-    if(!updatedUser){
-      return res.status(400).json({status: false, message: 'User not found'})
+    if (!updatedUser) {
+      return res.status(400).json({ status: false, message: "User not found" });
     }
 
-    return res.status(200).json({success: true, message: 'user profile successfully updated'})
+    return res
+      .status(200)
+      .json({ success: true, message: "user profile successfully updated" });
   } catch (error) {
-    return res.status(500).json({success: false, message: error.message})
+    return res.status(500).json({ success: false, message: error.message });
   }
-}
+};
 
 export const superAdminRegistration = async (req, res) => {
   try {
@@ -236,7 +248,7 @@ export const superAdminRegistration = async (req, res) => {
 
     if (
       [userName, email, contactNumber, password].some(
-        (field) => !field || field.trim() === ""
+        (field) => !field || field.trim() === "",
       )
     ) {
       return res.status(400).json({
@@ -364,13 +376,13 @@ export const superAdminLogin = async (req, res) => {
     const accessToken = jwt.sign(
       { id: superAdmin._id },
       process.env.SECRET_KET,
-      { expiresIn: "7d" }
+      { expiresIn: "7d" },
     );
 
     const refreshToken = jwt.sign(
       { id: superAdmin._id },
       process.env.SECRET_KET,
-      { expiresIn: "10d" }
+      { expiresIn: "10d" },
     );
 
     superAdmin.isLoggedIn = true;
@@ -402,7 +414,7 @@ export const superAdminLogout = async (req, res) => {
     await User.findByIdAndUpdate(
       superAdminId,
       { isLoggedIn: false },
-      { returnDocument: "after" }
+      { returnDocument: "after" },
     );
 
     return res.status(200).json({
@@ -420,40 +432,56 @@ export const superAdminLogout = async (req, res) => {
 export const updateSuperAdminProfile = async (req, res) => {
   try {
     const userId = req.user?.id;
-    if(!userId){
-      return res.status(400).json({success: false, message: 'Unauthorized user'})
+    if (!userId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Unauthorized user" });
     }
 
     const { userName, contactNumber } = req.body;
 
     const updateData = {};
 
-    if(userName?.trim()) updateData.userName = userName;
-    if(contactNumber?.trim()) updateData.contactNumber = contactNumber;
+    if (userName?.trim()) updateData.userName = userName;
+    if (contactNumber?.trim()) updateData.contactNumber = contactNumber;
 
-    if(req.files?.avatar?.[0]?.path){
-      const avatar = await uploadCloudinary(req.files.avatar[0].path)
-      if(!avatar){
-        return res.status(400).json({success: false, message: 'Avatar upload failed'})
+    if (req.files?.avatar?.[0]?.path) {
+      const avatar = await uploadCloudinary(req.files.avatar[0].path);
+      if (!avatar) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Avatar upload failed" });
       }
       updateData.avatar = avatar.url;
     }
 
-    if(Object.keys(updateData).length === 0){
-      return res.status(400).json({success: false, message:'Nothing to update'})
+    if (Object.keys(updateData).length === 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Nothing to update" });
     }
 
-    const updatedUser = await User.findByIdAndUpdate(userId, updateData, {returnDocument:'after', runValidators: true})
+    const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
+      returnDocument: "after",
+      runValidators: true,
+    });
 
-    if(!updatedUser){
-      return res.status(400).json({success: false, message: 'User not found'})
+    if (!updatedUser) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User not found" });
     }
 
-    return res.status(200).json({success: true, message: 'Super Admin Profile updated successfully'})
+    return res
+      .status(200)
+      .json({
+        success: true,
+        message: "Super Admin Profile updated successfully",
+      });
   } catch (error) {
-    return res.status(500).json({success: false, message: error.message})
+    return res.status(500).json({ success: false, message: error.message });
   }
-}
+};
 
 export const createAdminRegistration = async (req, res) => {
   try {
@@ -461,7 +489,7 @@ export const createAdminRegistration = async (req, res) => {
 
     if (
       [userName, email, contactNumber, password].some(
-        (field) => !field || field.trim() === ""
+        (field) => !field || field.trim() === "",
       )
     ) {
       return res.status(400).json({
@@ -514,7 +542,7 @@ export const adminLogin = async (req, res) => {
     }
 
     const registredAdmin = await User.findOne({ email, role: "admin" }).select(
-      "+password"
+      "+password",
     );
     if (!registredAdmin) {
       return res
@@ -524,7 +552,7 @@ export const adminLogin = async (req, res) => {
 
     const checkPassword = await bcrypt.compare(
       password,
-      registredAdmin.password
+      registredAdmin.password,
     );
     if (!checkPassword) {
       return res
@@ -551,25 +579,23 @@ export const adminLogin = async (req, res) => {
     const accessToken = jwt.sign(
       { id: registredAdmin._id },
       process.env.SECRET_KET,
-      { expiresIn: "10d" }
+      { expiresIn: "10d" },
     );
     const refreshToken = jwt.sign(
       { id: registredAdmin._id },
       process.env.SECRET_KET,
-      { expiresIn: "14d" }
+      { expiresIn: "14d" },
     );
 
     registredAdmin.isLoggedIn = true;
     await registredAdmin.save();
 
-    return res
-      .status(200)
-      .json({
-        success: true,
-        message: "admin login successfully",
-        accessToken,
-        refreshToken,
-      });
+    return res.status(200).json({
+      success: true,
+      message: "admin login successfully",
+      accessToken,
+      refreshToken,
+    });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
@@ -585,7 +611,7 @@ export const adminLogout = async (req, res) => {
     await User.findByIdAndUpdate(
       req.user.id,
       { isLoggedIn: false },
-      { returnDocument: "after" }
+      { returnDocument: "after" },
     );
 
     return res.status(200).json({
@@ -603,36 +629,47 @@ export const adminLogout = async (req, res) => {
 export const updateAdminProfile = async (req, res) => {
   try {
     const userId = req.user?.id;
-    if(!userId){
-      return res.status(400).json({success: false, message: 'Unauthorize User'})
+    if (!userId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Unauthorize User" });
     }
 
     const { userName, contactNumber } = req.body;
 
     const updateData = {};
 
-    if(userName?.trim()) updateData.userName = userName;
-    if(contactNumber?.trim()) updateData.contactNumber = contactNumber;
+    if (userName?.trim()) updateData.userName = userName;
+    if (contactNumber?.trim()) updateData.contactNumber = contactNumber;
 
-    if(req.files?.avatar?.[0]?.path){
-      const avatar = await uploadCloudinary(req.files.avatar[0].path)
-      if(!avatar){
-        return res.status(400).json({success: false, message:'Avatar upload failed'})
+    if (req.files?.avatar?.[0]?.path) {
+      const avatar = await uploadCloudinary(req.files.avatar[0].path);
+      if (!avatar) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Avatar upload failed" });
       }
       updateData.avatar = avatar.url;
     }
 
-    const updatedUser = await User.findByIdAndUpdate(userId, updateData, {returnDocument:"after", runValidators: true})
+    const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
+      returnDocument: "after",
+      runValidators: true,
+    });
 
-    if(!updatedUser){
-      return res.status(400).json({success: false, message: 'admin profile not updated'})
+    if (!updatedUser) {
+      return res
+        .status(400)
+        .json({ success: false, message: "admin profile not updated" });
     }
 
-    return res.status(200).json({success: true, message: 'admin profile update successfully'})
+    return res
+      .status(200)
+      .json({ success: true, message: "admin profile update successfully" });
   } catch (error) {
-    return res.status(500).json({success: false, message: error.message})
+    return res.status(500).json({ success: false, message: error.message });
   }
-}
+};
 
 export const approveAdmin = async (req, res) => {
   try {
@@ -695,7 +732,7 @@ export const userVerification = async (req, res) => {
         .json({ success: false, message: "user not found" });
     }
 
-    (user.token = null), (user.isVerified = true);
+    ((user.token = null), (user.isVerified = true));
     await user.save();
 
     return res
@@ -791,99 +828,143 @@ export const changePassword = async (req, res) => {
     const { email } = req.params;
     const { newPassword, confirmPassword } = req.body;
 
-    if([newPassword, confirmPassword].some((fields) => !fields || fields?.trim() === "")){
-      return res.status(400).json({success: false, message: "all fields mush be required"})
+    if (
+      [newPassword, confirmPassword].some(
+        (fields) => !fields || fields?.trim() === "",
+      )
+    ) {
+      return res
+        .status(400)
+        .json({ success: false, message: "all fields mush be required" });
     }
 
-    if(newPassword !== confirmPassword){
-      return res.status(400).json({success: false, message: "both password are not same"})
+    if (newPassword !== confirmPassword) {
+      return res
+        .status(400)
+        .json({ success: false, message: "both password are not same" });
     }
 
-    const user = await User.findOne({ email })
-    if(!user){
-      return res.status(400).json({success: false, message: "user not found"})
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "user not found" });
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
     await user.save();
 
-    return res.status(200).json({success: true, message: "password change successfully"})
+    return res
+      .status(200)
+      .json({ success: true, message: "password change successfully" });
   } catch (error) {
-    return res.status(500).json({success: false, message: error.message})
+    return res.status(500).json({ success: false, message: error.message });
   }
-}
+};
 
 export const userChangePassword = async (req, res) => {
-try {
+  try {
     const userId = req.user.id;
     const { oldPassword, newPassword, confirmPassword } = req.body;
-  
-    if([oldPassword, newPassword, confirmPassword].some((fields) => !fields || fields?.trim() === "")){
-      return res.status(200).json({success: false, message: "all fields must be required"})
+
+    if (
+      [oldPassword, newPassword, confirmPassword].some(
+        (fields) => !fields || fields?.trim() === "",
+      )
+    ) {
+      return res
+        .status(200)
+        .json({ success: false, message: "all fields must be required" });
     }
 
-    if(newPassword !== confirmPassword){
-      return res.status(400).json({success: false, message: "both password are not matched"})
+    if (newPassword !== confirmPassword) {
+      return res
+        .status(400)
+        .json({ success: false, message: "both password are not matched" });
     }
 
-    const user = await User.findOne( userId ).select("+password")
-    if(!user){
-      return res.status(400).json({success: false, message: 'user not found'})
+    const user = await User.findOne(userId).select("+password");
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "user not found" });
     }
 
     const checkPassword = await bcrypt.compare(oldPassword, user.password);
-    if(!checkPassword){
-      return res.status(400).json({success: false, message: "old password is Incorrect"})
+    if (!checkPassword) {
+      return res
+        .status(400)
+        .json({ success: false, message: "old password is Incorrect" });
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
 
     await user.save();
-    return res.status(200).json({success: false, message: 'password change successfully'})
-} catch (error) {
-  return res.status(500).json({success: false, message: error.message})
-}
-}
+    return res
+      .status(200)
+      .json({ success: false, message: "password change successfully" });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
 
 export const updateUserLocation = async (req, res) => {
   try {
     const userId = req.user?.id;
-    if(!userId){
-      return res.status(400).json({success: false, message: 'User Unauthorize'})
+    if (!userId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User Unauthorize" });
     }
 
     const { latitude, longitude, city, state, country, address } = req.body;
 
-    if(!latitude && !city){
-      return res.status(400).json({success: false, message: 'Provide latitude/longitude or city'})
+    if (!latitude && !city) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "Provide latitude/longitude or city",
+        });
     }
 
     const updateData = {};
-    if(latitude && longitude){
+    if (latitude && longitude) {
       updateData.location = {
-        type: 'Point',
-        coordinates:[longitude, latitude],
+        type: "Point",
+        coordinates: [longitude, latitude],
         city,
         state,
         country,
-        address
-      }
-    }else{
-      updateData.location = {city, state, country, address}
+        address,
+      };
+    } else {
+      updateData.location = { city, state, country, address };
     }
 
-    const user = await User.findByIdAndUpdate(userId, updateData, {returnDocument: 'after', runValidators: true})
-    if(!user){
-      return res.status(400).json({success: false, message: 'Location updated failed'})
+    const user = await User.findByIdAndUpdate(userId, updateData, {
+      returnDocument: "after",
+      runValidators: true,
+    });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Location updated failed" });
     }
 
-    return res.status(200).json({success: true, message: 'Location updated successfully', location: user.location})
+    return res
+      .status(200)
+      .json({
+        success: true,
+        message: "Location updated successfully",
+        location: user.location,
+      });
   } catch (error) {
-    return res.status(500).json({success: false, message: error.message})
+    return res.status(500).json({ success: false, message: error.message });
   }
-}
+};
 
 export const findNearbyAdmins = async (req, res) => {
   try {
@@ -892,7 +973,7 @@ export const findNearbyAdmins = async (req, res) => {
     if (!latitude || !longitude) {
       return res.status(400).json({
         success: false,
-        message: "latitude and longitude are required"
+        message: "latitude and longitude are required",
       });
     }
 
@@ -902,22 +983,18 @@ export const findNearbyAdmins = async (req, res) => {
         $near: {
           $geometry: {
             type: "Point",
-            coordinates: [
-              Number(latitude),
-              Number(longitude)
-            ]
+            coordinates: [Number(latitude), Number(longitude)],
           },
-          $maxDistance: distance * 1000 // km → meters
-        }
-      }
+          $maxDistance: distance * 1000, // km → meters
+        },
+      },
     });
 
     res.status(200).json({
       success: true,
       count: admins.length,
-      admins
+      admins,
     });
-
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -940,7 +1017,7 @@ export const smartSearch = async (req, res) => {
 
     // remove search keywords
     const filteredWords = words.filter(
-      (w) => !["hotel", "hotels", "place", "places"].includes(w)
+      (w) => !["hotel", "hotels", "place", "places"].includes(w),
     );
 
     const cityKeyword = filteredWords[0];
