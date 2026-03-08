@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { userLogout } from "../features/auth/authSlice";
+import { getUserData } from "../features/user/userSlice";
+import { FaRegUserCircle } from "react-icons/fa";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,23 +12,17 @@ function Navbar() {
   const navigate = useNavigate();
   const [darkmode, setDarkMode] = useState(false);
 
-  useEffect(() => {
-    if (darkmode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [darkmode]);
+  const { token } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.user);
+  // console.log(user);
 
-  const { token, user } = useSelector((state) => state.auth);
-
-  const getInitials = (name) => {
-    if (!name || typeof name !== "string") return "U";
-
-    const names = name.trim().split(" ");
-
-    return names
-      .map((n) => n.charAt(0))
+  const getInitials = (name = "User") => {
+    if (typeof name !== "string") return "U";
+    return name
+      .trim()
+      .split(" ")
+      .filter((n) => n)
+      .map((n) => n[0])
       .join("")
       .toUpperCase();
   };
@@ -44,6 +40,21 @@ function Navbar() {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (token) {
+      dispatch(getUserData());
+    }
+  }, [token, dispatch]);
+
+  useEffect(() => {
+    if (darkmode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [darkmode]);
+
   return (
     <nav className="bg-white/90 dark:bg-gray-900 shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -111,11 +122,11 @@ function Navbar() {
                   </button>
                 </Link>
                 <button
-                    onClick={() => setDarkMode(!darkmode)}
-                    className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700"
-                  >
-                    {darkmode ? "🌙" : "☀️"}
-                  </button>
+                  onClick={() => setDarkMode(!darkmode)}
+                  className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700"
+                >
+                  {darkmode ? "🌙" : "☀️"}
+                </button>
               </>
             ) : (
               <div className="relative">
@@ -123,49 +134,69 @@ function Navbar() {
                 <button
                   type="button"
                   onClick={() => setProfileOpen(!profileOpen)}
-                  className="w-10 h-10 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center"
+                  className="w-10 h-10 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center border overflow-hidden"
                 >
-                  {getInitials(user?.name || "User")}
+                  {user?.avatar ? (
+                    <img
+                      src={user.avatar}
+                      alt={user.userName || "User"}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    getInitials(user?.userName)
+                  )}
                 </button>
 
                 {/* Dropdown */}
                 {profileOpen && (
-                  <div className="absolute right-0 mt-3 w-52 bg-white rounded-lg shadow-lg border">
-                    <Link
-                      to="/profile"
-                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                    >
-                      My Profile
-                    </Link>
+                  <div className="absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                    {/* Menu Items */}
+                    <div className="py-2">
+                      <Link
+                        to="/user-profile"
+                        className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-300"
+                      >
+                        <span className="bg-blue-400 rounded-full text-white">
+                          <FaRegUserCircle style={{ fontSize: "22px" }} />
+                        </span>
+                        My Profile
+                      </Link>
 
-                    <Link
-                      to="/trips"
-                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                    >
-                      My Trips
-                    </Link>
+                      <Link
+                        to="/trips"
+                        className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
+                      >
+                        <span>🧳</span>
+                        My Trips
+                      </Link>
 
-                    <Link
-                      to="/wishlist"
-                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                    >
-                      Wishlist
-                    </Link>
+                      <Link
+                        to="/wishlist"
+                        className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
+                      >
+                        <span>❤️</span>
+                        Wishlist
+                      </Link>
 
-                    <Link
-                      to="/settings"
-                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                    >
-                      Settings
-                    </Link>
+                      <Link
+                        to="/settings"
+                        className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
+                      >
+                        <span>⚙️</span>
+                        Settings
+                      </Link>
+                    </div>
 
-                    <div className="border-t"></div>
+                    {/* Divider */}
+                    <div className="border-t border-gray-100"></div>
 
+                    {/* Logout */}
                     <button
                       type="button"
                       onClick={handelLogout}
-                      className="w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
+                      className="flex items-center gap-3 w-full text-left px-4 py-3 text-red-500 hover:bg-red-50 transition-colors"
                     >
+                      <span>🚪</span>
                       Logout
                     </button>
                   </div>
