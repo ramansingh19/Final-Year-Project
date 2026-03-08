@@ -6,7 +6,6 @@ import { FaEyeSlash } from "react-icons/fa6";
 import { IoEyeSharp } from "react-icons/io5";
 
 function Login() {
-
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -30,7 +29,7 @@ function Login() {
     const { email, password } = formData;
 
     if (!email || !password) {
-      error
+      error;
       return;
     }
 
@@ -44,18 +43,19 @@ function Login() {
   }, [loginSuccess, navigate]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-100 to-gray-200 px-4">
-
-      <div className="w-full max-w-md bg-white rounded-xl shadow-2xl p-8">
-
-        <h2 className="text-3xl font-bold text-center text-gray-700 mb-6">
-          Sign In
+    
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-gray-200 px-4">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-2">
+          Welcome Back
         </h2>
+        <p className="text-sm text-gray-500 text-center mb-6">
+          Sign in to continue to your account
+        </p>
 
-        <form onSubmit={handelFormSubmit} className="space-y-4">
-
+        <form onSubmit={handelFormSubmit} className="space-y-5">
           {/* Email */}
-          <div>
+          <div className="flex flex-col">
             <label className="text-sm font-medium text-gray-600">
               Email Address
             </label>
@@ -67,13 +67,14 @@ function Login() {
               placeholder="Enter your email"
               value={formData.email}
               onChange={handelChange}
-              className="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              className="w-full mt-1 px-4 py-2.5 border border-gray-300 rounded-lg 
+          focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none
+          transition duration-200"
             />
           </div>
 
           {/* Password */}
-          <div className="relative">
-
+          <div className="relative flex flex-col">
             <div className="flex justify-between items-center">
               <label className="text-sm font-medium text-gray-600">
                 Password
@@ -81,7 +82,7 @@ function Login() {
 
               <Link
                 to={"/forgot-password"}
-                className="text-sm text-blue-500 hover:underline"
+                className="text-sm text-blue-600 hover:text-blue-700 hover:underline transition"
               >
                 Forgot password?
               </Link>
@@ -94,13 +95,15 @@ function Login() {
               placeholder="Enter your password"
               value={formData.password}
               onChange={handelChange}
-              className="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none pr-10"
+              className="w-full mt-1 px-4 py-2.5 border border-gray-300 rounded-lg
+          focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none
+          transition duration-200 pr-10"
             />
 
             <button
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-3 top-9 text-gray-500"
+              className="absolute right-3 top-9 text-gray-500 hover:text-gray-700 transition"
             >
               {showPassword ? (
                 <IoEyeSharp size={18} />
@@ -108,14 +111,15 @@ function Login() {
                 <FaEyeSlash size={18} />
               )}
             </button>
-
           </div>
 
           {/* Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg font-medium transition duration-200 disabled:opacity-50"
+            className="w-full bg-blue-600 hover:bg-blue-700 active:scale-[0.99]
+        text-white py-2.5 rounded-lg font-semibold tracking-wide
+        transition duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {loading ? "Logging in..." : "Sign In"}
           </button>
@@ -125,7 +129,7 @@ function Login() {
             Don’t have an account?{" "}
             <Link
               to={"/signUp"}
-              className="text-blue-500 font-medium hover:underline"
+              className="text-blue-600 font-semibold hover:underline"
             >
               Sign up
             </Link>
@@ -133,15 +137,12 @@ function Login() {
 
           {/* Error */}
           {error && (
-            <p className="text-red-500 text-sm text-center font-medium">
+            <div className="bg-red-50 border border-red-200 text-red-600 text-sm text-center py-2 px-3 rounded-lg">
               {error}
-            </p>
+            </div>
           )}
-
         </form>
-
       </div>
-
     </div>
   );
 }
