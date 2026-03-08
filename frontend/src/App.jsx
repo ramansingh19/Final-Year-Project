@@ -13,6 +13,7 @@ import ForgotPassword from './pages/auth/ForgotPassword'
 import VerifyOTP from './pages/auth/VerifyOTP'
 import ChangePassword from './pages/auth/ChangePassword'
 import UserProfile from './pages/localPages/UserProfile'
+import UserProtectedRouter from './components/protectedRouter/UserProtectedRouter'
 
 
 function App() {
@@ -29,7 +30,7 @@ function App() {
       <Route path='/verify-otp/:email' element={<VerifyOTP/>}/>
       <Route path='/change-password/:email' element={<ChangePassword/>}/>
       <Route path='/login' element={<Login/>}/>
-      <Route path='/user-profile' element={<UserProfile/>} />
+      <Route path='/user-profile' element={<UserProtectedRouter><UserProfile/></UserProtectedRouter>} />
       <Route path='/about' element={<About/>}/>
     </Routes> 
     </>

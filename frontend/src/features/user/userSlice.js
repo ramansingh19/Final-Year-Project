@@ -56,6 +56,8 @@ export const updateUserLocation = createAsyncThunk(
 const userSlice = createSlice({
   name: "user",
   initialState,
+  user: null,
+  loading: false,
   reducers: {
     clearUserError(state) {
       state.error = null;
