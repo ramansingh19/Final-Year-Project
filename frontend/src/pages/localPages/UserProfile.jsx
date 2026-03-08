@@ -21,15 +21,15 @@ function UserProfile() {
 
   if (!user) {
     return (
-<div className="flex flex-col justify-center items-center h-64 space-y-4">
-  {/* Spinner */}
-  <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent border-solid rounded-full animate-spin"></div>
+      <div className="flex flex-col justify-center items-center h-64 space-y-4">
+        {/* Spinner */}
+        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent border-solid rounded-full animate-spin"></div>
 
-  {/* Loading text */}
-  <p className="text-gray-500 dark:text-gray-300 text-lg font-medium">
-    Loading user data...
-  </p>
-</div>
+        {/* Loading text */}
+        <p className="text-gray-500 dark:text-gray-300 text-lg font-medium">
+          Loading user data...
+        </p>
+      </div>
     );
   }
 

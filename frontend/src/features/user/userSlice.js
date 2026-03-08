@@ -31,13 +31,27 @@ export const updateUserProfile = createAsyncThunk("user/updateUserProfile", asyn
     const response = await apiClient.put("/api/user/update-user-profile", data,
     {
       headers: { "Content-Type": "multipart/form-data" },
-    }
-    );
+    });
     return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || "user update failed")
   }
 })
+
+/* ------------------- updateUserLocation ------------------------- */
+export const updateUserLocation = createAsyncThunk(
+  "user/updateLocation",
+  async (locationData, thunkAPI) => {
+    try {
+      const response = await apiClient.post("/api/user/update-location", locationData);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Update location failed"
+      );
+    }
+  }
+);
 
 const userSlice = createSlice({
   name: "user",
@@ -91,6 +105,27 @@ const userSlice = createSlice({
         state.profileUpdated = false
       })
 
+      /* ------------------- getUserLocation ------------------------- */
+      builder
+      .addCase(updateUserLocation.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+  
+      .addCase(updateUserLocation.fulfilled, (state, action) => {
+        state.loading = false;
+  
+        if (action.payload && action.payload.user) {
+          state.user = action.payload.user;
+        }
+  
+      })
+  
+      .addCase(updateUserLocation.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Location update failed";
+      });
+ 
   }
 });
 
