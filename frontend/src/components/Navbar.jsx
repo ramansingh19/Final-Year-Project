@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { userLogout } from "../features/auth/authSlice";
+import { getUserData } from "../features/user/userSlice";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,20 +10,36 @@ function Navbar() {
   const navigate = useNavigate()
 
   const { token } = useSelector((state) => state.auth)
+  const { user, loading } = useSelector((state) => state.user);
+
+  console.log(user);
+  // {
+  //   loading ? (
+  //     <p>loading</p>
+  //   ):
+  //   console.log(user?.userName);
+  // }
   
   const toggleMenu = () => setIsOpen(!isOpen);
 
   const handelLogout = async (e) => {
     e.preventDefault()
     try {
-      const result = await dispatch(userLogout())
+      const result = await dispatch(userLogout()).unwrap()
       if(result.success){
         navigate('/')
       }
     } catch (error) {
-      
+      console.log(error);
     }
   }
+
+  useEffect(()=> {
+   if(token){
+    dispatch(getUserData())
+   }
+  },[token, dispatch])
+
   return (
     <nav className="bg-white/90 shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -171,6 +188,9 @@ function Navbar() {
               Travel Option
             </Link>
             <div className="border-t border-gray-200 pt-4 pb-3 mt-4">
+              {
+               !token ?(
+               <>
               <Link
                 to="/login"
                 className="block px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:text-blue-600 hover:bg-gray-50 transition-colors duration-200"
@@ -185,6 +205,13 @@ function Navbar() {
               >
                 Register
               </Link>
+               </>
+               ) : (
+              <button onClick={handelLogout} className="px-5 py-2 text-sm font-medium text-white bg-linear-to-r from-blue-600 to-blue-700 rounded-full hover:from-blue-700 hover:to-blue-800 shadow-md hover:shadow-lg transition-all duration-200">
+                Logout
+              </button>
+               )
+              }
             </div>
           </div>
         </div>
