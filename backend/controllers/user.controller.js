@@ -395,6 +395,7 @@ export const superAdminLogin = async (req, res) => {
       message: "Super-admin logged in successfully",
       accessToken,
       refreshToken,
+      superAdmin
     });
   } catch (error) {
     return res.status(500).json({

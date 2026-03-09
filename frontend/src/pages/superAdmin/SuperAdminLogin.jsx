@@ -11,8 +11,8 @@ function SuperAdminLogin() {
   const navigate = useNavigate();
 
   const { loading, error, loginSuccess } = useSelector(
-    (state) => state.superAdminAuth
-  );
+    (state) => state.superAdminAuth);
+  const token = localStorage.getItem("superAdminToken");
 
   const [formData, setFormData] = useState({
     email: "",
@@ -37,10 +37,10 @@ function SuperAdminLogin() {
   };
 
   useEffect(() => {
-    if (loginSuccess) {
+    if (token) {
       navigate("/superAdmin/superAdminDashboard");
     }
-  }, [loginSuccess, navigate]);
+  }, [token, navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-50 to-gray-200 p-4">

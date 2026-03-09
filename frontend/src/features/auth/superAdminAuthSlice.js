@@ -3,7 +3,7 @@ import apiClient from "../../services/apiClient";
 
 /* --------------- Initial State ------------- */
 const initialState = {
-  token : localStorage.getItem("token") || null,
+  superAdminToken : localStorage.getItem("superAdminToken") || null,
   isAuthenticated: false,
   role: null,
   superAdmin: null,
@@ -31,17 +31,31 @@ export const superAdminRegister = createAsyncThunk("auth/superAdminRegister", as
 })
 
 /* ---------- superAdminLogin ------------ */
-export const superAdminLogin = createAsyncThunk("/auth/superAdminLogin", async (data, thunkAPI) => {
-  try {
-    const response = await apiClient.post("/api/admin/super-admin-login", data);
+export const superAdminLogin = createAsyncThunk(
+  "auth/superAdminLogin",
+  async (data, thunkAPI) => {
+    try {
 
-    localStorage.setItem("token", response.accessToken);
+      const response = await apiClient.post(
+        "/api/admin/super-admin-login",
+        data
+      );
 
-    return response
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.response?.data?.message || "Super admin login failed")
+      return {
+        superAdminToken: response.accessToken,
+        user: response.superAdmin,
+      };
+      
+
+    } catch (error) {
+
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Super admin login failed"
+      );
+
+    }
   }
-})
+);
 
 /* ---------- Slice ------------- */
 const superAdminAuthSlice = createSlice({
@@ -50,10 +64,10 @@ const superAdminAuthSlice = createSlice({
 
   reducers:{
     logout(state){
-      state.token = null,
+      state.superAdminToken = null,
       state.isAuthenticated = false,
       state.role = null,
-      localStorage.removeItem("token")
+      localStorage.removeItem("superAdminToken")
     },
     clearAuthError(state){
       state.error = null
@@ -94,10 +108,13 @@ const superAdminAuthSlice = createSlice({
     .addCase(superAdminLogin.fulfilled, (state, action) => {
       state.loading = false;
       state.loginSuccess = true;
-      state.error = null;
       state.isAuthenticated = true;
-      state.token = action.payload.accessToken;
-      state.user = action.payload?.user || null
+      state.role = "super_admin";
+    
+      state.superAdminToken = action.payload.token;
+      state.superAdmin = action.payload.user;
+    
+      localStorage.setItem("superAdminToken", action.payload.superAdminToken);
     })
 
     .addCase(superAdminLogin.rejected, (state, action) => {

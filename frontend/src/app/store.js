@@ -11,6 +11,5 @@ export const store = configureStore({
     user: userReducer,
     superAdminAuth: superAdminAuthReducer,
     search : searchReducer
-
   }
 })

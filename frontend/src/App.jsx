@@ -16,6 +16,7 @@ import UserProtectedRouter from './components/protectedRouter/UserProtectedRoute
 import SuperAdminRegister from './pages/superAdmin/SuperAdminRegister'
 import SuperAdminLogin from './pages/superAdmin/SuperAdminLogin'
 import SuperAdminDashboard from './pages/superAdmin/SuperAdminDashboard'
+import SuperAdminProtectedRouter from './components/protectedRouter/SuperAdminProtectedRouter'
 
 
 function App() {
@@ -35,7 +36,7 @@ function App() {
       <Route path='/user-profile' element={<UserProtectedRouter><UserProfile/></UserProtectedRouter>} />
       <Route path='/superAdmin/signUp' element={<SuperAdminRegister/>}/>
       <Route path='/superAdmin/login' element={<SuperAdminLogin/>}/>
-      <Route path='/superAdmin/superAdminDashboard' element={<SuperAdminDashboard/>}/>
+      <Route path='/superAdmin/superAdminDashboard' element={<SuperAdminProtectedRouter><SuperAdminDashboard/></SuperAdminProtectedRouter>}/>
       <Route path='/about' element={<About/>}/>
     </Routes> 
     </>
