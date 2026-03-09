@@ -38,11 +38,11 @@ function ChangePassword() {
       const result = await dispatch(
         changePassword({ email, newPassword, confirmPassword })).unwrap();
          console.log(result);
-      // if (result.user.role=== "super_admin") {
-      //   navigate("/superAdmin/login")
-      // }else{
-      //   navigate("/login")
-      // }
+      if (result.user.role=== "super_admin") {
+        navigate("/superAdmin/login")
+      }else{
+        navigate("/login")
+      }
     } catch (error) {
       console.log(error);
     }
