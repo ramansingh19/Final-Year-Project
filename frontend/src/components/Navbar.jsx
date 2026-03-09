@@ -28,12 +28,36 @@ function Navbar() {
   console.log(user);
   // console.log("superAdmin: ",superAdmin?.role);
 
+//   const handleSearch = (search) => {
+//   if (!search.trim()) return;
+
+//   dispatch(searchHotels(search)); // fake backend call
+//   dispatch(addHistory(search));   
+//   dispatch(setQuery(search));    
+//   setShowHistory(false);
+// };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowHistory(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
+
   const handleSearch = (search) => {
   if (!search.trim()) return;
 
   dispatch(searchHotels(search)); // fake backend call
   dispatch(addHistory(search));   
   dispatch(setQuery(search));    
+
+
   setShowHistory(false);
 };
 
@@ -49,6 +73,15 @@ function Navbar() {
     };
   }, []);
 
+
+
+  // const { token } = useSelector((state) => state.auth);
+  // const { user } = useSelector((state) => state.user);
+  // // console.log(user.location.state);
+
+
+  // const location = useLocation();
+  // const dropdownRef = useRef(null);
 
   const getInitials = (name = "User") => {
     if (typeof name !== "string") return "U";
@@ -97,6 +130,9 @@ function Navbar() {
     };
   }, [location.pathname]);
 
+
+
+
   return (
     <>
       <nav
@@ -130,6 +166,43 @@ function Navbar() {
                   </button>
                 </div>
               )}
+            </div>
+
+            {/*SEARCH BAR */}           
+            <div className="relative w-96 mr-30">
+              <div className="flex items-center gap-3 bg-gray-100 px-3 py-2 rounded-xl">
+                <FiSearch className="text-gray-500 text-lg" />
+
+                <input
+                  type="text"
+                  value={query}
+                  placeholder="Search for Cities, Hotels & more"
+                  className="bg-transparent outline-none text-sm flex-1"
+                  onFocus={() => setShowHistory(true)}
+                  onChange={(e) => dispatch(setQuery(e.target.value))}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleSearch(query);
+                    }
+                  }}
+                />
+              </div>
+
+              {showHistory && history.length > 0 && (
+                <div className="absolute top-12 left-0 w-full bg-white shadow-lg rounded-xl border border-gray-200 overflow-hidden">
+                  {history.map((item, index) => (
+                    <div
+                      key={index}
+                      onClick={() => handleSearch(item)}
+                      className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    >
+                      <FiSearch className="text-gray-400" />
+                      <span className="text-sm text-gray-700">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
             </div>
 
             {/*SEARCH BAR */} 
@@ -392,5 +465,6 @@ function Navbar() {
     </>
   );
 }
+
 
 export default Navbar;
