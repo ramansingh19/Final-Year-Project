@@ -18,6 +18,7 @@ function Navbar() {
   const { token } = useSelector((state) => state.auth);
   const { user } = useSelector((state) => state.user);
   // console.log(user.location.state);
+  console.log(user?.role);
   
   const location = useLocation()
   const dropdownRef = useRef(null)
@@ -80,7 +81,7 @@ function Navbar() {
 
   return (
     <>
-      <nav className="bg-white/90 dark:bg-gray-900 shadow-md sticky top-0 z-50" ref={dropdownRef}>
+      <nav className="bg-white/90 dark:bg-gray-900 shadow-md sticky top-0 z-50 border" ref={dropdownRef}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             {/* Logo */}

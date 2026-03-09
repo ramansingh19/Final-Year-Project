@@ -15,7 +15,7 @@ export const userRegistration = async (req, res) => {
 
     if (
       [userName, email, contactNumber, password].some(
-        (field) => !field || field.trim() === "",
+        (field) => !field || field.trim() === ""
       )
     ) {
       return res.status(400).json({
@@ -137,13 +137,13 @@ export const userLogin = async (req, res) => {
     const accessToken = jwt.sign(
       { id: registeredUser._id },
       process.env.SECRET_KET,
-      { expiresIn: "7d" },
+      { expiresIn: "7d" }
     );
 
     const refreshToken = jwt.sign(
       { id: registeredUser._id },
       process.env.SECRET_KET,
-      { expiresIn: "10d" },
+      { expiresIn: "10d" }
     );
 
     registeredUser.isLoggedIn = true;
@@ -153,7 +153,7 @@ export const userLogin = async (req, res) => {
       success: true,
       message: `User logged in successfully`,
       accessToken,
-      refreshToken
+      refreshToken,
     });
   } catch (error) {
     return res.status(500).json({
@@ -171,7 +171,7 @@ export const userLogout = async (req, res) => {
     await User.findByIdAndUpdate(
       userId,
       { isLoggedIn: false },
-      { returnDocument: "after" },
+      { returnDocument: "after" }
     );
     return res
       .status(200)
@@ -184,15 +184,17 @@ export const userLogout = async (req, res) => {
 export const getUserProfile = async (req, res) => {
   try {
     const userId = req.user.id;
-    if(!userId){
-      return res.status(400).json({success: false, message: "user is not found"})
+    if (!userId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "user is not found" });
     }
-    const user = await User.findById(req.user.id).select("-password")
-    return res.status(200).json({success: true, user})
+    const user = await User.findById(req.user.id).select("-password");
+    return res.status(200).json({ success: true, user });
   } catch (error) {
-    return res.status(500).json({success: false, message: error.message})
+    return res.status(500).json({ success: false, message: error.message });
   }
-}
+};
 
 export const updateUserProfile = async (req, res) => {
   try {
@@ -248,7 +250,7 @@ export const superAdminRegistration = async (req, res) => {
 
     if (
       [userName, email, contactNumber, password].some(
-        (field) => !field || field.trim() === "",
+        (field) => !field || field.trim() === ""
       )
     ) {
       return res.status(400).json({
@@ -376,13 +378,13 @@ export const superAdminLogin = async (req, res) => {
     const accessToken = jwt.sign(
       { id: superAdmin._id },
       process.env.SECRET_KET,
-      { expiresIn: "7d" },
+      { expiresIn: "7d" }
     );
 
     const refreshToken = jwt.sign(
       { id: superAdmin._id },
       process.env.SECRET_KET,
-      { expiresIn: "10d" },
+      { expiresIn: "10d" }
     );
 
     superAdmin.isLoggedIn = true;
@@ -414,7 +416,7 @@ export const superAdminLogout = async (req, res) => {
     await User.findByIdAndUpdate(
       superAdminId,
       { isLoggedIn: false },
-      { returnDocument: "after" },
+      { returnDocument: "after" }
     );
 
     return res.status(200).json({
@@ -472,12 +474,10 @@ export const updateSuperAdminProfile = async (req, res) => {
         .json({ success: false, message: "User not found" });
     }
 
-    return res
-      .status(200)
-      .json({
-        success: true,
-        message: "Super Admin Profile updated successfully",
-      });
+    return res.status(200).json({
+      success: true,
+      message: "Super Admin Profile updated successfully",
+    });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
@@ -489,7 +489,7 @@ export const createAdminRegistration = async (req, res) => {
 
     if (
       [userName, email, contactNumber, password].some(
-        (field) => !field || field.trim() === "",
+        (field) => !field || field.trim() === ""
       )
     ) {
       return res.status(400).json({
@@ -542,7 +542,7 @@ export const adminLogin = async (req, res) => {
     }
 
     const registredAdmin = await User.findOne({ email, role: "admin" }).select(
-      "+password",
+      "+password"
     );
     if (!registredAdmin) {
       return res
@@ -552,7 +552,7 @@ export const adminLogin = async (req, res) => {
 
     const checkPassword = await bcrypt.compare(
       password,
-      registredAdmin.password,
+      registredAdmin.password
     );
     if (!checkPassword) {
       return res
@@ -579,12 +579,12 @@ export const adminLogin = async (req, res) => {
     const accessToken = jwt.sign(
       { id: registredAdmin._id },
       process.env.SECRET_KET,
-      { expiresIn: "10d" },
+      { expiresIn: "10d" }
     );
     const refreshToken = jwt.sign(
       { id: registredAdmin._id },
       process.env.SECRET_KET,
-      { expiresIn: "14d" },
+      { expiresIn: "14d" }
     );
 
     registredAdmin.isLoggedIn = true;
@@ -611,7 +611,7 @@ export const adminLogout = async (req, res) => {
     await User.findByIdAndUpdate(
       req.user.id,
       { isLoggedIn: false },
-      { returnDocument: "after" },
+      { returnDocument: "after" }
     );
 
     return res.status(200).json({
@@ -732,7 +732,7 @@ export const userVerification = async (req, res) => {
         .json({ success: false, message: "user not found" });
     }
 
-    ((user.token = null), (user.isVerified = true));
+    (user.token = null), (user.isVerified = true);
     await user.save();
 
     return res
@@ -830,7 +830,7 @@ export const changePassword = async (req, res) => {
 
     if (
       [newPassword, confirmPassword].some(
-        (fields) => !fields || fields?.trim() === "",
+        (fields) => !fields || fields?.trim() === ""
       )
     ) {
       return res
@@ -857,7 +857,7 @@ export const changePassword = async (req, res) => {
 
     return res
       .status(200)
-      .json({ success: true, message: "password change successfully" });
+      .json({ success: true, message: "password change successfully", user });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
@@ -870,7 +870,7 @@ export const userChangePassword = async (req, res) => {
 
     if (
       [oldPassword, newPassword, confirmPassword].some(
-        (fields) => !fields || fields?.trim() === "",
+        (fields) => !fields || fields?.trim() === ""
       )
     ) {
       return res
@@ -922,12 +922,10 @@ export const updateUserLocation = async (req, res) => {
     const { latitude, longitude, city, state, country, address } = req.body;
 
     if (!latitude && !city) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Provide latitude/longitude or city",
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Provide latitude/longitude or city",
+      });
     }
 
     const updateData = {};
@@ -954,13 +952,11 @@ export const updateUserLocation = async (req, res) => {
         .json({ success: false, message: "Location updated failed" });
     }
 
-    return res
-      .status(200)
-      .json({
-        success: true,
-        message: "Location updated successfully",
-        location: user.location,
-      });
+    return res.status(200).json({
+      success: true,
+      message: "Location updated successfully",
+      location: user.location,
+    });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
@@ -1017,7 +1013,7 @@ export const smartSearch = async (req, res) => {
 
     // remove search keywords
     const filteredWords = words.filter(
-      (w) => !["hotel", "hotels", "place", "places"].includes(w),
+      (w) => !["hotel", "hotels", "place", "places"].includes(w)
     );
 
     const cityKeyword = filteredWords[0];
