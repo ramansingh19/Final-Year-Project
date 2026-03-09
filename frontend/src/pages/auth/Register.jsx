@@ -2,8 +2,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { register } from "../../features/auth/authSlice";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaEyeSlash } from "react-icons/fa6";
-import { IoEyeSharp } from "react-icons/io5";
+import {
+  FiUser,
+  FiMail,
+  FiPhone,
+  FiLock,
+  FiUpload,
+  FiEye,
+  FiEyeOff,
+} from "react-icons/fi";
 
 function Register() {
   const dispatch = useDispatch();
@@ -24,7 +31,6 @@ function Register() {
   const [avatar, setAvatar] = useState(null);
   const [preview, setPreview] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -68,125 +74,135 @@ function Register() {
   }, [registerSuccess]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-100 to-gray-200 px-4">
-
-      <div className="w-full max-w-md bg-white rounded-xl shadow-2xl p-8">
-
-        <h2 className="text-3xl font-bold text-center text-gray-700 mb-6">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-50 to-gray-200 p-4">
+      <div className="w-full max-w-md bg-white shadow-2xl rounded-2xl p-8 border border-gray-200">
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-2">
           Create Account
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <p className="text-center text-gray-500 text-sm mb-6">
+          Register your account to continue
+        </p>
 
-          {/* Image Preview */}
-          <div className="flex flex-col items-center justify-center">
-            <div className="w-20 h-20 rounded-full overflow-hidden  mb-2 shadow-sm">
-              <img
-                src={preview || "https://via.placeholder.com/100"}
-                alt="🙂"
-                className="w-full h-full object-cover flex items-center justify-center bg-gray-300"
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Avatar */}
+          <div className="flex flex-col items-center">
+            <div className="w-28 h-28 rounded-full border-4 border-blue-500 overflow-hidden shadow-md mb-3">
+              {preview ? (
+                <img
+                  src={preview || "https://via.placeholder.com/100"}
+                  alt="preview"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="flex items-center justify-center h-full text-gray-400 text-sm">
+                  Avatar
+                </div>
+              )}
+            </div>
+
+            <label className="flex items-center gap-2 cursor-pointer text-sm text-blue-600 hover:text-blue-700">
+              <FiUpload />
+              Upload Avatar
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
               />
-            </div>
-            <div className=" w-23 flex items-center justify-center ">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="w-full text-sm text-center bg-gray-300 px-1 py-1.5 rounded-2xl border-2 border-gray-200 shadow-sm shadow-gray-400"
-            />
-            </div>
+            </label>
           </div>
 
           {/* Name */}
           <div>
-            <label className="text-sm font-medium text-gray-600">
+            <label className="text-sm font-medium text-gray-700">
               Full Name
             </label>
-            <input
-              name="userName"
-              required
-              value={formData.userName}
-              onChange={handleChange}
-              placeholder="Enter your name"
-              className="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
-            />
+
+            <div className="relative mt-1">
+              <FiUser className="absolute left-3 top-4 text-gray-400" />
+
+              <input
+                name="userName"
+                value={formData.userName}
+                onChange={handleChange}
+                placeholder="Enter your name"
+                required
+                className="w-full pl-10 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+            </div>
           </div>
 
           {/* Email */}
           <div>
-            <label className="text-sm font-medium text-gray-600">
+            <label className="text-sm font-medium text-gray-700">
               Email Address
             </label>
-            <input
-              name="email"
-              type="email"
-              required
-              onChange={handleChange}
-              placeholder="Enter your email"
-              className="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
-            />
+
+            <div className="relative mt-1">
+              <FiMail className="absolute left-3 top-4 text-gray-400" />
+
+              <input
+                name="email"
+                type="email"
+                onChange={handleChange}
+                placeholder="Enter your email"
+                required
+                className="w-full pl-10 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+            </div>
           </div>
 
           {/* Phone */}
           <div>
-            <label className="text-sm font-medium text-gray-600">
+            <label className="text-sm font-medium text-gray-700">
               Contact Number
             </label>
-            <input
-              name="contactNumber"
-              type="tel"
-              value={formData.contactNumber}
-              onChange={handleChange}
-              placeholder="Enter phone number"
-              pattern="[0-9]{10}"
-              maxLength="10"
-              required
-              className="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
-            />
+
+            <div className="relative mt-1">
+              <FiPhone className="absolute left-3 top-4 text-gray-400" />
+
+              <input
+                name="contactNumber"
+                type="tel"
+                value={formData.contactNumber}
+                onChange={handleChange}
+                placeholder="Enter phone number"
+                pattern="[0-9]{10}"
+                maxLength="10"
+                required
+                className="w-full pl-10 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+            </div>
           </div>
 
           {/* Password */}
-          <div className="relative">
-            <label className="text-sm font-medium text-gray-600">
+          <div>
+            <label className="text-sm font-medium text-gray-700">
               Password
             </label>
 
-            <input
-              name="password"
-              type={showPassword ? "text" : "password"}
-              required
-              onChange={handleChange}
-              placeholder="Enter password"
-              className="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none pr-10"
-            />
+            <div className="relative mt-1">
+              <FiLock className="absolute left-3 top-4 text-gray-400" />
 
-            <button
-              type="button"
-              onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-3 top-9 text-gray-500"
-            >
-              {showPassword ? <IoEyeSharp size={18} /> : <FaEyeSlash size={18} />}
-            </button>
+              <input
+                name="password"
+                type={showPassword ? "text" : "password"}
+                onChange={handleChange}
+                placeholder="Enter password"
+                required
+                className="w-full pl-10 pr-10 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-4 text-gray-500"
+              >
+                {showPassword ? <FiEyeOff /> : <FiEye />}
+              </button>
+            </div>
           </div>
-
-          {/* Button */}
-          <button
-            disabled={loading}
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg font-medium transition duration-200 disabled:opacity-50"
-          >
-            {loading ? "Registering..." : "Register"}
-          </button>
-
-          {/* Login */}
-          <p className="text-sm text-center text-gray-600">
-            Already have an account?{" "}
-            <Link
-              to={"/login"}
-              className="text-blue-500 font-medium hover:underline"
-            >
-              Login
-            </Link>
-          </p>
 
           {/* Error */}
           {error && (
@@ -195,6 +211,24 @@ function Register() {
             </p>
           )}
 
+          {/* Button */}
+          <button
+            disabled={loading}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition"
+          >
+            {loading ? "Registering..." : "Register"}
+          </button>
+
+          {/* Login */}
+          <p className="text-sm text-center text-gray-600">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="text-blue-600 font-medium hover:underline"
+            >
+              Login
+            </Link>
+          </p>
         </form>
       </div>
     </div>
