@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function HeroSection() {
   const [activeTab, setActiveTab] = useState("hotels");
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     city: "",
@@ -93,10 +95,18 @@ function HeroSection() {
               { key: "places", label: "Places" },
               { key: "restaurants", label: "Restaurants" },
               { key: "travel", label: "Travel Options" },
-            ].map(({ key, label }) => ( 
+            ].map(({ key, label }) => (
               <button
                 key={key}
-                onClick={() => setActiveTab(key)}
+                onClick={() => {
+                  setActiveTab(key);
+                  if (key === "hotels") {
+                    navigate("/hotels");
+                  }
+                  if (key === "places") navigate("/places");
+                  if (key === "restaurants") navigate("/restaurants");
+                  if (key === "travel") navigate("/travel");
+                }}
                 className={`px-6 py-3 rounded-2xl font-semibold transition-all duration-300 cursor-pointer relative group shadow-lg hover:shadow-xl hover:-translate-y-0.5 border-2 ${
                   activeTab === key
                     ? "bg-gradient-to-r from-white to-gray-50 text-orange-600 border-orange-200 shadow-orange-200/50"

@@ -16,6 +16,7 @@ import UserProtectedRouter from './components/protectedRouter/UserProtectedRoute
 import SuperAdminRegister from './pages/superAdmin/SuperAdminRegister'
 import SuperAdminLogin from './pages/superAdmin/SuperAdminLogin'
 import SuperAdminDashboard from './pages/superAdmin/SuperAdminDashboard'
+import Hotel from './components/Hotel'
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
     <Navbar/>
     <Routes>
       <Route path='/' element={<LandingPage/>}/>
+      <Route path='/hotels' element={<Hotel/>}/>
       <Route path='/signUp' element={<Register/>}/>
       <Route path='/verifyEmail' element={<VerifyEmail/>}/>
       <Route path='/verify/:token' element={<Verify/>}/>
