@@ -12,6 +12,7 @@ import {
   searchHotels,
   setQuery,
 } from "../features/user/searchSlice";
+import { RxDashboard } from "react-icons/rx";
 import { superAdminLogout } from "../features/auth/superAdminAuthSlice";
 import { getSuperAdminData } from "../features/user/superAdminSlice";
 
@@ -277,6 +278,7 @@ function Navbar() {
                             Super Admin Profile
                           </Link>
                         ) : null}
+
                         {token ? (
                           <Link
                             to="/trips"
@@ -295,7 +297,17 @@ function Navbar() {
                             Wishlist
                           </Link>
                         ) : null}
-
+                        {
+                          superAdmin?.role === "super_admin" ? (
+                            <Link
+                            to="/superAdmin/superAdminDashboard"
+                            className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
+                          >
+                            <span><RxDashboard /></span>
+                            Dashboard
+                          </Link>
+                          ) : null
+                        }
                         <Link
                           to="/settings"
                           className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
