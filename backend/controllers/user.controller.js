@@ -23,7 +23,7 @@ export const userRegistration = async (req, res) => {
         message: "All fields are required",
       });
     }
-
+    
     const userExistance = await User.findOne({ email });
     if (userExistance) {
       return res.status(400).json({
@@ -501,10 +501,10 @@ export const updateSuperAdminProfile = async (req, res) => {
 
 export const createAdminRegistration = async (req, res) => {
   try {
-    const { userName, email, contactNumber, password } = req.body || {};
+    const { userName, email, contactNumber, password, host } = req.body || {};
 
     if (
-      [userName, email, contactNumber, password].some(
+      [userName, email, contactNumber, password, host ].some(
         (field) => !field || field.trim() === ""
       )
     ) {
@@ -513,6 +513,12 @@ export const createAdminRegistration = async (req, res) => {
         message: "All fields are required",
       });
     }
+
+     // validate host value
+    const allowedHosts = ["hotel", "restaurant", "travelOption", "driver"];
+    if (!allowedHosts.includes(host)){
+      return res.status(400).json({success: false, message: `Host must be one of: ${allowedHosts.join(", ")}`})
+    }    
 
     const userExistance = await User.findOne({ email });
     if (userExistance) {
@@ -531,9 +537,19 @@ export const createAdminRegistration = async (req, res) => {
       password: hashedPassword,
       avatar: null,
       role: "admin",
+      host,
       isActive: false,
       isVerified: false,
     });
+
+    const token = jwt.sign({ id: admin._id }, process.env.SECRET_KET, {
+      expiresIn: "1d",
+    });
+    admin.token = token;
+    verifyEmail(email, token);
+    
+    await admin.save()
+    console.log(token);
 
     return res.status(201).json({
       success: true,
@@ -701,7 +717,7 @@ export const approveAdmin = async (req, res) => {
     }
 
     admin.isActive = true;
-    admin.isVerified = true;
+    admin.status = "approved";
 
     await admin.save();
 

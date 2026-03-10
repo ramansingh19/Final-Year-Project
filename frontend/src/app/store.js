@@ -4,6 +4,7 @@ import userReducer from '../features/user/userSlice'
 import superAdminAuthReducer from "../features/auth/superAdminAuthSlice";
 import searchReducer from '../features/user/searchSlice'
 import superAdminReducer from "../features/user/superAdminSlice";
+import adminAuthReducer from "../features/auth/adminAuthSlice";
 
 
 export const store = configureStore({
@@ -12,6 +13,7 @@ export const store = configureStore({
     user: userReducer,
     superAdminAuth: superAdminAuthReducer,
     superAdmin: superAdminReducer,
+    adminAuth: adminAuthReducer,
     search : searchReducer
   }
 })
