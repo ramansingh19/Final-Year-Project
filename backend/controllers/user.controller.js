@@ -196,34 +196,6 @@ export const getUserProfile = async (req, res) => {
   }
 };
 
-export const getAllAdmins = async (req, res) => {
-  try {
-    // Fetch all users with role "admin"
-    const admins = await User.find({ role: "admin" }).select(
-      "-password" // Exclude password for security
-    );
-
-    if (!admins || admins.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "No admins found",
-      });
-    }
-
-    return res.status(200).json({
-      success: true,
-      message: "Admins fetched successfully",
-      admins,
-    });
-  } catch (error) {
-    console.error("Error fetching admins:", error.message);
-    return res.status(500).json({
-      success: false,
-      message: "Server error: " + error.message,
-    });
-  }
-};
-
 export const updateUserProfile = async (req, res) => {
   try {
     const userId = req.user?.id;
@@ -686,6 +658,22 @@ export const adminLogout = async (req, res) => {
   }
 };
 
+export const getAdminProfile = async (req, res) => {
+  try {
+    const adminId = req.user.id;
+    if (!adminId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "user is not found" });
+    }
+
+    const admin = await User.findById(adminId).select("-password")
+    return res.status(200).json({ success: true, admin });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+}
+
 export const updateAdminProfile = async (req, res) => {
   try {
     const userId = req.user?.id;
@@ -1128,6 +1116,34 @@ export const smartSearch = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: error.message,
+    });
+  }
+};
+
+export const getAllAdmins = async (req, res) => {
+  try {
+    // Fetch all users with role "admin"
+    const admins = await User.find({ role: "admin" }).select(
+      "-password" // Exclude password for security
+    );
+
+    if (!admins || admins.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No admins found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Admins fetched successfully",
+      admins,
+    });
+  } catch (error) {
+    console.error("Error fetching admins:", error.message);
+    return res.status(500).json({
+      success: false,
+      message: "Server error: " + error.message,
     });
   }
 };

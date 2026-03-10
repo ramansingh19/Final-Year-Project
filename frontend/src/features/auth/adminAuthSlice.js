@@ -85,6 +85,16 @@ export const adminLogin = createAsyncThunk(
   }
 );
 
+/* ------- Logout Admin ---------- */
+export const adminLogout = createAsyncThunk("admin/adminLogout", async (_, thunkAPI) => {
+  try {
+    const respone = await apiClient.delete("/api/admin/admin-logout")
+    return respone
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response?.data?.message || "Admin Logout Failed")
+  }
+})
+
 /* ---------- Slice ---------- */
 const adminAuthSlice = createSlice({
   name: "adminAuth",
@@ -96,7 +106,6 @@ const adminAuthSlice = createSlice({
       state.admin = null;
       state.isAuthenticated = false;
       state.role = null;
-
       localStorage.removeItem("adminToken");
     },
   },
@@ -178,6 +187,17 @@ const adminAuthSlice = createSlice({
         state.adminToken = null;
         state.isAuthenticated = false;
       });
+
+      /* ------- Logout Admin ---------- */
+      builder
+      .addCase(adminLogout.fulfilled, (state) => {
+        state.token = null;
+        state.superAdmin = null;
+        state.isAuthenticated = false;
+      
+        localStorage.removeItem("adminToken");
+      })
+
   },
 });
 

@@ -15,6 +15,8 @@ import {
 import { RxDashboard } from "react-icons/rx";
 import { superAdminLogout } from "../features/auth/superAdminAuthSlice";
 import { getSuperAdminData } from "../features/user/superAdminSlice";
+import { getAdminData } from "../features/user/adminSlice";
+import { adminLogout } from "../features/auth/adminAuthSlice";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,6 +35,8 @@ function Navbar() {
   );
   const {superAdmin} = useSelector((state) => state.superAdmin)
   const {adminToken} = useSelector((state) => state.adminAuth);
+  const {admin} = useSelector((state) => state.admin)
+
   const location = useLocation();
   const dropdownRef = useRef(null);
 
@@ -40,9 +44,10 @@ function Navbar() {
   // console.log(user);
   // console.log("superAdmin: ",superAdmin?.role);
   // console.log("superAdmin: ",superAdmin);
-  console.log("adminToken ", adminToken);
+  // console.log("adminToken ", adminToken);
+  // console.log("admin: ", admin);
 
-  const currentUser =  user || superAdmin
+  const currentUser =  user || superAdmin || admin
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -118,6 +123,17 @@ function Navbar() {
     }
   };
 
+  const handelAdminLogout = async (e) => {
+    e.preventDefault();
+    try {
+      const result = await dispatch(adminLogout())
+      if(result.type === "admin/adminLogout/fulfilled")
+      navigate("/")
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   useEffect(() => {
     /* ---- get User Data ---- */
     if (token) {
@@ -127,6 +143,12 @@ function Navbar() {
     if(superAdminToken){
       dispatch(getSuperAdminData())
      }
+
+    /* ----- get Admin Data ---- */
+    if(adminToken){
+      dispatch(getAdminData())
+    }
+
   }, [token, dispatch, superAdminToken]);
 
   useEffect(() => {
@@ -181,7 +203,7 @@ function Navbar() {
             </div>
 
             {/*SEARCH BAR */}
-            {(superAdminToken || loginSuccess) ? (
+            {(superAdminToken || loginSuccess) || (adminToken) ? (
               null
             ) : (
               <div className="relative w-96 mr-30">
@@ -222,7 +244,7 @@ function Navbar() {
 
             {/* Desktop Auth */}
             <div className="hidden md:flex items-center space-x-4">
-              {!token && !(superAdminToken || loginSuccess) ? (
+              {!token && !(superAdminToken || loginSuccess) && !(adminToken) ? (
                 <>
                   <Link to="/loginPage">
                     <button className="px-5 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-50 hover:border-gray-400 transition-all duration-200">
@@ -279,6 +301,16 @@ function Navbar() {
                             </span>
                             Super Admin Profile
                           </Link>
+                        ) : adminToken ? (
+                          <Link
+                          to="/admin/adminProfile"
+                          className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-300"
+                        >
+                          <span className="bg-blue-400 rounded-full text-white">
+                            <FaRegUserCircle style={{ fontSize: "22px" }} />
+                          </span>
+                         Admin Profile
+                        </Link>
                         ) : null}
 
                         {token ? (
@@ -308,6 +340,14 @@ function Navbar() {
                             <span><RxDashboard /></span>
                             Dashboard
                           </Link>
+                          ) : admin?.role === "admin" ? (
+                            <Link
+                            to="/admin/adminDashboard"
+                            className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
+                          >
+                            <span><RxDashboard /></span>
+                            Dashboard
+                          </Link>
                           ) : null
                         }
                         <Link
@@ -325,7 +365,7 @@ function Navbar() {
                       {/* Logout */}
                       <button
                         type="button"
-                        onClick={token ? (handelUserLogout)  : superAdminToken ? (handeSuperAdminLogout) : null}
+                        onClick={token ? (handelUserLogout)  : superAdminToken ? (handeSuperAdminLogout) :   adminToken ? (handelAdminLogout) : null}
                         className="flex items-center gap-3 w-full text-left px-4 py-3 text-red-500 hover:bg-red-50 transition-colors"
                       >
                         <span>🚪</span>

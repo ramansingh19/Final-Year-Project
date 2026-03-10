@@ -23,7 +23,8 @@ import AdminApprovalPage from './pages/admin/AdminApprovalPage'
 import AdminLogin from './pages/admin/AdminLogin'
 import LoginPage from './pages/localPages/LoginPage'
 import AdminDashboard from './pages/admin/AdminDashboard'
-
+import AdminProfile from './pages/admin/AdminProfile'
+import AdminProtectedRouter from './components/protectedRouter/AdminProtectedRouter'
 
 
 function App() {
@@ -50,7 +51,8 @@ function App() {
       <Route path='/about' element={<About/>}/>
       <Route path='/admin/login' element={<AdminLogin/>}/>
       <Route path='/loginPage' element={<LoginPage/>}/>
-      <Route path='/admin/adminDashboard' element={<AdminDashboard/>}/>
+      <Route path='/admin/adminDashboard' element={<AdminProtectedRouter><AdminDashboard/></AdminProtectedRouter>}/>
+      <Route path='/admin/adminProfile' element={<AdminProtectedRouter><AdminProfile/></AdminProtectedRouter>}/>
     </Routes> 
     </>
   

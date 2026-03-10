@@ -12,6 +12,7 @@ import {
   updateAdminProfile,
   getSuperAdminProfile,
   getAllAdmins,
+  getAdminProfile,
 } from "../controllers/user.controller.js";
 import { upload } from "../middleware/multer.middleware.js";
 import { approveCity, getPendingCities, rejectCity } from "../controllers/city.controller.js";
@@ -70,6 +71,10 @@ adminRouter.patch(
   authorize("super_admin"),
   approveAdmin
 );
+
+// get admin Profile
+adminRouter.get("/admin-profile", isAuthenticated, getAdminProfile)
+
 
 // Logout admin
 adminRouter.post("/admin-login", adminLogin);
