@@ -29,13 +29,13 @@ function Navbar() {
   const [showHistory, setShowHistory] = useState(false);
   const searchRef = useRef(null);
   const { token } = useSelector((state) => state.auth);
-  const { user } = useSelector((state) => state.user);
+  const { user, loading } = useSelector((state) => state.user);
   const { superAdminToken, loginSuccess } = useSelector(
     (state) => state.superAdminAuth
   );
-  const {superAdmin} = useSelector((state) => state.superAdmin)
-  const {adminToken} = useSelector((state) => state.adminAuth);
-  const {admin} = useSelector((state) => state.admin)
+  const { superAdmin } = useSelector((state) => state.superAdmin);
+  const { adminToken } = useSelector((state) => state.adminAuth);
+  const { admin } = useSelector((state) => state.admin);
 
   const location = useLocation();
   const dropdownRef = useRef(null);
@@ -47,7 +47,7 @@ function Navbar() {
   // console.log("adminToken ", adminToken);
   // console.log("admin: ", admin);
 
-  const currentUser =  user || superAdmin || admin
+  const currentUser = user || superAdmin || admin;
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -110,14 +110,13 @@ function Navbar() {
 
   const handeSuperAdminLogout = async (e) => {
     e.preventDefault();
-  
+
     try {
       const result = await dispatch(superAdminLogout());
       // console.log(result);
       if (result.type === "auth/superAdminLogout/fulfilled") {
         navigate("/");
       }
-  
     } catch (error) {
       console.log(error);
     }
@@ -126,13 +125,12 @@ function Navbar() {
   const handelAdminLogout = async (e) => {
     e.preventDefault();
     try {
-      const result = await dispatch(adminLogout())
-      if(result.type === "admin/adminLogout/fulfilled")
-      navigate("/")
+      const result = await dispatch(adminLogout());
+      if (result.type === "admin/adminLogout/fulfilled") navigate("/");
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
     /* ---- get User Data ---- */
@@ -140,16 +138,20 @@ function Navbar() {
       dispatch(getUserData());
     }
     /* ---- get Super Admin Data ---- */
-    if(superAdminToken){
-      dispatch(getSuperAdminData())
-     }
-
-    /* ----- get Admin Data ---- */
-    if(adminToken){
-      dispatch(getAdminData())
+    if (superAdminToken) {
+      dispatch(getSuperAdminData());
     }
 
-  }, [token, dispatch, superAdminToken]);
+    /* ----- get Admin Data ---- */
+    if (adminToken) {
+      dispatch(getAdminData());
+    }
+
+    /* ---- close location form section ---- */
+    if (loading === false) {
+      setShowLocationSection(false);
+    }
+  }, [token, dispatch, superAdminToken, setShowLocationSection, loading]);
 
   useEffect(() => {
     setProfileOpen(false);
@@ -186,26 +188,46 @@ function Navbar() {
               </Link>
 
               {/* Location */}
-              {token && (
-                <div className="flex items-center gap-1 px-3 py-1 rounded-lg">
-                  <GrLocationPin style={{ fontSize: "22px", color: "red" }} />
+              {token ||
+                (adminToken && (
+                  <div className="flex items-center gap-1 px-3 py-1 rounded-lg">
+                    <GrLocationPin style={{ fontSize: "22px", color: "red" }} />
 
-                  <button
-                    onClick={() => setShowLocationSection(true)}
-                    className="text-sm font-medium text-blue-700 hover:text-blue-900 transition"
+                    <button
+                      onClick={() => setShowLocationSection(true)}
+                      className="text-sm font-medium text-blue-700 hover:text-blue-900 transition"
+                    >
+                      {currentUser?.location?.city
+                        ? `${currentUser.location.city}, ${currentUser.location.state}`
+                        : "Add Location"}
+                    </button>
+                  </div>
+                ))}
+            </div>
+
+            {/* SUPER ADMIN NAV LINKS */}
+            <div>
+              {superAdmin?.role === "super_admin" && (
+                <div className="flex items-center gap-6 ml-8">
+                  <Link
+                    to="/superAdmin/superAdminDashboard"
+                    className="text-gray-700 font-medium hover:text-blue-600"
                   >
-                    {user?.location?.city
-                      ? `${user.location.city}, ${user.location.state}`
-                      : "Add Location"}
-                  </button>
+                    Dashboard
+                  </Link>
+
+                  <Link
+                    to="/superAdmin/cityDashboard"
+                    className="text-gray-700 font-medium hover:text-blue-600"
+                  >
+                    City
+                  </Link>
                 </div>
               )}
             </div>
 
             {/*SEARCH BAR */}
-            {(superAdminToken || loginSuccess) || (adminToken) ? (
-              null
-            ) : (
+            {superAdminToken || loginSuccess || adminToken ? null : (
               <div className="relative w-96 mr-30">
                 <div className="flex items-center gap-3 bg-gray-100 px-3 py-2 rounded-xl">
                   <FiSearch className="text-gray-500 text-lg" />
@@ -244,7 +266,7 @@ function Navbar() {
 
             {/* Desktop Auth */}
             <div className="hidden md:flex items-center space-x-4">
-              {!token && !(superAdminToken || loginSuccess) && !(adminToken) ? (
+              {!token && !(superAdminToken || loginSuccess) && !adminToken ? (
                 <>
                   <Link to="/loginPage">
                     <button className="px-5 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-50 hover:border-gray-400 transition-all duration-200">
@@ -303,14 +325,14 @@ function Navbar() {
                           </Link>
                         ) : adminToken ? (
                           <Link
-                          to="/admin/adminProfile"
-                          className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-300"
-                        >
-                          <span className="bg-blue-400 rounded-full text-white">
-                            <FaRegUserCircle style={{ fontSize: "22px" }} />
-                          </span>
-                         Admin Profile
-                        </Link>
+                            to="/admin/adminProfile"
+                            className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-300"
+                          >
+                            <span className="bg-blue-400 rounded-full text-white">
+                              <FaRegUserCircle style={{ fontSize: "22px" }} />
+                            </span>
+                            Admin Profile
+                          </Link>
                         ) : null}
 
                         {token ? (
@@ -331,25 +353,27 @@ function Navbar() {
                             Wishlist
                           </Link>
                         ) : null}
-                        {
-                          superAdmin?.role === "super_admin" ? (
-                            <Link
+                        {superAdmin?.role === "super_admin" ? (
+                          <Link
                             to="/superAdmin/superAdminDashboard"
                             className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
                           >
-                            <span><RxDashboard /></span>
+                            <span>
+                              <RxDashboard />
+                            </span>
                             Dashboard
                           </Link>
-                          ) : admin?.role === "admin" ? (
-                            <Link
+                        ) : admin?.role === "admin" ? (
+                          <Link
                             to="/admin/adminDashboard"
                             className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
                           >
-                            <span><RxDashboard /></span>
+                            <span>
+                              <RxDashboard />
+                            </span>
                             Dashboard
                           </Link>
-                          ) : null
-                        }
+                        ) : null}
                         <Link
                           to="/settings"
                           className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
@@ -365,7 +389,15 @@ function Navbar() {
                       {/* Logout */}
                       <button
                         type="button"
-                        onClick={token ? (handelUserLogout)  : superAdminToken ? (handeSuperAdminLogout) :   adminToken ? (handelAdminLogout) : null}
+                        onClick={
+                          token
+                            ? handelUserLogout
+                            : superAdminToken
+                            ? handeSuperAdminLogout
+                            : adminToken
+                            ? handelAdminLogout
+                            : null
+                        }
                         className="flex items-center gap-3 w-full text-left px-4 py-3 text-red-500 hover:bg-red-50 transition-colors"
                       >
                         <span>🚪</span>

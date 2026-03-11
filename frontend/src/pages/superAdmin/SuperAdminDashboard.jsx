@@ -166,6 +166,25 @@ function SuperAdminDashboard() {
             <FaUserShield className="text-xl text-blue-600 dark:text-blue-300" />
           </div>
         </Link>
+
+        {/* add city details card */}
+        <Link
+          to="/superAdmin/createCity"
+          className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md hover:shadow-xl transition flex items-center justify-between hover:-translate-y-1"
+        >
+          <div>
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
+              Add City 
+            </h3>
+            <p className="text-sm text-gray-500">
+             Add City Details
+            </p>
+          </div>
+
+          <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-lg">
+            <FaUserShield className="text-xl text-blue-600 dark:text-blue-300" />
+          </div>
+        </Link>
       </div>
     </div>
   );

@@ -12,7 +12,7 @@ import { authorize, isAuthenticated } from "../middleware/auth.middleware.js";
 const hotelRouter = express.Router();
 
 //private routes
-hotelRouter.post("/",isAuthenticated, authorize("admin") , upload.array("images", 5), createHotel);
+hotelRouter.post("/create-hotel",isAuthenticated, authorize("admin") , upload.array("images", 5), createHotel);
 hotelRouter.put("/:id",isAuthenticated, authorize("admin"), upload.array("images", 5), updateHotel);
 hotelRouter.delete("/:id",isAuthenticated, authorize("admin"), deleteHotel);
 
