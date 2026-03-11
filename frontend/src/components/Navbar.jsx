@@ -17,6 +17,7 @@ import { superAdminLogout } from "../features/auth/superAdminAuthSlice";
 import { getSuperAdminData } from "../features/user/superAdminSlice";
 import { getAdminData } from "../features/user/adminSlice";
 import { adminLogout } from "../features/auth/adminAuthSlice";
+import { FaUserShield } from "react-icons/fa";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -222,6 +223,16 @@ function Navbar() {
                   >
                     City
                   </Link>
+
+                  <div className="flex flex-row items-center justify-center gap-1 border-2 border-blue-500 p-1 rounded-2xl hover:bg-blue-500 group cursor-pointer">
+                    <FaUserShield className="text-xl text-blue-600 dark:text-blue-300 group-hover:text-white transition-colors duration-200" />
+                    <Link
+                      to="/superadmin/adminApprovel"
+                      className="text-gray-700 font-medium group-hover:text-white transition-colors duration-200"
+                    >
+                      Admin Approval
+                    </Link>
+                  </div>
                 </div>
               )}
             </div>

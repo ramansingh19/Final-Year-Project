@@ -24,9 +24,14 @@ function AdminApprovalPage() {
 
   return (
     <div className="p-6 bg-gray-100 dark:bg-gray-900 min-h-screen">
-      <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-6">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 md:flex-row gap-6 mb-6">
+      <h2 className="text-3xl font-bold text-gray-800 dark:text-white ">
         Admin Approval
       </h2>
+      <p className="text-sm text-gray-500">
+       Approve or reject admin accounts
+     </p>
+      </div>
 
       {loading && <p className="text-blue-500">Loading admins...</p>}
       {error && <p className="text-red-500">{error}</p>}

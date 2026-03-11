@@ -27,6 +27,7 @@ import AdminProfile from './pages/admin/AdminProfile'
 import AdminProtectedRouter from './components/protectedRouter/AdminProtectedRouter'
 import AddCityDetails from './pages/superAdmin/city/AddCityDetails'
 import CityDashboard from './pages/superAdmin/city/CityDashboard'
+import UpdateCityDetails from './pages/superAdmin/city/UpdateCityDetails'
 
 
 function App() {
@@ -55,8 +56,9 @@ function App() {
       <Route path='/loginPage' element={<LoginPage/>}/>
       <Route path='/admin/adminDashboard' element={<AdminProtectedRouter><AdminDashboard/></AdminProtectedRouter>}/>
       <Route path='/admin/adminProfile' element={<AdminProtectedRouter><AdminProfile/></AdminProtectedRouter>}/>
-      <Route path='/superAdmin/createCity' element={<SuperAdminProtectedRouter><AddCityDetails/></SuperAdminProtectedRouter>}/>
       <Route path='/superAdmin/cityDashboard' element={<SuperAdminProtectedRouter><CityDashboard/></SuperAdminProtectedRouter>}/>
+      <Route path='/superAdmin/createCity' element={<SuperAdminProtectedRouter><AddCityDetails/></SuperAdminProtectedRouter>}/>
+      <Route path='/superAdmin/updateCity' element={<SuperAdminProtectedRouter><UpdateCityDetails/></SuperAdminProtectedRouter>}/>
     </Routes> 
     </>
   
