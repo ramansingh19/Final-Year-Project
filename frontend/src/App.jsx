@@ -28,6 +28,7 @@ import AdminProtectedRouter from './components/protectedRouter/AdminProtectedRou
 import AddCityDetails from './pages/superAdmin/city/AddCityDetails'
 import CityDashboard from './pages/superAdmin/city/CityDashboard'
 import UpdateCityDetails from './pages/superAdmin/city/UpdateCityDetails'
+import SuperAdminCityList from './pages/superAdmin/city/SuperAdminCityList'
 
 
 function App() {
@@ -59,6 +60,7 @@ function App() {
       <Route path='/superAdmin/cityDashboard' element={<SuperAdminProtectedRouter><CityDashboard/></SuperAdminProtectedRouter>}/>
       <Route path='/superAdmin/createCity' element={<SuperAdminProtectedRouter><AddCityDetails/></SuperAdminProtectedRouter>}/>
       <Route path='/superAdmin/updateCity' element={<SuperAdminProtectedRouter><UpdateCityDetails/></SuperAdminProtectedRouter>}/>
+      <Route path='/superAdmin/superAdminCityList' element={<SuperAdminProtectedRouter><SuperAdminCityList/></SuperAdminProtectedRouter>}/>
     </Routes> 
     </>
   

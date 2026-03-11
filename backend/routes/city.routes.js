@@ -21,8 +21,6 @@ cityRouter.post(
   authorize("super_admin"), upload.array("images", 5), createCity,
 );
 
-
-
 // Admin updates city
 cityRouter.put(
   "/updatecity/:id",

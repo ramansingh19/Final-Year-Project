@@ -5,7 +5,7 @@ import { getAllAdmin, updateAdminStatus } from "../../features/auth/adminAuthSli
 function AdminApprovalPage() {
   const dispatch = useDispatch();
   const { admins, loading, error } = useSelector((state) => state.adminAuth);
-  console.log(admins);
+  // console.log(admins);
 
   const [actionLoading, setActionLoading] = useState({});
   const [selectedAdmin, setSelectedAdmin] = useState(null); // popup state
