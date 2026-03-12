@@ -107,7 +107,7 @@ const userSlice = createSlice({
         state.profileUpdated = false
       })
 
-      /* ------------------- getUserLocation ------------------------- */
+      /* ------------------- updateUserLocation ------------------------- */
       builder
       .addCase(updateUserLocation.pending, (state) => {
         state.loading = true;

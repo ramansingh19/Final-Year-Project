@@ -31,6 +31,11 @@ const userSchema = new mongoose.Schema(
       default: "admin",
     },
 
+    host: {
+      type: String,
+      enum: ["hotel", "restaurant", "travelOption", "driver"]
+    }, 
+
     avatar: {
       type: String,
       default: null,

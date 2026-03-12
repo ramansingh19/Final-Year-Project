@@ -3,6 +3,7 @@ import {
   createCity,
   deleteCity,
   getActiveCities,
+  getAllCities,
   getCityById,
   getNearbyCities,
   updateCity,
@@ -16,21 +17,16 @@ const cityRouter = express.Router();
 
 // Admin creates city
 cityRouter.post(
-  "/",
+  "/create-city",
   isAuthenticated,
-  authorize("super_admin" , "admin"), upload.array("images", 5),
-  authorize("admin"),
-  upload.array("images", 5),
-  createCity,
+  authorize("super_admin"), upload.array("images", 5), createCity,
 );
-
-
 
 // Admin updates city
 cityRouter.put(
   "/updatecity/:id",
   isAuthenticated,
-  authorize("admin"),
+  authorize("super_admin"),
   upload.array("images", 5),
   updateCity,
 );
@@ -44,7 +40,7 @@ cityRouter.delete(
 );
 
 /* ------------ PUBLIC ROUTES ------------ */
-
+cityRouter.get("/get-allcities", getAllCities);
 cityRouter.get("/activecity", getActiveCities);
 cityRouter.get("/nearby", getNearbyCities);
 cityRouter.get("/getcity/:id", getCityById);

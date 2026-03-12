@@ -3,7 +3,7 @@ import apiClient from "../../pages/services/apiClient";
 
 /* --------------- Initial State ------------- */
 const initialState = {
-  token : localStorage.getItem("token") || null,
+  superAdminToken : localStorage.getItem("superAdminToken") || null,
   isAuthenticated: false,
   role: null,
   superAdmin: null,
@@ -31,15 +31,33 @@ export const superAdminRegister = createAsyncThunk("auth/superAdminRegister", as
 })
 
 /* ---------- superAdminLogin ------------ */
-export const superAdminLogin = createAsyncThunk("/auth/superAdminLogin", async (data, thunkAPI) => {
+export const superAdminLogin = createAsyncThunk(
+  "auth/superAdminLogin",
+  async (data, thunkAPI) => {
+    try {
+      const response = await apiClient.post(
+        "/api/admin/super-admin-login",
+        data
+      );
+      return {
+        superAdminToken: response.accessToken,
+        user: response.superAdmin,
+      };
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Super admin login failed"
+      );
+    }
+  }
+);
+
+/* -------- superAdminLogOut ---------- */
+export const superAdminLogout = createAsyncThunk("auth/superAdminLogout", async (_, thunkAPI) => {
   try {
-    const response = await apiClient.post("/api/admin/super-admin-login", data);
-
-    localStorage.setItem("token", response.accessToken);
-
+   const response = await apiClient.delete("/api/admin/super-admin-logout");
     return response
   } catch (error) {
-    return thunkAPI.rejectWithValue(error.response?.data?.message || "Super admin login failed")
+    return thunkAPI.rejectWithValue(error.response?.data?.message || "Super Admin Logout Failed")
   }
 })
 
@@ -50,10 +68,11 @@ const superAdminAuthSlice = createSlice({
 
   reducers:{
     logout(state){
-      state.token = null,
-      state.isAuthenticated = false,
-      state.role = null,
-      localStorage.removeItem("token")
+      state.superAdminToken = null;
+      state.superAdmin = null;
+      state.isAuthenticated = false;
+      state.role = null;
+      localStorage.removeItem("superAdminToken");
     },
     clearAuthError(state){
       state.error = null
@@ -94,16 +113,30 @@ const superAdminAuthSlice = createSlice({
     .addCase(superAdminLogin.fulfilled, (state, action) => {
       state.loading = false;
       state.loginSuccess = true;
-      state.error = null;
       state.isAuthenticated = true;
-      state.token = action.payload.accessToken;
-      state.user = action.payload?.user || null
+      state.role = "super_admin";
+    
+      state.superAdminToken = action.payload.token;
+      state.superAdmin = action.payload.user;
+    
+      localStorage.setItem("superAdminToken", action.payload.superAdminToken);
+
     })
 
     .addCase(superAdminLogin.rejected, (state, action) => {
      state.loading = false,
      state.loginSuccess = false,
      state.error = action.payload
+    })
+
+    /* -------- superAdminLogOut ---------- */
+    builder
+    .addCase(superAdminLogout.fulfilled, (state) => {
+      state.token = null;
+      state.superAdmin = null;
+      state.isAuthenticated = false;
+    
+      localStorage.removeItem("superAdminToken");
     })
 
 

@@ -5,7 +5,7 @@ import axios from "axios";
 
 /* -------------- Initial State ---------------- */
 const initialState = {
-    token: localStorage.getItem("token") || null,
+    token: localStorage.getItem("userToken") || null,
     isAuthenticated: false,
     role: null,
     user: null,
@@ -20,10 +20,12 @@ const initialState = {
 /* -------------- User Registration ------------------- */
 export const register = createAsyncThunk("auth/register", async (data, thunkAPI) => {
   try {
-    const response = await apiClient.post("/api/user/user-registration", data, 
-      
-    )
-    return response.data
+    const response = await apiClient.post("/api/user/user-registration", data, {
+      headers:{
+        "Content-Type": "multipart/form-data"
+      }
+    })
+    return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || "Registration failed")
   }
@@ -50,7 +52,7 @@ export const userLogin = createAsyncThunk(
     try {
       const response = await apiClient.post("/api/user/user-login", userData);
 
-      localStorage.setItem("token", response.accessToken);
+      localStorage.setItem("userToken", response.accessToken);
 
       return response;
 
@@ -68,7 +70,7 @@ export const userLogin = createAsyncThunk(
 export const userLogout = createAsyncThunk("auth/userLogout", async (_, thunkAPI) => {
   try {
     await apiClient.delete("/api/user/user-logout")
-    localStorage.removeItem("token" )
+    localStorage.removeItem("userToken" )
     return true
   } catch (error) {
     console.log("LOGOUT ERROR:", error.response);
@@ -117,7 +119,7 @@ const authSlice = createSlice({
       state.token = null,
       state.isAuthenticated = false,
       state.role = null,
-      localStorage.removeItem("token")
+      localStorage.removeItem("userToken")
     },
     clearAuthError(state){
       state.error = null

@@ -7,7 +7,17 @@ import { FaRegUserCircle } from "react-icons/fa";
 import { GrLocationPin } from "react-icons/gr";
 import UpdateUserLocation from "./UpdateUserLocation";
 import { FiSearch } from "react-icons/fi";
-import { addHistory, searchHotels, setQuery } from "../features/user/searchSlice";
+import {
+  addHistory,
+  searchHotels,
+  setQuery,
+} from "../features/user/searchSlice";
+import { RxDashboard } from "react-icons/rx";
+import { superAdminLogout } from "../features/auth/superAdminAuthSlice";
+import { getSuperAdminData } from "../features/user/superAdminSlice";
+import { getAdminData } from "../features/user/adminSlice";
+import { adminLogout } from "../features/auth/adminAuthSlice";
+import { FaUserShield } from "react-icons/fa";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,22 +25,30 @@ function Navbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showLocationSection, setShowLocationSection] = useState(false);
-
   //Search
   const { query, history } = useSelector((state) => state.search);
   const [showHistory, setShowHistory] = useState(false);
   const searchRef = useRef(null);
+  const { token } = useSelector((state) => state.auth);
+  const { user, loading } = useSelector((state) => state.user);
+  const { superAdminToken, loginSuccess } = useSelector(
+    (state) => state.superAdminAuth
+  );
+  const { superAdmin } = useSelector((state) => state.superAdmin);
+  const { adminToken } = useSelector((state) => state.adminAuth);
+  const { admin } = useSelector((state) => state.admin);
 
-  const handleSearch = (search) => {
-  if (!search.trim()) return;
+  const location = useLocation();
+  const dropdownRef = useRef(null);
 
-  dispatch(searchHotels(search)); // fake backend call
-  dispatch(addHistory(search));   
-  dispatch(setQuery(search));    
+  // console.log("user: ", user?.role);
+  // console.log(user);
+  // console.log("superAdmin: ",superAdmin?.role);
+  // console.log("superAdmin: ",superAdmin);
+  // console.log("adminToken ", adminToken);
+  // console.log("admin: ", admin);
 
-
-  setShowHistory(false);
-};
+  const currentUser = user || superAdmin || admin;
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -44,14 +62,27 @@ function Navbar() {
     };
   }, []);
 
+  const handleSearch = (search) => {
+    if (!search.trim()) return;
 
+    dispatch(searchHotels(search)); // fake backend call
+    dispatch(addHistory(search));
+    dispatch(setQuery(search));
 
-  const { token } = useSelector((state) => state.auth);
-  const { user } = useSelector((state) => state.user);
-  // console.log(user.location.state);
+    setShowHistory(false);
+  };
 
-  const location = useLocation();
-  const dropdownRef = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowHistory(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   const getInitials = (name = "User") => {
     if (typeof name !== "string") return "U";
@@ -66,7 +97,7 @@ function Navbar() {
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
-  const handelLogout = async (e) => {
+  const handelUserLogout = async (e) => {
     e.preventDefault();
     try {
       const result = await dispatch(userLogout());
@@ -78,23 +109,62 @@ function Navbar() {
     }
   };
 
+  const handeSuperAdminLogout = async (e) => {
+    e.preventDefault();
+
+    try {
+      const result = await dispatch(superAdminLogout());
+      // console.log(result);
+      if (result.type === "auth/superAdminLogout/fulfilled") {
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handelAdminLogout = async (e) => {
+    e.preventDefault();
+    try {
+      const result = await dispatch(adminLogout());
+      if (result.type === "admin/adminLogout/fulfilled") navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
+    /* ---- get User Data ---- */
     if (token) {
       dispatch(getUserData());
     }
-  }, [token, dispatch]);
+    /* ---- get Super Admin Data ---- */
+    if (superAdminToken) {
+      dispatch(getSuperAdminData());
+    }
+
+    /* ----- get Admin Data ---- */
+    if (adminToken) {
+      dispatch(getAdminData());
+    }
+
+    /* ---- close location form section ---- */
+    if (loading === false) {
+      setShowLocationSection(false);
+    }
+  }, [token, dispatch, superAdminToken, setShowLocationSection, loading]);
 
   useEffect(() => {
     setProfileOpen(false);
+    setShowHistory(false);
 
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setProfileOpen(false);
+        setShowHistory(false);
       }
     }
-
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -119,63 +189,97 @@ function Navbar() {
               </Link>
 
               {/* Location */}
-              {token && (
-                <div className="flex items-center gap-1 px-3 py-1 rounded-lg">
-                  <GrLocationPin style={{ fontSize: "22px", color: "red" }} />
+              {token ||
+                (adminToken && (
+                  <div className="flex items-center gap-1 px-3 py-1 rounded-lg">
+                    <GrLocationPin style={{ fontSize: "22px", color: "red" }} />
 
-                  <button
-                    onClick={() => setShowLocationSection(true)}
-                    className="text-sm font-medium text-blue-700 hover:text-blue-900 transition"
-                  >
-                    {user?.location?.city
-                      ? `${user.location.city}, ${user.location.state}`
-                      : "Add Location"}
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/*SEARCH BAR */}           
-            <div className="relative w-96 mr-30">
-              <div className="flex items-center gap-3 bg-gray-100 px-3 py-2 rounded-xl">
-                <FiSearch className="text-gray-500 text-lg" />
-
-                <input
-                  type="text"
-                  value={query}
-                  placeholder="Search for Cities, Hotels & more"
-                  className="bg-transparent outline-none text-sm flex-1"
-                  onFocus={() => setShowHistory(true)}
-                  onChange={(e) => dispatch(setQuery(e.target.value))}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      handleSearch(query);
-                    }
-                  }}
-                />
-              </div>
-
-              {showHistory && history.length > 0 && (
-                <div className="absolute top-12 left-0 w-full bg-white shadow-lg rounded-xl border border-gray-200 overflow-hidden">
-                  {history.map((item, index) => (
-                    <div
-                      key={index}
-                      onClick={() => handleSearch(item)}
-                      className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    <button
+                      onClick={() => setShowLocationSection(true)}
+                      className="text-sm font-medium text-blue-700 hover:text-blue-900 transition"
                     >
-                      <FiSearch className="text-gray-400" />
-                      <span className="text-sm text-gray-700">{item}</span>
-                    </div>
-                  ))}
+                      {currentUser?.location?.city
+                        ? `${currentUser.location.city}, ${currentUser.location.state}`
+                        : "Add Location"}
+                    </button>
+                  </div>
+                ))}
+            </div>
+
+            {/* SUPER ADMIN NAV LINKS */}
+            <div>
+              {superAdmin?.role === "super_admin" && (
+                <div className="flex items-center gap-6 ml-8">
+                  <Link
+                    to="/superAdmin/superAdminDashboard"
+                    className="text-gray-700 font-medium hover:text-blue-600"
+                  >
+                    Dashboard
+                  </Link>
+
+                  <Link
+                    to="/superAdmin/cityDashboard"
+                    className="text-gray-700 font-medium hover:text-blue-600"
+                  >
+                    City
+                  </Link>
+
+                  <div className="flex flex-row items-center justify-center gap-1 border-2 border-blue-500 p-1 rounded-2xl hover:bg-blue-500 group cursor-pointer">
+                    <FaUserShield className="text-xl text-blue-600 dark:text-blue-300 group-hover:text-white transition-colors duration-200" />
+                    <Link
+                      to="/superadmin/adminApprovel"
+                      className="text-gray-700 font-medium group-hover:text-white transition-colors duration-200"
+                    >
+                      Admin Approval
+                    </Link>
+                  </div>
                 </div>
               )}
             </div>
+
+            {/*SEARCH BAR */}
+            {superAdminToken || loginSuccess || adminToken ? null : (
+              <div className="relative w-96 mr-30">
+                <div className="flex items-center gap-3 bg-gray-100 px-3 py-2 rounded-xl">
+                  <FiSearch className="text-gray-500 text-lg" />
+
+                  <input
+                    type="text"
+                    value={query}
+                    placeholder="Search for Cities, Hotels & more"
+                    className="bg-transparent outline-none text-sm flex-1"
+                    onFocus={() => setShowHistory(true)}
+                    onChange={(e) => dispatch(setQuery(e.target.value))}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleSearch(query);
+                      }
+                    }}
+                  />
+                </div>
+
+                {showHistory && history.length > 0 && (
+                  <div className="absolute top-12 left-0 w-full bg-white shadow-lg rounded-xl border border-gray-200 overflow-hidden">
+                    {history.map((item, index) => (
+                      <div
+                        key={index}
+                        onClick={() => handleSearch(item)}
+                        className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                      >
+                        <FiSearch className="text-gray-400" />
+                        <span className="text-sm text-gray-700">{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Desktop Auth */}
             <div className="hidden md:flex items-center space-x-4">
-              {!token ? (
+              {!token && !(superAdminToken || loginSuccess) && !adminToken ? (
                 <>
-                  <Link to="/login">
+                  <Link to="/loginPage">
                     <button className="px-5 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-50 hover:border-gray-400 transition-all duration-200">
                       Login
                     </button>
@@ -194,10 +298,10 @@ function Navbar() {
                     onClick={() => setProfileOpen(!profileOpen)}
                     className="w-10 h-10 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center border overflow-hidden"
                   >
-                    {user?.avatar ? (
+                    {currentUser?.avatar ? (
                       <img
-                        src={user.avatar}
-                        alt={user.userName || "User"}
+                        src={currentUser.avatar}
+                        alt={currentUser.userName || "User"}
                         className="w-full h-full object-cover"
                       />
                     ) : (
@@ -210,32 +314,77 @@ function Navbar() {
                     <div className="absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden transform transition-all duration-300 ease-out animate-dropdown">
                       {/* Menu Items */}
                       <div className="py-2">
-                        <Link
-                          to="/user-profile"
-                          className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-300"
-                        >
-                          <span className="bg-blue-400 rounded-full text-white">
-                            <FaRegUserCircle style={{ fontSize: "22px" }} />
-                          </span>
-                          My Profile
-                        </Link>
+                        {token ? (
+                          <Link
+                            to="/user-profile"
+                            className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-300"
+                          >
+                            <span className="bg-blue-400 rounded-full text-white">
+                              <FaRegUserCircle style={{ fontSize: "22px" }} />
+                            </span>
+                            User Profile
+                          </Link>
+                        ) : superAdminToken ? (
+                          <Link
+                            to="/superAdmin/superAdminProfile"
+                            className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-300"
+                          >
+                            <span className="bg-blue-400 rounded-full text-white">
+                              <FaRegUserCircle style={{ fontSize: "22px" }} />
+                            </span>
+                            Super Admin Profile
+                          </Link>
+                        ) : adminToken ? (
+                          <Link
+                            to="/admin/adminProfile"
+                            className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-300"
+                          >
+                            <span className="bg-blue-400 rounded-full text-white">
+                              <FaRegUserCircle style={{ fontSize: "22px" }} />
+                            </span>
+                            Admin Profile
+                          </Link>
+                        ) : null}
 
-                        <Link
-                          to="/trips"
-                          className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
-                        >
-                          <span>🧳</span>
-                          My Trips
-                        </Link>
-
-                        <Link
-                          to="/wishlist"
-                          className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
-                        >
-                          <span>❤️</span>
-                          Wishlist
-                        </Link>
-
+                        {token ? (
+                          <Link
+                            to="/trips"
+                            className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
+                          >
+                            <span>🧳</span>
+                            My Trips
+                          </Link>
+                        ) : null}
+                        {token ? (
+                          <Link
+                            to="/wishlist"
+                            className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
+                          >
+                            <span>❤️</span>
+                            Wishlist
+                          </Link>
+                        ) : null}
+                        {superAdmin?.role === "super_admin" ? (
+                          <Link
+                            to="/superAdmin/superAdminDashboard"
+                            className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
+                          >
+                            <span>
+                              <RxDashboard />
+                            </span>
+                            Dashboard
+                          </Link>
+                        ) : admin?.role === "admin" ? (
+                          <Link
+                            to="/admin/adminDashboard"
+                            className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
+                          >
+                            <span>
+                              <RxDashboard />
+                            </span>
+                            Dashboard
+                          </Link>
+                        ) : null}
                         <Link
                           to="/settings"
                           className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
@@ -251,7 +400,15 @@ function Navbar() {
                       {/* Logout */}
                       <button
                         type="button"
-                        onClick={handelLogout}
+                        onClick={
+                          token
+                            ? handelUserLogout
+                            : superAdminToken
+                            ? handeSuperAdminLogout
+                            : adminToken
+                            ? handelAdminLogout
+                            : null
+                        }
                         className="flex items-center gap-3 w-full text-left px-4 py-3 text-red-500 hover:bg-red-50 transition-colors"
                       >
                         <span>🚪</span>

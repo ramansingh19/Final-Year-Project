@@ -10,9 +10,9 @@ function SuperAdminLogin() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { loading, error, loginSuccess } = useSelector(
-    (state) => state.superAdminAuth
-  );
+  const { loading, error, loginSuccess, superAdminToken } = useSelector(
+    (state) => state.superAdminAuth);
+  const token = localStorage.getItem("superAdminToken");
 
   const [formData, setFormData] = useState({
     email: "",

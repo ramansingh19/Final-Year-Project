@@ -10,6 +10,9 @@ import {
   createAdminRegistration,
   updateSuperAdminProfile,
   updateAdminProfile,
+  getSuperAdminProfile,
+  getAllAdmins,
+  getAdminProfile,
 } from "../controllers/user.controller.js";
 import { upload } from "../middleware/multer.middleware.js";
 import { approveCity, getPendingCities, rejectCity } from "../controllers/city.controller.js";
@@ -38,6 +41,9 @@ adminRouter.delete(
   superAdminLogout
 );
 
+// get Super Admin Profile
+adminRouter.get("/superAdmin-profile", isAuthenticated, getSuperAdminProfile)
+
 // update Super Admin Profile
 adminRouter.put(
   "/update-super-admin-profile",
@@ -55,6 +61,9 @@ adminRouter.post(
   createAdminRegistration
 );
 
+// get all admins
+adminRouter.get("/getAllAdmins", isAuthenticated, authorize("super_admin"), getAllAdmins)
+
 // Verification of Admin Account by Super Admin
 adminRouter.patch(
   "/approve-admin/:adminId",
@@ -62,6 +71,10 @@ adminRouter.patch(
   authorize("super_admin"),
   approveAdmin
 );
+
+// get admin Profile
+adminRouter.get("/admin-profile", isAuthenticated, getAdminProfile)
+
 
 // Logout admin
 adminRouter.post("/admin-login", adminLogin);

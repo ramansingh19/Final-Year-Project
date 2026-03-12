@@ -16,7 +16,27 @@ import UserProtectedRouter from './components/protectedRouter/UserProtectedRoute
 import SuperAdminRegister from './pages/superAdmin/SuperAdminRegister'
 import SuperAdminLogin from './pages/superAdmin/SuperAdminLogin'
 import SuperAdminDashboard from './pages/superAdmin/SuperAdminDashboard'
+
 import HotelPage from './pages/auth/HotelPage'
+
+
+import SuperAdminProtectedRouter from './components/protectedRouter/SuperAdminProtectedRouter'
+// import Hotel from './components/Hotel'
+import SuperAdminProfile from './pages/superAdmin/SuperAdminProfile'
+import AdminApprovalPage from './pages/admin/AdminApprovalPage'
+import AdminLogin from './pages/admin/AdminLogin'
+import LoginPage from './pages/localPages/LoginPage'
+import AdminDashboard from './pages/admin/AdminDashboard'
+import AdminProfile from './pages/admin/AdminProfile'
+import AdminProtectedRouter from './components/protectedRouter/AdminProtectedRouter'
+import AddCityDetails from './pages/superAdmin/city/AddCityDetails'
+import CityDashboard from './pages/superAdmin/city/CityDashboard'
+import UpdateCityDetails from './pages/superAdmin/city/UpdateCityDetails'
+// import SuperAdminCityList from './pages/superAdmin/city/SuperAdminApprovealCityList'
+import GetCityById from './pages/superAdmin/city/GetCityById'
+import SuperAdminApprovealCityList from './pages/superAdmin/city/SuperAdminApprovealCityList'
+import GetAllCities from './pages/superAdmin/city/GetAllCities'
+import GetAllActiveCities from './pages/superAdmin/city/GetAllActiveCities'
 
 
 
@@ -38,8 +58,22 @@ function App() {
       <Route path='/user-profile' element={<UserProtectedRouter><UserProfile/></UserProtectedRouter>} />
       <Route path='/superAdmin/signUp' element={<SuperAdminRegister/>}/>
       <Route path='/superAdmin/login' element={<SuperAdminLogin/>}/>
-      <Route path='/superAdmin/superAdminDashboard' element={<SuperAdminDashboard/>}/>
+      <Route path='/superAdmin/superAdminDashboard' element={<SuperAdminProtectedRouter><SuperAdminDashboard/></SuperAdminProtectedRouter>}/>
+      <Route path='/superAdmin/superAdminProfile' element={<SuperAdminProtectedRouter><SuperAdminProfile/></SuperAdminProtectedRouter>}/>
+      <Route path='/superadmin/adminApprovel' element={<SuperAdminProtectedRouter><AdminApprovalPage/></SuperAdminProtectedRouter>}/>
       <Route path='/about' element={<About/>}/>
+      <Route path='/admin/login' element={<AdminLogin/>}/>
+      <Route path='/loginPage' element={<LoginPage/>}/>
+      <Route path='/admin/adminDashboard' element={<AdminProtectedRouter><AdminDashboard/></AdminProtectedRouter>}/>
+      <Route path='/admin/adminProfile' element={<AdminProtectedRouter><AdminProfile/></AdminProtectedRouter>}/>
+      <Route path='/superAdmin/cityDashboard' element={<SuperAdminProtectedRouter><CityDashboard/></SuperAdminProtectedRouter>}/>
+      <Route path='/superAdmin/createCity' element={<SuperAdminProtectedRouter><AddCityDetails/></SuperAdminProtectedRouter>}/>
+      <Route path='/superAdmin/updateCity' element={<SuperAdminProtectedRouter><UpdateCityDetails/></SuperAdminProtectedRouter>}/>
+      <Route path='/superAdmin/SuperAdminApprovealCityList' element={<SuperAdminProtectedRouter><SuperAdminApprovealCityList/></SuperAdminProtectedRouter>}/>
+      <Route path='/superAdmin/getCityById/:id' element={<SuperAdminProtectedRouter><GetCityById/></SuperAdminProtectedRouter>}/>
+      <Route path='/superAdmin/get-all-cities' element={<SuperAdminProtectedRouter><GetAllCities/></SuperAdminProtectedRouter>}/>
+      <Route path='/superAdmin/get-all-active-cities' element={<SuperAdminProtectedRouter><GetAllActiveCities/></SuperAdminProtectedRouter>}/>
+
     </Routes> 
     </>
   
