@@ -105,6 +105,21 @@ function CityDashboard() {
   </Link>
 </div>
 
+  <div className="flex mt-6">
+  <Link
+    to="/superAdmin/get-all-inactive-cities"
+    className="w-60 p-5 bg-gray-100 rounded-xl shadow hover:shadow-lg hover:scale-105 transition flex flex-col items-center"
+  >
+    <span className="text-3xl mb-2 bg-green-400 p-1 rounded-sm text-white">
+      <FaCity />
+    </span>
+
+    <span className="font-semibold text-gray-700">
+      Show All Inactive Cities
+    </span>
+  </Link>
+</div>
+
     </div>
 
     </div>

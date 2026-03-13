@@ -5,6 +5,7 @@ import {
   getActiveCities,
   getAllCities,
   getCityById,
+  getInactiveCities,
   getNearbyCities,
   updateCity,
 } from "../controllers/city.controller.js";
@@ -38,6 +39,8 @@ cityRouter.delete(
   authorize("super_admin"),
   deleteCity,
 );
+
+cityRouter.get("/inactive-cities", isAuthenticated, authorize("super_admin"), getInactiveCities)
 
 /* ------------ PUBLIC ROUTES ------------ */
 cityRouter.get("/get-allcities", getAllCities);

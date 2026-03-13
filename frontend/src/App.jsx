@@ -33,6 +33,7 @@ import GetCityById from './pages/superAdmin/city/GetCityById'
 import SuperAdminApprovealCityList from './pages/superAdmin/city/SuperAdminApprovealCityList'
 import GetAllCities from './pages/superAdmin/city/GetAllCities'
 import GetAllActiveCities from './pages/superAdmin/city/GetAllActiveCities'
+import GetAllInactiveCities from './pages/superAdmin/city/GetAllInactiveCities'
 
 
 
@@ -68,6 +69,7 @@ function App() {
       <Route path='/superAdmin/getCityById/:id' element={<SuperAdminProtectedRouter><GetCityById/></SuperAdminProtectedRouter>}/>
       <Route path='/superAdmin/get-all-cities' element={<SuperAdminProtectedRouter><GetAllCities/></SuperAdminProtectedRouter>}/>
       <Route path='/superAdmin/get-all-active-cities' element={<SuperAdminProtectedRouter><GetAllActiveCities/></SuperAdminProtectedRouter>}/>
+      <Route path='/superAdmin/get-all-inactive-cities' element={<SuperAdminProtectedRouter><GetAllInactiveCities/></SuperAdminProtectedRouter>} />
 
     </Routes> 
     </>

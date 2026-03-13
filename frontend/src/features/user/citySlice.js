@@ -149,6 +149,24 @@ export const getActiveCities = createAsyncThunk(
   }
 );
 
+/* -------- get All Inactive Cities -------- */
+export const getAllInactiveCities = createAsyncThunk(
+  "city/getAllInactiveCities",
+  async (_, thunkAPI) => {
+    try {
+      const superAdminToken = localStorage.getItem("superAdminToken");
+      const response = await apiClient.get("/api/city/inactive-cities", {
+        headers: {
+          Authorization: `Bearer ${superAdminToken}`,
+        },
+      });
+      return response.data; // return inactive cities data
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
 /* ------ getCityById ------- */
 export const getCityById = createAsyncThunk(
   "city/getCityById",
@@ -264,11 +282,11 @@ const citySlice = createSlice({
       .addCase(inactiveCity.pending, (state) => {
         state.loading = true;
         state.error = null;
-        state.success = false; 
+        state.success = false;
       })
       .addCase(inactiveCity.fulfilled, (state, action) => {
         state.loading = false;
-        state.success = true; 
+        state.success = true;
         const city = state.cities.find((c) => c._id === action.payload.cityId);
         if (city) city.status = "inactive";
       })
@@ -322,6 +340,21 @@ const citySlice = createSlice({
         state.cities = action.payload;
       })
       .addCase(getActiveCities.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+
+    /* -------- get All Inactive Cities -------- */
+    builder
+      .addCase(getAllInactiveCities.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAllInactiveCities.fulfilled, (state, action) => {
+        state.loading = false;
+        state.cities = action.payload;
+      })
+      .addCase(getAllInactiveCities.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
