@@ -307,10 +307,9 @@ export const getActiveHotels = async (req, res) => {
 
 export const getPendingHotels = async (req, res) => {
   try {
-    const hotels = await Hotel.find({ status: "pending" }).populate(
-      "createdBy",
-      "userName email role",
-    );
+    const hotels = await Hotel.find({ status: "pending" })
+  .populate("city", "name state country")
+  .populate("createdBy", "name email");
 
     return res.status(200).json({
       success: true,
