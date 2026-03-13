@@ -35,7 +35,7 @@ cityRouter.put(
 cityRouter.delete(
   "/deletecity/:id",
   isAuthenticated,
-  authorize("admin"),
+  authorize("super_admin"),
   deleteCity,
 );
 

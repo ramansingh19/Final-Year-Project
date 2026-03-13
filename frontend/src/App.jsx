@@ -63,7 +63,7 @@ function App() {
       <Route path='/admin/adminProfile' element={<AdminProtectedRouter><AdminProfile/></AdminProtectedRouter>}/>
       <Route path='/superAdmin/cityDashboard' element={<SuperAdminProtectedRouter><CityDashboard/></SuperAdminProtectedRouter>}/>
       <Route path='/superAdmin/createCity' element={<SuperAdminProtectedRouter><AddCityDetails/></SuperAdminProtectedRouter>}/>
-      <Route path='/superAdmin/updateCity' element={<SuperAdminProtectedRouter><UpdateCityDetails/></SuperAdminProtectedRouter>}/>
+      <Route path='/superAdmin/updateCityDetails/:id' element={<SuperAdminProtectedRouter><UpdateCityDetails/></SuperAdminProtectedRouter>}/>
       <Route path='/superAdmin/SuperAdminApprovealCityList' element={<SuperAdminProtectedRouter><SuperAdminApprovealCityList/></SuperAdminProtectedRouter>}/>
       <Route path='/superAdmin/getCityById/:id' element={<SuperAdminProtectedRouter><GetCityById/></SuperAdminProtectedRouter>}/>
       <Route path='/superAdmin/get-all-cities' element={<SuperAdminProtectedRouter><GetAllCities/></SuperAdminProtectedRouter>}/>
