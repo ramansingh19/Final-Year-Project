@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { approveHotelById, getPendingHotels } from '../../../features/user/hotelSlice'
+import { approveHotelById, getPendingHotels, rejectHotelById } from '../../../features/user/hotelSlice'
 
 function SuperAdminApprovealHoteList() {
   const dispatch = useDispatch()
@@ -20,7 +20,7 @@ function SuperAdminApprovealHoteList() {
 
   const handleReject = (e, id) => {
     e.stopPropagation();
-
+    dispatch(rejectHotelById(id))
   };
 
   const closeModal = () => {

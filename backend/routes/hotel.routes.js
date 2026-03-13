@@ -3,6 +3,7 @@ import {
   createHotel,
   deleteHotel,
   getActiveHotels,
+  getAllHotels,
   getHotelbyid,
   updateHotel,
 } from "../controllers/hotel.controller.js";
@@ -18,6 +19,7 @@ hotelRouter.delete("/:id",isAuthenticated, authorize("admin"), deleteHotel);
 
 
 //public routes 
+hotelRouter.get("/get-all-hotels", getAllHotels)
 hotelRouter.get("/:id", getHotelbyid);
 hotelRouter.get("/activehotel/:cityid", getActiveHotels)
 export default hotelRouter;

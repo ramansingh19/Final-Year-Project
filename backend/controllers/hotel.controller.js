@@ -323,3 +323,26 @@ export const getPendingHotels = async (req, res) => {
     });
   }
 };
+
+export const getAllHotels = async (req, res) => {
+  try {
+    const hotels = await Hotel.find().
+    populate("city", "name state country")
+    if(!hotels.length){
+      return res.status(404).json({
+        success: false,
+        message: "No hotels found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: hotels,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+} 

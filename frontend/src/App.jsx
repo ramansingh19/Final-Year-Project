@@ -37,6 +37,8 @@ import GetAllInactiveCities from './pages/superAdmin/city/GetAllInactiveCities'
 import AddHotelDetails from './pages/admin/hotel/AddHotelDetails'
 import SuperAdminApprovealHoteList from './pages/superAdmin/Hotel/SuperAdminApprovealHoteList'
 import HotelDashboard from './pages/superAdmin/Hotel/HotelDashboard'
+import GetAllHotels from './pages/superAdmin/Hotel/GetAllHotels'
+import GetAllActiveHotels from './pages/superAdmin/Hotel/GetAllActiveHotels'
 
 
 
@@ -76,6 +78,8 @@ function App() {
       <Route path='/admin/create-hotel' element={<AdminProtectedRouter><AddHotelDetails/></AdminProtectedRouter>}/>
       <Route path='/superAdmin/hotelDashboard' element={<SuperAdminProtectedRouter><HotelDashboard/></SuperAdminProtectedRouter>}/>
       <Route path='/superAdmin/SuperAdminApprovealHotelList' element={<SuperAdminProtectedRouter><SuperAdminApprovealHoteList/></SuperAdminProtectedRouter>}/>
+      <Route path='/superadmin/get-all-hotels' element={<SuperAdminProtectedRouter><GetAllHotels/></SuperAdminProtectedRouter>}/>
+      <Route path='/superAdmin/get-all-active-hotels' element={<SuperAdminProtectedRouter><GetAllActiveHotels/></SuperAdminProtectedRouter>}/>
 
     </Routes> 
     </>

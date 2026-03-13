@@ -60,6 +60,44 @@ export const approveHotelById = createAsyncThunk("hotel/approveHotel", async (ho
   }
 })
 
+/* -------- Rejected Hotel -------- */
+export const rejectHotelById = createAsyncThunk(
+  "city/rejectHotel",
+  async (hotelId, thunkAPI) => {
+    try {
+      const superAdminToken = localStorage.getItem("superAdminToken");
+      const response = await apiClient.patch(
+        `/api/admin/hotel/${hotelId}/reject`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${superAdminToken}` },
+        }
+      );
+      return { hotelId, message: response.data.message };
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "City rejection failed"
+      );
+    }
+  }
+);
+
+/* -------- get All Hotels -------- */
+export const getAllHotels = createAsyncThunk(
+  "city/getAllCities",
+  async (_, thunkAPI) => {
+    try {
+      const response = await apiClient.get("/api/hotel/get-all-hotels");
+
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to fetch hotels"
+      );
+    }
+  }
+);
+
 const hotelSlice = createSlice({
   name: "hotel",
   initialState,
@@ -115,6 +153,38 @@ const hotelSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       });
+    
+    /* -------- Rejected Hotel -------- */  
+    builder
+    .addCase(rejectHotelById.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    })
+    .addCase(rejectHotelById.fulfilled, (state, action) => {
+      state.loading = false;
+      const hotel = state.hotels.find((c) => c._id === action.payload.hotelId);
+      if (hotel) hotel.status = "rejected";
+    })
+    .addCase(rejectHotelById.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+  /* -------- get All Hotels -------- */ 
+  builder
+
+  .addCase(getAllHotels.pending, (state) => {
+    state.loading = true;
+  })
+
+  .addCase(getAllHotels.fulfilled, (state, action) => {
+    state.loading = false;
+    state.hotels = action.payload;
+  })
+
+  .addCase(getAllHotels.rejected, (state, action) => {
+    state.loading = false;
+    state.error = action.payload;
+  }); 
 
 
   },
