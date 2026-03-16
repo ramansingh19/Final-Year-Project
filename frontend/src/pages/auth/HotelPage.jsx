@@ -1,10 +1,12 @@
 import React from 'react'
-import HotelCard from '../../components/Hotels/HotelCard'
+import HeroSearch from '../../components/Hotel/HotelSearch'
+
+
 
 function HotelPage() {
   return (
     <>
-    <HotelCard />
+    <HeroSearch />
     </>
   )
 }
