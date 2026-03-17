@@ -43,7 +43,7 @@ const HotelFilter = ({ onFilterChange }) => {
   const isActive = (type, value) => filters[type].includes(value);
 
   return (
-    <div className="w-[340px] bg-white shadow-2xl rounded-3xl p-6 border border-gray-100 sticky top-4 h-fit max-h-[90vh] overflow-y-auto">
+    <div className="w-85 bg-white shadow-2xl rounded-3xl p-6 border border-gray-100 sticky top-4 h-fit max-h-[90vh] overflow-y-auto">
       {/* Header */}
       <div className="text-center mb-6 pb-4 border-b border-gray-100">
         <h2 className="text-xl font-bold text-gray-800 mb-1">Filters</h2>
@@ -52,7 +52,7 @@ const HotelFilter = ({ onFilterChange }) => {
 
       {/* MAP - MakeMyTrip Style */}
       <div className="relative mb-6 group">
-        <div className="w-full h-[140px] bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl shadow-lg overflow-hidden relative">
+        <div className="w-full h-35 bg-linear-to-br from-blue-500 to-indigo-600 rounded-2xl shadow-lg overflow-hidden relative">
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')] bg-cover bg-center opacity-80"></div>
           <div className="absolute inset-0 bg-black/20"></div>
           <FaMapMarkerAlt className="absolute top-4 left-4 text-white text-xl drop-shadow-lg" />
@@ -75,7 +75,7 @@ const HotelFilter = ({ onFilterChange }) => {
           placeholder="Search locality or hotel name"
           value={filters.locality}
           onChange={handleLocalitySearch}
-          className="w-full pl-12 pr-4 py-4 bg-gradient-to-r from-gray-50 to-white border-2 border-gray-200 rounded-2xl focus:border-blue-400 focus:outline-none focus:ring-4 focus:ring-blue-100/50 shadow-sm text-sm transition-all duration-300 hover:shadow-md"
+          className="w-full pl-12 pr-4 py-4 bg-linear-to-r from-gray-50 to-white border-2 border-gray-200 rounded-2xl focus:border-blue-400 focus:outline-none focus:ring-4 focus:ring-blue-100/50 shadow-sm text-sm transition-all duration-300 hover:shadow-md"
         />
         <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
           <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
@@ -98,7 +98,7 @@ const HotelFilter = ({ onFilterChange }) => {
               onClick={() => toggleFilter("suggested", item.label)}
               className={`w-full flex justify-between items-center p-4 rounded-xl border-2 transition-all duration-300 group hover:shadow-lg hover:-translate-y-0.5 ${
                 isActive("suggested", item.label)
-                  ? "bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-300 shadow-blue-200"
+                  ? "bg-linear-to-r from-blue-50 to-indigo-50 border-blue-300 shadow-blue-200"
                   : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
               }`}
             >
@@ -106,7 +106,7 @@ const HotelFilter = ({ onFilterChange }) => {
                 <div
                   className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold shadow-sm ${
                     isActive("suggested", item.label)
-                      ? "bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-blue-300"
+                      ? "bg-linear-to-r from-blue-500 to-indigo-500 text-white shadow-blue-300"
                       : "bg-white border-2 border-gray-200"
                   }`}
                 >
@@ -148,7 +148,7 @@ const HotelFilter = ({ onFilterChange }) => {
               onClick={() => toggleFilter("price", item.value)}
               className={`w-full flex justify-between items-center p-4 rounded-xl border-2 transition-all duration-300 group hover:shadow-lg hover:-translate-y-0.5 ${
                 isActive("price", item.value)
-                  ? "bg-gradient-to-r from-emerald-50 to-green-50 border-emerald-300 shadow-emerald-200"
+                  ? "bg-linear-to-r from-emerald-50 to-green-50 border-emerald-300 shadow-emerald-200"
                   : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
               }`}
             >
@@ -156,7 +156,7 @@ const HotelFilter = ({ onFilterChange }) => {
                 <div
                   className={`w-10 h-10 rounded-xl flex items-center justify-center text-xs font-bold shadow-sm ${
                     isActive("price", item.value)
-                      ? "bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-emerald-300"
+                      ? "bg-linear-to-r from-emerald-500 to-green-500 text-white shadow-emerald-300"
                       : "bg-white border-2 border-gray-200"
                   }`}
                 >
@@ -185,7 +185,7 @@ const HotelFilter = ({ onFilterChange }) => {
         <button className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-4 rounded-xl transition-all duration-300 text-sm shadow-sm hover:shadow-md">
           Clear All
         </button>
-        <button className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 text-sm shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+        <button className="flex-1 bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 text-sm shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
           Apply Filters
         </button>
       </div>
