@@ -163,7 +163,10 @@ function Navbar() {
               {
                 (token || adminToken) && (
                   <div className="flex items-center gap-1 px-3 py-1 rounded-lg">
-                    <GrLocationPin style={{ fontSize: "22px", color: "red" }} />
+                    <img 
+                    className="w-5 mb-1"
+                    src="https://cdn-icons-png.flaticon.com/128/684/684908.png" alt="" />
+                    {/* <GrLocationPin style={{ fontSize: "22px", color: "red" }} /> */}
 
                     <button
                       onClick={() => setShowLocationSection(true)}

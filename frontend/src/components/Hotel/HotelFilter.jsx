@@ -73,7 +73,7 @@ const HotelFilter = ({ onFilterChange, onMapOpen }) => {
     (filters.locality ? 1 : 0);
 
   return (
-    <div className="w-[268px] bg-white rounded-2xl border border-slate-100 shadow-lg shadow-slate-100/70 overflow-hidden sticky top-4 max-h-[calc(100vh-90px)] flex flex-col">
+    <div className="w-67 bg-white rounded-2xl border border-slate-100 shadow-lg shadow-slate-100/70 overflow-hidden sticky top-4 max-h-[calc(100vh-90px)] flex flex-col">
       {/* Header */}
       <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between shrink-0 bg-slate-50/60">
         <div className="flex items-center gap-2">
@@ -99,7 +99,7 @@ const HotelFilter = ({ onFilterChange, onMapOpen }) => {
         {/* Map */}
         <div
           onClick={onMapOpen}
-          className="relative h-[88px] rounded-xl overflow-hidden cursor-pointer group shadow-sm"
+          className="relative h-22 rounded-xl overflow-hidden cursor-pointer group shadow-sm"
         >
           <img
             src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=600&q=80"
@@ -146,7 +146,7 @@ const HotelFilter = ({ onFilterChange, onMapOpen }) => {
                   key={item.label}
                   onClick={() => toggle("suggested", item.label)}
                   className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg border text-left transition-all duration-150
-                    ${active ? "border-[#1a3a6b]/20 bg-[#1a3a6b]/[0.04]" : "border-transparent hover:bg-slate-50"}`}
+                    ${active ? "border-[#1a3a6b]/20 bg-[#1a3a6b]/4" : "border-transparent hover:bg-slate-50"}`}
                 >
                   <div className="flex items-center gap-2">
                     <div
