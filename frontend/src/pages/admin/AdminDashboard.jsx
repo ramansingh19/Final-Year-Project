@@ -7,6 +7,7 @@ function AdminDashboard() {
 
   const { admin } = useSelector((state) => state.admin);
 
+
   // console.log(hotels);
 
   const getInitials = (name) => {
@@ -62,6 +63,13 @@ function AdminDashboard() {
           >
             + Add Hotel Details
           </Link>
+
+          <Link
+            to="/admin/create-room"
+            className="px-4 py-3 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg shadow-md transition text-[13px]"
+          >
+            + Add Room Details
+          </Link>
         </div>
       </div>
 
@@ -89,6 +97,18 @@ function AdminDashboard() {
             Show Hotels Status
           </span>
         </Link>
+
+        {/* <Link
+          to={`/admin/rooms`}
+          className="w-60 p-5 bg-gray-100 rounded-xl shadow hover:shadow-lg hover:scale-105 transition flex flex-col items-center"
+        >
+          <span className="text-3xl mb-2 bg-gray-400 p-1 rounded-sm text-white">
+            <FaCity />
+          </span>
+          <span className="font-semibold text-gray-700">
+            Show All Rooms
+          </span>
+        </Link> */}
       </div>
     </div>
   );
