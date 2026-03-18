@@ -20,7 +20,10 @@ import {
   FaPercent,
 } from "react-icons/fa";
 import { MdOutlineLocalOffer, MdAir, MdSpa } from "react-icons/md";
-import { getAllActiveHotels, getPublicActiveHotels } from "../../features/user/hotelSlice";
+import {
+  getPublicActiveHotels,
+} from "../../features/user/hotelSlice";
+import { useNavigate } from "react-router-dom";
 
 const AMENITY_ICONS = {
   wifi: <FaWifi />,
@@ -63,6 +66,7 @@ const SkeletonCard = () => (
 // ── Hotel card ───────────────────────────────────────────────────────────────
 const HotelCard = ({ hotel }) => {
   const [wishlist, setWishlist] = useState(false);
+  const navigate = useNavigate()
   const images = hotel.images?.length
     ? hotel.images
     : [
@@ -81,16 +85,18 @@ const HotelCard = ({ hotel }) => {
     : null;
 
   return (
-    <div className="group bg-white rounded-2xl overflow-hidden border border-slate-100 hover:border-slate-200 hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300 flex flex-col md:flex-row">
+    <div className="group bg-white rounded-2xl overflow-hidden border border-slate-100 hover:border-slate-200 hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300 flex flex-col md:flex-row md:items-stretch cursor-pointer"
+    onClick={() => navigate(`/hotels/${hotel._id}`)}
+    >
       {/* Image */}
-      <div className="relative w-full md:w-56 h-48 md:h-auto shrink-0 overflow-hidden bg-slate-100">
+      <div className="relative w-full md:w-56 h-40 md:h-52 shrink-0 overflow-hidden bg-slate-100">
         <img
           src={images[0]}
           alt={hotel.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
         <button
-          onClick={() => setWishlist(!wishlist)}
+          onClick={(e) => { e.stopPropagation(); setWishlist(!wishlist); }}
           className="absolute top-3 right-3 w-7 h-7 bg-white/85 backdrop-blur-sm rounded-full flex items-center justify-center shadow hover:scale-110 transition-transform"
         >
           {wishlist ? (
@@ -187,7 +193,9 @@ const HotelCard = ({ hotel }) => {
               <FaShieldAlt className="text-[8px]" /> Free cancellation
             </span>
           )}
-          <button className="bg-[#1a3a6b] hover:bg-[#14305a] active:scale-95 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow hover:shadow-md transition-all whitespace-nowrap">
+          <button 
+          onClick={(e) => { e.stopPropagation(); navigate(`/hotels/${hotel._id}`); }}
+          className="bg-[#1a3a6b] hover:bg-[#14305a] active:scale-95 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow hover:shadow-md transition-all whitespace-nowrap">
             Book Now
           </button>
         </div>
@@ -218,7 +226,6 @@ function HotelPage() {
   const { hotels = [], loading } = useSelector((s) => s.hotel);
   const totalCount = hotels?.length || 0;
   console.log(hotels);
-  
 
   useEffect(() => {
     dispatch(getPublicActiveHotels());

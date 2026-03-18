@@ -18,10 +18,10 @@ export const createHotel = createAsyncThunk(
       return response.hotel;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Create hotel failed"
+        error.response?.data?.message || "Create hotel failed",
       );
     }
-  }
+  },
 );
 
 /* -------- get all pending Hotel -------- */
@@ -40,10 +40,10 @@ export const getPendingHotels = createAsyncThunk(
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Failed to fetch cities"
+        error.response?.data?.message || "Failed to fetch cities",
       );
     }
-  }
+  },
 );
 
 /* -------- approve Hotel -------- */
@@ -57,15 +57,15 @@ export const approveHotelById = createAsyncThunk(
         {},
         {
           headers: { Authorization: `Bearer ${superAdminToken}` },
-        }
+        },
       );
       return { hotelId, message: response.data.message };
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "City approval failed"
+        error.response?.data?.message || "City approval failed",
       );
     }
-  }
+  },
 );
 
 /* -------- Rejected Hotel -------- */
@@ -79,15 +79,15 @@ export const rejectHotelById = createAsyncThunk(
         {},
         {
           headers: { Authorization: `Bearer ${superAdminToken}` },
-        }
+        },
       );
       return { hotelId, message: response.data.message };
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "City rejection failed"
+        error.response?.data?.message || "City rejection failed",
       );
     }
-  }
+  },
 );
 
 /* -------- get All Hotels -------- */
@@ -100,10 +100,10 @@ export const getAllHotels = createAsyncThunk(
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Failed to fetch hotels"
+        error.response?.data?.message || "Failed to fetch hotels",
       );
     }
-  }
+  },
 );
 
 /* -------- get All Active Hotels -------- */
@@ -115,10 +115,10 @@ export const getAllActiveHotels = createAsyncThunk(
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Failed to fetch active cities"
+        error.response?.data?.message || "Failed to fetch active cities",
       );
     }
-  }
+  },
 );
 
 /* -------- inactive Hotel -------- */
@@ -133,16 +133,16 @@ export const inactiveHotel = createAsyncThunk(
         {},
         {
           headers: { Authorization: `Bearer ${superAdminToken}` },
-        }
+        },
       );
 
       return { hotelId, message: response.data.message };
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Hotel Inactive failed"
+        error.response?.data?.message || "Hotel Inactive failed",
       );
     }
-  }
+  },
 );
 
 /* -------- get All Inactive Hotels -------- */
@@ -157,13 +157,13 @@ export const getAllInactiveHotels = createAsyncThunk(
           headers: {
             Authorization: `Bearer ${superAdminToken}`,
           },
-        }
+        },
       );
       return response.data; // return inactive hotels data
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data?.message);
     }
-  }
+  },
 );
 
 /* -------- get All Rejected Hotels -------- */
@@ -183,7 +183,7 @@ export const getAllRejectedHotels = createAsyncThunk(
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data?.message);
     }
-  }
+  },
 );
 
 /* ------ delete Hotel ------- */
@@ -201,10 +201,10 @@ export const deleteHotel = createAsyncThunk(
       return { id, ...response.data };
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "hotel delete failde"
+        error.response?.data?.message || "hotel delete failde",
       );
     }
-  }
+  },
 );
 
 /* ------ update Hotel ------- */
@@ -220,15 +220,15 @@ export const updateHotel = createAsyncThunk(
           headers: {
             Authorization: `Bearer ${adminToken}`,
           },
-        }
+        },
       );
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "hotel update failed"
+        error.response?.data?.message || "hotel update failed",
       );
     }
-  }
+  },
 );
 
 /* -------- get All Active Public Hotels -------- */
@@ -240,10 +240,10 @@ export const getPublicActiveHotels = createAsyncThunk(
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Failed to fetch public active hotels"
+        error.response?.data?.message || "Failed to fetch public active hotels",
       );
     }
-  }
+  },
 );
 
 /* ------ get hotel by ID ------- */
@@ -262,10 +262,10 @@ export const getHotelById = createAsyncThunk(
       return response.data; // IMPORTANT
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Failed to fetch hotel"
+        error.response?.data?.message || "Failed to fetch hotel",
       );
     }
-  }
+  },
 );
 
 const hotelSlice = createSlice({
@@ -317,7 +317,7 @@ const hotelSlice = createSlice({
       .addCase(approveHotelById.fulfilled, (state, action) => {
         state.loading = false;
         const hotel = state.hotels.find(
-          (c) => c._id === action.payload.hotelId
+          (c) => c._id === action.payload.hotelId,
         );
         if (hotel) hotel.status = "active";
       })
@@ -335,7 +335,7 @@ const hotelSlice = createSlice({
       .addCase(rejectHotelById.fulfilled, (state, action) => {
         state.loading = false;
         const hotel = state.hotels.find(
-          (c) => c._id === action.payload.hotelId
+          (c) => c._id === action.payload.hotelId,
         );
         if (hotel) hotel.status = "rejected";
       })
@@ -386,7 +386,7 @@ const hotelSlice = createSlice({
         state.loading = false;
         state.success = true;
         const hotel = state.hotels.find(
-          (c) => c._id === action.payload.hotelId
+          (c) => c._id === action.payload.hotelId,
         );
         if (hotel) hotel.status = "inactive";
       })
@@ -457,7 +457,7 @@ const hotelSlice = createSlice({
         state.success = true;
 
         const index = state.hotels.findIndex(
-          (h) => h._id === action.payload._id
+          (h) => h._id === action.payload._id,
         );
 
         if (index !== -1) {
@@ -480,7 +480,7 @@ const hotelSlice = createSlice({
 
       .addCase(getHotelById.fulfilled, (state, action) => {
         state.loading = false;
-        state.hotel = action.payload;
+        state.hotel = action.payload.data;
       })
 
       .addCase(getHotelById.rejected, (state, action) => {

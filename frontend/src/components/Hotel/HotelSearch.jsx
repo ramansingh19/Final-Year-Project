@@ -183,7 +183,7 @@ const HeroSearch = () => {
           {/* Search button */}
           <button
             onClick={onSearch}
-            className="lg:ml-3 shrink-0 h-[46px] px-7 bg-[#1a3a6b] hover:bg-[#14305a] active:scale-95 text-white font-bold text-sm rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2 whitespace-nowrap self-end"
+            className="lg:ml-3 shrink-0 h-11.5 px-7 bg-[#1a3a6b] hover:bg-[#14305a] active:scale-95 text-white font-bold text-sm rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2 whitespace-nowrap self-end"
           >
             <FaSearch className="text-xs" />
             Search
