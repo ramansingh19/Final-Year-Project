@@ -43,8 +43,7 @@ import GetAllInactiveHotels from './pages/superAdmin/Hotel/GetAllInactiveHotels'
 import GetAllRejectedHotels from './pages/superAdmin/Hotel/GetAllRejectedHotels'
 import UpdateHotelDetails from './pages/admin/hotel/UpdateHotelDetails'
 import HotelPage from './pages/auth/HotelPage'
-import GetAllInactiveHotels from './pages/superAdmin/Hotel/GetAllInactiveHotels'
-import GetAllRejectedHotels from './pages/superAdmin/Hotel/GetAllRejectedHotels'
+
 
 
 
@@ -57,7 +56,7 @@ function App() {
     <Navbar/>
     <Routes>
       <Route path='/' element={<LandingPage/>}/>
-      {/* <Route path='hotels' element={<HotelPage />}/> */}
+      <Route path='hotels' element={<HotelPage />}/>
       <Route path='/city/:id' element={<CityDetails />}/>
       <Route path='/signUp' element={<Register/>}/>
       <Route path='/verifyEmail' element={<VerifyEmail/>}/>

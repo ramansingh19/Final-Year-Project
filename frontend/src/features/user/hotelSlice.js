@@ -14,7 +14,11 @@ export const createHotel = createAsyncThunk(
   "hotel/createHotel",
   async (data, thunkAPI) => {
     try {
-      const response = await apiClient.post("/api/hotel/create-hotel", data);
+      const response = await apiClient.post("/api/hotel/create-hotel", data,{
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
       return response.hotel;
     } catch (error) {
       return thunkAPI.rejectWithValue(
@@ -126,20 +130,14 @@ export const inactiveHotel = createAsyncThunk(
   "hotel/inactiveHotel",
   async (hotelId, thunkAPI) => {
     try {
-      const superAdminToken = localStorage.getItem("superAdminToken");
-
       const response = await apiClient.patch(
-        `/api/admin/hotel/${hotelId}/inactive`,
-        {},
-        {
-          headers: { Authorization: `Bearer ${superAdminToken}` },
-        }
+        `/api/admin/hotel/${hotelId}/inactive`
       );
-
       return { hotelId, message: response.data.message };
+
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Hotel Inactive failed"
+        error.response?.data?.message || "Hotel inactive failed"
       );
     }
   }
@@ -263,6 +261,33 @@ export const getHotelById = createAsyncThunk(
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Failed to fetch hotel"
+      );
+    }
+  }
+);
+
+/* ------ inactive Hotel by admin ------- */
+export const inactiveHotelByAdmin = createAsyncThunk(
+  "hotel/inactiveHotelByAdmin",
+  async (hotelId, thunkAPI) => {
+    try {
+      const adminToken = localStorage.getItem("adminToken");
+
+      const response = await apiClient.patch(
+        `/api/admin/adminhotel/${hotelId}/inactive`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${adminToken}`,
+          },
+        }
+      );
+
+      return { hotelId, message: response.data.message };
+
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to inactive hotel"
       );
     }
   }
@@ -502,6 +527,31 @@ const hotelSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       });
+
+  /* ------ inactive Hotel by admin ------- */
+  
+  builder
+    .addCase(inactiveHotelByAdmin.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    })
+
+    .addCase(inactiveHotelByAdmin.fulfilled, (state, action) => {
+      state.loading = false;
+
+      const id = action.payload.hotelId;
+
+      // ⭐ remove from active list
+      state.hotels = state.hotels.filter(h => h._id !== id);
+
+    })
+
+    .addCase(inactiveHotelByAdmin.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+    
+    
   },
 });
 

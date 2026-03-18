@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaUserSecret } from "react-icons/fa";
-import AddHotelDetails from "./hotel/AddHotelDetails";
 import { Link } from "react-router-dom";
-import { getAllActiveHotels } from "../../features/user/hotelSlice";
+import { getAllActiveHotels, inactiveHotelByAdmin} from "../../features/user/hotelSlice";
 
 function AdminDashboard() {
   const dispatch = useDispatch();
   const [selectedHotel, setSelectedHotel] = useState(null);
   const { admin } = useSelector((state) => state.admin);
   const { hotels = [], loading } = useSelector((state) => state.hotel);
-
+  // console.log(hotels);
 
   const getInitials = (name) => {
     if (!name) return "SA";
@@ -19,6 +18,10 @@ function AdminDashboard() {
       .map((n) => n[0])
       .join("")
       .toUpperCase();
+  };
+
+  const handelInactiveHotel = (hotelId) => {
+    dispatch(inactiveHotelByAdmin(hotelId))
   };
 
   useEffect(() => {
@@ -93,38 +96,43 @@ function AdminDashboard() {
             <p className="text-gray-500">No active hotels found.</p>
           ) : (
             <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {hotels.map((hotel) => (
-                <div
-                  key={hotel._id}
-                  onClick={() => setSelectedHotel(hotel)}
-                  className="bg-white rounded-xl shadow hover:shadow-lg transition cursor-pointer overflow-hidden"
-                >
-                  {/* IMAGE */}
-                  <div className="h-48 relative overflow-hidden">
-                    <img
-                      src={hotel.images?.[0]}
-                      className="w-full h-full object-cover hover:scale-105 transition"
-                      alt={hotel.name}
-                    />
+              {Array.isArray(hotels) &&
+                hotels
+                  .filter((h) => h && h._id)
+                  .map((hotel) => (
+                    <div
+                      key={hotel._id}
+                      onClick={() => setSelectedHotel(hotel)}
+                      className="bg-white rounded-xl shadow hover:shadow-lg transition cursor-pointer overflow-hidden"
+                    >
+                      {/* IMAGE */}
+                      <div className="h-48 relative overflow-hidden">
+                        <img
+                          src={hotel.images?.[0] || "/no-image.jpg"}
+                          className="w-full h-full object-cover hover:scale-105 transition"
+                          alt={hotel.name || "hotel"}
+                        />
 
-                    {/* STATUS BADGE */}
-                    <span className="absolute top-3 right-3 text-xs px-2 py-1 bg-green-100 text-green-700 rounded-full">
-                      {hotel.status}
-                    </span>
-                  </div>
+                        {/* STATUS BADGE */}
+                        <span className="absolute top-3 right-3 text-xs px-2 py-1 bg-green-100 text-green-700 rounded-full">
+                          {hotel.status}
+                        </span>
+                      </div>
 
-                  {/* INFO */}
-                  <div className="p-4">
-                    <h3 className="font-semibold text-lg">{hotel.name}</h3>
+                      {/* INFO */}
+                      <div className="p-4">
+                        <h3 className="font-semibold text-lg">{hotel.name}</h3>
 
-                    <p className="text-sm text-gray-500">{hotel.city?.name}</p>
+                        <p className="text-sm text-gray-500">
+                          {hotel.city?.name}
+                        </p>
 
-                    <p className="text-sm text-gray-400 line-clamp-2 mt-2">
-                      {hotel.address}
-                    </p>
-                  </div>
-                </div>
-              ))}
+                        <p className="text-sm text-gray-400 line-clamp-2 mt-2">
+                          {hotel.address}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
             </div>
           )}
 
@@ -207,10 +215,20 @@ function AdminDashboard() {
 
                 {/* ACTIONS */}
                 <div className="flex gap-3 mt-6 border-t pt-4 justify-end">
-                  <Link to={`/admin/update-hotel-details/${selectedHotel._id}`} className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg"
+                  <Link
+                    to={`/admin/update-hotel-details/${selectedHotel._id}`}
+                    className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg"
                   >
                     Update
                   </Link>
+                 
+                    <button
+                      onClick={() => handelInactiveHotel(selectedHotel._id)}
+                      className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg"
+                    >
+                      Inactive
+                    </button>
+               
                 </div>
               </div>
             </div>

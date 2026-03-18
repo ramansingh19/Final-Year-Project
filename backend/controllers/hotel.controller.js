@@ -71,7 +71,7 @@ export const createHotel = async (req, res) => {
       images: imageUrls,
       location,
       status: "pending",
-      createdBy: req.user._id,
+      createdBy: req.user.id,
     });
 
     return res.status(201).json({
@@ -175,8 +175,10 @@ export const updateHotel = async (req, res) => {
     const updatehotel = await Hotel.findByIdAndUpdate(
       id,
       updateData,
-      { new: true, runValidators: true }, //this is use to validate data
-    ).populate("city").populate("createdBy", "name email");
+      { new: true, runValidators: true } //this is use to validate data
+    )
+      .populate("city")
+      .populate("createdBy", "name email");
     console.log(updatehotel);
 
     if (!updatehotel) {
@@ -279,24 +281,20 @@ export const rejectHotel = async (req, res) => {
 
 export const getActiveHotels = async (req, res) => {
   try {
-   let filter = { status: "active"};
-   if (req.user.role === "admin") {
-    // admin → only own hotels
-    filter.createdBy = req.user.id;
-  }
+    let filter = { status: "active" };
+    if (req.user.role === "admin") {
+      // admin → only own hotels
+      filter.createdBy = req.user.id;
+    }
 
-  if (req.user.role === "user") {
-    // user → only approved active hotels
-    filter.isApproved = true;
-  }
+    if (req.user.role === "user") {
+      // user → only approved active hotels
+      filter.isApproved = true;
+    }
 
     const hotels = await Hotel.find(filter)
-    .populate("city", "name state")
-    .populate("createdBy", "name email");
-    
-    const hotels = await Hotel.find({
-      status: "active",
-    }).populate("city", "name state");
+      .populate("city", "name state")
+      .populate("createdBy", "name email");
 
     return res.status(200).json({
       success: true,
@@ -362,6 +360,17 @@ export const inactiveHotel = async (req, res) => {
         .json({ success: false, message: "hotel not found" });
     }
 
+    // ADMIN → only own hotel
+    if (
+      req.user.role === "admin" &&
+      hotel.createdBy.toString() !== req.user.id
+    ) {
+      return res.status(403).json({
+        success: false,
+        message: "You cannot inactive other admin hotels",
+      });
+    }
+
     hotel.status = "inactive";
     hotel.approvedBy = null;
     await hotel.save();
@@ -394,8 +403,7 @@ export const getRejectedHotel = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
-  
-}
+};
 
 export const getPublicActiveHotels = async (req, res) => {
   try {
@@ -407,9 +415,55 @@ export const getPublicActiveHotels = async (req, res) => {
       success: true,
       data: hotels,
     });
-
   } catch (error) {
     res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const inactiveHotelByAdmin = async (req, res) => {
+  try {
+    const hotelId = req.params.id;
+    
+    const hotel = await Hotel.findById(hotelId);
+    if (!hotel) {
+      return res.status(404).json({
+        success: false,
+        message: "Hotel not found",
+      });
+    }
+
+    // ownership check
+    if (hotel.createdBy.toString() !== req.user.id) {
+      return res.status(403).json({
+        success: false,
+        message: "You can only inactive your own hotel",
+      });
+    }
+
+    // status validation
+    if (hotel.status !== "active") {
+      return res.status(400).json({
+        success: false,
+        message: "Only active hotel can be inactivated",
+      });
+    }
+
+    hotel.status = "inactive";
+    hotel.approvedBy = null;
+    await hotel.save();
+
+
+
+    return res.status(200).json({
+      success: true,
+      message: "Hotel inactivated successfully",
+    });
+
+  } catch (error) {
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
