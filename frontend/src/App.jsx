@@ -41,8 +41,10 @@ import GetAllHotels from './pages/superAdmin/Hotel/GetAllHotels'
 import GetAllActiveHotels from './pages/superAdmin/Hotel/GetAllActiveHotels'
 import GetAllRejectedHotels from './pages/superAdmin/Hotel/GetAllRejectedHotels'
 import UpdateHotelDetails from './pages/admin/hotel/UpdateHotelDetails'
-import GetAllInactiveHotels from './pages/superAdmin/Hotel/GetAllInactiveHotels'
 import HotelPage from './pages/auth/HotelPage'
+import GetAllInactiveHotels from './pages/superAdmin/Hotel/GetAllInactiveHotels'
+
+
 
 
 

@@ -24,6 +24,7 @@ hotelRouter.get("/activehotel",isAuthenticated, getActiveHotels)
 hotelRouter.get("/get-all-hotels",isAuthenticated, getAllHotels)
 
 
+
 //public routes 
 hotelRouter.get("/public/hotels", getPublicActiveHotels)
 export default hotelRouter;
