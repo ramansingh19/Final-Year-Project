@@ -8,6 +8,8 @@ import adminAuthReducer from "../features/auth/adminAuthSlice";
 import adminReducer from "../features/user/adminSlice";
 import hotelReducer from "../features/user/hotelSlice";
 import cityReducer from "../features/user/citySlice";
+import roomReducer from "../features/user/roomSlice";
+import hotelBookingreducer from "../features/user/hotelBookingSlice";
 
 
 export const store = configureStore({
@@ -20,6 +22,8 @@ export const store = configureStore({
     admin: adminReducer,
     city: cityReducer,
     hotel: hotelReducer,
+    room: roomReducer,
+    hotelBooking: hotelBookingreducer,
     search : searchReducer
   }
 })
