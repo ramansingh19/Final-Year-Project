@@ -74,7 +74,7 @@ const HotelFilter = ({ onFilterChange, onMapOpen }) => {
 
   return (
     // ── Fixed width only on lg+ screens ───────────────────────────────────
-    <div className="w-full lg:w-[268px] bg-white rounded-2xl border border-slate-100 shadow-lg shadow-slate-100/70 overflow-hidden lg:sticky lg:top-4 lg:max-h-[calc(100vh-90px)] flex flex-col">
+    <div className="w-full lg:w-67 bg-white rounded-2xl border border-slate-100 shadow-lg shadow-slate-100/70 overflow-hidden lg:sticky lg:top-4 lg:max-h-[calc(100vh-90px)] flex flex-col">
       {/* Header */}
       <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between shrink-0 bg-slate-50/60">
         <div className="flex items-center gap-2">
@@ -107,7 +107,7 @@ const HotelFilter = ({ onFilterChange, onMapOpen }) => {
             alt="Map"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0f1f3d]/65 via-[#0f1f3d]/20 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-[#0f1f3d]/65 via-[#0f1f3d]/20 to-transparent" />
           <div className="absolute inset-x-0 bottom-2.5 flex justify-center">
             <div className="flex items-center gap-1.5 bg-white/95 text-[#1a3a6b] text-[11px] font-bold px-3 py-1.5 rounded-full shadow-md">
               <FaMapMarkerAlt className="text-[9px]" />
@@ -147,7 +147,7 @@ const HotelFilter = ({ onFilterChange, onMapOpen }) => {
                   key={item.label}
                   onClick={() => toggle("suggested", item.label)}
                   className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg border text-left transition-all duration-150
-                    ${active ? "border-[#1a3a6b]/20 bg-[#1a3a6b]/[0.04]" : "border-transparent hover:bg-slate-50"}`}
+                    ${active ? "border-[#1a3a6b]/20 bg-[#1a3a6b]/4" : "border-transparent hover:bg-slate-50"}`}
                 >
                   <div className="flex items-center gap-2">
                     <div

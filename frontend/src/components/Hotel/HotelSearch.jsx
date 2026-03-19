@@ -320,7 +320,7 @@ const HeroSearch = () => {
 
                 {/* Dropdown panel */}
                 {showGuests && (
-                  <div className="absolute top-full left-0 right-0 sm:min-w-[300px] mt-2 bg-white border border-slate-200 rounded-2xl shadow-2xl z-50 overflow-hidden">
+                  <div className="absolute top-full left-0 right-0 sm:min-w-75 mt-2 bg-white border border-slate-200 rounded-2xl shadow-2xl z-50 overflow-hidden">
                     <div className="px-5 py-4">
                       {/* Counters */}
                       <CounterRow
@@ -369,7 +369,7 @@ const HeroSearch = () => {
               </p>
               <button
                 onClick={onSearch}
-                className="h-[46px] px-6 sm:px-7 bg-[#1a3a6b] hover:bg-[#14305a] active:scale-95 text-white font-bold text-sm rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-2 whitespace-nowrap"
+                className="h-11.5 px-6 sm:px-7 bg-[#1a3a6b] hover:bg-[#14305a] active:scale-95 text-white font-bold text-sm rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-2 whitespace-nowrap"
               >
                 <FaSearch className="text-xs" />
                 <span className="hidden sm:inline">Search</span>
