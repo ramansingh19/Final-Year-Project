@@ -176,7 +176,9 @@ export const updateHotel = async (req, res) => {
       id,
       updateData,
       { new: true, runValidators: true }, //this is use to validate data
-    ).populate("city").populate("createdBy", "name email");
+    )
+      .populate("city")
+      .populate("createdBy", "name email");
     console.log(updatehotel);
 
     if (!updatehotel) {
@@ -279,21 +281,20 @@ export const rejectHotel = async (req, res) => {
 
 export const getActiveHotels = async (req, res) => {
   try {
-   let filter = { status: "active"};
-   if (req.user.role === "admin") {
-    // admin → only own hotels
-    filter.createdBy = req.user.id;
-  }
+    let filter = { status: "active" };
+    if (req.user.role === "admin") {
+      // admin → only own hotels
+      filter.createdBy = req.user.id;
+    }
 
-  if (req.user.role === "user") {
-    // user → only approved active hotels
-    filter.isApproved = true;
-  }
+    if (req.user.role === "user") {
+      // user → only approved active hotels
+      filter.isApproved = true;
+    }
 
     const hotels = await Hotel.find(filter)
-    .populate("city", "name state")
-    .populate("createdBy", "name email");
-    
+      .populate("city", "name state")
+      .populate("createdBy", "name email");
 
     return res.status(200).json({
       success: true,
@@ -391,24 +392,30 @@ export const getRejectedHotel = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
-  
-}
+};
 
 export const getPublicActiveHotels = async (req, res) => {
   try {
-    const hotels = await Hotel.find({
-      status: "active",
-    }).populate("city", "name state");
+    const { city } = req.query; // ← read city from ?city=Delhi
 
-    res.status(200).json({
-      success: true,
-      data: hotels,
-    });
+    let query = { status: "active" };
 
+    if (city && city.trim()) {
+      const cityDoc = await City.findOne({
+        name: { $regex: city.trim(), $options: "i" }, // case-insensitive match
+      });
+
+      if (!cityDoc) {
+        return res.status(200).json({ success: true, data: [] }); // no match = empty
+      }
+
+      query.city = cityDoc._id; // filter hotels by city id
+    }
+
+    const hotels = await Hotel.find(query).populate("city", "name state");
+
+    res.status(200).json({ success: true, data: hotels });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
