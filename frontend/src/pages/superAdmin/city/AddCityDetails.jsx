@@ -149,158 +149,160 @@ function AddCityDetails() {
   /* ---------------- UI ---------------- */
 
   return (
-    <div className="max-w-5xl mx-auto p-6 bg-white rounded-xl shadow-lg">
-
-      <h2 className="text-2xl font-bold mb-6">Create City</h2>
-
-      <form onSubmit={handleSubmit} className="space-y-5">
-
-        {/* CITY NAME */}
-        <input
-          name="name"
-          placeholder="City Name"
-          className="w-full border p-2 rounded"
-          value={formData.name}
-          onChange={handleChange}
-        />
-
-        {/* STATE & COUNTRY */}
-        <div className="grid grid-cols-2 gap-4">
-
+    <div className="max-w-5xl mx-auto p-6 bg-white dark:bg-gray-900 rounded-2xl shadow-xl transition-all">
+  
+      {/* Header */}
+      <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-6">
+        Create City
+      </h2>
+  
+      <form onSubmit={handleSubmit} className="space-y-6">
+  
+        {/* City Name */}
+        <div className="flex flex-col">
+          <label className="text-gray-700 dark:text-gray-300 font-medium mb-1">City Name</label>
           <input
-            name="state"
-            placeholder="State"
-            className="border p-2 rounded"
-            value={formData.state}
+            name="name"
+            placeholder="Enter city name"
+            value={formData.name}
             onChange={handleChange}
+            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+            required
           />
-
-          <input
-            name="country"
-            placeholder="Country"
-            className="border p-2 rounded"
-            value={formData.country}
-            onChange={handleChange}
-          />
-
         </div>
-
-        {/* DESCRIPTION */}
-        <textarea
-          name="description"
-          placeholder="City Description"
-          className="w-full border p-2 rounded"
-          value={formData.description}
-          onChange={handleChange}
-        />
-
-        {/* BEST TIME + BUDGET */}
-        <div className="grid grid-cols-2 gap-4">
-
-          <select
-            name="bestTimeToVisit"
-            className="border p-2 rounded"
-            value={formData.bestTimeToVisit}
-            onChange={handleChange}
-          >
-            <option value="">Select Best Time</option>
-
-            {bestTimeOptions.map((time) => (
-              <option key={time}>{time}</option>
-            ))}
-
-          </select>
-
-          <input
-            name="avgDailyBudget"
-            placeholder="Average Daily Budget"
-            className="border p-2 rounded"
-            value={formData.avgDailyBudget}
-            onChange={handleChange}
-          />
-
+  
+        {/* State & Country */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="flex flex-col">
+            <label className="text-gray-700 dark:text-gray-300 font-medium mb-1">State</label>
+            <input
+              name="state"
+              placeholder="Enter state"
+              value={formData.state}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+              required
+            />
+          </div>
+  
+          <div className="flex flex-col">
+            <label className="text-gray-700 dark:text-gray-300 font-medium mb-1">Country</label>
+            <input
+              name="country"
+              placeholder="Enter country"
+              value={formData.country}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+              required
+            />
+          </div>
         </div>
-
-        {/* LOCATION */}
-        <div>
-
-          <p className="font-semibold mb-2">Location</p>
-
-          <div className="grid grid-cols-3 gap-3">
-
+  
+        {/* Description */}
+        <div className="flex flex-col">
+          <label className="text-gray-700 dark:text-gray-300 font-medium mb-1">City Description</label>
+          <textarea
+            name="description"
+            placeholder="Describe the city"
+            value={formData.description}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+            rows={4}
+            required
+          />
+        </div>
+  
+        {/* Best Time & Budget */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="flex flex-col">
+            <label className="text-gray-700 dark:text-gray-300 font-medium mb-1">Best Time to Visit</label>
+            <select
+              name="bestTimeToVisit"
+              value={formData.bestTimeToVisit}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+              required
+            >
+              <option value="">Select best time</option>
+              {bestTimeOptions.map((time) => (
+                <option key={time}>{time}</option>
+              ))}
+            </select>
+          </div>
+  
+          <div className="flex flex-col">
+            <label className="text-gray-700 dark:text-gray-300 font-medium mb-1">Average Daily Budget</label>
+            <input
+              name="avgDailyBudget"
+              placeholder="Enter budget"
+              value={formData.avgDailyBudget}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+              required
+            />
+          </div>
+        </div>
+  
+        {/* Location */}
+        <div className="flex flex-col">
+          <label className="text-gray-700 dark:text-gray-300 font-medium mb-2">Location</label>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <input
               name="latitude"
               placeholder="Latitude"
-              className="border p-2 rounded"
               value={formData.latitude}
               onChange={handleChange}
+              className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-800 dark:border-gray-700 dark:text-white"
             />
-
             <input
               name="longitude"
               placeholder="Longitude"
-              className="border p-2 rounded"
               value={formData.longitude}
               onChange={handleChange}
+              className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-800 dark:border-gray-700 dark:text-white"
             />
-
             <button
               type="button"
               onClick={handleGetLocation}
-              className="bg-blue-600 text-white rounded-lg"
+              className="bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-700 transition"
             >
               Get Location
             </button>
-
           </div>
-
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-gray-500 mt-1 dark:text-gray-400">
             Type coordinates manually or click "Get Location".
           </p>
-
         </div>
-
-        {/* FAMOUS FOR */}
+  
+        {/* Famous For */}
         <div>
-
-          <p className="font-semibold mb-2">Famous For</p>
-
-          <div className="grid grid-cols-3 gap-2">
-
+          <p className="font-semibold text-gray-700 dark:text-gray-300 mb-2">Famous For</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {famousOptions.map((item) => (
               <label
                 key={item}
-                className="flex items-center gap-2 border p-2 rounded cursor-pointer"
+                className="flex items-center gap-2 border rounded-lg p-2 cursor-pointer hover:bg-blue-50 dark:hover:bg-gray-700 transition"
               >
-
                 <input
                   type="checkbox"
                   checked={formData.famousFor.includes(item)}
                   onChange={() => toggleFamous(item)}
                 />
-
                 {item}
-
               </label>
             ))}
-
           </div>
-
         </div>
-
-        {/* IMAGES */}
+  
+        {/* Images */}
         <div>
-
-          <p className="font-semibold mb-2">City Images (Max 5)</p>
-
-          <div className="grid grid-cols-5 gap-3">
-
+          <p className="font-semibold text-gray-700 dark:text-gray-300 mb-2">City Images (Max 5)</p>
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
             {formData.images.map((img, index) => (
               <label
                 key={index}
-                className="border h-24 flex items-center justify-center cursor-pointer rounded overflow-hidden"
+                className="border h-24 flex items-center justify-center cursor-pointer rounded-lg overflow-hidden hover:shadow-md transition"
               >
-
                 {img ? (
                   <img
                     src={URL.createObjectURL(img)}
@@ -310,32 +312,26 @@ function AddCityDetails() {
                 ) : (
                   "+"
                 )}
-
                 <input
                   type="file"
                   accept="image/*"
                   hidden
                   onChange={(e) => handleImageChange(e, index)}
                 />
-
               </label>
             ))}
-
           </div>
-
         </div>
-
-        {/* SUBMIT */}
+  
+        {/* Submit */}
         <button
           type="submit"
           disabled={loading}
-          className="bg-green-600 text-white px-6 py-2 rounded-lg"
+          className="w-full bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? "Creating..." : "Create City"}
         </button>
-
       </form>
-
     </div>
   );
 }

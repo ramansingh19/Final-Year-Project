@@ -49,11 +49,12 @@ import ShowHotelStatus from "./pages/admin/hotel/ShowHotelStatus";
 import CreateRoom from "./pages/admin/rooms/CreateRoom";
 import GetAllRooms from "./pages/admin/rooms/GetAllRooms";
 import UpdateRoom from "./pages/admin/rooms/UpdateRoom";
+import AdminsDetails from "./pages/superAdmin/AdminsDetails";
+import AdminItemsDetailsByAdminId from "./pages/superAdmin/AdminItemsDetailsByAdminId";
 
 function App() {
   return (
     <>
-
       <Navbar />
       <Routes>
         <Route path="/" element={<LandingPage />} />
@@ -248,8 +249,49 @@ function App() {
             </AdminProtectedRouter>
           }
         />
+        <Route
+          path="/admin/hotel-dashboard"
+          element={
+            <AdminProtectedRouter>
+              <AdminHotelDashBoard />
+            </AdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/admin/show-hotel-status"
+          element={
+            <AdminProtectedRouter>
+              <ShowHotelStatus />
+            </AdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/admin/create-room"
+          element={
+            <AdminProtectedRouter>
+              <CreateRoom />
+            </AdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/admin/rooms/:id"
+          element={
+            <AdminProtectedRouter>
+              <GetAllRooms />
+            </AdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/admin/update-room/:hotelId"
+          element={
+            <AdminProtectedRouter>
+              <UpdateRoom />
+            </AdminProtectedRouter>
+          }
+        />
+        <Route path="/superAdmin/admin-details" element={<SuperAdminProtectedRouter><AdminsDetails/></SuperAdminProtectedRouter>}/>
+        <Route path="/superAdmin/admin-products/:adminId" element={<SuperAdminProtectedRouter><AdminItemsDetailsByAdminId/></SuperAdminProtectedRouter>} />
       </Routes>
-
     </>
   );
 }

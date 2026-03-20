@@ -233,7 +233,7 @@ export const searchHotels = async(req , res) => {
   
 }
 
-}
+
 
 export const getBookingsByHotel = async (req, res) => {
   try {

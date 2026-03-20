@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getCityById, updateCity } from "../../../features/user/citySlice";
 import { useNavigate, useParams } from "react-router-dom";
+import { FaCity } from "react-icons/fa";
 
 function UpdateCityDetails() {
   const { id: cityId } = useParams();
@@ -76,103 +77,111 @@ function UpdateCityDetails() {
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="p-6 max-w-4xl mx-auto bg-white rounded-2xl shadow-lg">
-      <h2 className="text-2xl font-bold mb-6">Update City Details</h2>
-
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="p-6 max-w-4xl mx-auto bg-white dark:bg-gray-900 rounded-2xl shadow-xl transition-all">
+  
+      {/* Header */}
+      <div className="flex items-center gap-3 mb-6">
+        <FaCity className="text-3xl text-blue-600 dark:text-blue-400" />
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+          Update City Details
+        </h2>
+      </div>
+  
+      <form onSubmit={handleSubmit} className="space-y-6">
+  
         {/* Name */}
-        <div>
-          <label className="font-semibold">Name</label>
+        <div className="flex flex-col">
+          <label className="mb-1 font-medium text-gray-700 dark:text-gray-300">Name</label>
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
-            className="w-full border rounded px-3 py-2 mt-1"
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white dark:border-gray-700"
           />
         </div>
-
+  
         {/* State & Country */}
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="font-semibold">State</label>
+          <div className="flex flex-col">
+            <label className="mb-1 font-medium text-gray-700 dark:text-gray-300">State</label>
             <input
               type="text"
               name="state"
               value={formData.state}
               onChange={handleChange}
-              className="w-full border rounded px-3 py-2 mt-1"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white dark:border-gray-700"
             />
           </div>
-          <div>
-            <label className="font-semibold">Country</label>
+          <div className="flex flex-col">
+            <label className="mb-1 font-medium text-gray-700 dark:text-gray-300">Country</label>
             <input
               type="text"
               name="country"
               value={formData.country}
               onChange={handleChange}
-              className="w-full border rounded px-3 py-2 mt-1"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white dark:border-gray-700"
             />
           </div>
         </div>
-
+  
         {/* Description */}
-        <div>
-          <label className="font-semibold">Description</label>
+        <div className="flex flex-col">
+          <label className="mb-1 font-medium text-gray-700 dark:text-gray-300">Description</label>
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
-            rows={3}
-            className="w-full border rounded px-3 py-2 mt-1"
+            rows={4}
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white dark:border-gray-700"
           ></textarea>
         </div>
-
+  
         {/* Best Time & Budget */}
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="font-semibold">Best Time To Visit</label>
+          <div className="flex flex-col">
+            <label className="mb-1 font-medium text-gray-700 dark:text-gray-300">Best Time To Visit</label>
             <input
               type="text"
               name="bestTimeToVisit"
               value={formData.bestTimeToVisit}
               onChange={handleChange}
-              className="w-full border rounded px-3 py-2 mt-1"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white dark:border-gray-700"
             />
           </div>
-          <div>
-            <label className="font-semibold">Average Daily Budget</label>
+          <div className="flex flex-col">
+            <label className="mb-1 font-medium text-gray-700 dark:text-gray-300">Average Daily Budget</label>
             <input
               type="number"
               name="avgDailyBudget"
               value={formData.avgDailyBudget}
               onChange={handleChange}
-              className="w-full border rounded px-3 py-2 mt-1"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white dark:border-gray-700"
             />
           </div>
         </div>
-
+  
         {/* Famous For */}
-        <div>
-          <label className="font-semibold">Famous For (comma separated)</label>
+        <div className="flex flex-col">
+          <label className="mb-1 font-medium text-gray-700 dark:text-gray-300">Famous For (comma separated)</label>
           <input
             type="text"
             name="famousFor"
             value={formData.famousFor}
             onChange={handleChange}
-            className="w-full border rounded px-3 py-2 mt-1"
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white dark:border-gray-700"
           />
         </div>
-
+  
         {/* Images */}
-        <div>
-          <label className="font-semibold">Images</label>
+        <div className="flex flex-col">
+          <label className="mb-1 font-medium text-gray-700 dark:text-gray-300">Images</label>
           <input
             type="file"
             name="images"
             multiple
             onChange={handleChange}
-            className="w-full border rounded px-3 py-2 mt-1"
+            className="w-full"
           />
           <div className="flex gap-2 mt-2 flex-wrap">
             {Array.from(formData.images || []).map((img, i) => {
@@ -182,19 +191,27 @@ function UpdateCityDetails() {
                   key={i}
                   src={src}
                   alt="city"
-                  className="w-24 h-24 object-cover rounded"
+                  className="w-24 h-24 object-cover rounded-lg shadow-sm"
                 />
               );
             })}
           </div>
         </div>
-
+  
         {/* Submit */}
         <button
           type="submit"
-          className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+          disabled={loading}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg shadow-md transition flex justify-center items-center"
         >
-          Update City
+          {loading ? (
+            <span className="flex items-center gap-2">
+              <span className="loader border-t-white border-blue-500 animate-spin rounded-full w-5 h-5"></span>
+              Updating...
+            </span>
+          ) : (
+            "Update City"
+          )}
         </button>
       </form>
     </div>
