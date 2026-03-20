@@ -1,5 +1,5 @@
 import express from "express"
-import { bookRoom, cancelBooking, getBookingsByHotel, getMyBookings, getRoomAvailability, updateBookingStatus } from "../controllers/hotelBooking.controller.js";
+import { bookRoom, cancelBooking, getBookingsByHotel, getMyBookings, getRoomAvailability, searchHotels, updateBookingStatus } from "../controllers/hotelBooking.controller.js";
 import { authorize, isAuthenticated } from "../middleware/auth.middleware.js";
 
 const hotelBookingRouter = express.Router();
@@ -12,6 +12,9 @@ hotelBookingRouter.post("/bookRoom",isAuthenticated, bookRoom)
 
 // user - get my bookings
 hotelBookingRouter.get("/my-bookings", isAuthenticated, getMyBookings);
+
+//user - get by search
+hotelBookingRouter.get("/search" , isAuthenticated, searchHotels)
 
 // user - cancel booking
 hotelBookingRouter.put("/cancel/:bookingId", isAuthenticated, cancelBooking);

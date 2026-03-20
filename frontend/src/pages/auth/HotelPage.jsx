@@ -21,7 +21,8 @@ import {
   FaPercent,
 } from "react-icons/fa";
 import { MdOutlineLocalOffer, MdAir, MdSpa } from "react-icons/md";
-import { getPublicActiveHotels } from "../../features/user/hotelSlice";
+import { getPublicActiveHotels, searchHotel } from "../../features/user/hotelSlice";
+
 
 // ── Amenity icons — matches backend facilities field values ───────────────────
 const AMENITY_ICONS = {
@@ -300,12 +301,29 @@ function HotelPage() {
   const [searchParams] = useSearchParams();
 
   const { hotels = [], loading } = useSelector((s) => s.hotel);
-  const cityParam = searchParams.get("city") || "";
 
-  // Fetch whenever city param changes
+  const cityParam = searchParams.get("city") || "";
+  const checkInParam = searchParams.get("checkIn") || "";
+  const checkOutParam = searchParams.get("checkOut") || "";
+  const roomsParam = searchParams.get("rooms") || "";
+  const adultsParam = searchParams.get("adults") || "";
+  const childrenParam = searchParams.get("children") || "";
+
   useEffect(() => {
-    dispatch(getPublicActiveHotels({ city: cityParam }));
-  }, [cityParam, dispatch]);
+  if (cityParam) {
+    dispatch(searchHotel({
+
+      city:    cityParam,
+      checkIn: checkInParam,
+      checkOut:checkOutParam,
+      rooms:   roomsParam,
+      adults:  adultsParam,
+      children:childrenParam,
+    }));
+  } else {
+    dispatch(getPublicActiveHotels());
+  }
+}, [cityParam, dispatch, checkInParam , checkOutParam , roomsParam , adultsParam , childrenParam]);
 
   const [filters, setFilters] = useState({});
   const [sortBy, setSortBy] = useState("recommended");

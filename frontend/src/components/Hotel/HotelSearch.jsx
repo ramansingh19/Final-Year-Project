@@ -11,7 +11,7 @@ import {
   FaPlus,
 } from "react-icons/fa";
 // import { MdPets } from "react-icons/md";
-import { useSelector } from "react-redux";
+import apiClient from "../../pages/services/apiClient";
 
 const getToday = () => new Date().toISOString().split("T")[0];
 const getTomorrow = () => {
@@ -120,31 +120,35 @@ const HeroSearch = () => {
   const [cityError, setCityError] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [allCities, setAllCities] = useState([]);
 
-  const { hotels = [] } = useSelector((s) => s.hotel);
-  const cityNames = [
-    ...new Set(
-      hotels
-        .map(
-          (h) => h.city?.name || (typeof h.city === "string" ? h.city : null),
-        )
-        .filter(Boolean),
-    ),
-  ].sort();
-
-  const debouncedCity = useDebounce(searchData.city, 200);
   useEffect(() => {
-    if (debouncedCity.trim().length > 0) {
-      const f = cityNames.filter((c) =>
-        c.toLowerCase().includes(debouncedCity.toLowerCase()),
-      );
-      setSuggestions(f);
-      setShowSuggestions(f.length > 0);
-    } else {
+    apiClient
+      .get("/api/city/active-cities")
+      .then((res) => {
+        const names = (res.data?.data || [])
+          .map((c) => c.name)
+          .filter(Boolean)
+          .sort();
+        setAllCities(names);
+      })
+      .catch(() => {});
+  }, []);
+
+  const debouncedCity = useDebounce(searchData.city, 200); // ← declare FIRST
+
+  useEffect(() => {
+    if (debouncedCity.trim().length < 1) {
       setSuggestions([]);
       setShowSuggestions(false);
+      return;
     }
-  }, [debouncedCity]);
+    const filtered = allCities.filter((c) =>
+      c.toLowerCase().includes(debouncedCity.toLowerCase()),
+    );
+    setSuggestions(filtered);
+    setShowSuggestions(filtered.length > 0);
+  }, [debouncedCity, allCities]);
 
   // Close on outside click
   useEffect(() => {

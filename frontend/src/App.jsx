@@ -44,16 +44,10 @@ import HotelPage from "./pages/auth/HotelPage";
 import HotelDetailPage from "./pages/auth/HotelDetailPage ";
 import SuperAdminApprovealCityList from "./pages/superAdmin/city/SuperAdminApprovealCityList";
 import GetAllActiveCities from "./pages/superAdmin/city/GetAllActiveCities";
-import AdminHotelDashBoard from "./pages/admin/hotel/AdminHotelDashBoard";
-import ShowHotelStatus from "./pages/admin/hotel/ShowHotelStatus";
-import CreateRoom from "./pages/admin/rooms/CreateRoom";
-import GetAllRooms from "./pages/admin/rooms/GetAllRooms";
-import UpdateRoom from "./pages/admin/rooms/UpdateRoom";
 
 function App() {
   return (
     <>
-
       <Navbar />
       <Routes>
         <Route path="/" element={<LandingPage />} />
@@ -249,7 +243,6 @@ function App() {
           }
         />
       </Routes>
-
     </>
   );
 }

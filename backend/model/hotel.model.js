@@ -14,6 +14,12 @@ const hotelSchema = new Schema(
       required: true,
     },
 
+    pricePerNight: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+
     address: {
       type: String,
       required: true,
@@ -87,7 +93,7 @@ const hotelSchema = new Schema(
       ref: "User",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 hotelSchema.index({ location: "2dsphere" });
