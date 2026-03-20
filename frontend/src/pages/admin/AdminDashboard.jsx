@@ -109,6 +109,24 @@ function AdminDashboard() {
             </p>
           </motion.div>
         </Link>
+
+        {/* Card */}
+        <Link to="/admin/hotel-booking-dashboard">
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl transition-all p-6 flex flex-col items-center text-center border border-gray-200 dark:border-gray-700"
+          >
+            <div className="text-3xl mb-3 bg-gray-500 p-3 rounded-xl text-white shadow">
+              <FaCity />
+            </div>
+            <h2 className="font-semibold text-gray-800 dark:text-white">
+              Show Hotel Bookings
+            </h2>
+            <p className="text-sm text-gray-500 mt-1">
+              Track approval & availability
+            </p>
+          </motion.div>
+        </Link>
       </div>
     </div>
   );

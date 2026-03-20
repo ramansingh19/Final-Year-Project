@@ -51,6 +51,8 @@ import GetAllRooms from "./pages/admin/rooms/GetAllRooms";
 import UpdateRoom from "./pages/admin/rooms/UpdateRoom";
 import AdminsDetails from "./pages/superAdmin/AdminsDetails";
 import AdminItemsDetailsByAdminId from "./pages/superAdmin/AdminItemsDetailsByAdminId";
+import HotelBookingDashboard from "./pages/admin/HotelBooking/HotelBookingDashboard";
+import BookedHotels from "./pages/admin/HotelBooking/BookedHotels";
 
 function App() {
   return (
@@ -291,6 +293,8 @@ function App() {
         />
         <Route path="/superAdmin/admin-details" element={<SuperAdminProtectedRouter><AdminsDetails/></SuperAdminProtectedRouter>}/>
         <Route path="/superAdmin/admin-products/:adminId" element={<SuperAdminProtectedRouter><AdminItemsDetailsByAdminId/></SuperAdminProtectedRouter>} />
+        <Route path="/admin/hotel-booking-dashboard" element={<AdminProtectedRouter><HotelBookingDashboard/></AdminProtectedRouter>}/>
+        <Route path="/admin/booked-hotels/:hotelId" element={<AdminProtectedRouter><BookedHotels/></AdminProtectedRouter>}/>
       </Routes>
     </>
   );

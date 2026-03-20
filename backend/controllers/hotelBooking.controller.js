@@ -233,8 +233,6 @@ export const searchHotels = async(req , res) => {
   
 }
 
-
-
 export const getBookingsByHotel = async (req, res) => {
   try {
     const { hotelId } = req.params;
@@ -303,6 +301,7 @@ export const getMyBookings = async (req, res) => {
 export const cancelBooking = async (req, res) => {
   try {
     const { bookingId } = req.params;
+    console.log("BookId: ",bookingId);
 
     const booking = await HotelBooking.findById(bookingId);
 

@@ -38,12 +38,11 @@ export const getBookingsByHotel = createAsyncThunk(
   async (hotelId, thunkAPI) => {
     try {
       const token = localStorage.getItem("adminToken");
-
       const res = await apiClient.get(`/api/hotelBooking/admin/${hotelId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      return res.data.data;
+      return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data?.message);
     }
@@ -56,7 +55,7 @@ export const updateBookingStatus = createAsyncThunk(
   async ({ bookingId, status }, thunkAPI) => {
     try {
       const token = localStorage.getItem("adminToken");
-
+      console.log(bookingId, status);
       const res = await apiClient.put(
         `/api/hotelBooking/status/${bookingId}`,
         { bookingStatus: status },
@@ -65,7 +64,7 @@ export const updateBookingStatus = createAsyncThunk(
         }
       );
 
-      return res.data.data;
+      return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data?.message);
     }
@@ -96,7 +95,6 @@ export const cancelBooking = createAsyncThunk(
   async (bookingId, thunkAPI) => {
     try {
       const token = localStorage.getItem("userToken");
-
       const res = await apiClient.put(
         `/api/hotelBooking/cancel/${bookingId}`,
         {},
@@ -105,7 +103,7 @@ export const cancelBooking = createAsyncThunk(
         }
       );
 
-      return res.data.data;
+      return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data?.message);
     }
