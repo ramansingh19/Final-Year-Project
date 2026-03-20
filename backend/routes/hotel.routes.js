@@ -3,6 +3,7 @@ import {
   createHotel,
   deleteHotel,
   getActiveHotels,
+  getAdminHotels,
   getAllHotels,
   getHotelbyid,
   getHotelsByStatus,
@@ -23,7 +24,10 @@ hotelRouter.get("/get-all-Inactive-hotels", isAuthenticated, authorize("super_ad
 hotelRouter.get("/get-hotel-by-id/:id",isAuthenticated, authorize("admin"), getHotelbyid);
 hotelRouter.get("/activehotel",isAuthenticated, getActiveHotels)
 hotelRouter.get("/get-all-hotels",isAuthenticated, getAllHotels)
-hotelRouter.get("/get-hotel-status", isAuthenticated, authorize("admin"), getHotelsByStatus)
+hotelRouter.get("/get-hotel-status", isAuthenticated, authorize("admin", "super_admin"), getHotelsByStatus)
+
+// Only superadmin can access
+hotelRouter.get("/admin/:adminId/hotels", isAuthenticated, authorize("super_admin"), getAdminHotels);
 
 //public routes 
 hotelRouter.get("/public/hotels", getPublicActiveHotels)

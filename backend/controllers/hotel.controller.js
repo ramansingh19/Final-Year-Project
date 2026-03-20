@@ -4,6 +4,7 @@ import { City } from "../model/city.model.js";
 import { Hotel } from "../model/hotel.model.js";
 import fs from "fs";
 import { Place } from "../model/place.model.js";
+import { User } from "../model/user.model.js";
 
 export const createHotel = async (req, res) => {
   try {
@@ -514,6 +515,37 @@ export const inactiveHotelByAdmin = async (req, res) => {
       message: "Hotel inactivated successfully",
     });
 
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Get active hotels for a specific admin
+export const getAdminHotels = async (req, res) => {
+  try {
+    const { adminId } = req.params;
+
+    // Check if admin exists
+    const admin = await User.findById(adminId);
+    if (!admin) {
+      return res.status(404).json({
+        success: false,
+        message: "Admin not found",
+      });
+    }
+
+    // Fetch active hotels for this admin
+    const hotels = await Hotel.find({ createdBy: adminId, status: "active" })
+      .populate("city")
+      .populate("createdBy", "name email");
+
+    return res.status(200).json({
+      success: true,
+      data: hotels,
+    });
   } catch (error) {
     return res.status(500).json({
       success: false,

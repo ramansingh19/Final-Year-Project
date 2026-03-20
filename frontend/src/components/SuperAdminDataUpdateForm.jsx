@@ -57,35 +57,40 @@ function SuperAdminDataUpdateForm() {
 
 
   return (
-       <form
+    <form
       onSubmit={handleSubmit}
-      className="space-y-6 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg max-w-md mx-auto"
+      className="space-y-6 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl p-6 rounded-2xl shadow-2xl max-w-md mx-auto transition-all"
     >
-      <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">
+      {/* Header */}
+      <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 dark:text-white text-center mb-4">
         Update Profile
       </h2>
-
-      {/* Avatar Upload on Top */}
+  
+      {/* Avatar Upload */}
       <div className="flex flex-col items-center">
         {avatarPreview ? (
           <img
             src={avatarPreview}
             alt="Avatar Preview"
-            className="w-28 h-28 rounded-full border border-gray-300 dark:border-gray-600 object-cover mb-3"
+            className="w-28 h-28 rounded-full border border-gray-300 dark:border-gray-600 object-cover mb-3 shadow-md"
           />
         ) : (
-          <div className="w-28 h-28 rounded-full bg-blue-500 flex items-center justify-center text-white text-2xl font-bold mb-3">
+          <div className="w-28 h-28 rounded-full bg-linear-to-r from-blue-500 to-indigo-600 flex items-center justify-center text-white text-3xl font-bold mb-3 shadow-md">
             {superAdmin.userName ? superAdmin.userName[0].toUpperCase() : "U"}
           </div>
         )}
-        <input
-          type="file"
-          name="avatar"
-          onChange={handleChange}
-          className="w-full text-gray-700 dark:text-gray-200"
-        />
+        <label className="flex items-center gap-2 cursor-pointer text-blue-600 hover:text-blue-700 text-sm">
+          {/* <FiUpload /> */}
+          Upload Avatar
+          <input
+            type="file"
+            name="avatar"
+            onChange={handleChange}
+            className="hidden"
+          />
+        </label>
       </div>
-
+  
       {/* Name Field */}
       <div className="flex flex-col">
         <label className="mb-1 text-gray-600 dark:text-gray-300 font-medium">
@@ -97,10 +102,10 @@ function SuperAdminDataUpdateForm() {
           value={formData.userName}
           onChange={handleChange}
           placeholder="Enter your name"
-          className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white dark:border-gray-600"
+          className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-700 dark:text-white dark:border-gray-600 transition"
         />
       </div>
-
+  
       {/* Email Field */}
       <div className="flex flex-col">
         <label className="mb-1 text-gray-600 dark:text-gray-300 font-medium">
@@ -112,10 +117,10 @@ function SuperAdminDataUpdateForm() {
           value={formData.email}
           onChange={handleChange}
           placeholder="Enter your email"
-          className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white dark:border-gray-600"
+          className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-700 dark:text-white dark:border-gray-600 transition"
         />
       </div>
-
+  
       {/* Contact Number Field */}
       <div className="flex flex-col">
         <label className="mb-1 text-gray-600 dark:text-gray-300 font-medium">
@@ -127,22 +132,24 @@ function SuperAdminDataUpdateForm() {
           value={formData.contactNumber}
           onChange={handleChange}
           placeholder="Enter your number"
-          className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white dark:border-gray-600"
+          className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-700 dark:text-white dark:border-gray-600 transition"
         />
       </div>
-
+  
       {/* Error Message */}
-      {error && <p className="text-red-500 text-sm font-medium">{error}</p>}
-
+      {error && (
+        <p className="text-red-500 text-sm font-medium text-center">{error}</p>
+      )}
+  
       {/* Submit Button */}
       <button
         type="submit"
-        className="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-md focus:ring-2 focus:ring-blue-500 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
         disabled={loading}
+        className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-lg flex items-center justify-center transition-all disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {loading ? (
           <>
-            <span className="loader border-t-white border-blue-500 animate-spin rounded-full w-5 h-5 mr-2"></span>
+            <span className="border-2 border-t-white border-blue-500 animate-spin rounded-full w-5 h-5 mr-2"></span>
             Updating...
           </>
         ) : (
@@ -150,7 +157,7 @@ function SuperAdminDataUpdateForm() {
         )}
       </button>
     </form>
-  )
+  );
 }
 
 export default SuperAdminDataUpdateForm

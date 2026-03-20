@@ -7,6 +7,9 @@ const initialState = {
   error: null,
   createSuccess: false,
   hotel: null,
+  selectedAdminId: null,
+  loadingAdmins: false,
+  loadingHotels: false,
 };
 
 /* -------- Create Hotel -------- */
@@ -333,10 +336,32 @@ export const getHotelsStatus = createAsyncThunk(
   }
 );
 
+/* ------  Fetch active hotels by admin ------- */
+export const getAdminHotels = createAsyncThunk(
+  "hotel/getAdminHotels",
+  async (adminId, thunkAPI) => {
+    try {
+      const token = localStorage.getItem("superAdminToken");
+      
+      const response = await apiClient.get(`/api/hotel/admin/${adminId}/hotels`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.data; // returns hotel array
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response?.data?.message || "Failed to fetch hotels");
+    }
+  }
+);
+
 const hotelSlice = createSlice({
   name: "hotel",
   initialState,
-  reducers: {},
+  reducers: {
+    selectAdmin: (state, action) => {
+      state.selectedAdminId = action.payload;
+      state.hotels = []; // reset hotels when selecting new admin
+    },
+  },
 
   extraReducers: (builder) => {
     builder
@@ -616,7 +641,24 @@ const hotelSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       });
+
+      /* ------  Fetch active hotels by admin ------- */
+      builder
+      .addCase(getAdminHotels.pending, (state) => {
+        state.loadingHotels = true;
+        state.error = null;
+      })
+      .addCase(getAdminHotels.fulfilled, (state, action) => {
+        state.loadingHotels = false;
+        state.hotels = action.payload;
+      })
+      .addCase(getAdminHotels.rejected, (state, action) => {
+        state.loadingHotels = false;
+        state.error = action.payload;
+      });
+
   },
 });
 
+export const { selectAdmin } = hotelSlice.actions;
 export default hotelSlice.reducer;
