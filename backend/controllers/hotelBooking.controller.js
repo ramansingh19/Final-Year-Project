@@ -139,6 +139,7 @@ export const searchHotels = async (req, res) => {
   try {
     const { city, checkIn, checkOut, rooms, adults, children } = req.query;
 
+
     let query = { status: "active" };
 
     if (city && city.trim()) {
@@ -167,6 +168,7 @@ export const searchHotels = async (req, res) => {
     });
   }
 };
+
 
 export const getBookingsByHotel = async (req, res) => {
   try {
@@ -236,6 +238,7 @@ export const getMyBookings = async (req, res) => {
 export const cancelBooking = async (req, res) => {
   try {
     const { bookingId } = req.params;
+    console.log("BookId: ",bookingId);
 
     const booking = await HotelBooking.findById(bookingId);
 

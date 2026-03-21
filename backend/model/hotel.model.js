@@ -92,6 +92,17 @@ const hotelSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
+    starCategory: {
+      type: Number,
+      min: 1,
+      max: 5,
+      default: null, // null = unrated
+    },
+    propertyType: {
+      type: String,
+      enum: ["hotel", "villa", "homestay", "resort", "apartment"],
+      default: "hotel",
+    },
   },
   { timestamps: true },
 );

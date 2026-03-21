@@ -19,12 +19,14 @@ import {
   FaShieldAlt,
   FaBolt,
   FaPercent,
+  FaMoon,
 } from "react-icons/fa";
 import { MdOutlineLocalOffer, MdAir, MdSpa } from "react-icons/md";
-import { getPublicActiveHotels, searchHotel } from "../../features/user/hotelSlice";
+import {
+  getPublicActiveHotels,
+  searchHotel,
+} from "../../features/user/hotelSlice";
 
-
-// ── Amenity icons — matches backend facilities field values ───────────────────
 const AMENITY_ICONS = {
   wifi: <FaWifi />,
   pool: <FaSwimmingPool />,
@@ -42,7 +44,15 @@ const SORT_OPTIONS = [
   { label: "Newest First", value: "newest" },
 ];
 
-// ── Sort hotels client-side ───────────────────────────────────────────────────
+// ── Night count helper ────────────────────────────────────────────────────────
+const getNights = (checkIn, checkOut) => {
+  if (!checkIn || !checkOut) return 1;
+  const diff = new Date(checkOut) - new Date(checkIn);
+  const nights = Math.round(diff / (1000 * 60 * 60 * 24));
+  return nights > 0 ? nights : 1;
+};
+
+// ── Sort ──────────────────────────────────────────────────────────────────────
 const sortHotels = (hotels, sortBy) => {
   const arr = [...hotels];
   switch (sortBy) {
@@ -67,11 +77,9 @@ const sortHotels = (hotels, sortBy) => {
   }
 };
 
-// ── Filter hotels client-side by sidebar filters ──────────────────────────────
+// ── Filter ────────────────────────────────────────────────────────────────────
 const applyFilters = (hotels, filters) => {
   let result = [...hotels];
-
-  // Locality search
   if (filters.locality) {
     const q = filters.locality.toLowerCase();
     result = result.filter(
@@ -80,36 +88,31 @@ const applyFilters = (hotels, filters) => {
         h.address?.toLowerCase().includes(q),
     );
   }
-
-  // Price filter
   if (filters.price?.length > 0) {
     result = result.filter((h) => {
       const price = h.pricePerNight ?? 0;
       return filters.price.some((range) => {
-        const [min, max] = range.split("-").map(Number);
         if (range === "10000+") return price >= 10000;
+        const [min, max] = range.split("-").map(Number);
         return price >= min && price <= max;
       });
     });
   }
-
-  // Amenities filter — matches backend facilities array
   if (filters.amenities?.length > 0) {
     result = result.filter((h) => {
       const fac = (h.facilities || []).map((f) => f.toLowerCase());
       return filters.amenities.every((a) => fac.includes(a));
     });
   }
-
   return result;
 };
 
-// ── Skeleton card (mobile responsive) ────────────────────────────────────────
+// ── Skeleton ──────────────────────────────────────────────────────────────────
 const SkeletonCard = () => (
-  <div className="bg-white rounded-2xl overflow-hidden border border-slate-100 flex flex-col sm:flex-row animate-pulse">
-    <div className="w-full sm:w-56 h-44 bg-slate-200 shrink-0" />
+  <div className="bg-white rounded-2xl overflow-hidden border border-slate-100 flex flex-col sm:flex-row animate-pulse h-[180px] sm:h-[168px]">
+    <div className="w-full sm:w-52 h-44 sm:h-full bg-slate-200 shrink-0" />
     <div className="flex-1 p-4 space-y-3">
-      <div className="h-4 bg-slate-200 rounded-lg w-2/3" />
+      <div className="h-4 bg-slate-200 rounded w-2/3" />
       <div className="h-3 bg-slate-100 rounded w-1/2" />
       <div className="flex gap-2 mt-3">
         {[...Array(3)].map((_, i) => (
@@ -117,15 +120,27 @@ const SkeletonCard = () => (
         ))}
       </div>
     </div>
-    <div className="w-full sm:w-36 p-4 border-t sm:border-t-0 sm:border-l border-slate-100 flex flex-row sm:flex-col justify-between items-center sm:items-end gap-3">
-      <div className="h-6 bg-slate-200 rounded-lg w-24" />
+    <div className="w-36 p-4 border-l border-slate-100 hidden sm:flex flex-col justify-between items-end">
+      <div className="h-6 bg-slate-200 rounded w-20" />
       <div className="h-9 bg-slate-200 rounded-xl w-24" />
     </div>
   </div>
 );
 
-// ── Hotel card ────────────────────────────────────────────────────────────────
-const HotelCard = ({ hotel }) => {
+// ── Star display ──────────────────────────────────────────────────────────────
+const StarDisplay = ({ count }) => {
+  if (!count) return null;
+  return (
+    <div className="flex items-center gap-0.5">
+      {[...Array(Math.min(5, count))].map((_, i) => (
+        <FaStar key={i} className="text-amber-400 text-[9px]" />
+      ))}
+    </div>
+  );
+};
+
+// ── Hotel Card ────────────────────────────────────────────────────────────────
+const HotelCard = ({ hotel, nights = 1 }) => {
   const [wishlist, setWishlist] = useState(false);
   const navigate = useNavigate();
 
@@ -134,9 +149,8 @@ const HotelCard = ({ hotel }) => {
     : [
         "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80",
       ];
-
-  // ── Use correct backend field names ──────────────────────────────────────
   const price = hotel.pricePerNight ?? hotel.price ?? 0;
+  const totalPrice = price * nights;
   const rating = hotel.averageRating ?? hotel.rating ?? null;
   const totalReviews = hotel.totalReviews ?? 0;
   const facilities = hotel.facilities?.slice(0, 4) || [];
@@ -149,22 +163,24 @@ const HotelCard = ({ hotel }) => {
 
   return (
     <div
-      className="group bg-white rounded-2xl overflow-hidden border border-slate-100 hover:border-slate-200 hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300 flex flex-col sm:flex-row sm:items-stretch cursor-pointer"
+      className="group bg-white rounded-2xl overflow-hidden border border-slate-100 hover:border-slate-200 hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300 flex flex-col sm:flex-row cursor-pointer"
       onClick={() => navigate(`/hotels/${hotel._id}`)}
     >
-      {/* Image */}
-      <div className="relative w-full sm:w-52 h-44 sm:h-auto shrink-0 overflow-hidden bg-slate-100">
+      {/* ── Fixed size image ── */}
+      <div className="relative w-full sm:w-52 h-48 sm:h-48 shrink-0 overflow-hidden bg-slate-100">
         <img
           src={images[0]}
           alt={hotel.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
+
+        {/* Wishlist */}
         <button
           onClick={(e) => {
             e.stopPropagation();
             setWishlist(!wishlist);
           }}
-          className="absolute top-3 right-3 w-7 h-7 bg-white/85 backdrop-blur-sm rounded-full flex items-center justify-center shadow hover:scale-110 transition-transform"
+          className="absolute top-3 right-3 w-7 h-7 bg-white/85 backdrop-blur-sm rounded-full flex items-center justify-center shadow hover:scale-110 transition-transform z-10"
         >
           {wishlist ? (
             <FaHeart className="text-rose-500 text-xs" />
@@ -172,30 +188,45 @@ const HotelCard = ({ hotel }) => {
             <FaRegHeart className="text-slate-500 text-xs" />
           )}
         </button>
+
+        {/* Discount badge */}
         {discount > 0 && (
-          <div className="absolute top-3 left-3 bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded-lg flex items-center gap-1">
+          <div className="absolute top-3 left-3 bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded-lg flex items-center gap-1 z-10">
             <FaPercent className="text-[8px]" />
             {discount}% OFF
           </div>
         )}
+
+        {/* Image count badge */}
+        {hotel.images?.length > 1 && (
+          <div className="absolute bottom-2 right-2 bg-black/50 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded-md backdrop-blur-sm">
+            +{hotel.images.length} photos
+          </div>
+        )}
       </div>
 
-      {/* Info */}
+      {/* ── Info ── */}
       <div className="flex-1 p-4 flex flex-col justify-between min-w-0">
         <div>
+          {/* Name + rating row */}
           <div className="flex items-start justify-between gap-2 mb-1">
-            <h3 className="font-bold text-slate-900 text-sm sm:text-base leading-snug group-hover:text-[#1a3a6b] transition-colors line-clamp-1">
-              {hotel.name}
-            </h3>
-            {/* ── Real rating from backend ── */}
-            {rating !== null && (
-              <div className="flex items-center gap-1 shrink-0 bg-amber-50 border border-amber-200/80 rounded-lg px-2 py-0.5">
-                <FaStar className="text-amber-400 text-[10px]" />
-                <span className="text-xs font-bold text-amber-700">
+            <div className="min-w-0">
+              <h3 className="font-bold text-slate-900 text-sm sm:text-base leading-snug group-hover:text-[#1a3a6b] transition-colors line-clamp-1">
+                {hotel.name}
+              </h3>
+              {/* Star category */}
+              {hotel.starCategory && <StarDisplay count={hotel.starCategory} />}
+            </div>
+
+            {/* Review rating */}
+            {rating !== null && rating > 0 && (
+              <div className="flex items-center gap-1 shrink-0 bg-[#1a3a6b] rounded-lg px-2 py-1">
+                <FaStar className="text-amber-300 text-[10px]" />
+                <span className="text-xs font-bold text-white">
                   {Number(rating).toFixed(1)}
                 </span>
                 {totalReviews > 0 && (
-                  <span className="text-[10px] text-slate-400">
+                  <span className="text-[10px] text-white/70">
                     ({totalReviews})
                   </span>
                 )}
@@ -203,18 +234,18 @@ const HotelCard = ({ hotel }) => {
             )}
           </div>
 
-          <p className="text-xs text-slate-500 flex items-center gap-1 mb-3">
+          {/* Address */}
+          <p className="text-xs text-slate-500 flex items-center gap-1 mb-2.5">
             <FaMapMarkerAlt className="text-[#1a3a6b]/50 text-[10px] shrink-0" />
-            {/* ── Show address + city name from populated city object ── */}
             <span className="line-clamp-1">
               {[hotel.address, cityName].filter(Boolean).join(", ") ||
                 "City Centre"}
             </span>
           </p>
 
-          {/* ── Real facilities from backend ── */}
+          {/* Facilities */}
           {facilities.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex flex-wrap gap-1.5 mb-2">
               {facilities.map((f) => {
                 const key = f.toLowerCase().replace(/\s/g, "");
                 return (
@@ -231,35 +262,60 @@ const HotelCard = ({ hotel }) => {
               })}
             </div>
           )}
+
+          {/* Tags */}
+          {hotel.tags?.length > 0 && (
+            <div className="flex flex-wrap gap-1">
+              {hotel.tags.slice(0, 2).map((tag) => (
+                <span
+                  key={tag}
+                  className="text-[10px] bg-[#1a3a6b]/5 text-[#1a3a6b] border border-[#1a3a6b]/15 px-2 py-0.5 rounded-full font-semibold"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
+        {/* Offer */}
         {hotel.offers?.length > 0 && (
           <div className="mt-2 flex items-center gap-1 text-emerald-600 text-[11px] font-semibold">
-            <MdOutlineLocalOffer className="text-sm" />
+            <MdOutlineLocalOffer className="text-sm shrink-0" />
             <span className="line-clamp-1">{hotel.offers[0]}</span>
           </div>
         )}
       </div>
 
-      {/* Price block */}
-      <div className="sm:w-40 p-4 border-t sm:border-t-0 sm:border-l border-slate-100 flex flex-row sm:flex-col justify-between sm:justify-start items-center sm:items-end gap-3">
+      {/* ── Price block ── */}
+      <div className="sm:w-44 p-4 border-t sm:border-t-0 sm:border-l border-slate-100 flex flex-row sm:flex-col justify-between sm:justify-start items-center sm:items-end gap-3">
         <div className="text-right">
           {hotel.originalPrice && (
             <p className="text-[11px] text-slate-400 line-through">
               ₹{hotel.originalPrice.toLocaleString()}
             </p>
           )}
-          {/* ── Use pricePerNight from backend ── */}
+
+          {/* Per night price */}
           <p className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
-            {price > 0 ? `₹${price.toLocaleString()}` : "Price on request"}
+            {price > 0 ? `₹${price.toLocaleString()}` : "On request"}
           </p>
           {price > 0 && (
             <p className="text-[10px] text-slate-400">per night + taxes</p>
           )}
+
+          {/* Total for stay */}
+          {price > 0 && nights > 1 && (
+            <p className="text-[11px] text-slate-500 font-semibold mt-1 flex items-center justify-end gap-1">
+              <FaMoon className="text-[9px]" />₹{totalPrice.toLocaleString()} ·{" "}
+              {nights} nights
+            </p>
+          )}
         </div>
+
         <div className="flex flex-col items-end gap-1.5 shrink-0">
           {hotel.freeCancellation && (
-            <span className="hidden sm:flex items-center gap-1 text-emerald-600 text-[10px] font-semibold">
+            <span className="hidden sm:flex items-center gap-1 text-emerald-600 text-[10px] font-semibold whitespace-nowrap">
               <FaShieldAlt className="text-[8px]" /> Free cancellation
             </span>
           )}
@@ -278,7 +334,7 @@ const HotelCard = ({ hotel }) => {
   );
 };
 
-// ── Empty state ───────────────────────────────────────────────────────────────
+// ── Empty ─────────────────────────────────────────────────────────────────────
 const EmptyState = ({ cityParam }) => (
   <div className="flex flex-col items-center justify-center py-20 text-center px-4">
     <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
@@ -299,7 +355,6 @@ const EmptyState = ({ cityParam }) => (
 function HotelPage() {
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
-
   const { hotels = [], loading } = useSelector((s) => s.hotel);
 
   const cityParam = searchParams.get("city") || "";
@@ -309,21 +364,33 @@ function HotelPage() {
   const adultsParam = searchParams.get("adults") || "";
   const childrenParam = searchParams.get("children") || "";
 
-  useEffect(() => {
-  if (cityParam) {
-    dispatch(searchHotel({
+  // ── Night count for price display ─────────────────────────────────────────
+  const nights = getNights(checkInParam, checkOutParam);
 
-      city:    cityParam,
-      checkIn: checkInParam,
-      checkOut:checkOutParam,
-      rooms:   roomsParam,
-      adults:  adultsParam,
-      children:childrenParam,
-    }));
-  } else {
-    dispatch(getPublicActiveHotels());
-  }
-}, [cityParam, dispatch, checkInParam , checkOutParam , roomsParam , adultsParam , childrenParam]);
+  useEffect(() => {
+    if (cityParam) {
+      dispatch(
+        searchHotel({
+          city: cityParam,
+          checkIn: checkInParam,
+          checkOut: checkOutParam,
+          rooms: roomsParam,
+          adults: adultsParam,
+          children: childrenParam,
+        }),
+      );
+    } else {
+      dispatch(getPublicActiveHotels());
+    }
+  }, [
+    cityParam,
+    checkInParam,
+    checkOutParam,
+    roomsParam,
+    adultsParam,
+    childrenParam,
+    dispatch,
+  ]);
 
   const [filters, setFilters] = useState({});
   const [sortBy, setSortBy] = useState("recommended");
@@ -333,13 +400,10 @@ function HotelPage() {
   const [page, setPage] = useState(1);
   const PER_PAGE = 10;
 
-  // ── Apply sidebar filters + sort client-side ──────────────────────────────
-  const processedHotels = useMemo(() => {
-    const filtered = applyFilters(hotels, filters);
-    return sortHotels(filtered, sortBy);
-  }, [hotels, filters, sortBy]);
-
-  // Paginate
+  const processedHotels = useMemo(
+    () => sortHotels(applyFilters(hotels, filters), sortBy),
+    [hotels, filters, sortBy],
+  );
   const totalCount = processedHotels.length;
   const totalPages = Math.ceil(totalCount / PER_PAGE);
   const pagedHotels = processedHotels.slice(
@@ -353,7 +417,6 @@ function HotelPage() {
   };
   const sortLabel = SORT_OPTIONS.find((o) => o.value === sortBy)?.label;
 
-  // Close sort menu on outside click
   useEffect(() => {
     const h = (e) => {
       if (!e.target.closest("#sort-menu")) setShowSortMenu(false);
@@ -380,7 +443,6 @@ function HotelPage() {
           />
         </aside>
 
-        {/* Main */}
         <main className="flex-1 min-w-0">
           {/* Results header */}
           <div className="flex items-center justify-between mb-3 sm:mb-4 flex-wrap gap-2">
@@ -388,19 +450,35 @@ function HotelPage() {
               {loading ? (
                 <div className="h-5 w-40 bg-slate-200 rounded animate-pulse" />
               ) : (
-                <h1 className="text-base sm:text-lg font-bold text-slate-900">
-                  <span className="text-[#1a3a6b]">{totalCount}</span> Hotels
-                  Found
-                  {cityParam && (
-                    <span className="text-slate-500 font-normal text-sm sm:text-base ml-1">
-                      in {cityParam}
-                    </span>
+                <>
+                  <h1 className="text-base sm:text-lg font-bold text-slate-900">
+                    <span className="text-[#1a3a6b]">{totalCount}</span> Hotels
+                    Found
+                    {cityParam && (
+                      <span className="text-slate-500 font-normal text-sm sm:text-base ml-1">
+                        in {cityParam}
+                      </span>
+                    )}
+                  </h1>
+                  {/* Guest & date summary */}
+                  {cityParam && (checkInParam || adultsParam) && (
+                    <p className="text-[11px] text-slate-400 mt-0.5">
+                      {checkInParam &&
+                        checkOutParam &&
+                        `${checkInParam} → ${checkOutParam} · `}
+                      {nights > 1 && `${nights} nights · `}
+                      {roomsParam && `${roomsParam} Room · `}
+                      {adultsParam && `${adultsParam} Adults`}
+                      {childrenParam > 0 && ` · ${childrenParam} Children`}
+                    </p>
                   )}
-                </h1>
+                  {!cityParam && (
+                    <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 hidden sm:block">
+                      Prices include taxes · Free cancellation available
+                    </p>
+                  )}
+                </>
               )}
-              <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 hidden sm:block">
-                Prices include taxes · Free cancellation available
-              </p>
             </div>
 
             <div className="flex items-center gap-2">
@@ -456,7 +534,7 @@ function HotelPage() {
             </div>
           </div>
 
-          {/* Flash deal banner */}
+          {/* Flash deal */}
           {!loading && pagedHotels.length > 0 && (
             <div className="flex items-center gap-2 bg-amber-50 border border-amber-200/70 rounded-xl px-3 sm:px-4 py-2.5 mb-3 sm:mb-4 text-xs">
               <FaBolt className="text-amber-500 shrink-0" />
@@ -474,7 +552,9 @@ function HotelPage() {
             ) : pagedHotels.length === 0 ? (
               <EmptyState cityParam={cityParam} />
             ) : (
-              pagedHotels.map((h) => <HotelCard key={h._id} hotel={h} />)
+              pagedHotels.map((h) => (
+                <HotelCard key={h._id} hotel={h} nights={nights} />
+              ))
             )}
           </div>
 
@@ -542,7 +622,6 @@ function HotelPage() {
         </div>
       )}
 
-      {/* Map modal — pass real hotels with coordinates */}
       <MapModal
         isOpen={mapOpen}
         onClose={() => setMapOpen(false)}
@@ -553,7 +632,7 @@ function HotelPage() {
             _id: h._id,
             name: h.name,
             price: h.pricePerNight ?? 0,
-            lat: h.location.coordinates[1], // GeoJSON: [lng, lat]
+            lat: h.location.coordinates[1],
             lng: h.location.coordinates[0],
             rating: h.averageRating ?? 0,
             selected: false,

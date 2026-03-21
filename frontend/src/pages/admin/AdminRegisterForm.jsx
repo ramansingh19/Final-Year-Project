@@ -53,16 +53,16 @@ function AdminRegisterForm() {
   }, [registerSuccess, navigate]);
 
   return (
-    <div className="w-full flex items-center justify-center bg-linear-to-br from-blue-50 to-gray-200 dark:from-gray-900 dark:to-gray-800 p-4">
-      <div className="w-full max-w-[60%] bg-white dark:bg-gray-900 shadow-2xl rounded-2xl p-8 border border-gray-200 dark:border-gray-700 ">
+    <div className=" flex items-center justify-center bg-linear-to-br from-blue-50 to-gray-200 dark:from-gray-900 dark:to-gray-800 p-6">
+      <div className="w-full max-w-[60%] bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-2xl rounded-2xl p-8 border border-gray-200 dark:border-gray-700 transition-all">
+        {/* Header */}
         <h2 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-2">
           Admin Register
         </h2>
-
-        <p className="text-center text-gray-500 text-sm mb-6">
+        <p className="text-center text-gray-500 dark:text-gray-400 text-sm mb-6">
           Create admin account
         </p>
-
+  
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Username */}
           <div>
@@ -77,12 +77,12 @@ function AdminRegisterForm() {
                 placeholder="Enter username"
                 value={formData.userName}
                 onChange={handleChange}
-                className="w-full pl-10 p-3 rounded-lg border focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full pl-10 p-3 rounded-lg border focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:bg-gray-700 dark:text-white dark:border-gray-600"
                 required
               />
             </div>
           </div>
-
+  
           {/* Email */}
           <div>
             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -96,12 +96,12 @@ function AdminRegisterForm() {
                 placeholder="Enter email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full pl-10 p-3 rounded-lg border focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full pl-10 p-3 rounded-lg border focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:bg-gray-700 dark:text-white dark:border-gray-600"
                 required
               />
             </div>
           </div>
-
+  
           {/* Contact */}
           <div>
             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -115,11 +115,11 @@ function AdminRegisterForm() {
                 placeholder="Enter phone number"
                 value={formData.contactNumber}
                 onChange={handleChange}
-                className="w-full pl-10 p-3 rounded-lg border focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full pl-10 p-3 rounded-lg border focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:bg-gray-700 dark:text-white dark:border-gray-600"
               />
             </div>
           </div>
-
+  
           {/* Password */}
           <div>
             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -133,19 +133,19 @@ function AdminRegisterForm() {
                 placeholder="Enter password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full pl-10 pr-10 p-3 rounded-lg border focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full pl-10 pr-10 p-3 rounded-lg border focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:bg-gray-700 dark:text-white dark:border-gray-600"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-4 text-gray-500 hover:text-gray-700"
+                className="absolute right-3 top-4 text-gray-500 hover:text-gray-700 transition"
               >
                 {showPassword ? <FiEyeOff /> : <FiEye />}
               </button>
             </div>
           </div>
-
+  
           {/* Host Type */}
           <div>
             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -156,7 +156,7 @@ function AdminRegisterForm() {
               value={formData.host}
               onChange={handleChange}
               required
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none mt-1"
+              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none mt-1 transition-all dark:bg-gray-700 dark:text-white dark:border-gray-600"
             >
               <option value="">Select host type</option>
               <option value="hotel">Hotel</option>
@@ -165,15 +165,17 @@ function AdminRegisterForm() {
               <option value="driver">Driver</option>
             </select>
           </div>
-
+  
           {/* Error */}
-          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
-
-          {/* Button */}
+          {error && (
+            <p className="text-red-500 text-sm text-center font-medium">{error}</p>
+          )}
+  
+          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Registering..." : "Register Admin"}
           </button>
