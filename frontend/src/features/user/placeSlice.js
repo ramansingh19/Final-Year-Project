@@ -3,6 +3,7 @@ import apiClient from "../../pages/services/apiClient";
 
 const initialState = {
   places: [],
+  cityWisePlaces: [],
   loading: false,
   error: null,
   success: false,
@@ -87,6 +88,43 @@ export const rejectePlaceById = createAsyncThunk("place/rejectPlace", async (pla
   }
 })
 
+/* -------- get Place cityWise -------- */
+export const getPlacesCityWise = createAsyncThunk(
+  "place/getPlacesCityWise",
+  async (_, thunkAPI) => {
+    try {
+      const token = localStorage.getItem("superAdminToken");
+
+      const response = await apiClient.get("/api/place/city-wise", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to fetch places"
+      );
+    }
+  }
+);
+
+/* -------- get Active Place cityWise -------- */
+export const getActivePlacesCityWise = createAsyncThunk(
+  "place/getActivePlacesCityWise",
+  async (_, thunkAPI) => {
+    try {
+      const res = await apiClient.get("/api/place/activePlace/city-wise");
+      return res.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data?.message || "Failed"
+      );
+    }
+  }
+);
+
 
 const placeSlice = createSlice({
   name:"place",
@@ -166,6 +204,35 @@ const placeSlice = createSlice({
     if (place) place.status = "rejected";
   })
   .addCase(rejectePlaceById.rejected, (state, action) => {
+    state.loading = false;
+    state.error = action.payload;
+  });
+
+  /* -------- get Place cityWise -------- */
+  builder
+  .addCase(getPlacesCityWise.pending, (state) => {
+    state.loading = true;
+    state.error = null;
+  })
+  .addCase(getPlacesCityWise.fulfilled, (state, action) => {
+    state.loading = false;
+    state.cityWisePlaces = action.payload;
+  })
+  .addCase(getPlacesCityWise.rejected, (state, action) => {
+    state.loading = false;
+    state.error = action.payload;
+  });
+
+  /* -------- get Active Place cityWise -------- */
+  builder
+  .addCase(getActivePlacesCityWise.pending, (state) => {
+    state.loading = true;
+  })
+  .addCase(getActivePlacesCityWise.fulfilled, (state, action) => {
+    state.loading = false;
+    state.cityWisePlaces = action.payload;
+  })
+  .addCase(getActivePlacesCityWise.rejected, (state, action) => {
     state.loading = false;
     state.error = action.payload;
   });

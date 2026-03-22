@@ -48,6 +48,30 @@ function PlaceDashboard() {
             Place Approval List
           </span>
         </Link>
+
+      <Link
+          to="/superAdmin/get-placeCityWise"
+          className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl shadow-md hover:shadow-xl hover:scale-105 transition p-6 flex flex-col items-center text-center border border-gray-200 dark:border-gray-700"
+        >
+          <span className="text-3xl mb-2 bg-amber-400 p-2 rounded-sm text-white">
+            <FaCity />
+          </span>
+          <span className="font-semibold text-gray-700 dark:text-gray-100">
+            Show All Places
+          </span>
+        </Link>
+
+      <Link
+          to="/superAdmin/get-all-active-placeCityWise"
+          className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl shadow-md hover:shadow-xl hover:scale-105 transition p-6 flex flex-col items-center text-center border border-gray-200 dark:border-gray-700"
+        >
+          <span className="text-3xl mb-2 bg-amber-400 p-2 rounded-sm text-white">
+            <FaCity />
+          </span>
+          <span className="font-semibold text-gray-700 dark:text-gray-100">
+            Show All Active Places
+          </span>
+        </Link>
       </div>
 
     </div>

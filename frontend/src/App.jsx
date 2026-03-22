@@ -56,6 +56,8 @@ import BookedHotels from "./pages/admin/HotelBooking/BookedHotels";
 import PlaceDashboard from "./pages/superAdmin/place/PlaceDashboard";
 import AddPlaceDetails from "./pages/superAdmin/place/AddPlaceDetails";
 import SuperAdminApprovealPlaceList from "./pages/superAdmin/place/SuperAdminApprovealPlaceList";
+import GetPlaceCityWise from "./pages/superAdmin/place/GetPlaceCityWise";
+import GetAllActivePlaceCityWise from "./pages/superAdmin/place/GetAllActivePlaceCityWise";
 
 function App() {
   return (
@@ -329,6 +331,8 @@ function App() {
         <Route path="/superAdmin/place-dashboard" element={<SuperAdminProtectedRouter><PlaceDashboard/></SuperAdminProtectedRouter>}/>
         <Route path="/superAdmin/add-place-details" element={<SuperAdminProtectedRouter><AddPlaceDetails/></SuperAdminProtectedRouter>}/>
         <Route path="/superAdmin/SuperAdminApprovealPlaceList" element={<SuperAdminProtectedRouter><SuperAdminApprovealPlaceList/></SuperAdminProtectedRouter>}/>
+        <Route path="/superAdmin/get-placeCityWise" element={<SuperAdminProtectedRouter><GetPlaceCityWise/></SuperAdminProtectedRouter>}/>
+        <Route path="/superAdmin/get-all-active-placeCityWise" element={<SuperAdminProtectedRouter><GetAllActivePlaceCityWise/></SuperAdminProtectedRouter>}/>
       </Routes>
     </>
   );

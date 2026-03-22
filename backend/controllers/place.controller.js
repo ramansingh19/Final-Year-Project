@@ -206,38 +206,110 @@ export const pendingPlace = async (req, res) => {
   }
 };
 
-
-export const getActivePlace = async (req, res) => {
+export const getPlacesCityWise = async (req, res) => {
   try {
-    const { cityId } = req.params;
+    const places = await Place.aggregate([
+      {
+        $lookup: {
+          from: "cities", // collection name in MongoDB
+          localField: "city",
+          foreignField: "_id",
+          as: "cityDetails",
+        },
+      },
+      { $unwind: "$cityDetails" },
 
-    if (!cityId) {
-      return res.status(400).json({
+      {
+        $group: {
+          _id: "$cityDetails._id",
+          cityName: { $first: "$cityDetails.name" },
+          places: { $push: "$$ROOT" },
+        },
+      },
+    ]);
+
+    if (!places.length) {
+      return res.status(404).json({
         success: false,
-        message: "cityid not found",
+        message: "No places found",
       });
     }
-    if (!mongoose.Types.ObjectId.isValid(cityId)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid city ID",
-      });
-    }
-
-    const place = await Place.find({
-      city: cityId,
-      status: "active",
-    }).populate("city", "name state");
 
     return res.status(200).json({
       success: true,
-      data: place,
-      message: "get Active place successfully",
+      data: places,
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
       message: error.message,
+    });
+  }
+};
+
+export const getActivePlacesCityWise = async (req, res) => {
+  try {
+    const places = await Place.aggregate([
+      
+      // ✅ only active places
+      {
+        $match: { status: "active" }
+      },
+
+      // ✅ join city data
+      {
+        $lookup: {
+          from: "cities", // collection name (IMPORTANT ⚠️)
+          localField: "city",
+          foreignField: "_id",
+          as: "city"
+        }
+      },
+
+      // ✅ convert array → object
+      {
+        $unwind: "$city"
+      },
+
+      // ✅ group by city
+      {
+        $group: {
+          _id: "$city._id",
+          cityName: { $first: "$city.name" },
+          state: { $first: "$city.state" },
+
+          places: {
+            $push: {
+              _id: "$_id",
+              name: "$name",
+              category: "$category",
+              description: "$description",
+              images: "$images",
+              timeRequired: "$timeRequired",
+              entryfees: "$entryfees",
+              bestTimeToVisit: "$bestTimeToVisit",
+              location: "$location"
+            }
+          }
+        }
+      },
+
+      // ✅ optional sorting
+      {
+        $sort: { cityName: 1 }
+      }
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      data: places
+    });
+
+  } catch (error) {
+    console.log("ERROR:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message
     });
   }
 };
