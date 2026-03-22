@@ -1,7 +1,8 @@
 import express from 'express'
-import { activeRoom, createRoom, getAllRoomsByID, getSingleRoom, inactiveRoom, updateRoom } from '../controllers/room.controller.js';
+import { activeRoom, createRoom, getAllRoomsByID, getPublicRoomsByHotel, getSingleRoom, inactiveRoom, updateRoom } from '../controllers/room.controller.js';
 import { authorize, isAuthenticated } from '../middleware/auth.middleware.js';
 import { upload } from '../middleware/multer.middleware.js';
+
 
 
 const roomRouter = express.Router()
@@ -20,6 +21,8 @@ roomRouter.get(
   authorize("admin"),
   getAllRoomsByID
 );
+
+roomRouter.get("/public/:hotelId", getPublicRoomsByHotel)
 
 roomRouter.get(
   "/single-room/:roomId",
