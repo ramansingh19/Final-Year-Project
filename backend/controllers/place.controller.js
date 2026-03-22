@@ -4,6 +4,7 @@ import { City } from "../model/city.model.js";
 import { Place } from "../model/place.model.js";
 import mongoose from "mongoose";
 
+
 export const createPlace = async (req, res) => {
   try {
     let {
@@ -17,7 +18,6 @@ export const createPlace = async (req, res) => {
       bestTimeToVisit,
     } = req.body;
 
-    //normalize text
     name = name?.trim().toLowerCase();
     category = category?.trim().toLowerCase();
     bestTimeToVisit = bestTimeToVisit?.trim();
@@ -31,7 +31,7 @@ export const createPlace = async (req, res) => {
         message: "Inavalid location format",
       });
     }
-    console.log(location);
+    // console.log(location);
 
     if (
       !name ||
@@ -40,7 +40,7 @@ export const createPlace = async (req, res) => {
       !category ||
       !timeRequired ||
       !entryfees ||
-      !isPopular ||
+      isPopular === undefined ||
       !bestTimeToVisit
     ) {
       return res.status(400).json({
@@ -57,7 +57,7 @@ export const createPlace = async (req, res) => {
         message: "wrong city id",
       });
     }
-    console.log(city);
+    // console.log(city);
 
     //verify place by city
     const existingPlace = await Place.findOne({
@@ -70,7 +70,7 @@ export const createPlace = async (req, res) => {
         message: "Place is already exits in this city ",
       });
     }
-    console.log(existingPlace);
+    // console.log(existingPlace);
 
     //privent location duplicate
     const exitinglocation = await Place.findOne({
@@ -87,6 +87,7 @@ export const createPlace = async (req, res) => {
     if (req.files?.length) {
       for (const file of req.files) {
         const result = await uploadCloudinary(file.path, "places");
+        console.log(result);
         imageUrl.push(result.secure_url);
         //unlink when upload to cloudnary
         try {
@@ -111,7 +112,7 @@ export const createPlace = async (req, res) => {
       images: imageUrl,
       location,
       status: "pending",
-      createdBy: req.user?._id,
+      createdBy: req.user?.id,
     });
     console.log(place);
 
@@ -121,6 +122,9 @@ export const createPlace = async (req, res) => {
       message: "place created successfully",
     });
   } catch (error) {
+    console.log("🔥 ERROR FULL:", error);
+    console.log("🔥 ERROR MESSAGE:", error.message);
+    console.log("🔥 ERROR STACK:", error.stack);
     return res.status(500).json({
       success: false,
       message: error.message,
@@ -187,6 +191,8 @@ export const pendingPlace = async (req, res) => {
       "userName email role",
     );
 
+    console.log("Place: ", place);
+
     return res.status(200).json({
       success: true,
       data: place,
@@ -199,6 +205,7 @@ export const pendingPlace = async (req, res) => {
     });
   }
 };
+
 
 export const getActivePlace = async (req, res) => {
   try {

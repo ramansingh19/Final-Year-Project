@@ -5,7 +5,7 @@ import { upload } from "../middleware/multer.middleware.js";
 
 const placeRouter = express.Router();
 
-placeRouter.post("/", isAuthenticated, authorize("admin"), upload.array("images" , 5), createPlace)
+placeRouter.post("/create-place", isAuthenticated, authorize("super_admin"), upload.array("images" , 5), createPlace)
 placeRouter.put("/updatedata/:id", isAuthenticated, authorize("admin"), upload.array("images" , 5), updatePlace)
 placeRouter.delete("/deleteplace/:id", isAuthenticated , authorize("admin"), deletePlace)
 

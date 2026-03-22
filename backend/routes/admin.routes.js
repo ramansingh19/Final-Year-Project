@@ -113,7 +113,7 @@ adminRouter.patch("/review/:id/reject", isAuthenticated, authorize("super_admin"
 //get pending cities
 adminRouter.get("/cities/pending", isAuthenticated, authorize("super_admin"), getPendingCities)
 adminRouter.get("/hotels/pending", isAuthenticated, authorize("super_admin"), getPendingHotels)
-adminRouter.get("/place/pending", isAuthenticated, authorize("super_admin"), pendingPlace)
+adminRouter.get("/places/pending", isAuthenticated, authorize("super_admin"), pendingPlace)
 adminRouter.get("/travel-options", isAuthenticated, authorize("super_admin"), getPendingTravelOptions)
 adminRouter.get("/resturant/pending", isAuthenticated , authorize("super_admin"), allPendingResturant)
 
