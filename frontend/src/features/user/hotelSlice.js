@@ -134,24 +134,20 @@ export const inactiveHotel = createAsyncThunk(
   async (hotelId, thunkAPI) => {
     try {
       const response = await apiClient.patch(
-
         `/api/admin/hotel/${hotelId}/inactive`,
         {},
         {
           headers: { Authorization: `Bearer ${superAdminToken}` },
         },
 
-        `/api/admin/hotel/${hotelId}/inactive`
-
+        `/api/admin/hotel/${hotelId}/inactive`,
       );
       return { hotelId, message: response.data.message };
     } catch (error) {
       return thunkAPI.rejectWithValue(
-
         error.response?.data?.message || "Hotel Inactive failed",
 
-        error.response?.data?.message || "Hotel inactive failed"
-
+        error.response?.data?.message || "Hotel inactive failed",
       );
     }
   },
@@ -233,18 +229,18 @@ export const updateHotel = createAsyncThunk(
           headers: {
             Authorization: `Bearer ${adminToken}`,
           },
-        }
+        },
       );
 
       console.log("UPDATE RESPONSE:", response.data);
 
-      return response.data; 
+      return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "hotel update failed"
+        error.response?.data?.message || "hotel update failed",
       );
     }
-  }
+  },
 );
 
 /* -------- get All Active Public Hotels -------- */
@@ -253,7 +249,7 @@ export const getPublicActiveHotels = createAsyncThunk(
   async (params = {}, thunkAPI) => {
     try {
       const response = await apiClient.get("/api/hotel/public/hotels", {
-        params,   // ← sends ?city=Delhi&checkIn=...&checkOut=...&guests=...
+        params, // ← sends ?city=Delhi&checkIn=...&checkOut=...&guests=...
       });
       return response.data;
     } catch (error) {
@@ -300,16 +296,16 @@ export const inactiveHotelByAdmin = createAsyncThunk(
           headers: {
             Authorization: `Bearer ${adminToken}`,
           },
-        }
+        },
       );
 
       return { hotelId, message: response.data.message };
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Failed to inactive hotel"
+        error.response?.data?.message || "Failed to inactive hotel",
       );
     }
-  }
+  },
 );
 
 /* ------  getHotelsByStatus ------- */
@@ -325,15 +321,31 @@ export const getHotelsStatus = createAsyncThunk(
           headers: {
             Authorization: `Bearer ${adminToken}`,
           },
-        }
+        },
       );
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Failed to inactive hotel"
+        error.response?.data?.message || "Failed to inactive hotel",
       );
     }
-  }
+  },
+);
+
+/* ------ search Hotel ------- */
+// In hotelSlice.js — add this thunk:
+export const searchHotel = createAsyncThunk(
+  "hotel/searchHotels",
+  async (params = {}, thunkAPI) => {
+    try {
+      const response = await apiClient.get("/api/hotelBooking/search", { params });
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Search failed",
+      );
+    }
+  },
 );
 
 /* ------  Fetch active hotels by admin ------- */
@@ -527,7 +539,7 @@ const hotelSlice = createSlice({
         const hotel = state.hotels.find((c) => c._id === action.payload.id);
 
         if (hotel) {
-          hotel.status = "inactive"; 
+          hotel.status = "inactive";
         }
       })
       .addCase(deleteHotel.rejected, (state, action) => {
@@ -543,24 +555,22 @@ const hotelSlice = createSlice({
         state.success = false;
       })
       .addCase(updateHotel.fulfilled, (state, action) => {
-        console.log("FULL PAYLOAD:", action.payload); 
+        console.log("FULL PAYLOAD:", action.payload);
         state.loading = false;
         state.success = true;
-      
+
         const updatedHotel = action.payload?.data || action.payload;
         if (!updatedHotel || !updatedHotel._id) {
           console.error("Updated hotel invalid:", updatedHotel);
-          return; 
+          return;
         }
-      
-        const index = state.hotels.findIndex(
-          (h) => h._id === updatedHotel._id
-        );
-      
+
+        const index = state.hotels.findIndex((h) => h._id === updatedHotel._id);
+
         if (index !== -1) {
           state.hotels[index] = updatedHotel;
         }
-      
+
         state.hotel = updatedHotel; // ✅ update current hotel also
       })
       .addCase(updateHotel.rejected, (state, action) => {
@@ -620,6 +630,22 @@ const hotelSlice = createSlice({
       })
 
       .addCase(inactiveHotelByAdmin.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+
+
+    //  -----------------search Hotel --------------
+    builder
+      .addCase(searchHotel.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(searchHotel.fulfilled, (state, action) => {
+        state.loading = false;
+        state.hotels = action.payload; // ← now goes to s.hotel.hotels ✅
+      })
+      .addCase(searchHotel.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

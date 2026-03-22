@@ -10,8 +10,7 @@ import {
   FaMinus,
   FaPlus,
 } from "react-icons/fa";
-// import { MdPets } from "react-icons/md";
-import { useSelector } from "react-redux";
+import apiClient from "../../pages/services/apiClient";
 
 const getToday = () => new Date().toISOString().split("T")[0];
 const getTomorrow = () => {
@@ -20,7 +19,6 @@ const getTomorrow = () => {
   return d.toISOString().split("T")[0];
 };
 
-// Debounce hook
 const useDebounce = (value, delay) => {
   const [debounced, setDebounced] = useState(value);
   useEffect(() => {
@@ -30,7 +28,6 @@ const useDebounce = (value, delay) => {
   return debounced;
 };
 
-// +/- counter row
 const CounterRow = ({ label, sub, value, min = 0, max = 10, onChange }) => (
   <div className="flex items-center justify-between py-3 border-b border-slate-100 last:border-0">
     <div>
@@ -97,56 +94,57 @@ const HeroSearch = () => {
     checkOut: searchParams.get("checkOut") || getTomorrow(),
   });
 
-  // ── Guests state (Booking.com style) ──────────────────────────────────────
-  const [rooms, setRooms] = useState(1);
-  const [adults, setAdults] = useState(2);
-  const [children, setChildren] = useState(0);
-  const [pets, setPets] = useState(false);
+  const [rooms, setRooms] = useState(Number(searchParams.get("rooms")) || 1);
+  const [adults, setAdults] = useState(Number(searchParams.get("adults")) || 2);
+  const [children, setChildren] = useState(
+    Number(searchParams.get("children")) || 0,
+  );
   const [showGuests, setShowGuests] = useState(false);
 
-  // Display summary label
   const guestLabel = [
     `${rooms} Room${rooms > 1 ? "s" : ""}`,
     `${adults} Adult${adults > 1 ? "s" : ""}`,
     children > 0 ? `${children} Child${children > 1 ? "ren" : ""}` : null,
-    pets ? "Pets" : null,
   ]
     .filter(Boolean)
     .join(", ");
 
-  // Serialise for URL
-  const guestsParam = `${rooms}r-${adults}a-${children}c${pets ? "-pets" : ""}`;
-
   const [cityError, setCityError] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [allCities, setAllCities] = useState([]);
 
-  const { hotels = [] } = useSelector((s) => s.hotel);
-  const cityNames = [
-    ...new Set(
-      hotels
-        .map(
-          (h) => h.city?.name || (typeof h.city === "string" ? h.city : null),
-        )
-        .filter(Boolean),
-    ),
-  ].sort();
+  // Load cities once on mount
+  useEffect(() => {
+    apiClient
+      .get("/api/city/active-cities")
+      .then((res) => {
+        const names = (res.data?.data || [])
+          .map((c) => c.name)
+          .filter(Boolean)
+          .sort();
+        setAllCities(names);
+      })
+      .catch(() => {});
+  }, []);
 
   const debouncedCity = useDebounce(searchData.city, 200);
+
+  // Filter cities locally
   useEffect(() => {
-    if (debouncedCity.trim().length > 0) {
-      const f = cityNames.filter((c) =>
-        c.toLowerCase().includes(debouncedCity.toLowerCase()),
-      );
-      setSuggestions(f);
-      setShowSuggestions(f.length > 0);
-    } else {
+    if (debouncedCity.trim().length < 1) {
       setSuggestions([]);
       setShowSuggestions(false);
+      return;
     }
-  }, [debouncedCity]);
+    const filtered = allCities.filter((c) =>
+      c.toLowerCase().includes(debouncedCity.toLowerCase()),
+    );
+    setSuggestions(filtered);
+    setShowSuggestions(filtered.length > 0);
+  }, [debouncedCity, allCities]);
 
-  // Close on outside click
+  // Close dropdowns on outside click
   useEffect(() => {
     const h = (e) => {
       if (!e.target.closest("#city-field")) setShowSuggestions(false);
@@ -178,11 +176,9 @@ const HeroSearch = () => {
       city: searchData.city.trim(),
       checkIn: searchData.checkIn,
       checkOut: searchData.checkOut,
-      guests: guestsParam,
       rooms,
       adults,
       children,
-      ...(pets ? { pets: "1" } : {}),
     });
     navigate(`/hotels?${params.toString()}`);
     setShowSuggestions(false);
@@ -201,7 +197,7 @@ const HeroSearch = () => {
     <div className="w-full max-w-6xl mx-auto">
       <div className="bg-white rounded-2xl shadow-lg shadow-slate-200/60 border border-slate-100 px-3 sm:px-4 py-3.5">
         <div className="flex flex-col lg:flex-row gap-3 lg:gap-0 lg:items-end">
-          {/* ── City ── */}
+          {/* City */}
           <div className="flex-1 min-w-0" id="city-field">
             <p className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-1.5 px-1">
               Destination
@@ -268,7 +264,7 @@ const HeroSearch = () => {
 
           <div className="hidden lg:block w-px h-8 bg-slate-200 self-center mx-2" />
 
-          {/* ── Check-in + Check-out ── */}
+          {/* Check-in + Check-out */}
           <div className="flex gap-3 flex-1">
             <Field icon={<FaCalendarAlt />} label="Check-in">
               <input
@@ -294,14 +290,13 @@ const HeroSearch = () => {
 
           <div className="hidden lg:block w-px h-8 bg-slate-200 self-center mx-2" />
 
-          {/* ── Guests panel ── */}
+          {/* Guests + Search */}
           <div className="flex items-end gap-3">
             <div className="flex-1 min-w-0" id="guests-panel">
               <p className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-1.5 px-1">
                 Guests & rooms
               </p>
               <div className="relative">
-                {/* Trigger button */}
                 <button
                   type="button"
                   onClick={() => setShowGuests((v) => !v)}
@@ -318,11 +313,9 @@ const HeroSearch = () => {
                   />
                 </button>
 
-                {/* Dropdown panel */}
                 {showGuests && (
-                  <div className="absolute top-full left-0 right-0 sm:min-w-75 mt-2 bg-white border border-slate-200 rounded-2xl shadow-2xl z-50 overflow-hidden">
+                  <div className="absolute top-full left-0 right-0 sm:min-w-[300px] mt-2 bg-white border border-slate-200 rounded-2xl shadow-2xl z-50 overflow-hidden">
                     <div className="px-5 py-4">
-                      {/* Counters */}
                       <CounterRow
                         label="Rooms"
                         value={rooms}
@@ -345,13 +338,13 @@ const HeroSearch = () => {
                         max={10}
                         onChange={setChildren}
                       />
-
-                      {/* Pets toggle */}
-
-                      {/* Apply button */}
+                      {/* Apply button triggers search if city is set */}
                       <button
                         type="button"
-                        onClick={() => setShowGuests(false)}
+                        onClick={() => {
+                          setShowGuests(false);
+                          if (searchData.city.trim()) onSearch();
+                        }}
                         className="mt-4 w-full bg-[#1a3a6b] hover:bg-[#14305a] text-white font-bold py-2.5 rounded-xl text-sm shadow hover:shadow-md transition-all"
                       >
                         Apply
@@ -362,14 +355,13 @@ const HeroSearch = () => {
               </div>
             </div>
 
-            {/* Search button */}
             <div className="shrink-0">
-              <p className="text-[10px] font-bold tracking-widest uppercase text-transparent mb-1.5 px-1 select-none">
+              <p className="text-[10px] tracking-widest text-transparent mb-1.5 px-1 select-none">
                 S
               </p>
               <button
                 onClick={onSearch}
-                className="h-11.5 px-6 sm:px-7 bg-[#1a3a6b] hover:bg-[#14305a] active:scale-95 text-white font-bold text-sm rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-2 whitespace-nowrap"
+                className="h-[46px] px-6 sm:px-7 bg-[#1a3a6b] hover:bg-[#14305a] active:scale-95 text-white font-bold text-sm rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-2 whitespace-nowrap"
               >
                 <FaSearch className="text-xs" />
                 <span className="hidden sm:inline">Search</span>
