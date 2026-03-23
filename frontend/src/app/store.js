@@ -11,6 +11,7 @@ import cityReducer from "../features/user/citySlice";
 import roomReducer from "../features/user/roomSlice";
 import hotelBookingreducer from "../features/user/hotelBookingSlice";
 import placeReducer from "../features/user/placeSlice";
+import reviewReducer from "../features/user/reviewSlice"
 
 
 export const store = configureStore({
@@ -27,5 +28,7 @@ export const store = configureStore({
     hotelBooking: hotelBookingreducer,
     place: placeReducer,
     search : searchReducer
+    search : searchReducer,
+    review : reviewReducer
   }
 })
