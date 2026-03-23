@@ -22,7 +22,6 @@ function GetAllActivePlaceCityWise() {
     dispatch(getActivePlacesCityWise());
   }, [dispatch]);
 
-  // ✅ Auto select first city
   useEffect(() => {
     if (cityWisePlaces.length > 0 && !activeCity) {
       setActiveCity(cityWisePlaces[0]);
