@@ -60,6 +60,8 @@ import GetPlaceCityWise from "./pages/superAdmin/place/GetPlaceCityWise";
 import GetAllActivePlaceCityWise from "./pages/superAdmin/place/GetAllActivePlaceCityWise";
 import GetInactivePlaceCityWise from "./pages/superAdmin/place/GetInactivePlaceCityWise";
 import UpdatePlaceDetails from "./pages/superAdmin/place/UpdatePlaceDetails";
+import AiPlanner from "./pages/AIPlanner/AiPlanner";
+import AiPlannerDetails from "./pages/AIPlanner/AiPlannerDetails";
 
 function App() {
   return (
@@ -386,6 +388,9 @@ function App() {
             </SuperAdminProtectedRouter>
           }
         />
+        <Route path="/AiPlanner" element={<AiPlanner/>}/>
+        <Route path="/AiPlanner-details" element={<AiPlannerDetails/>}/>
+
       </Routes>
     </>
   );
