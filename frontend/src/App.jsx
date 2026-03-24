@@ -54,6 +54,14 @@ import AdminItemsDetailsByAdminId from "./pages/superAdmin/AdminItemsDetailsByAd
 import HotelBookingDashboard from "./pages/admin/HotelBooking/HotelBookingDashboard";
 import BookedHotels from "./pages/admin/HotelBooking/BookedHotels";
 import Booking from "./pages/auth/Booking";
+import PlaceDashboard from "./pages/superAdmin/place/PlaceDashboard";
+import AddPlaceDetails from "./pages/superAdmin/place/AddPlaceDetails";
+import SuperAdminApprovealPlaceList from "./pages/superAdmin/place/SuperAdminApprovealPlaceList";
+import GetPlaceCityWise from "./pages/superAdmin/place/GetPlaceCityWise";
+import GetAllActivePlaceCityWise from "./pages/superAdmin/place/GetAllActivePlaceCityWise";
+import GetInactivePlaceCityWise from "./pages/superAdmin/place/GetInactivePlaceCityWise";
+import UpdatePlaceDetails from "./pages/superAdmin/place/UpdatePlaceDetails";
+
 
 function App() {
   return (
@@ -323,6 +331,62 @@ function App() {
             <AdminProtectedRouter>
               <BookedHotels />
             </AdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/superAdmin/place-dashboard"
+          element={
+            <SuperAdminProtectedRouter>
+              <PlaceDashboard />
+            </SuperAdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/superAdmin/add-place-details"
+          element={
+            <SuperAdminProtectedRouter>
+              <AddPlaceDetails />
+            </SuperAdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/superAdmin/SuperAdminApprovealPlaceList"
+          element={
+            <SuperAdminProtectedRouter>
+              <SuperAdminApprovealPlaceList />
+            </SuperAdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/superAdmin/get-placeCityWise"
+          element={
+            <SuperAdminProtectedRouter>
+              <GetPlaceCityWise />
+            </SuperAdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/superAdmin/get-all-active-placeCityWise"
+          element={
+            <SuperAdminProtectedRouter>
+              <GetAllActivePlaceCityWise />
+            </SuperAdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/superAdmin/get-inactive-pLaceCityWise"
+          element={
+            <SuperAdminProtectedRouter>
+              <GetInactivePlaceCityWise />
+            </SuperAdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/superAdmin/update-place-Details/:id"
+          element={
+            <SuperAdminProtectedRouter>
+              <UpdatePlaceDetails />
+            </SuperAdminProtectedRouter>
           }
         />
       </Routes>
