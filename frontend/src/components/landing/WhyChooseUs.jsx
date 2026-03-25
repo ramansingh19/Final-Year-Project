@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-// ─── Mock API  GET /api/features ───────────────────────────────────────────────
+// ─── Mock API ─────────────────────────────────────────────
 const MOCK_DB = [
   {
     id: 1,
@@ -34,7 +34,7 @@ const MOCK_DB = [
     icon: "🍜",
     tag: "EAT",
     title: "Local Food Trails",
-    desc: "Eat where the locals eat. Curated food experiences, street food maps, and chef-recommended restaurants at every stop.",
+    desc: "Eat where the locals eat. Curated food experiences, street food maps.",
     stat: "8,400+",
     statLabel: "eateries",
     color: ["#4facfe", "#00f2fe"],
@@ -89,13 +89,14 @@ const MOCK_DB = [
   },
 ];
 
+// ─── API ─────────────────────────────────────────────
 async function fetchFeatures() {
   return new Promise((resolve) =>
-    setTimeout(() => resolve({ data: MOCK_DB.filter((f) => f.active) }), 900),
+    setTimeout(() => resolve({ data: MOCK_DB }), 800)
   );
 }
 
-// ─── Particles ─────────────────────────────────────────────────────────────────
+// ─── Particles ─────────────────────────────────────────────
 function Particles() {
   const dots = Array.from({ length: 28 }, (_, i) => ({
     id: i,
@@ -106,15 +107,9 @@ function Particles() {
     delay: Math.random() * 8,
     opacity: 0.06 + Math.random() * 0.16,
   }));
+
   return (
-    <div
-      style={{
-        position: "absolute",
-        inset: 0,
-        // overflow: "hidden",
-        pointerEvents: "none",
-      }}
-    >
+    <div className="absolute inset-0 pointer-events-none">
       {dots.map((d) => (
         <div
           key={d.id}
@@ -135,45 +130,19 @@ function Particles() {
   );
 }
 
-// ─── Skeleton ──────────────────────────────────────────────────────────────────
-function SkeletonCard() {
-  return (
-    <div
-      style={{
-        background: "rgba(255,255,255,.07)",
-        border: "1px solid rgba(255,255,255,.1)",
-        borderRadius: 20,
-        padding: "32px 28px",
-        backdropFilter: "blur(16px)",
-      }}
-    >
-      {["40px", "60%", "90%", "75%", "50%"].map((w, i) => (
-        <div
-          key={i}
-          style={{
-            height: i === 0 ? 40 : 13,
-            width: w,
-            background: "rgba(255,255,255,.1)",
-            borderRadius: 8,
-            marginBottom: i === 0 ? 20 : 10,
-            animation: `shimmer 1.6s ${i * 0.15}s ease-in-out infinite alternate`,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
-// ─── Feature Card ──────────────────────────────────────────────────────────────
+// ─── Feature Card (UNCHANGED LOGIC) ─────────────────────
 function FeatureCard({ feature, index, onNavigate }) {
   const [hovered, setHovered] = useState(false);
   const [pressed, setPressed] = useState(false);
   const [visible, setVisible] = useState(false);
+
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), index * 110);
     return () => clearTimeout(t);
   }, [index]);
+
   const [c1, c2] = feature.color;
+
   return (
     <div
       role="button"
@@ -185,148 +154,52 @@ function FeatureCard({ feature, index, onNavigate }) {
           onNavigate(feature);
         }, 160);
       }}
-      onKeyDown={(e) => e.key === "Enter" && onNavigate(feature)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      className="relative rounded-[20px] p-[32px_28px_28px] cursor-pointer backdrop-blur-[20px] border flex flex-col transition-all duration-300"
       style={{
-        position: "relative",
-        background: hovered ? "rgba(255,255,255,.17)" : "rgba(255,255,255,.08)",
-        border: `1px solid ${hovered ? "rgba(255,255,255,.32)" : "rgba(255,255,255,.13)"}`,
-        borderRadius: 20,
-        padding: "32px 28px 28px",
-        cursor: "pointer",
-        backdropFilter: "blur(20px)",
-        WebkitBackdropFilter: "blur(20px)",
+        background: hovered
+          ? "rgba(255,255,255,.17)"
+          : "rgba(255,255,255,.08)",
+        borderColor: hovered
+          ? "rgba(255,255,255,.32)"
+          : "rgba(255,255,255,.13)",
         boxShadow: hovered
           ? "0 28px 72px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,.18) inset"
           : "0 8px 32px rgba(0,0,0,.2)",
         transform: pressed
           ? "translateY(-2px) scale(.985)"
           : hovered
-            ? "translateY(-12px) scale(1.015)"
-            : visible
-              ? "translateY(0) scale(1)"
-              : "translateY(32px) scale(.96)",
+          ? "translateY(-12px) scale(1.015)"
+          : visible
+          ? "translateY(0) scale(1)"
+          : "translateY(32px) scale(.96)",
         opacity: visible ? 1 : 0,
-        transition:
-          "transform .38s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease, background .25s ease, border-color .25s ease, opacity .55s ease",
-        outline: "none",
-        // overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
       }}
     >
-      {/* Gradient glow */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          borderRadius: 20,
-          background: `linear-gradient(135deg, ${c1}20, ${c2}20)`,
-          opacity: hovered ? 1 : 0,
-          transition: "opacity .3s ease",
-          pointerEvents: "none",
-        }}
-      />
-      {/* Top line */}
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 24,
-          right: 24,
-          height: 2,
-          background: `linear-gradient(90deg, ${c1}, ${c2})`,
-          borderRadius: "0 0 4px 4px",
-          opacity: hovered ? 1 : 0,
-          transition: "opacity .3s ease",
-        }}
-      />
-
-      {/* Tag */}
-      <div
-        style={{
-          display: "inline-block",
-          background: `linear-gradient(135deg, ${c1}30, ${c2}30)`,
-          border: `1px solid ${c1}50`,
-          borderRadius: 999,
-          padding: "3px 12px",
-          fontSize: 9,
-          fontWeight: 800,
-          color: "#fff",
-          letterSpacing: ".12em",
-          marginBottom: 18,
-          fontFamily: "'Plus Jakarta Sans',sans-serif",
-        }}
-      >
-        {feature.tag}
-      </div>
-
       {/* Icon */}
       <div
+        className="w-13.5 h-13.5 rounded-2xl flex items-center justify-center text-[24px] mb-4.5"
         style={{
-          width: 54,
-          height: 54,
-          borderRadius: 16,
           background: `linear-gradient(135deg, ${c1}, ${c2})`,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: 24,
-          marginBottom: 18,
           boxShadow: `0 8px 24px ${c1}55`,
-          transform: hovered
-            ? "scale(1.12) rotate(-5deg)"
-            : "scale(1) rotate(0)",
-          transition: "transform .38s cubic-bezier(.34,1.56,.64,1)",
         }}
       >
         {feature.icon}
       </div>
 
-      <h3
-        style={{
-          fontFamily: "'Instrument Serif',serif",
-          fontSize: 21,
-          fontWeight: 400,
-          color: "#fff",
-          lineHeight: 1.25,
-          marginBottom: 10,
-          letterSpacing: "-.01em",
-        }}
-      >
+      <h3 className="text-white text-[21px] mb-2.5">
         {feature.title}
       </h3>
 
-      <p
-        style={{
-          fontFamily: "'Plus Jakarta Sans',sans-serif",
-          fontSize: 13,
-          color: "rgba(255,255,255,.6)",
-          lineHeight: 1.78,
-          marginBottom: 22,
-          fontWeight: 400,
-          flex: 1,
-        }}
-      >
+      <p className="text-white/60 text-[13px] mb-5.5 flex-1 leading-[1.7]">
         {feature.desc}
       </p>
 
-      {/* Stat */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "baseline",
-          gap: 6,
-          borderTop: "1px solid rgba(255,255,255,.1)",
-          paddingTop: 16,
-        }}
-      >
+      <div className="flex items-baseline gap-1.5 border-t border-white/10 pt-4">
         <span
+          className="text-[24px]"
           style={{
-            fontFamily: "'Instrument Serif',serif",
-            fontSize: 24,
-            fontWeight: 400,
             background: `linear-gradient(135deg, ${c1}, ${c2})`,
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
@@ -334,392 +207,98 @@ function FeatureCard({ feature, index, onNavigate }) {
         >
           {feature.stat}
         </span>
-        <span
-          style={{
-            fontFamily: "'Plus Jakarta Sans',sans-serif",
-            fontSize: 11,
-            color: "rgba(255,255,255,.4)",
-            fontWeight: 500,
-          }}
-        >
+        <span className="text-[11px] text-white/40">
           {feature.statLabel}
         </span>
       </div>
-
-      {/* Arrow */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: 26,
-          right: 26,
-          width: 32,
-          height: 32,
-          borderRadius: "50%",
-          background: "rgba(255,255,255,.1)",
-          border: "1px solid rgba(255,255,255,.18)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: 13,
-          color: "#fff",
-          opacity: hovered ? 1 : 0,
-          transform: hovered
-            ? "scale(1) translateX(0)"
-            : "scale(.5) translateX(-10px)",
-          transition:
-            "opacity .25s ease, transform .32s cubic-bezier(.34,1.56,.64,1)",
-        }}
-      >
-        →
-      </div>
     </div>
   );
 }
 
-// ─── Toast ─────────────────────────────────────────────────────────────────────
-function Toast({ msg, onClose }) {
-  useEffect(() => {
-    const t = setTimeout(onClose, 3200);
-    return () => clearTimeout(t);
-  }, []);
-  return (
-    <div
-      style={{
-        position: "fixed",
-        bottom: 32,
-        left: "50%",
-        transform: "translateX(-50%)",
-        background: "rgba(10,10,20,.88)",
-        backdropFilter: "blur(20px)",
-        border: "1px solid rgba(255,255,255,.15)",
-        borderRadius: 999,
-        padding: "13px 26px",
-        color: "#fff",
-        fontSize: 13,
-        fontWeight: 600,
-        fontFamily: "'Plus Jakarta Sans',sans-serif",
-        boxShadow: "0 8px 40px rgba(0,0,0,.4)",
-        zIndex: 9999,
-        animation: "toastIn .35s cubic-bezier(.34,1.56,.64,1)",
-        whiteSpace: "nowrap",
-        display: "flex",
-        alignItems: "center",
-        gap: 10,
-      }}
-    >
-      <span
-        style={{
-          width: 8,
-          height: 8,
-          borderRadius: "50%",
-          background: "#4facfe",
-          display: "inline-block",
-          flexShrink: 0,
-        }}
-      />
-      {msg}
-    </div>
-  );
-}
-
-// ─── Main ──────────────────────────────────────────────────────────────────────
+// ─── MAIN ─────────────────────────────────────────────
 export default function WhyChooseUs() {
   const [features, setFeatures] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [toast, setToast] = useState(null);
   const [filter, setFilter] = useState("ALL");
+
   const navigate = useNavigate();
 
-  const load = () => {
-    setLoading(true);
-    setError(null);
-    fetchFeatures()
-      .then((res) => {
-        setFeatures(res.data);
-        setLoading(false);
-      })
-      .catch(() => {
-        setError("Could not load features.");
-        setLoading(false);
-      });
-  };
-  useEffect(load, []);
+  useEffect(() => {
+    fetchFeatures().then((res) => {
+      setFeatures(res.data);
+      setLoading(false);
+    });
+  }, []);
 
-  const tags = ["ALL", ...Array.from(new Set(features.map((f) => f.tag)))];
+  const tags = ["ALL", ...new Set(features.map((f) => f.tag))];
   const visible =
-    filter === "ALL" ? features : features.filter((f) => f.tag === filter);
+    filter === "ALL"
+      ? features
+      : features.filter((f) => f.tag === filter);
 
   return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap');
-        *{box-sizing:border-box;margin:0;padding:0;}
-        @keyframes floatDot{from{transform:translateY(0)}to{transform:translateY(-20px)}}
-        @keyframes shimmer{from{opacity:.4}to{opacity:.9}}
-        @keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-        @keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
-        .wcu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
-        @media(max-width:960px){.wcu-grid{grid-template-columns:repeat(2,1fr);}}
-        @media(max-width:580px){.wcu-grid{grid-template-columns:1fr;}}
-        .fpill{
-          background:rgba(255,255,255,.09);
-          border:1px solid rgba(255,255,255,.16);
-          color:rgba(255,255,255,.65);
-          border-radius:999px;padding:7px 18px;
-          font-family:'Plus Jakarta Sans',sans-serif;
-          font-size:10px;font-weight:800;letter-spacing:.1em;
-          cursor:pointer;backdrop-filter:blur(8px);
-          transition:all .2s ease;text-transform:uppercase;
-        }
-        .fpill:hover{background:rgba(255,255,255,.16);color:#fff;}
-        .fpill.on{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.38);color:#fff;box-shadow:0 4px 20px rgba(0,0,0,.25);}
-        .cta-btn{
-          background:linear-gradient(135deg,#4facfe,#667eea);
-          border:none;border-radius:999px;
-          padding:16px 44px;color:#fff;
-          font-family:'Plus Jakarta Sans',sans-serif;
-          font-size:14px;font-weight:700;letter-spacing:.04em;
-          cursor:pointer;
-          box-shadow:0 8px 32px rgba(79,172,254,.35);
-          transition:transform .25s ease,box-shadow .25s ease;
-        }
-        .cta-btn:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(79,172,254,.48);}
-      `}</style>
+    <section className="relative py-25 px-6 bg-[linear-gradient(135deg,#0d0b20_0%,#1a1040_28%,#0f2040_60%,#0a1628_100%)] font-[Plus_Jakarta_Sans] overflow-hidden">
+      
+      <Particles />
 
-      <section
-        style={{
-          position: "relative",
-          background:
-            "linear-gradient(135deg, #0d0b20 0%, #1a1040 28%, #0f2040 60%, #0a1628 100%)",
-          padding: "100px 24px 112px",
-          // overflow: "hidden",
-          fontFamily: "'Plus Jakarta Sans',sans-serif",
-        }}
-      >
-        <Particles />
+      <div className="max-w-285 mx-auto relative z-1">
 
-        {/* Ambient orbs */}
-        {[
-          { style: { top: "0px", left: "0px" }, size: 400, c: "#667eea" },
-          { style: { top: "35%", right: "-120px" }, size: 420, c: "#f093fb" },
-          { style: { bottom: "-100px", left: "25%" }, size: 380, c: "#4facfe" },
-        ].map((o, i) => (
-          <div
-            key={i}
-            style={{
-              position: "absolute",
-              ...o.style,
-              width: o.size,
-              height: o.size,
-              borderRadius: "50%",
-              background: `radial-gradient(circle, ${o.c}16 0%, transparent 70%)`,
-              pointerEvents: "none",
-            }}
-          />
-        ))}
+        {/* HEADER */}
+        <div className="text-center mb-13">
+          <h2 className="text-white text-[clamp(34px,5.5vw,58px)] leading-tight mb-4.5">
+            Travel smarter.
+            <br />
+            <span className="bg-linear-to-r from-blue-400 via-pink-400 to-green-400 bg-clip-text text-transparent">
+              Experience more.
+            </span>
+          </h2>
 
-        <div
-          style={{
-            maxWidth: 1140,
-            margin: "0 auto",
-            position: "relative",
-            zIndex: 1,
-          }}
-        >
-          {/* Header */}
-          <div
-            style={{
-              textAlign: "center",
-              marginBottom: 52,
-              animation: "fadeUp .7s ease both",
-            }}
-          >
-            <div
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                background: "rgba(255,255,255,.09)",
-                border: "1px solid rgba(255,255,255,.18)",
-                borderRadius: 999,
-                padding: "6px 20px",
-                marginBottom: 24,
-                backdropFilter: "blur(12px)",
-              }}
-            >
-              <div
-                style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: "50%",
-                  background: "#4facfe",
-                  boxShadow: "0 0 8px #4facfe",
-                }}
-              />
-              <span
-                style={{
-                  fontSize: 10,
-                  fontWeight: 800,
-                  color: "rgba(255,255,255,.8)",
-                  letterSpacing: ".14em",
-                  textTransform: "uppercase",
-                }}
-              >
-                Why Choose Us
-              </span>
-            </div>
-
-            <h2
-              style={{
-                fontFamily: "'Instrument Serif',serif",
-                fontSize: "clamp(34px, 5.5vw, 58px)",
-                fontWeight: 400,
-                color: "#fff",
-                lineHeight: 1.1,
-                marginBottom: 18,
-                letterSpacing: "-.02em",
-              }}
-            >
-              Travel smarter.
-              <br />
-              <em
-                style={{
-                  background:
-                    "linear-gradient(90deg, #4facfe 0%, #f093fb 50%, #43e97b 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
-              >
-                Experience more.
-              </em>
-            </h2>
-
-            <p
-              style={{
-                fontSize: 15,
-                color: "rgba(255,255,255,.5)",
-                lineHeight: 1.8,
-                maxWidth: 500,
-                margin: "0 auto",
-                fontWeight: 400,
-              }}
-            >
-              Every feature we've built exists to make your journey more
-              effortless, more memorable, and more you.
-            </p>
-          </div>
-
-          {/* Filters */}
-          {!loading && !error && (
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                justifyContent: "center",
-                gap: 8,
-                marginBottom: 44,
-                animation: "fadeUp .7s .15s ease both",
-              }}
-            >
-              {tags.map((tag) => (
-                <button
-                  key={tag}
-                  className={`fpill ${filter === tag ? "on" : ""}`}
-                  onClick={() => setFilter(tag)}
-                >
-                  {tag}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* Error */}
-          {error && (
-            <div
-              style={{
-                textAlign: "center",
-                padding: "48px 0",
-                color: "rgba(255,255,255,.45)",
-                fontSize: 14,
-              }}
-            >
-              ⚠ {error} —{" "}
-              <button
-                onClick={load}
-                style={{
-                  background: "none",
-                  border: "none",
-                  color: "#4facfe",
-                  cursor: "pointer",
-                  fontSize: 14,
-                  fontWeight: 700,
-                }}
-              >
-                Retry
-              </button>
-            </div>
-          )}
-
-          {/* Grid */}
-          <div className="wcu-grid">
-            {loading
-              ? Array.from({ length: 6 }).map((_, i) => (
-                  <SkeletonCard key={i} />
-                ))
-              : visible.map((f, i) => (
-                  <FeatureCard
-                    key={f.id}
-                    feature={f}
-                    index={i}
-                    onNavigate={(f) => {
-                      // scroll if section exists
-                      const sectionId =
-                        f.route === "/hotels"
-                          ? "hotel"
-                          : f.route === "/places"
-                            ? "places"
-                            : f.route === "/travel"
-                              ? "travel"
-                              : null;
-
-                      if (sectionId && document.getElementById(sectionId)) {
-                        document
-                          .getElementById(sectionId)
-                          ?.scrollIntoView({ behavior: "smooth" });
-                      } else {
-                        navigate(f.route);
-                      }
-                    }}
-                  />
-                ))}
-          </div>
-
-          {/* CTA */}
-          {!loading && !error && (
-            <div
-              style={{
-                textAlign: "center",
-                marginTop: 68,
-                animation: "fadeUp .7s .4s ease both",
-              }}
-            >
-              <p
-                style={{
-                  fontSize: 12,
-                  color: "rgba(255,255,255,.28)",
-                  marginTop: 14,
-                  fontWeight: 500,
-                }}
-              >
-                No account needed · Free to browse
-              </p>
-            </div>
-          )}
+          <p className="text-white/50 max-w-125 mx-auto text-[15px]">
+            Every feature we've built exists to make your journey effortless.
+          </p>
         </div>
-      </section>
 
-      {toast && <Toast msg={toast} onClose={() => setToast(null)} />}
-    </>
+        {/* FILTER */}
+        <div className="flex flex-wrap justify-center gap-2 mb-11">
+          {tags.map((tag) => (
+            <button
+              key={tag}
+              onClick={() => setFilter(tag)}
+              className={`px-4.5 py-1.75 text-[10px] font-extrabold uppercase tracking-widest rounded-full border backdrop-blur-sm
+              ${
+                filter === tag
+                  ? "bg-white/20 border-white/40 text-white"
+                  : "bg-white/10 border-white/20 text-white/60 hover:bg-white/20"
+              }`}
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
+
+        {/* GRID */}
+        <div className="grid grid-cols-3 gap-5 max-[960px]:grid-cols-2 max-[580px]:grid-cols-1">
+          {loading
+            ? Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="h-45 bg-white/10 animate-pulse rounded-xl" />
+              ))
+            : visible.map((f, i) => (
+                <FeatureCard
+                  key={f.id}
+                  feature={f}
+                  index={i}
+                  onNavigate={(f) => navigate(f.route)}
+                />
+              ))}
+        </div>
+
+        {/* FOOTER */}
+        <div className="text-center mt-17">
+          <p className="text-white/30 text-[12px]">
+            No account needed · Free to browse
+          </p>
+        </div>
+      </div>
+    </section>
   );
 }

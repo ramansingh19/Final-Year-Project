@@ -12,9 +12,9 @@ function LandingPage() {
         <HeroSection />
       </div>
       <PopularCities />
-      {/* <div id="why-choose-us" style={{ marginTop: "30px" }}>
+      <div id="why-choose-us" style={{ marginTop: "30px" }}>
         <WhyChooseUs />
-      </div> */}
+      </div>
       <BudgetPlanner />
       <Footer />
     </>

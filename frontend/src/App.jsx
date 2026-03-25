@@ -391,9 +391,8 @@ function App() {
             </SuperAdminProtectedRouter>
           }
         />
-        <Route path="/AiPlanner" element={<AiPlanner/>}/>
-        <Route path="/AiPlanner-details" element={<AiPlannerDetails/>}/>
-
+        <Route path="/AiPlanner" element={<AiPlanner />} />
+        <Route path="/AiPlanner-details" element={<AiPlannerDetails />} />
       </Routes>
     </>
   );
