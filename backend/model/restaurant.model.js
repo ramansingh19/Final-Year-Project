@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 
 const restaurantSchema = new mongoose.Schema(
   {
@@ -8,10 +8,11 @@ const restaurantSchema = new mongoose.Schema(
       trim: true,
       lowercase: true,
     },
+
     state: {
       type: String,
-      lowercase: true,
       trim: true,
+      lowercase: true,
     },
 
     address: {
@@ -26,13 +27,6 @@ const restaurantSchema = new mongoose.Schema(
       required: true,
     },
 
-    famousFood: {
-      type: String,
-      required: true,
-      trim: true,
-      lowercase: true,
-    },
-
     foodType: {
       type: String,
       enum: ["veg", "non-veg", "both"],
@@ -44,27 +38,21 @@ const restaurantSchema = new mongoose.Schema(
       required: true,
     },
 
-    bestTime: {
-      type: String,
-      enum: ["breakfast", "lunch", "dinner", "anytime"],
-      default: "anytime",
+    openingHours: {
+      open: String,
+      close: String,
     },
 
-    images: [
-      {
-        type: String,
-      },
-    ],
+    images: [String],
 
     location: {
       type: {
         type: String,
         enum: ["Point"],
         default: "Point",
-        required: true,
       },
       coordinates: {
-        type: [Number], // [longitude, latitude]
+        type: [Number], // [lng, lat]
         required: true,
       },
     },
@@ -79,11 +67,8 @@ const restaurantSchema = new mongoose.Schema(
       enum: ["active", "inactive", "pending", "rejected"],
       default: "pending",
     },
-    approvedBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-    createdBy: {
+
+    owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
@@ -98,10 +83,9 @@ const restaurantSchema = new mongoose.Schema(
       default: 0,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 restaurantSchema.index({ location: "2dsphere" });
-restaurantSchema.index({ status: 1 });
 
 export const Restaurant = mongoose.model("Restaurant", restaurantSchema);

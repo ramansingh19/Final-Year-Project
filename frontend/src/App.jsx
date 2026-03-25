@@ -63,6 +63,7 @@ import GetInactivePlaceCityWise from "./pages/superAdmin/place/GetInactivePlaceC
 import UpdatePlaceDetails from "./pages/superAdmin/place/UpdatePlaceDetails";
 import AiPlanner from "./pages/AIPlanner/AiPlanner";
 import AiPlannerDetails from "./pages/AIPlanner/AiPlannerDetails";
+import RestaurantDashboard from "./pages/admin/restaurant/restaurantDashboard";
 
 
 function App() {
@@ -393,6 +394,7 @@ function App() {
         />
         <Route path="/AiPlanner" element={<AiPlanner />} />
         <Route path="/AiPlanner-details" element={<AiPlannerDetails />} />
+        <Route path="/admin/restaurantDashboard" element={<AdminProtectedRouter><RestaurantDashboard/></AdminProtectedRouter>}/>
       </Routes>
     </>
   );

@@ -374,7 +374,7 @@ function Navbar() {
                             </span>
                             Dashboard
                           </Link>
-                        ) : admin?.role === "admin" ? (
+                        )  : admin?.host === "hotel" ? (
                           <Link
                             to="/admin/adminDashboard"
                             className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
@@ -382,7 +382,17 @@ function Navbar() {
                             <span>
                               <RxDashboard />
                             </span>
-                            Dashboard
+                            Hotel Dashboard
+                          </Link>
+                        ) : admin?.host === "restaurant" ? (
+                          <Link
+                            to="/admin/restaurantDashboard"
+                            className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
+                          >
+                            <span>
+                              <RxDashboard />
+                            </span>
+                            Restaurant Dashboard
                           </Link>
                         ) : null}
                         <Link

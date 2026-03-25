@@ -4,116 +4,121 @@ import { City } from "../model/city.model.js";
 import { Restaurant } from "../model/restaurant.model.js";
 import fs from "fs";
 
-export const createResturant = async (req, res) => {
+// Superadmin - createRestaurant 
+export const createRestaurant = async (req, res) => {
   try {
     let {
       name,
       address,
       state,
       cityId,
-      famousFood,
       foodType,
       avgCostForOne,
-      bestTime,
       isRecommended,
+      openingHours,
     } = req.body;
 
+    // ✅ Parse location safely
     let location;
     try {
       location = JSON.parse(req.body.location);
-    } catch (error) {
+    } catch {
       return res.status(400).json({
         success: false,
-        message: "Inavalid location format",
+        message: "Invalid location format",
       });
     }
-    console.log(location);
 
+    // ✅ Validate location
+    if (
+      !location ||
+      !Array.isArray(location.coordinates) ||
+      location.coordinates.length !== 2
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid coordinates",
+      });
+    }
+
+    // ✅ Required fields validation
     if (
       !name ||
       !address ||
       !state ||
       !cityId ||
       !foodType ||
-      !avgCostForOne ||
-      !bestTime ||
-      !famousFood ||
-      isRecommended === undefined //boolean value that why
+      !avgCostForOne
     ) {
-      return res.status(404).json({
+      return res.status(400).json({
         success: false,
-        message: "All fields are required",
+        message: "All required fields must be filled",
       });
     }
 
-    //validating city
+    // ✅ Convert number
+    avgCostForOne = Number(avgCostForOne);
+
+    // ✅ Validate city
     const city = await City.findOne({ _id: cityId, status: "active" });
     if (!city) {
       return res.status(404).json({
         success: false,
-        message: "Invalid city id",
+        message: "Invalid city",
       });
     }
-    console.log(city);
 
-    const exitingResturant = await Restaurant.findOne({
-      name,
+    // ✅ Duplicate name check
+    const existingRestaurant = await Restaurant.findOne({
+      name: name.toLowerCase(),
       city: cityId,
     });
-    if (exitingResturant) {
+
+    if (existingRestaurant) {
       return res.status(409).json({
         success: false,
-        message: "Resturant is already exists in this city with same name",
+        message: "Restaurant already exists in this city",
       });
     }
 
-    //privent location
-    const exitinglocation = await Restaurant.findOne({
-      "location.coordinates": location.coordinates,
-    });
-    if (exitinglocation) {
-      return res.status(409).json({
-        success: false,
-        message: "A restaurant already exists at this location",
-      });
-    }
+    // ✅ Upload images
+    let imageUrls = [];
 
-    let imageUrl = [];
     if (req.files?.length) {
       for (const file of req.files) {
-        //we can put try and catch later
-        const result = await uploadCloudinary(file.path, "resturant");
-        imageUrl.push(result.secure_url);
         try {
+          const result = await uploadCloudinary(file.path, "restaurant");
+          imageUrls.push(result.secure_url);
+
           if (fs.existsSync(file.path)) {
             fs.unlinkSync(file.path);
           }
-        } catch (error) {
-          console.warn("File delete skipped:", err.message);
+        } catch (err) {
+          console.warn("Image upload failed:", err.message);
         }
       }
     }
 
-    const resturant = await Restaurant.create({
+    // ✅ Create restaurant
+    const restaurant = await Restaurant.create({
       name,
-      city: cityId,
       address,
       state,
-      bestTime,
-      avgCostForOne,
-      isRecommended,
-      location,
-      images: imageUrl,
-      famousFood,
+      city: cityId,
       foodType,
+      avgCostForOne,
+      isRecommended: isRecommended || false,
+      openingHours,
+      location,
+      images: imageUrls,
+      owner: req.user?._id,
       status: "pending",
-      createdBy: req.user?._id,
     });
 
     return res.status(201).json({
       success: true,
-      data: resturant,
-      message: "successfully created resturant",
+      data: restaurant,
+      message: "Restaurant created successfully",
     });
   } catch (error) {
     return res.status(500).json({
