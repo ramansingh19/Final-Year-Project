@@ -1,16 +1,18 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import apiClient from "../../pages/services/apiClient";
+import axios from "axios";
 
 const initialState = {
   places: [],
   cityWisePlaces: [],
+  nearbyPlaces: [],
   inactiveCityWisePlaces: [],
   place: null,
   loading: false,
   error: null,
   success: false,
 
-//  AI STATE
+  //  AI STATE
   aiPlan: [],
   planHistory: [],
   aiLoading: false,
@@ -34,10 +36,10 @@ export const createPlace = createAsyncThunk(
       return response.data.data; // ✅ important
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Place creation failed"
+        error.response?.data?.message || "Place creation failed",
       );
     }
-  }
+  },
 );
 
 /* -------- get pending places -------- */
@@ -55,10 +57,10 @@ export const getPendingPlaces = createAsyncThunk(
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Failed to fetch cities"
+        error.response?.data?.message || "Failed to fetch cities",
       );
     }
-  }
+  },
 );
 
 /* -------- approve Place -------- */
@@ -72,16 +74,16 @@ export const approvePlaceById = createAsyncThunk(
         {},
         {
           headers: { Authorization: `Bearer ${superAdminToken}` },
-        }
+        },
       );
 
       return { placeId, message: response.data.message };
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "City approval failed"
+        error.response?.data?.message || "City approval failed",
       );
     }
-  }
+  },
 );
 
 /* -------- rejected Place -------- */
@@ -95,15 +97,15 @@ export const rejectePlaceById = createAsyncThunk(
         {},
         {
           headers: { Authorization: `Bearer ${superAdminToken}` },
-        }
+        },
       );
       return { cityId, message: response.data.message };
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "City rejection failed"
+        error.response?.data?.message || "City rejection failed",
       );
     }
-  }
+  },
 );
 
 /* -------- Inactive Place -------- */
@@ -117,15 +119,15 @@ export const inactivePlace = createAsyncThunk(
         {},
         {
           headers: { Authorization: `Bearer ${superAdminToken}` },
-        }
+        },
       );
       return { placeId, message: response.data.message };
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Place Inactive failed"
+        error.response?.data?.message || "Place Inactive failed",
       );
     }
-  }
+  },
 );
 
 /* -------- get Place cityWise -------- */
@@ -144,10 +146,10 @@ export const getPlacesCityWise = createAsyncThunk(
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Failed to fetch places"
+        error.response?.data?.message || "Failed to fetch places",
       );
     }
-  }
+  },
 );
 
 /* -------- get Active Place cityWise -------- */
@@ -160,7 +162,7 @@ export const getActivePlacesCityWise = createAsyncThunk(
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response?.data?.message || "Failed");
     }
-  }
+  },
 );
 
 /* -------- get Inactive Place cityWise -------- */
@@ -179,10 +181,10 @@ export const getInactivePlacesCityWise = createAsyncThunk(
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Failed to fetch inactive places"
+        error.response?.data?.message || "Failed to fetch inactive places",
       );
     }
-  }
+  },
 );
 
 /* ------ delete Place ------- */
@@ -200,10 +202,10 @@ export const deletePlace = createAsyncThunk(
       return { id, ...response.data };
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "place delete failde"
+        error.response?.data?.message || "place delete failde",
       );
     }
-  }
+  },
 );
 
 /* -------- get place ById -------- */
@@ -215,10 +217,10 @@ export const getPlaceById = createAsyncThunk(
       return response.data; // return city
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Place rejection failed"
+        error.response?.data?.message || "Place rejection failed",
       );
     }
-  }
+  },
 );
 
 /* ------ update place ------- */
@@ -227,19 +229,23 @@ export const updatePlace = createAsyncThunk(
   async ({ id, data }, thunkAPI) => {
     try {
       const superAdminToken = localStorage.getItem("superAdminToken");
-      const response = await apiClient.put(`/api/place/updatePlace/${id}`, data, {
-        headers: { 
-          Authorization: `Bearer ${superAdminToken}`,
-          "Content-Type": "multipart/form-data" 
+      const response = await apiClient.put(
+        `/api/place/updatePlace/${id}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${superAdminToken}`,
+            "Content-Type": "multipart/form-data",
+          },
         },
-      });
+      );
       return response.data; // updated city
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "place update failed"
+        error.response?.data?.message || "place update failed",
       );
     }
-  }
+  },
 );
 
 /* ------ generateTravelPlan ------- */
@@ -247,41 +253,65 @@ export const generatePlan = createAsyncThunk(
   "place/generatePlan",
   async (data, thunkAPI) => {
     try {
-      const response = await apiClient.post("/api/place/generate-plan", data); 
+      const response = await apiClient.post("/api/place/generate-plan", data);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data?.message);
     }
-  }
+  },
 );
 
+//near by places
+export const fetchNearbyPlaces = createAsyncThunk(
+  "place/fetchNearbyPlaces",
+  async ({ lat, lng, cityId, distance = 25000 }, { rejectWithValue }) => {
+    try {
+      const query = new URLSearchParams({
+        lat,
+        lng,
+        distance,
+        isPopular: true,
+      });
+
+      if (cityId) query.append("cityId", cityId);
+
+      const res = await apiClient.get(`/api/place/nearby?${query}`);
+
+      return res.data.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch nearby places",
+      );
+    }
+  },
+);
 
 const placeSlice = createSlice({
   name: "place",
   initialState,
   reducers: {
-        // save AI plan and history
-        setAiPlan: (state, action) => {
-          state.aiPlan = action.payload;
-          // save in localStorage
-          let history = JSON.parse(localStorage.getItem("planHistory")) || [];
-          history.unshift({ id: Date.now(), plan: action.payload });
-          history = history.slice(0, 10); // keep last 10
-          localStorage.setItem("planHistory", JSON.stringify(history));
-          state.planHistory = history;
-          localStorage.setItem("lastAiPlan", JSON.stringify(action.payload));
-        },
-    
-        // load history from localStorage
-        loadPlanHistory: (state) => {
-          const history = JSON.parse(localStorage.getItem("planHistory")) || [];
-          state.planHistory = history;
-        },
-    
-        // load a plan into aiPlan
-        loadAiPlan: (state, action) => {
-          state.aiPlan = action.payload;
-        },
+    // save AI plan and history
+    setAiPlan: (state, action) => {
+      state.aiPlan = action.payload;
+      // save in localStorage
+      let history = JSON.parse(localStorage.getItem("planHistory")) || [];
+      history.unshift({ id: Date.now(), plan: action.payload });
+      history = history.slice(0, 10); // keep last 10
+      localStorage.setItem("planHistory", JSON.stringify(history));
+      state.planHistory = history;
+      localStorage.setItem("lastAiPlan", JSON.stringify(action.payload));
+    },
+
+    // load history from localStorage
+    loadPlanHistory: (state) => {
+      const history = JSON.parse(localStorage.getItem("planHistory")) || [];
+      state.planHistory = history;
+    },
+
+    // load a plan into aiPlan
+    loadAiPlan: (state, action) => {
+      state.aiPlan = action.payload;
+    },
   },
 
   extraReducers: (builder) => {
@@ -333,7 +363,7 @@ const placeSlice = createSlice({
       .addCase(approvePlaceById.fulfilled, (state, action) => {
         state.loading = false;
         const place = state.places.find(
-          (p) => p._id === action.payload.placeId
+          (p) => p._id === action.payload.placeId,
         );
         if (place) place.status = "active";
       })
@@ -352,7 +382,7 @@ const placeSlice = createSlice({
       .addCase(rejectePlaceById.fulfilled, (state, action) => {
         state.loading = false;
         const place = state.places.find(
-          (p) => p._id === action.payload.placeId
+          (p) => p._id === action.payload.placeId,
         );
         if (place) place.status = "rejected";
       })
@@ -401,7 +431,7 @@ const placeSlice = createSlice({
         state.loading = false;
         state.success = true;
         const place = state.places.find(
-          (p) => p._id === action.payload.placeId
+          (p) => p._id === action.payload.placeId,
         );
         if (place) place.status = "inactive";
       })
@@ -461,48 +491,62 @@ const placeSlice = createSlice({
 
     /* ------ update city ------- */
     builder
-        .addCase(updatePlace.pending, (state) => {
-          state.loading = true;
-          state.error = null;
-          state.success = false;
-        })
-        .addCase(updatePlace.fulfilled, (state, action) => {
-          state.loading = false;
-          state.place = action.payload;
-          state.success = true;
-        })
-        .addCase(updatePlace.rejected, (state, action) => {
-          state.loading = false;
-          state.error = action.payload;
-          state.success = false;
-        }); 
-    
+      .addCase(updatePlace.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(updatePlace.fulfilled, (state, action) => {
+        state.loading = false;
+        state.place = action.payload;
+        state.success = true;
+      })
+      .addCase(updatePlace.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.success = false;
+      });
+
     /* ------ generateTravelPlan ------- */
     builder
-    .addCase(generatePlan.pending, (state) => {
-      state.aiLoading = true;
-      state.aiError = null;
-      state.aiPlan = null;
-    })
-  
-    .addCase(generatePlan.fulfilled, (state, action) => {
-      state.aiLoading = false;
-      state.aiPlan = action.payload; // ✅ store AI result
+      .addCase(generatePlan.pending, (state) => {
+        state.aiLoading = true;
+        state.aiError = null;
+        state.aiPlan = null;
+      })
 
-       // also save in localStorage using setAiPlan logic
-       let history = JSON.parse(localStorage.getItem("planHistory")) || [];
-       history.unshift({ id: Date.now(), plan: action.payload });
-       history = history.slice(0, 10);
-       localStorage.setItem("planHistory", JSON.stringify(history));
-       state.planHistory = history;
-       localStorage.setItem("lastAiPlan", JSON.stringify(action.payload));
-    })
-  
-    .addCase(generatePlan.rejected, (state, action) => {
-      state.aiLoading = false;
-      state.aiError = action.payload;
-    }); 
-       
+      .addCase(generatePlan.fulfilled, (state, action) => {
+        state.aiLoading = false;
+        state.aiPlan = action.payload; // ✅ store AI result
+
+        // also save in localStorage using setAiPlan logic
+        let history = JSON.parse(localStorage.getItem("planHistory")) || [];
+        history.unshift({ id: Date.now(), plan: action.payload });
+        history = history.slice(0, 10);
+        localStorage.setItem("planHistory", JSON.stringify(history));
+        state.planHistory = history;
+        localStorage.setItem("lastAiPlan", JSON.stringify(action.payload));
+      })
+
+      .addCase(generatePlan.rejected, (state, action) => {
+        state.aiLoading = false;
+        state.aiError = action.payload;
+      });
+
+    //Near by places
+    builder
+      .addCase(fetchNearbyPlaces.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchNearbyPlaces.fulfilled, (state, action) => {
+        state.loading = false;
+        state.places = action.payload;
+      })
+      .addCase(fetchNearbyPlaces.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 
