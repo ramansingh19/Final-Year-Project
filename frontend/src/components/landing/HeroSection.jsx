@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { smartSearch } from "../../features/user/searchSlice";
 
+
 function HeroSection() {
   const [activeTab, setActiveTab] = useState("cities");
   const navigate = useNavigate();
