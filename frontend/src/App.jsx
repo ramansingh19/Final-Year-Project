@@ -63,6 +63,7 @@ import GetInactivePlaceCityWise from "./pages/superAdmin/place/GetInactivePlaceC
 import UpdatePlaceDetails from "./pages/superAdmin/place/UpdatePlaceDetails";
 import AiPlanner from "./pages/AIPlanner/AiPlanner";
 import AiPlannerDetails from "./pages/AIPlanner/AiPlannerDetails";
+import PlacePage from "./pages/auth/PlacePage";
 
 
 function App() {
@@ -72,6 +73,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="hotels" element={<HotelPage />} />
+        <Route path="places" element={<PlacePage />} />
         <Route path="/hotels/:id" element={<HotelDetailPage />} />
         <Route path="/my-booking" element={<Booking />} />
         <Route path="/city/:id" element={<CityDetails />} />
