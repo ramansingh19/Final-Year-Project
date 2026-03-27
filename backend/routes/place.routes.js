@@ -71,6 +71,6 @@ placeRouter.post("/generate-plan", generateTravelPlan);
 placeRouter.get("/getplace/:id", getplacebyid);
 
 //user  
-placeRouter.get("/nearby" , isAuthenticated , getNearbyPlaces)
+placeRouter.get("/nearby"  , getNearbyPlaces)
 
 export default placeRouter;

@@ -9,7 +9,7 @@ import PlaceMap from "../../components/Place/PlaceMap";
 import EmptyState from "../../components/Place/EmptyState";
 import LoadingSkeleton from "../../components/Place/LoadingSkeleton";
 
-const DEFAULT_DISTANCE = 25000;
+const DEFAULT_DISTANCE = 100000;
 
 const PlacePage = ({ cityId }) => {
   const dispatch = useDispatch();
@@ -139,5 +139,7 @@ const PlacePage = ({ cityId }) => {
     </section>
   );
 };
+
+
 
 export default PlacePage;
