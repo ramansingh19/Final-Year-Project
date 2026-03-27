@@ -15,6 +15,7 @@ const PlaceFilters = ({ distance, category, onDistanceChange, onCategoryChange }
           <option value={5000}>5 km</option>
           <option value={10000}>10 km</option>
           <option value={25000}>25 km</option>
+          <option value={100000}>100 km</option>
         </select>
       </label>
 
@@ -38,4 +39,6 @@ const PlaceFilters = ({ distance, category, onDistanceChange, onCategoryChange }
   );
 };
 
+
 export default PlaceFilters;
+

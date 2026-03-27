@@ -8,6 +8,17 @@ const formatDistance = (distance) => {
 
 const PlaceCard = ({ place, isSelected, isHovered, onClick, onMouseEnter, onMouseLeave }) => {
   const image = place?.image || place?.images?.[0] || "https://placehold.co/320x180?text=Place";
+  // Backend returns:
+  // - distanceInKm (km)
+  // - entryfees
+  // Frontend UI expects:
+  // - distance (meters)
+  // - entryFee
+  const distanceMeters =
+    place?.distance ??
+    (place?.distanceInKm != null ? Number(place.distanceInKm) * 1000 : null);
+
+  const entryFee = place?.entryFee ?? place?.entryfees;
 
   return (
     <button
@@ -41,10 +52,10 @@ const PlaceCard = ({ place, isSelected, isHovered, onClick, onMouseEnter, onMous
         <p className="text-sm text-gray-500">{place?.category || "Uncategorized"}</p>
         <div className="grid grid-cols-2 gap-2 text-sm text-gray-700">
           <p>
-            <span className="font-medium">Distance:</span> {formatDistance(place?.distance)}
+            <span className="font-medium">Distance:</span> {formatDistance(distanceMeters)}
           </p>
           <p>
-            <span className="font-medium">Entry Fee:</span> {place?.entryFee ?? "Free"}
+            <span className="font-medium">Entry Fee:</span> {entryFee ?? "Free"}
           </p>
         </div>
       </div>

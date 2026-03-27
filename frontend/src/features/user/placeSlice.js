@@ -264,7 +264,7 @@ export const generatePlan = createAsyncThunk(
 export const fetchNearbyPlaces = createAsyncThunk(
   "place/fetchNearbyPlaces",
   async (
-    { lat, lng, cityId, distance = 25000, category },
+    { lat, lng, cityId, distance = 25000 },
     { rejectWithValue },
   ) => {
     try {
@@ -276,12 +276,13 @@ export const fetchNearbyPlaces = createAsyncThunk(
       });
 
       if (cityId) query.append("cityId", cityId);
-      if (category) query.append("category", category);
 
       const res = await apiClient.get(`/api/place/nearby?${query}`);
       console.log("FULL RESPONSE:", res);
       console.log("DATA:", res?.data);
-      return res.data?.data || res.data?.places || [];
+      // `apiClient` interceptor unwraps axios response and returns backend JSON directly.
+      // Backend shape: { success: true, data: places[] }
+      return res?.data || res?.places || [];
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Failed to fetch nearby places",

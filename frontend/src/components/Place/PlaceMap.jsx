@@ -4,6 +4,24 @@ import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 const mapContainerStyle = { width: "100%", height: "100%" };
 const defaultCenter = { lat: 20.5937, lng: 78.9629 };
 
+const getPlaceLatLng = (place) => {
+  const lat = Number(place?.latitude);
+  const lng = Number(place?.longitude);
+  if (Number.isFinite(lat) && Number.isFinite(lng)) return { lat, lng };
+
+  // Backend returns coordinates as: location: { type: "Point", coordinates: [lng, lat] }
+  const coordinates = place?.location?.coordinates;
+  if (Array.isArray(coordinates) && coordinates.length === 2) {
+    const lngNum = Number(coordinates[0]);
+    const latNum = Number(coordinates[1]);
+    if (Number.isFinite(latNum) && Number.isFinite(lngNum)) {
+      return { lat: latNum, lng: lngNum };
+    }
+  }
+
+  return null;
+};
+
 const PlaceMap = ({ center, places, selectedPlaceId, hoveredPlaceId, onSelectPlace }) => {
   const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
   const { isLoaded } = useJsApiLoader({
@@ -39,17 +57,21 @@ const PlaceMap = ({ center, places, selectedPlaceId, hoveredPlaceId, onSelectPla
   return (
     <GoogleMap
       mapContainerStyle={mapContainerStyle}
-      center={selectedPlace ? { lat: selectedPlace.latitude, lng: selectedPlace.longitude } : mapCenter}
+      center={selectedPlace ? getPlaceLatLng(selectedPlace) || mapCenter : mapCenter}
       zoom={selectedPlace ? 14 : 12}
       options={{ streetViewControl: false, mapTypeControl: false, fullscreenControl: false }}
     >
-      {places.map((place) => {
-        const id = place._id || place.id;
+      {places.map((place, index) => {
+        const id = place._id || place.id || `${place?.name ?? "place"}-${index}`;
         const active = id === selectedPlaceId || id === hoveredPlaceId;
+        const markerPos = getPlaceLatLng(place);
+
+        if (!markerPos) return null;
+
         return (
           <Marker
             key={id}
-            position={{ lat: place.latitude, lng: place.longitude }}
+            position={markerPos}
             title={place.name}
             onClick={() => onSelectPlace(id)}
             icon={

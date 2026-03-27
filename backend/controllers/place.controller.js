@@ -673,7 +673,7 @@ export const getNearbyPlaces = async (req, res) => {
     }
 
     // only famous places
-    // query.isPopular = true;
+    query.isPopular = true;
 
     const places = await Place.aggregate([
       {
