@@ -39,7 +39,7 @@ restaurantRouter.get("/inactive-restaurant-cityWise", isAuthenticated, authorize
 restaurantRouter.get("/rejected-restaurant-cityWise", isAuthenticated, authorize("super_admin"), getAllRejectedRestaurantCityWise)
 
 // SUPERADMIN - DELETE RESTAURANT
-restaurantRouter.delete("/delete/:id", isAuthenticated, authorize("admin"), deleteResturant)
+restaurantRouter.delete("/delete/:id", isAuthenticated, authorize("super_admin"), deleteResturant)
 
 //public routes
 restaurantRouter.get("/restaurant/:cityId" , allAciveResturant)

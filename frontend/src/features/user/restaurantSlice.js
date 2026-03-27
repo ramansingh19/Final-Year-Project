@@ -348,6 +348,27 @@ export const getAllRejectedRestaurantCityWise = createAsyncThunk(
   }
 );
 
+// SUPERADMIN - DELETE RESTAURANT
+export const deleteRestaurant = createAsyncThunk(
+  "restaurant/deleteRestaurant",
+  async (id, thunkAPI) => {
+    try {
+      const token = localStorage.getItem("superAdminToken");
+      const response = await apiClient.delete(`/api/resturant/delete/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("RESPONSE: ", response);
+      return { id, ...response.data };
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "restaurant delete failde",
+      );
+    }
+  },
+);
+
 const restaurantSlice = createSlice({
   name: "restaurant",
   initialState: {
@@ -637,6 +658,25 @@ const restaurantSlice = createSlice({
     state.restaurants = action.payload;
   })
   .addCase(getAllRejectedRestaurantCityWise.rejected, (state, action) => {
+    state.loading = false;
+    state.error = action.payload;
+  });
+
+  // SUPERADMIN - DELETE RESTAURANT
+  builder
+  .addCase(deleteRestaurant.pending, (state) => {
+    state.loading = true;
+  })
+  .addCase(deleteRestaurant.fulfilled, (state, action) => {
+    state.loading = false;
+
+    const restaurant = state.restaurants.find((r) => r._id === action.payload.id);
+
+    if (restaurant) {
+      restaurant.status = "inactive";
+    }
+  })
+  .addCase(deleteRestaurant.rejected, (state, action) => {
     state.loading = false;
     state.error = action.payload;
   });

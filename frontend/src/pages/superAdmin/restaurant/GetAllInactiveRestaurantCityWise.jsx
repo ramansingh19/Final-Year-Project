@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {getInactiveRestaurantCityWise,  } from "../../../features/user/restaurantSlice";
+import {approveRestaurantById, deleteRestaurant, getInactiveRestaurantCityWise,  } from "../../../features/user/restaurantSlice";
 import { getActiveCities } from "../../../features/user/citySlice";
 import { FaUtensils } from "react-icons/fa";
 
@@ -23,6 +23,16 @@ function GetAllInactiveRestaurantCityWise() {
   useEffect(() => {
     dispatch(getInactiveRestaurantCityWise({ city: selectedCity, page: 1 }));
   }, [dispatch, selectedCity]);
+
+  const handelApprove = (e, id) => {
+    e.stopPropagation()
+    dispatch(approveRestaurantById(id))
+  }
+
+  const handelDelete = (e, id) => {
+    e.stopPropagation()
+    dispatch(deleteRestaurant(id))
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
@@ -126,6 +136,11 @@ function GetAllInactiveRestaurantCityWise() {
               <p className="text-xs mt-2 text-green-600 font-medium">
                 {r.status}
               </p>
+            </div>
+            {/* buttons */}
+            <div className=" flex items-center justify-end gap-3 p-2">
+             <button onClick={(e) => handelApprove(e, r._id)} className="bg-blue-400 px-2 py-1 rounded-xl hover:bg-blue-500 hover:text-white duration-300 cursor-pointer">active</button>
+             <button onClick={(e) => handelDelete(e, r._id)} className="bg-red-400 px-2 py-1 rounded-xl hover:bg-red-500 hover:text-white duration-300 cursor-pointer">delete</button>
             </div>
           </div>
         ))}

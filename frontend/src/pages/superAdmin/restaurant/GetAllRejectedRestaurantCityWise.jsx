@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {getAllRejectedRestaurantCityWise} from "../../../features/user/restaurantSlice";
+import {deleteRestaurant, getAllRejectedRestaurantCityWise} from "../../../features/user/restaurantSlice";
 import { getActiveCities } from "../../../features/user/citySlice";
 import { FaUtensils } from "react-icons/fa";
 
@@ -22,6 +22,11 @@ function GetAllRejectedRestaurantCityWise() {
   useEffect(() => {
     dispatch(getAllRejectedRestaurantCityWise({ city: selectedCity, page: 1 }));
   }, [dispatch, selectedCity]);
+
+  const handelDelete = (e, id) => {
+    e.stopPropagation()
+    dispatch(deleteRestaurant(id))
+  }
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
 
@@ -96,7 +101,7 @@ function GetAllRejectedRestaurantCityWise() {
           <div
             key={r._id}
             onClick={() => setSelectedRestaurant(r)}
-            className="bg-white dark:bg-gray-800 rounded-2xl shadow hover:shadow-xl transition overflow-hidden cursor-pointer"
+            className="bg-white dark:bg-gray-800 rounded-2xl shadow hover:shadow-xl transition overflow-hidden cursor-pointer "
           >
             {/* IMAGE */}
             <div className="h-40">
@@ -124,6 +129,10 @@ function GetAllRejectedRestaurantCityWise() {
               <p className="text-xs mt-2 text-green-600 font-medium">
                 {r.status}
               </p>
+            </div>
+            {/* buttons */}
+            <div onClick={(e) => handelDelete(e, r._id)} className=" flex items-center justify-end p-2">
+              <button className="px-2 py-1 rounded-xl bg-red-400 hover:bg-red-500 hover:text-white duration-300 cursor-pointer">Delete</button>
             </div>
           </div>
         ))}

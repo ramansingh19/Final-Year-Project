@@ -762,6 +762,41 @@ export const getAllRejectedRestaurantCityWise = async (req, res) => {
   }
 }; 
 
+// SUPERADMIN - DELETE RESTAURANT
+export const deleteResturant = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid id ",
+      });
+    }
+
+    const deleteresturant = await Restaurant.findByIdAndDelete(id, {
+      runValidators: true,
+    });
+    if (!deleteresturant) {
+      return res.status(404).json({
+        success: true,
+        message: "Resturant not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: deleteresturant,
+      message: "successfully deleted",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 export const allAciveResturant = async (req, res) => {
   try {
     const { cityId } = req.params;
@@ -821,36 +856,4 @@ export const allAciveResturant = async (req, res) => {
 
 
 
-export const deleteResturant = async (req, res) => {
-  try {
-    const { id } = req.params;
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid id ",
-      });
-    }
-
-    const deleteresturant = await Restaurant.findByIdAndDelete(id, {
-      runValidators: true,
-    });
-    if (!deleteresturant) {
-      return res.status(404).json({
-        success: true,
-        message: "Resturant not found",
-      });
-    }
-
-    return res.status(200).json({
-      success: true,
-      data: deleteresturant,
-      message: "successfully deleted",
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
