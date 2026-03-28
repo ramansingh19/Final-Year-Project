@@ -1,10 +1,11 @@
-import React from 'react'
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import { motion } from "framer-motion"
 import { FaUserSecret, FaCity } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 
 function RestaurantDashboard() {
+
   const { admin } = useSelector((state) => state.admin);
 
   const getInitials = (name) => {
@@ -65,10 +66,10 @@ function RestaurantDashboard() {
           </Link>
 
           <Link
-            to="/admin/create-room"
+            to="/admin/create-food"
             className="px-5 py-3 bg-gray-700 hover:bg-gray-800 text-white font-medium rounded-xl shadow-lg transition-all duration-300 text-sm text-center"
           >
-            + Add Room
+            + Add Food Items
           </Link>
         </div>
       </motion.div>

@@ -369,6 +369,28 @@ export const deleteRestaurant = createAsyncThunk(
   },
 );
 
+// SUPERADMIN - GET ACTIVE RESTAURANT FOR A SPECIFIC ADMIN
+export const getAdminRestaurant = createAsyncThunk(
+  "restaurant/getAdminRestaurant",
+  async (adminId, thunkAPI) => {
+    try {
+      const token = localStorage.getItem("superAdminToken");
+
+      const response = await apiClient.get(
+        `/api/resturant/admin/${adminId}/restaurant`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      return response.data; // returns restaurant array
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data?.message || "Failed to fetch restaurant",
+      );
+    }
+  },
+);
+
 const restaurantSlice = createSlice({
   name: "restaurant",
   initialState: {
@@ -678,6 +700,21 @@ const restaurantSlice = createSlice({
   })
   .addCase(deleteRestaurant.rejected, (state, action) => {
     state.loading = false;
+    state.error = action.payload;
+  });
+
+  // SUPERADMIN - GET ACTIVE RESTAURANT FOR A SPECIFIC ADMIN
+  builder
+  .addCase(getAdminRestaurant.pending, (state) => {
+    state.loading = true;
+    state.error = null;
+  })
+  .addCase(getAdminRestaurant.fulfilled, (state, action) => {
+    state.loading = false;
+    state.restaurants = action.payload;
+  })
+  .addCase(getAdminRestaurant.rejected, (state, action) => {
+    state.loading = false;  
     state.error = action.payload;
   });
 

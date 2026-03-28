@@ -1,7 +1,7 @@
 import express from "express"
 import { authorize, isAuthenticated } from "../middleware/auth.middleware.js";
 import { upload } from "../middleware/multer.middleware.js";
-import { allAciveResturant, createRestaurant, deleteResturant, getActiveRestaurant, getAllActiveRestaurantCityWise, getAllInActiveRestaurantCityWise, getAllRejectedRestaurantCityWise, getAllRestaurantCityWise, getRestaurantStatus, getResturantbyID, inactiveRestaurantByAdmin, updateResturant } from "../controllers/restaurant.controller.js";
+import { allAciveResturant, createRestaurant, deleteResturant, getActiveRestaurant, getAdminRestaurant, getAllActiveRestaurantCityWise, getAllInActiveRestaurantCityWise, getAllRejectedRestaurantCityWise, getAllRestaurantCityWise, getRestaurantStatus, getResturantbyID, inactiveRestaurantByAdmin, updateResturant } from "../controllers/restaurant.controller.js";
 
 
 const restaurantRouter = express.Router()
@@ -40,6 +40,9 @@ restaurantRouter.get("/rejected-restaurant-cityWise", isAuthenticated, authorize
 
 // SUPERADMIN - DELETE RESTAURANT
 restaurantRouter.delete("/delete/:id", isAuthenticated, authorize("super_admin"), deleteResturant)
+
+// SUPERADMIN - GET ACTIVE RESTAURANT FOR A SPECIFIC ADMIN
+restaurantRouter.get("/admin/:adminId/restaurant", isAuthenticated, authorize("super_admin"), getAdminRestaurant);
 
 //public routes
 restaurantRouter.get("/restaurant/:cityId" , allAciveResturant)

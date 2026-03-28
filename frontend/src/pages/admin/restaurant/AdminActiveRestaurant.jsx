@@ -221,8 +221,15 @@ function AdminActiveRestaurant() {
             {/* ACTIONS */}
             <div className="flex gap-3 mt-6 justify-end">
               <Link
+                to={`/admin/get-All-Food/${selectedRestaurant._id}`}
+                className="px-4 py-2 bg-gray-400 hover:bg-gray-500 duration-300 text-white rounded-lg"
+              >
+                Show Food Menu
+              </Link>
+
+              <Link
                 to={`/admin/update-restaurant/${selectedRestaurant._id}`}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg"
+                className="px-4 py-2 bg-blue-400 hover:bg-blue-500 duration-300 text-white rounded-lg"
               >
                 Update
               </Link>
@@ -231,7 +238,7 @@ function AdminActiveRestaurant() {
                 onClick={() =>
                   handelRestaurantInactiveButton(selectedRestaurant._id)
                 }
-                className="px-4 py-2 bg-red-500 text-white rounded-lg"
+                className="px-4 py-2 bg-red-400 hover:bg-red-500 duration-300 text-white rounded-lg"
               >
                 Inactive
               </button>

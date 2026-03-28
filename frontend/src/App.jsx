@@ -74,8 +74,9 @@ import GetAllRestaurantCityWise from "./pages/superAdmin/restaurant/GetAllRestau
 import GetAllActiveRestaurantCityWise from "./pages/superAdmin/restaurant/GetAllActiveRestaurantCityWise";
 import GetAllInactiveRestaurantCityWise from "./pages/superAdmin/restaurant/GetAllInactiveRestaurantCityWise";
 import GetAllRejectedRestaurantCityWise from "./pages/superAdmin/restaurant/GetAllRejectedRestaurantCityWise";
-
-
+import CreateFood from "./pages/admin/food/CreateFood";
+import GetAllFood from "./pages/admin/food/GetAllFood";
+import UpdateFood from "./pages/admin/food/UpdateFood";
 
 function App() {
   return (
@@ -405,17 +406,93 @@ function App() {
         />
         <Route path="/AiPlanner" element={<AiPlanner />} />
         <Route path="/AiPlanner-details" element={<AiPlannerDetails />} />
-        <Route path="/admin/restaurantDashboard" element={<AdminProtectedRouter><RestaurantDashboard/></AdminProtectedRouter>}/>
-        <Route path="/admin/add-restaurant" element={<AdminProtectedRouter><AddRestaurantDetails/></AdminProtectedRouter>}/>
-        <Route path="/admin/admin-active-restaurant" element={<AdminProtectedRouter><AdminActiveRestaurant/></AdminProtectedRouter>}/>
-        <Route path="/admin/show-restaurant-status" element={<AdminProtectedRouter><ShowRestaurantStatus/></AdminProtectedRouter>}/>
-        <Route path="/admin/update-restaurant/:id" element={<AdminProtectedRouter><UpdateRestaurantDetails/></AdminProtectedRouter>}/>
-        <Route path="/superAdmin/restaurant-dashboard" element={<SuperAdminProtectedRouter><SuperAdminRestaurantDashboard/></SuperAdminProtectedRouter>}/>
-        <Route path="/superAdmin/approval-restaurant" element={<SuperAdminProtectedRouter><SuperAdminApprovealRestaurant/></SuperAdminProtectedRouter>}/>
-        <Route path="/superAdmin/all-restaurant" element={<SuperAdminProtectedRouter><GetAllRestaurantCityWise/></SuperAdminProtectedRouter>}/>
-        <Route path="/superAdmin/all-active-restaurant" element={<GetAllActiveRestaurantCityWise/>}/>
-        <Route path="/superAdmin/all-inactive-restaurant" element={<SuperAdminProtectedRouter><GetAllInactiveRestaurantCityWise/></SuperAdminProtectedRouter>}/>
-        <Route path="/superAdmin/all-rejected-restaurant" element={<SuperAdminProtectedRouter><GetAllRejectedRestaurantCityWise/></SuperAdminProtectedRouter>}/>
+        <Route
+          path="/admin/restaurantDashboard"
+          element={
+            <AdminProtectedRouter>
+              <RestaurantDashboard />
+            </AdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/admin/add-restaurant"
+          element={
+            <AdminProtectedRouter>
+              <AddRestaurantDetails />
+            </AdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/admin/admin-active-restaurant"
+          element={
+            <AdminProtectedRouter>
+              <AdminActiveRestaurant />
+            </AdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/admin/show-restaurant-status"
+          element={
+            <AdminProtectedRouter>
+              <ShowRestaurantStatus />
+            </AdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/admin/update-restaurant/:id"
+          element={
+            <AdminProtectedRouter>
+              <UpdateRestaurantDetails />
+            </AdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/superAdmin/restaurant-dashboard"
+          element={
+            <SuperAdminProtectedRouter>
+              <SuperAdminRestaurantDashboard />
+            </SuperAdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/superAdmin/approval-restaurant"
+          element={
+            <SuperAdminProtectedRouter>
+              <SuperAdminApprovealRestaurant />
+            </SuperAdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/superAdmin/all-restaurant"
+          element={
+            <SuperAdminProtectedRouter>
+              <GetAllRestaurantCityWise />
+            </SuperAdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/superAdmin/all-active-restaurant"
+          element={<GetAllActiveRestaurantCityWise />}
+        />
+        <Route
+          path="/superAdmin/all-inactive-restaurant"
+          element={
+            <SuperAdminProtectedRouter>
+              <GetAllInactiveRestaurantCityWise />
+            </SuperAdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/superAdmin/all-rejected-restaurant"
+          element={
+            <SuperAdminProtectedRouter>
+              <GetAllRejectedRestaurantCityWise />
+            </SuperAdminProtectedRouter>
+          }
+        />
+        <Route path="/admin/create-food" element={<AdminProtectedRouter><CreateFood/></AdminProtectedRouter>}/>
+        <Route path="/admin/get-All-Food/:id" element={<AdminProtectedRouter><GetAllFood/></AdminProtectedRouter>}/>
+        <Route path="/admin/update-food/:id" element={<AdminProtectedRouter><UpdateFood/></AdminProtectedRouter>}/>
       </Routes>
     </>
   );

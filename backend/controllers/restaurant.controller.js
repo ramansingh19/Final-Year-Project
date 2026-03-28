@@ -3,6 +3,7 @@ import { uploadCloudinary } from "../config/cloudinary.config.js";
 import { City } from "../model/city.model.js";
 import { Restaurant } from "../model/restaurant.model.js";
 import fs from "fs";
+import { User } from "../model/user.model.js";
 
 // ADMIN - CREATE RESTAURANT
 export const createRestaurant = async (req, res) => {
@@ -788,6 +789,37 @@ export const deleteResturant = async (req, res) => {
       success: true,
       data: deleteresturant,
       message: "successfully deleted",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// SUPERADMIN - GET ACTIVE RESTAURANT FOR A SPECIFIC ADMIN
+export const getAdminRestaurant = async (req, res) => {
+  try {
+    const { adminId } = req.params;
+
+    // Check if admin exists
+    const admin = await User.findById(adminId);
+    if (!admin) {
+      return res.status(404).json({
+        success: false,
+        message: "Admin not found",
+      });
+    }
+
+    // Fetch active hotels for this admin
+    const restaurants = await Restaurant.find({ owner: adminId, status: "active" })
+      .populate("city")
+      .populate("owner", "name email");
+
+    return res.status(200).json({
+      success: true,
+      data: restaurants,
     });
   } catch (error) {
     return res.status(500).json({
