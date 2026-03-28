@@ -1,7 +1,7 @@
 import  express  from "express";
 import { authorize, isAuthenticated } from "../middleware/auth.middleware.js";
 import { upload } from "../middleware/multer.middleware.js";
-import { createFood, getAllFoodByRestaurantId, toggleFoodAvailability, updateFood } from "../controllers/food.controller.js";
+import { createFood, deleteFood, getAllFoodByRestaurantId, getFoodById, toggleFoodAvailability, updateFood } from "../controllers/food.controller.js";
 
 const foodRouter = express.Router()
 
@@ -16,6 +16,20 @@ foodRouter.put("/admin/update-food/:foodId", isAuthenticated, authorize("admin")
 
 // ADMIN - TOOGLE Availability 
 foodRouter.patch("/admin/toggle-food/:id", isAuthenticated, authorize("admin"), toggleFoodAvailability)
+
+// ADMIN - DELETE FOOD
+foodRouter.delete(
+  "/admin/delete-food/:id",
+  isAuthenticated, authorize("admin"),
+  deleteFood
+);
+
+// GET SINGLE FOOD
+foodRouter.get(
+  "/admin/food/:id",
+  isAuthenticated,
+  getFoodById
+);
 
 
 export default foodRouter

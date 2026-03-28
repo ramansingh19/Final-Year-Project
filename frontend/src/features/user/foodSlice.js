@@ -78,10 +78,57 @@ export const toggleFoodAvailability = createAsyncThunk(
   async (id, thunkAPI) => {
     try {
       const token = localStorage.getItem("adminToken");
-      
+
       const res = await apiClient.patch(
         `/api/food/admin/toggle-food/${id}`,
         {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed"
+      );
+    }
+  }
+);
+
+// ADMIN - DELETE FOOD
+export const deleteFood = createAsyncThunk(
+  "food/deleteFood",
+  async (id, thunkAPI) => {
+    try {
+      const token = localStorage.getItem("adminToken");
+
+      await apiClient.delete(`/api/food/admin/delete-food/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      return id; // 👈 return deleted id
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Delete failed"
+      );
+    }
+  }
+);
+
+// GET SINGLE FOOD BY ID
+export const getFoodById = createAsyncThunk(
+  "food/getFoodById",
+  async (id, thunkAPI) => {
+    try {
+      const token = localStorage.getItem("adminToken");
+
+      const res = await apiClient.get(
+        `/api/food/admin/food/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -198,6 +245,44 @@ const foodSlice = createSlice({
   })
 
   .addCase(toggleFoodAvailability.rejected, (state, action) => {
+    state.loading = false;
+    state.error = action.payload;
+  });
+
+  // ADMIN - DELETE FOOD
+  builder
+  .addCase(deleteFood.pending, (state) => {
+    state.loading = true;
+  })
+
+  .addCase(deleteFood.fulfilled, (state, action) => {
+    state.loading = false;
+
+    // remove from UI instantly
+    state.foods = state.foods.filter(
+      (food) => food._id !== action.payload
+    );
+  })
+
+  .addCase(deleteFood.rejected, (state, action) => {
+    state.loading = false;
+    state.error = action.payload;
+  });
+
+  // GET SINGLE FOOD BY ID
+  builder
+  .addCase(getFoodById.pending, (state) => {
+    state.loading = true;
+  })
+
+  .addCase(getFoodById.fulfilled, (state, action) => {
+    state.loading = false;
+
+    // store single food
+    state.singleFood = action.payload;
+  })
+
+  .addCase(getFoodById.rejected, (state, action) => {
     state.loading = false;
     state.error = action.payload;
   });

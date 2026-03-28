@@ -209,7 +209,7 @@ export const updateFood = async (req, res) => {
   }
 };
 
-// Toggle Availability 
+// ADMIN - Toggle Availability 
 export const toggleFoodAvailability = async (req, res) => {
   try {
     const { id } = req.params;
@@ -266,6 +266,120 @@ export const toggleFoodAvailability = async (req, res) => {
 
   } catch (error) {
     console.error("TOGGLE FOOD ERROR:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// ADMIN - Delete Food
+export const deleteFood = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Find food
+    const food = await Food.findById(id);
+    if (!food) {
+      return res.status(404).json({
+        success: false,
+        message: "Food not found",
+      });
+    }
+
+    // Find restaurant
+    const restaurant = await Restaurant.findById(food.restaurantId);
+    if (!restaurant) {
+      return res.status(404).json({
+        success: false,
+        message: "Restaurant not found",
+      });
+    }
+
+    // Ownership check (IMPORTANT)
+    if (
+      req.user.role === "admin" &&
+      !restaurant.owner.equals(req.user.id)
+    ) {
+      return res.status(403).json({
+        success: false,
+        message: "You cannot delete food from another admin's restaurant",
+      });
+    }
+
+    // Delete
+    await Food.findByIdAndDelete(id);
+
+    return res.status(200).json({
+      success: true,
+      message: "Food deleted successfully",
+    });
+
+  } catch (error) {
+    console.error("DELETE FOOD ERROR:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// GET SINGLE FOOD By ID
+export const getFoodById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Find food
+    const food = await Food.findById(id).populate(
+      "restaurantId",
+      "name owner status"
+    );
+
+    if (!food) {
+      return res.status(404).json({
+        success: false,
+        message: "Food not found",
+      });
+    }
+
+    // Ownership check (ADMIN)
+    if (
+      req.user.role === "admin" &&
+      !food.restaurantId.owner.equals(req.user.id)
+    ) {
+      return res.status(403).json({
+        success: false,
+        message: "You cannot view other admin's food",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: food,
+    });
+
+  } catch (error) {
+    console.error("GET FOOD BY ID ERROR:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// GET ALL FOOD
+export const getAllFood = async (req, res) => {
+  try {
+    const foods = await Food.find()
+      .populate("restaurant", "name city")
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      data: foods,
+    });
+  } catch (error) {
     return res.status(500).json({
       success: false,
       message: error.message,

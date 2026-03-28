@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getFoodByRestaurantId, toggleFoodAvailability } from "../../../features/user/foodSlice";
+import {
+  deleteFood,
+  getFoodByRestaurantId,
+  toggleFoodAvailability,
+} from "../../../features/user/foodSlice";
 import { Link, useParams } from "react-router-dom";
 
 function GetAllFood() {
@@ -151,17 +155,26 @@ function GetAllFood() {
               >
                 Update
               </Link>
-            <button
-              onClick={() => dispatch(toggleFoodAvailability(selectedFood._id))}
-              className={`px-3 py-1 rounded ${
-                selectedFood.isAvailable ? "bg-green-500 hover:bg-green-600 hover:text-white duration-300" : "bg-red-500 hover:bg-red-600 hover:text-white duration-300"
-              } text-black cursor-pointer`}
-            >
-              {selectedFood.isAvailable ? "Available" : "Unavailable"}
-            </button>
+              <button
+                onClick={() =>
+                  dispatch(toggleFoodAvailability(selectedFood._id))
+                }
+                className={`px-3 py-1 rounded ${
+                  selectedFood.isAvailable
+                    ? "bg-green-500 hover:bg-green-600 hover:text-white duration-300"
+                    : "bg-red-500 hover:bg-red-600 hover:text-white duration-300"
+                } text-black cursor-pointer`}
+              >
+                {selectedFood.isAvailable ? "Available" : "Unavailable"}
+              </button>
 
+              <button
+                onClick={() => dispatch(deleteFood(selectedFood._id))}
+                className="bg-red-500 hover:bg-red-600 text-black hover:text-white duration-300 cursor-pointer px-3 py-1 rounded"
+              >
+                Delete
+              </button>
             </div>
-
           </div>
         </div>
       )}
