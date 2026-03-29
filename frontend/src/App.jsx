@@ -85,6 +85,9 @@ import CartPage from "./components/Restaurant/CartPage";
 import CheckoutPage from "./components/Restaurant/CheckoutPage";
 import MyOrdersPage from "./components/Restaurant/MyOrdersPage";
 import OrderDetailsPage from "./components/Restaurant/OrderDetailsPage";
+import OrdersDashboard from "./pages/admin/restaurant/OrdersDashboard";
+import ManageOrder from "./pages/admin/restaurant/ManageOrder";
+import AdminOrderDetails from "./pages/admin/restaurant/AdminOrderDetails";
 
 
 function App() {
@@ -520,6 +523,9 @@ function App() {
         <Route path="/CheckoutPage" element={<UserProtectedRouter><CheckoutPage/></UserProtectedRouter>}/>
         <Route path="/My-Food-orders" element={<UserProtectedRouter><MyOrdersPage/></UserProtectedRouter>}/>
         <Route path="/OrderDetailsPage/:orderId" element={<UserProtectedRouter><OrderDetailsPage/></UserProtectedRouter>}/>
+        <Route path="/admin/ordersDashboard" element={<AdminProtectedRouter><OrdersDashboard/></AdminProtectedRouter>}/>
+        <Route path="/admin/manage-orders" element={<AdminProtectedRouter><ManageOrder/></AdminProtectedRouter>}/>
+        <Route path="/admin/AdminOrderDetails/:orderId" element={<AdminProtectedRouter><AdminOrderDetails/></AdminProtectedRouter>}/>
 
 
       </Routes>

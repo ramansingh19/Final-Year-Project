@@ -81,7 +81,6 @@ export const getOrderById = createAsyncThunk(
           },
         }
       );
-      console.log(res.order);
       return res.order;
     } catch (error) {
       return thunkAPI.rejectWithValue(
@@ -116,6 +115,7 @@ export const cancelOrder = createAsyncThunk(
     }
   }
 );
+
 
 const initialState = {
   orders: [],

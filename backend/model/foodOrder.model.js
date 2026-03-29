@@ -58,4 +58,4 @@ const foodOrderSchema = new mongoose.Schema(
 
 foodOrderSchema.index({ "deliveryAddress.location": "2dsphere" });
 
-export const FoodOrder = mongoose.model("FoodOrder", foodOrderSchema);
+export const FoodOrder = mongoose.models.FoodOrder || mongoose.model("FoodOrder", foodOrderSchema);

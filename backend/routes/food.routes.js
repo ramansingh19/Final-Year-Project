@@ -2,14 +2,19 @@ import express from "express";
 import { authorize, isAuthenticated } from "../middleware/auth.middleware.js";
 import { upload } from "../middleware/multer.middleware.js";
 import {
+  acceptOrder,
   createFood,
   deleteFood,
   getAllFoodByRestaurantId,
   getAllFoodForUser,
+  getAllOrdersAdmin,
   getFoodById,
   getFoodByIdForUser,
+  getOrderDetailsAdmin,
+  rejectOrder,
   toggleFoodAvailability,
   updateFood,
+  updateOrderStatus,
 } from "../controllers/food.controller.js";
 
 const foodRouter = express.Router();
@@ -56,6 +61,7 @@ foodRouter.delete(
   deleteFood
 );
 
+
 // GET SINGLE FOOD
 foodRouter.get("/admin/food/:id", isAuthenticated, getFoodById);
 
@@ -64,5 +70,20 @@ foodRouter.get("/foods/:id", getFoodByIdForUser);
 
 // USER - GET ALL FOOD
 foodRouter.get("/foods", getAllFoodForUser);
+
+// ADMIN - GET ALL ORDERS
+foodRouter.get("/admin/My-orders", isAuthenticated, authorize("admin"), getAllOrdersAdmin)
+
+// ADMIN -  GET SINGLE ORDER
+foodRouter.get("/admin/orderDetails/:orderId", isAuthenticated, authorize("admin"), getOrderDetailsAdmin)
+
+// ADMIN - ACCEPT ORDER 
+foodRouter.patch("/admin/acceptOrder/:orderId", isAuthenticated, authorize("admin"), acceptOrder)
+
+// ADMIN - REJECT ORDER
+foodRouter.patch("/admin/rejectOrder/:orderId", isAuthenticated, authorize("admin"), rejectOrder)
+
+// ADMIN - . UPDATE STATUS
+foodRouter.patch("/admin/updateOrder/:orderId", isAuthenticated, authorize("admin"), updateOrderStatus)
 
 export default foodRouter;

@@ -113,7 +113,7 @@ function RestaurantDashboard() {
         </Link>
 
         {/* Card */}
-        <Link to="/admin/hotel-booking-dashboard">
+        <Link to="/admin/ordersDashboard">
           <motion.div
             whileHover={{ scale: 1.05 }}
             className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl transition-all p-6 flex flex-col items-center text-center border border-gray-200 dark:border-gray-700"
@@ -122,7 +122,7 @@ function RestaurantDashboard() {
               <FaCity />
             </div>
             <h2 className="font-semibold text-gray-800 dark:text-white">
-              Show Restaurant Bookings
+              Show Orders
             </h2>
             <p className="text-sm text-gray-500 mt-1">
               Track approval & availability

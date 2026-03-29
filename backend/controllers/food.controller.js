@@ -3,6 +3,8 @@ import fs from "fs";
 import { Food } from "../model/food.model.js";
 import { Restaurant } from "../model/restaurant.model.js";
 import mongoose from "mongoose";
+import { FoodOrder } from "../model/foodOrder.model.js"
+
 
 // ADMIN - CREATE FOOD
 export const createFood = async (req, res) => {
@@ -499,5 +501,259 @@ export const getAllFoodForUser = async (req, res) => {
       success: false,
       message: error.message,
     });
+  }
+};
+
+// ADMIN - GET ALL ORDERS
+export const getAllOrdersAdmin = async (req, res) => {
+  try {
+    const { page = 1, limit = 10, status, search } = req.query;
+
+    const query = {};
+
+    // FILTER BY STATUS
+    if (status) {
+      query.status = status;
+    }
+
+    // SEARCH BY USER NAME
+    if (search) {
+      query["user.name"] = { $regex: search, $options: "i" };
+    }
+
+    const orders = await FoodOrder.find(query)
+      .populate("user", "name email")
+      .populate("items.restaurant", "name")
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(Number(limit));
+
+    const totalOrders = await FoodOrder.countDocuments(query);
+
+    res.json({
+      orders,
+      totalOrders,
+      currentPage: Number(page),
+      totalPages: Math.ceil(totalOrders / limit),
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ADMIN -  GET SINGLE ORDER
+export const getOrderDetailsAdmin = async (req, res) => {
+  try {
+    // Check if user is admin
+    if (!req.user || req.user.role !== "admin") {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    const { orderId } = req.params;
+
+    // Fetch order and populate only valid refs
+    const order = await FoodOrder.findById(orderId)
+      .populate("user", "name email phone") // user info
+      .populate("items.restaurant", "name phone"); // restaurant info
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // Map items using embedded food info
+    const items = order.items.map((item) => ({
+      foodId: item.food.id || null,
+      name: item.food.name,
+      price: item.food.price,
+      quantity: item.quantity,
+      image: item.food.image || null,
+      restaurant: item.restaurant
+        ? {
+            name: item.restaurant.name,
+            phone: item.restaurant.phone || null,
+          }
+        : null,
+      notes: item.notes || "",
+    }));
+
+    // Structured response
+    const response = {
+      orderId: order._id,
+      status: order.status,
+      totalAmount: order.totalAmount,
+      paymentMethod: order.paymentMethod,
+      cancelReason: order.cancelReason || null,
+      cancelledAt: order.cancelledAt || null,
+      createdAt: order.createdAt,
+      updatedAt: order.updatedAt,
+      deliveryAddress: order.deliveryAddress,
+      user: order.user,
+      items,
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error("Admin get order details error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ADMIN - ACCEPT ORDER 
+export const acceptOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+
+    // Find the order
+    const order = await FoodOrder.findById(orderId).populate(
+      "user",
+      "name email phone"
+    );
+
+    if (!order) return res.status(404).json({ message: "Order not found" });
+
+    if (order.status !== "pending")
+      return res.status(400).json({ message: `Order already ${order.status}` });
+
+    order.status = "confirmed";
+    await order.save();
+
+    // Populate restaurant info for each item
+    await order.populate("items.restaurant", "name phone address");
+
+    res.status(200).json({
+      message: "Order accepted successfully",
+      order,
+    });
+  } catch (error) {
+    console.error("Accept order error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ADMIN - REJECT ORDER
+export const rejectOrder = async (req, res) => {
+  try {
+    const { reason } = req.body;
+    const { orderId } = req.params;
+
+    // Find the order
+    const order = await FoodOrder.findById(orderId).populate("user", "name email phone");
+
+    if (!order) return res.status(404).json({ message: "Order not found" });
+
+    // Only allow cancelling pending/confirmed orders
+    if (["cancelled", "failed", "delivered"].includes(order.status)) {
+      return res.status(400).json({ message: `Cannot cancel order, status is ${order.status}` });
+    }
+
+    order.status = "cancelled";
+    order.cancelReason = reason || "Rejected by restaurant";
+    order.cancelledAt = new Date();
+
+    await order.save();
+
+    // Populate restaurant info for each item
+    await order.populate("items.restaurant", "name phone address");
+
+    res.status(200).json({
+      message: "Order rejected successfully",
+      order,
+    });
+  } catch (error) {
+    console.error("Reject order error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ADMIN - . UPDATE STATUS
+export const updateOrderStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+
+    const validStatus = [
+      "confirmed",
+      "preparing",
+      "out_for_delivery",
+      "delivered",
+    ];
+
+    if (!validStatus.includes(status)) {
+      return res.status(400).json({ message: "Invalid status" });
+    }
+
+    const order = await FoodOrder.findById(req.params.orderId);
+
+    if (!order) return res.status(404).json({ message: "Order not found" });
+
+    order.status = status;
+
+    // timestamps (optional pro feature)
+    if (status === "preparing") order.preparingAt = new Date();
+    if (status === "out_for_delivery") order.outForDeliveryAt = new Date();
+    if (status === "delivered") order.deliveredAt = new Date();
+
+    await order.save();
+
+    res.json({ message: "Status updated", order });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ADMIN - ASSIGN DELIVERY BOY
+// export const assignDeliveryBoy = async (req, res) => {
+//   try {
+//     const { deliveryBoyId } = req.body;
+
+//     const order = await FoodOrder.findById(req.params.orderId);
+//     const rider = await DeliveryBoy.findById(deliveryBoyId);
+
+//     if (!order || !rider) {
+//       return res.status(404).json({ message: "Not found" });
+//     }
+
+//     order.deliveryPartner = {
+//       name: rider.name,
+//       phone: rider.phone,
+//     };
+
+//     await order.save();
+
+//     res.json({ message: "Delivery boy assigned", order });
+//   } catch (error) {
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
+
+// FILTER ORDERS
+export const getOrdersByStatus = async (req, res) => {
+  try {
+    const { status } = req.query;
+
+    const orders = await FoodOrder.find({ status })
+      .populate("user", "name")
+      .sort({ createdAt: -1 });
+
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+//  DASHBOARD STATS
+export const getOrderStats = async (req, res) => {
+  try {
+    const totalOrders = await FoodOrder.countDocuments();
+    const delivered = await FoodOrder.countDocuments({ status: "delivered" });
+    const pending = await FoodOrder.countDocuments({ status: "pending" });
+
+    res.json({
+      totalOrders,
+      delivered,
+      pending,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
   }
 };
