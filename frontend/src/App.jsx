@@ -82,6 +82,9 @@ import RestaurantDetailPage from "./components/Restaurant/RestaurantDetailPage";
 import RestaurantMenuPage from "./components/Restaurant/RestaurantMenuPage";
 import FoodDetailPage from "./components/Restaurant/FoodDetailPage";
 import CartPage from "./components/Restaurant/CartPage";
+import CheckoutPage from "./components/Restaurant/CheckoutPage";
+import MyOrdersPage from "./components/Restaurant/MyOrdersPage";
+import OrderDetailsPage from "./components/Restaurant/OrderDetailsPage";
 
 
 function App() {
@@ -513,6 +516,10 @@ function App() {
           path="/RestaurantLandingPage"
           element={<RestaurantLandingPage />}
         />
+
+        <Route path="/CheckoutPage" element={<UserProtectedRouter><CheckoutPage/></UserProtectedRouter>}/>
+        <Route path="/My-Food-orders" element={<UserProtectedRouter><MyOrdersPage/></UserProtectedRouter>}/>
+        <Route path="/OrderDetailsPage/:orderId" element={<UserProtectedRouter><OrderDetailsPage/></UserProtectedRouter>}/>
 
 
       </Routes>

@@ -30,7 +30,7 @@ function FoodDetailPage() {
   const restaurantId =
     restaurant?._id ?? location.state?.restaurantId ?? "";
 
-  const handleOrder = () => {
+  const handleOrder =  () => {
     if (!food) return;
     dispatch(
       addToCart({
@@ -76,7 +76,7 @@ function FoodDetailPage() {
       animate={{ opacity: 1 }}
       className="min-h-screen bg-gray-50 pb-28 dark:bg-gray-950"
     >
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-gray-200 dark:bg-gray-800 sm:aspect-[16/9] sm:max-h-[420px]">
+      <div className="relative aspect-4/3 w-full overflow-hidden bg-gray-200 dark:bg-gray-800 sm:aspect-video sm:max-h-105">
         <img
           src={img || "/no-image.jpg"}
           alt=""
@@ -132,7 +132,7 @@ function FoodDetailPage() {
           <button
             type="button"
             onClick={handleOrder}
-            className="inline-flex flex-[2] items-center justify-center rounded-2xl bg-gradient-to-r from-orange-500 to-rose-600 py-3.5 text-sm font-semibold text-white shadow-lg shadow-orange-500/25"
+            className="inline-flex flex-2 items-center justify-center rounded-2xl bg-linear-to-r from-orange-500 to-rose-600 py-3.5 text-sm font-semibold text-white shadow-lg shadow-orange-500/25"
           >
             Order — add to cart
           </button>
