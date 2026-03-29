@@ -77,6 +77,12 @@ import GetAllRejectedRestaurantCityWise from "./pages/superAdmin/restaurant/GetA
 import CreateFood from "./pages/admin/food/CreateFood";
 import GetAllFood from "./pages/admin/food/GetAllFood";
 import UpdateFood from "./pages/admin/food/UpdateFood";
+import RestaurantLandingPage from "./components/Restaurant/RestaurantLandingPage";
+import RestaurantDetailPage from "./components/Restaurant/RestaurantDetailPage";
+import RestaurantMenuPage from "./components/Restaurant/RestaurantMenuPage";
+import FoodDetailPage from "./components/Restaurant/FoodDetailPage";
+import CartPage from "./components/Restaurant/CartPage";
+
 
 function App() {
   return (
@@ -493,6 +499,22 @@ function App() {
         <Route path="/admin/create-food" element={<AdminProtectedRouter><CreateFood/></AdminProtectedRouter>}/>
         <Route path="/admin/get-All-Food/:id" element={<AdminProtectedRouter><GetAllFood/></AdminProtectedRouter>}/>
         <Route path="/admin/update-food/:id" element={<AdminProtectedRouter><UpdateFood/></AdminProtectedRouter>}/>
+        <Route
+          path="/restaurant/:restaurantId/menu"
+          element={<RestaurantMenuPage />}
+        />
+        <Route
+          path="/restaurant/:restaurantId"
+          element={<RestaurantDetailPage />}
+        />
+        <Route path="/food/:foodId" element={<FoodDetailPage />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route
+          path="/RestaurantLandingPage"
+          element={<RestaurantLandingPage />}
+        />
+
+
       </Routes>
     </>
   );

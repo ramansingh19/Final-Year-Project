@@ -113,6 +113,21 @@ export const getRestaurantById = createAsyncThunk(
   }
 );
 
+// USER — public restaurant detail (no auth)
+export const getRestaurantByIdPublic = createAsyncThunk(
+  "restaurant/getRestaurantByIdPublic",
+  async (id, thunkAPI) => {
+    try {
+      const response = await apiClient.get(`/api/resturant/getresturant/${id}`);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to fetch restaurant"
+      );
+    }
+  }
+);
+
 // ADMIN - UPDATE RESTAURANT
 export const updateRestaurant = createAsyncThunk(
   "restaurant/updateRestaurant",
@@ -391,6 +406,44 @@ export const getAdminRestaurant = createAsyncThunk(
   },
 );
 
+// USER - GET ALL ACTIVE RESTAURANT FOR USER
+export const getAllRestaurantsForUser = createAsyncThunk(
+  "restaurant/getAllForUser",
+  async (params, thunkAPI) => {
+    try {
+      const query = new URLSearchParams(params).toString();
+      console.log("Params",params);
+
+      const res = await apiClient.get(`/api/resturant/restaurants?${query}`);
+
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message
+      );
+    }
+  }
+);
+
+// GET NEARBY RESTAURANTS
+export const getNearbyRestaurants = createAsyncThunk(
+  "restaurant/getNearby",
+  async ({ lat, lng } = {}, thunkAPI) => {
+    try {
+      const qs =
+        lat != null && lng != null
+          ? `?lat=${encodeURIComponent(lat)}&lng=${encodeURIComponent(lng)}`
+          : "";
+      const res = await apiClient.get(`/api/resturant/nearby${qs}`);
+      return res.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data?.message || err.message
+      );
+    }
+  }
+);
+
 const restaurantSlice = createSlice({
   name: "restaurant",
   initialState: {
@@ -398,6 +451,7 @@ const restaurantSlice = createSlice({
     nearbyRestaurants: [],
     inactiveCityWiseRestaurant: [],
     restaurant: null,
+    restaurantDetailLoading: false,
     loading: false,
     error: null,
     createSuccess: false,
@@ -490,6 +544,23 @@ const restaurantSlice = createSlice({
       .addCase(getRestaurantById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      });
+
+    // USER — public restaurant detail
+    builder
+      .addCase(getRestaurantByIdPublic.pending, (state) => {
+        state.restaurantDetailLoading = true;
+        state.error = null;
+      })
+      .addCase(getRestaurantByIdPublic.fulfilled, (state, action) => {
+        state.restaurantDetailLoading = false;
+        const p = action.payload;
+        state.restaurant = p?.data ?? p ?? null;
+      })
+      .addCase(getRestaurantByIdPublic.rejected, (state, action) => {
+        state.restaurantDetailLoading = false;
+        state.error = action.payload;
+        state.restaurant = null;
       });
 
     // ADMIN - UPDATE RESTAURANT
@@ -715,6 +786,38 @@ const restaurantSlice = createSlice({
   })
   .addCase(getAdminRestaurant.rejected, (state, action) => {
     state.loading = false;  
+    state.error = action.payload;
+  });
+
+  // USER - GET ALL ACTIVE RESTAURANT FOR USER
+  builder
+  .addCase(getAllRestaurantsForUser.pending, (state) => {
+    state.loading = true;
+  })
+  .addCase(getAllRestaurantsForUser.fulfilled, (state, action) => {
+    state.loading = false;
+    const p = action.payload;
+    state.restaurants = Array.isArray(p) ? p : (p?.data ?? []);
+  })
+  .addCase(getAllRestaurantsForUser.rejected, (state, action) => {
+    state.loading = false;
+    state.error = action.payload;
+    state.restaurants = [];
+  });
+
+  // GET NEARBY RESTAURANTS
+  builder
+  .addCase(getNearbyRestaurants.pending, (state) => {
+    state.loading = true;
+    state.restaurants = [];
+  })
+  .addCase(getNearbyRestaurants.fulfilled, (state, action) => {
+    state.loading = false;
+    const p = action.payload;
+    state.restaurants = Array.isArray(p) ? p : (p?.data ?? []);
+  })
+  .addCase(getNearbyRestaurants.rejected, (state, action) => {
+    state.loading = false;
     state.error = action.payload;
   });
 

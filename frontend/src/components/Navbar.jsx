@@ -14,6 +14,8 @@ import { getAdminData } from "../features/user/adminSlice";
 import { adminLogout } from "../features/auth/adminAuthSlice";
 import { FaUserShield } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
+import { ShoppingBagIcon } from "@heroicons/react/24/outline";
+import { selectCartItemCount } from "../features/user/cartSlice";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,6 +33,7 @@ function Navbar() {
   const { superAdmin } = useSelector((state) => state.superAdmin);
   const { adminToken } = useSelector((state) => state.adminAuth);
   const { admin } = useSelector((state) => state.admin);
+  const cartCount = useSelector(selectCartItemCount);
 
   const location = useLocation();
   const dropdownRef = useRef(null);
@@ -156,6 +159,19 @@ function Navbar() {
                 className="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors duration-200"
               >
                 NotDefine
+              </Link>
+
+              <Link
+                to="/cart"
+                className="relative ml-2 inline-flex items-center justify-center rounded-xl p-2 text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800"
+                aria-label="Cart"
+              >
+                <ShoppingBagIcon className="h-6 w-6" />
+                {cartCount > 0 && (
+                  <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-orange-500 px-1 text-[11px] font-bold text-white">
+                    {cartCount > 99 ? "99+" : cartCount}
+                  </span>
+                )}
               </Link>
 
               {/* Location */}

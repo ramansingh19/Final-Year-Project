@@ -1,7 +1,7 @@
 import express from "express"
 import { authorize, isAuthenticated } from "../middleware/auth.middleware.js";
 import { upload } from "../middleware/multer.middleware.js";
-import { allAciveResturant, createRestaurant, deleteResturant, getActiveRestaurant, getAdminRestaurant, getAllActiveRestaurantCityWise, getAllInActiveRestaurantCityWise, getAllRejectedRestaurantCityWise, getAllRestaurantCityWise, getRestaurantStatus, getResturantbyID, inactiveRestaurantByAdmin, updateResturant } from "../controllers/restaurant.controller.js";
+import { allAciveResturant, createRestaurant, deleteResturant, getActiveRestaurant, getAdminRestaurant, getAllActiveRestaurantCityWise, getAllActiveRestaurantsForUser, getAllInActiveRestaurantCityWise, getAllRejectedRestaurantCityWise, getAllRestaurantCityWise, getNearbyRestaurants, getRestaurantStatus, getResturantbyID, inactiveRestaurantByAdmin, updateResturant } from "../controllers/restaurant.controller.js";
 
 
 const restaurantRouter = express.Router()
@@ -43,6 +43,12 @@ restaurantRouter.delete("/delete/:id", isAuthenticated, authorize("super_admin")
 
 // SUPERADMIN - GET ACTIVE RESTAURANT FOR A SPECIFIC ADMIN
 restaurantRouter.get("/admin/:adminId/restaurant", isAuthenticated, authorize("super_admin"), getAdminRestaurant);
+
+// USER - GET ALL ACTIVE RESTAURANT FOR USER
+restaurantRouter.get("/restaurants", getAllActiveRestaurantsForUser);
+
+// GET NEARBY RESTAURANTS (optional auth; lat/lng query for immediate "near me")
+restaurantRouter.get("/nearby", getNearbyRestaurants);
 
 //public routes
 restaurantRouter.get("/restaurant/:cityId" , allAciveResturant)

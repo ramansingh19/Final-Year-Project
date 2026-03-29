@@ -324,6 +324,58 @@ export const deleteFood = async (req, res) => {
   }
 };
 
+// USER — GET SINGLE FOOD BY ID (public, active restaurant + available food only)
+export const getFoodByIdForUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid food ID",
+      });
+    }
+
+    const food = await Food.findById(id).populate({
+      path: "restaurantId",
+      select: "name city status images address avgCostForOne foodType famousFood",
+      populate: { path: "city", select: "name state" },
+    });
+
+    if (!food || !food.restaurantId) {
+      return res.status(404).json({
+        success: false,
+        message: "Food not found",
+      });
+    }
+
+    if (food.restaurantId.status !== "active") {
+      return res.status(404).json({
+        success: false,
+        message: "Food not available",
+      });
+    }
+
+    if (!food.isAvailable) {
+      return res.status(404).json({
+        success: false,
+        message: "This item is currently unavailable",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: food,
+    });
+  } catch (error) {
+    console.error("GET FOOD BY ID (USER) ERROR:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 // GET SINGLE FOOD By ID
 export const getFoodById = async (req, res) => {
   try {
@@ -369,17 +421,80 @@ export const getFoodById = async (req, res) => {
 };
 
 // GET ALL FOOD
-export const getAllFood = async (req, res) => {
+// export const getAllFood = async (req, res) => {
+//   try {
+//     const foods = await Food.find()
+//       .populate("restaurant", "name city")
+//       .sort({ createdAt: -1 });
+
+//     return res.status(200).json({
+//       success: true,
+//       data: foods,
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
+
+// USER - GET ALL FOOD 
+export const getAllFoodForUser = async (req, res) => {
   try {
-    const foods = await Food.find()
-      .populate("restaurant", "name city")
-      .sort({ createdAt: -1 });
+    const {
+      page = 1,
+      limit = 10,
+      restaurantId,
+      category,
+      isVeg,
+    } = req.query;
+
+    const skip = (page - 1) * limit;
+
+    let filter = {
+      isAvailable: true, // ✅ only available food
+    };
+
+    //  filter by restaurant
+    if (restaurantId) {
+      filter.restaurantId = restaurantId;
+    }
+
+    //  filter by category
+    if (category) {
+      filter.category = category;
+    }
+
+    // filter veg/non-veg
+    if (isVeg !== undefined) {
+      filter.isVeg = isVeg === "true";
+    }
+
+    const foods = await Food.find(filter)
+      .populate({
+        path: "restaurantId",
+        match: { status: "active" }, //  only active restaurants
+        select: "name city",
+      })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(Number(limit));
+
+    // remove foods whose restaurant is null (inactive)
+    const filteredFoods = foods.filter((f) => f.restaurantId !== null);
+
+    const total = await Food.countDocuments(filter);
 
     return res.status(200).json({
       success: true,
-      data: foods,
+      data: filteredFoods,
+      page: Number(page),
+      total,
+      totalPages: Math.ceil(total / limit),
     });
   } catch (error) {
+    console.error("USER FOOD ERROR:", error);
     return res.status(500).json({
       success: false,
       message: error.message,

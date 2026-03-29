@@ -14,6 +14,7 @@ import reviewReducer from "../features/user/reviewSlice"
 import placeReducer from "../features/user/placeSlice";
 import restaurantReducer from "../features/user/restaurantSlice";
 import foodReducer from "../features/user/foodSlice";
+import cartReducer from "../features/user/cartSlice";
 
 export const store = configureStore({
   reducer:{
@@ -32,6 +33,7 @@ export const store = configureStore({
     review : reviewReducer,
     place : placeReducer,
     restaurant : restaurantReducer,
-    food : foodReducer
+    food : foodReducer,
+    cart : cartReducer,
   }
 })

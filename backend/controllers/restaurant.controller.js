@@ -829,6 +829,104 @@ export const getAdminRestaurant = async (req, res) => {
   }
 };
 
+// USER - GET ALL ACTIVE RESTAURANT FOR USER
+export const getAllActiveRestaurantsForUser = async (req, res) => {
+  try {
+    const { city, search } = req.query;
+
+    let filter = { status: "active" };
+
+    // ✅ HANDLE CITY NAME
+    if (city) {
+      const cityDoc = await City.findOne({
+        name: { $regex: city, $options: "i" },
+      });
+
+      if (cityDoc) {
+        filter.city = cityDoc._id;
+      } else {
+        return res.status(404).json({
+          success: false,
+          message: "City not found",
+        });
+      }
+    }
+
+    // ✅ SEARCH
+    if (search) {
+      filter.name = { $regex: search, $options: "i" };
+    }
+
+    const restaurants = await Restaurant.find(filter)
+      .populate("city")
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      data: restaurants,
+    });
+  } catch (error) {
+    console.log("ERROR:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// GET NEARBY RESTAURANTS
+export const getNearbyRestaurants = async (req, res) => {
+  try {
+    let lat;
+    let lng;
+
+    if (req.query.lat != null && req.query.lng != null) {
+      lat = Number(req.query.lat);
+      lng = Number(req.query.lng);
+    } else if (req.user?.id) {
+      const user = await User.findById(req.user.id);
+      if (!user?.location?.coordinates?.length) {
+        return res.status(400).json({
+          success: false,
+          message: "Location not set on profile",
+        });
+      }
+      [lng, lat] = user.location.coordinates;
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: "lat and lng are required",
+      });
+    }
+
+    if (Number.isNaN(lat) || Number.isNaN(lng)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid coordinates",
+      });
+    }
+
+    const restaurants = await Restaurant.find({
+      status: "active",
+      location: {
+        $near: {
+          $geometry: {
+            type: "Point",
+            coordinates: [Number(lng), Number(lat)],
+          },
+          $maxDistance: 5000,
+        },
+      },
+    })
+      .populate("city")
+      .sort({ createdAt: -1 });
+
+    res.json({ success: true, data: restaurants });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 export const allAciveResturant = async (req, res) => {
   try {
     const { cityId } = req.params;

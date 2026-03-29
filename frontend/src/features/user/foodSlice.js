@@ -145,13 +145,58 @@ export const getFoodById = createAsyncThunk(
   }
 );
 
+// USER — GET SINGLE FOOD (public)
+export const getFoodByIdForUser = createAsyncThunk(
+  "food/getFoodByIdForUser",
+  async (id, thunkAPI) => {
+    try {
+      const res = await apiClient.get(`/api/food/foods/${id}`);
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to load food"
+      );
+    }
+  }
+);
+
+// USER - GET ALL FOOD
+export const getAllFoodForUser = createAsyncThunk(
+  "food/getAllFoodForUser",
+  async (
+    { page = 1, limit = 10, restaurantId = "", category = "", isVeg = "" },
+    thunkAPI
+  ) => {
+    try {
+      let url = `/api/food/foods?page=${page}&limit=${limit}`;
+
+      if (restaurantId) url += `&restaurantId=${restaurantId}`;
+      if (category) url += `&category=${category}`;
+      if (isVeg !== "") url += `&isVeg=${isVeg}`;
+
+      const res = await apiClient.get(url);
+
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to fetch foods"
+      );
+    }
+  }
+);
+
 const initialState = {
   foods: [],
+  userFoodDetail: null,
+  userFoodDetailLoading: false,
   loading: false,
   error: null,
   success: false,
   count: 0,
   successMessage: null,
+  page: 1,
+  total: 0,
+  totalPages: 1
 };
 
 const foodSlice = createSlice({
@@ -283,6 +328,47 @@ const foodSlice = createSlice({
   })
 
   .addCase(getFoodById.rejected, (state, action) => {
+    state.loading = false;
+    state.error = action.payload;
+  });
+
+  // USER — GET SINGLE FOOD
+  builder
+    .addCase(getFoodByIdForUser.pending, (state) => {
+      state.userFoodDetailLoading = true;
+      state.error = null;
+    })
+    .addCase(getFoodByIdForUser.fulfilled, (state, action) => {
+      state.userFoodDetailLoading = false;
+      const p = action.payload;
+      state.userFoodDetail = p?.data ?? p ?? null;
+    })
+    .addCase(getFoodByIdForUser.rejected, (state, action) => {
+      state.userFoodDetailLoading = false;
+      state.error = action.payload;
+      state.userFoodDetail = null;
+    });
+
+  // USER - GET ALL FOOD
+  builder
+  .addCase(getAllFoodForUser.pending, (state) => {
+    state.loading = true;
+    state.error = null;
+  })
+
+  .addCase(getAllFoodForUser.fulfilled, (state, action) => {
+    state.loading = false;
+
+    const p = action.payload;
+    state.foods = p?.data ?? p ?? [];
+
+    // pagination
+    state.page = p?.page ?? 1;
+    state.total = p?.total ?? 0;
+    state.totalPages = p?.totalPages ?? 1;
+  })
+
+  .addCase(getAllFoodForUser.rejected, (state, action) => {
     state.loading = false;
     state.error = action.payload;
   });
