@@ -16,13 +16,14 @@ export const isAuthenticated = async (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.SECRET_KET);
 
-    const user = await User.findById(decoded.id).select("role isActive");
+    const user = await User.findById(decoded.id).select("role host isActive");
     if (!user) {
       return res.status(401).json({
         success: false,
         message: "Invalid token user",
       });
     }
+    console.log(user);
 
     if (!user.isActive) {
       return res.status(403).json({
@@ -34,6 +35,7 @@ export const isAuthenticated = async (req, res, next) => {
     req.user = {
       id: user._id,
       role: user.role,
+      host: user.host,
     };
 
     next();

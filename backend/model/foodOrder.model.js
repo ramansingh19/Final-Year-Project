@@ -47,12 +47,16 @@ const foodOrderSchema = new mongoose.Schema(
       phone: String,
       address: String,
     },
+    deliveryBoy: { type: mongoose.Schema.Types.ObjectId, ref: "DeliveryBoy" },
+    assignedAt: Date,
+
     cancelReason: { type: String },
     cancelledAt: { type: Date },
     isSynced: { type: Boolean, default: true }, // offline orders use false until synced
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
   },
+  
   { timestamps: true }
 );
 

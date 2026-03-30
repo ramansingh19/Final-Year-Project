@@ -90,6 +90,8 @@ import ManageOrder from "./pages/admin/restaurant/ManageOrder";
 import AdminOrderDetails from "./pages/admin/restaurant/AdminOrderDetails";
 import ViewUsers from "./pages/admin/restaurant/ViewUsers";
 import PlacePage from "./pages/auth/PlacePage";
+import AdminRegisterForm from "./pages/admin/AdminRegisterForm";
+import DeliveryBoyDeshboard from "./pages/admin/deliverBoy/DeliveryBoyDeshboard";
 
 
 function App() {
@@ -600,6 +602,8 @@ function App() {
             </AdminProtectedRouter>
           }
         />
+        <Route path="/superAdmin/admin-registration" element={<SuperAdminProtectedRouter><AdminRegisterForm/></SuperAdminProtectedRouter>}/>
+        <Route path="/admin/deliveryBoy-dashboard" element={<AdminProtectedRouter><DeliveryBoyDeshboard/></AdminProtectedRouter>} />
       </Routes>
     </>
   );
