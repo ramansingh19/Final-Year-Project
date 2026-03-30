@@ -6,6 +6,7 @@ import {
   generateTravelPlan,
   getActivePlacesCityWise,
   getInactivePlacesCityWise,
+  getNearbyPlaces,
   getPlacesCityWise,
   getplacebyid,
   updatePlace,
@@ -68,5 +69,8 @@ placeRouter.get(
 placeRouter.post("/generate-plan", generateTravelPlan);
 
 placeRouter.get("/getplace/:id", getplacebyid);
+
+//user  
+placeRouter.get("/nearby"  , getNearbyPlaces)
 
 export default placeRouter;

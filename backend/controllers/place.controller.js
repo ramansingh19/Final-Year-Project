@@ -173,7 +173,7 @@ export const rejectPlace = async (req, res) => {
     }
 
     place.status = "rejected";
-    place.approveBy = null;
+    place.approvedBy = null;
     await place.save();
 
     return res.json({ success: true, message: "place rejected" });
@@ -651,3 +651,70 @@ export const generateTravelPlan = async (req, res) => {
     });
   }
 };
+
+export const getNearbyPlaces = async (req, res) => {
+  try {
+    const { lat, lng, cityId, distance = 25000 } = req.query;
+
+    if (!lat || !lng) {
+      return res.status(400).json({
+        success: false,
+        message: "Latitude and Longitude are required",
+      });
+    }
+
+    let query = {
+      status: "active",
+    };
+
+    // filter by city if provided
+    if (cityId) {
+      query.city = new mongoose.Types.ObjectId(cityId);
+    }
+
+    // only famous places
+    query.isPopular = true;
+
+    const places = await Place.aggregate([
+      {
+        $geoNear: {
+          near: {
+            type: "Point",
+            coordinates: [parseFloat(lng), parseFloat(lat)],
+          },
+          distanceField: "distance",
+          maxDistance: parseInt(distance),
+          spherical: true,
+          query: query,
+        },
+      },
+      {
+        $project: {
+          name: 1,
+          images: 1,
+          category: 1,
+          entryfees: 1,
+          isPopular: 1,
+          location: 1,
+          distanceInKm: {
+            $round: [{ $divide: ["$distance", 1000] }, 2],
+          },
+        },
+      },
+      {
+        $sort: { distance: 1 },
+      },
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      data: places,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+

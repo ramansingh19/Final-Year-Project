@@ -89,6 +89,8 @@ import OrdersDashboard from "./pages/admin/restaurant/OrdersDashboard";
 import ManageOrder from "./pages/admin/restaurant/ManageOrder";
 import AdminOrderDetails from "./pages/admin/restaurant/AdminOrderDetails";
 import ViewUsers from "./pages/admin/restaurant/ViewUsers";
+import PlacePage from "./pages/auth/PlacePage";
+
 
 function App() {
   return (
@@ -97,6 +99,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="hotels" element={<HotelPage />} />
+        <Route path="places" element={<PlacePage />} />
         <Route path="/hotels/:id" element={<HotelDetailPage />} />
         <Route path="/my-booking" element={<Booking />} />
         <Route path="/city/:id" element={<CityDetails />} />
