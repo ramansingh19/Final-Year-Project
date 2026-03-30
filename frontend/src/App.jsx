@@ -90,7 +90,6 @@ import ManageOrder from "./pages/admin/restaurant/ManageOrder";
 import AdminOrderDetails from "./pages/admin/restaurant/AdminOrderDetails";
 import ViewUsers from "./pages/admin/restaurant/ViewUsers";
 
-
 function App() {
   return (
     <>
@@ -503,9 +502,30 @@ function App() {
             </SuperAdminProtectedRouter>
           }
         />
-        <Route path="/admin/create-food" element={<AdminProtectedRouter><CreateFood/></AdminProtectedRouter>}/>
-        <Route path="/admin/get-All-Food/:id" element={<AdminProtectedRouter><GetAllFood/></AdminProtectedRouter>}/>
-        <Route path="/admin/update-food/:id" element={<AdminProtectedRouter><UpdateFood/></AdminProtectedRouter>}/>
+        <Route
+          path="/admin/create-food"
+          element={
+            <AdminProtectedRouter>
+              <CreateFood />
+            </AdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/admin/get-All-Food/:id"
+          element={
+            <AdminProtectedRouter>
+              <GetAllFood />
+            </AdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/admin/update-food/:id"
+          element={
+            <AdminProtectedRouter>
+              <UpdateFood />
+            </AdminProtectedRouter>
+          }
+        />
         <Route
           path="/restaurant/:restaurantId/menu"
           element={<RestaurantMenuPage />}
@@ -521,15 +541,62 @@ function App() {
           element={<RestaurantLandingPage />}
         />
 
-        <Route path="/CheckoutPage" element={<UserProtectedRouter><CheckoutPage/></UserProtectedRouter>}/>
-        <Route path="/My-Food-orders" element={<UserProtectedRouter><MyOrdersPage/></UserProtectedRouter>}/>
-        <Route path="/OrderDetailsPage/:orderId" element={<UserProtectedRouter><OrderDetailsPage/></UserProtectedRouter>}/>
-        <Route path="/admin/ordersDashboard" element={<AdminProtectedRouter><OrdersDashboard/></AdminProtectedRouter>}/>
-        <Route path="/admin/manage-orders" element={<AdminProtectedRouter><ManageOrder/></AdminProtectedRouter>}/>
-        <Route path="/admin/AdminOrderDetails/:orderId" element={<AdminProtectedRouter><AdminOrderDetails/></AdminProtectedRouter>}/>
-        <Route path="/admin/ViewUsers" element={<AdminProtectedRouter><ViewUsers/></AdminProtectedRouter>}/>
-
-
+        <Route
+          path="/CheckoutPage"
+          element={
+            <UserProtectedRouter>
+              <CheckoutPage />
+            </UserProtectedRouter>
+          }
+        />
+        <Route
+          path="/My-Food-orders"
+          element={
+            <UserProtectedRouter>
+              <MyOrdersPage />
+            </UserProtectedRouter>
+          }
+        />
+        <Route
+          path="/OrderDetailsPage/:orderId"
+          element={
+            <UserProtectedRouter>
+              <OrderDetailsPage />
+            </UserProtectedRouter>
+          }
+        />
+        <Route
+          path="/admin/ordersDashboard"
+          element={
+            <AdminProtectedRouter>
+              <OrdersDashboard />
+            </AdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/admin/manage-orders"
+          element={
+            <AdminProtectedRouter>
+              <ManageOrder />
+            </AdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/admin/AdminOrderDetails/:orderId"
+          element={
+            <AdminProtectedRouter>
+              <AdminOrderDetails />
+            </AdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/admin/ViewUsers"
+          element={
+            <AdminProtectedRouter>
+              <ViewUsers />
+            </AdminProtectedRouter>
+          }
+        />
       </Routes>
     </>
   );
