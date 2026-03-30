@@ -3,7 +3,7 @@ import fs from "fs";
 import { Food } from "../model/food.model.js";
 import { Restaurant } from "../model/restaurant.model.js";
 import mongoose from "mongoose";
-import { FoodOrder } from "../model/foodOrder.model.js"
+import { FoodOrder } from "../model/FoodOrder.model.js";
 
 
 // ADMIN - CREATE FOOD
@@ -603,23 +603,28 @@ export const getOrderDetailsAdmin = async (req, res) => {
 export const acceptOrder = async (req, res) => {
   try {
     const { orderId } = req.params;
+    const adminId = req.user._id; // Assuming you have admin auth middleware
 
     // Find the order
-    const order = await FoodOrder.findById(orderId).populate(
-      "user",
-      "name email phone"
-    );
+    const order = await FoodOrder.findById(orderId).populate("user", "name email phone");
 
     if (!order) return res.status(404).json({ message: "Order not found" });
+    if (order.status !== "pending") return res.status(400).json({ message: `Order already ${order.status}` });
 
-    if (order.status !== "pending")
-      return res.status(400).json({ message: `Order already ${order.status}` });
+    // Optional: fetch restaurant info from admin or restaurant model
+    const restaurant = await Restaurant.findOne({ admin: adminId });
+    if (!restaurant) return res.status(400).json({ message: "Restaurant not found for this admin" });
 
     order.status = "confirmed";
+    order.restaurantInfo = {
+      name: restaurant.name,
+      phone: restaurant.phone,
+      address: restaurant.address,
+    };
+
     await order.save();
 
-    // Populate restaurant info for each item
-    await order.populate("items.restaurant", "name phone address");
+    console.log(order);
 
     res.status(200).json({
       message: "Order accepted successfully",

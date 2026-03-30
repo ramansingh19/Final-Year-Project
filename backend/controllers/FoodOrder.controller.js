@@ -79,7 +79,8 @@ export const getOrderById = async (req, res) => {
     const { orderId } = req.params;
 
     const order = await FoodOrder.findById(orderId)
-      .populate("items.restaurant", "name");
+      .populate("items.restaurant", "name")
+      .populate("restaurantInfo", "name phone address");
 
     if (!order) {
       return res.status(404).json({ message: "Order not found" });

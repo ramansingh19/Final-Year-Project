@@ -37,8 +37,9 @@ function OrdersDashboard() {
   }, [orders])
 
 
+
   return (
-    <div className="p-6 bg-gray-50 dark:bg-gray-950 min-h-screen">
+    <div className="p-6 bg-gray-50 dark:bg-gray-950 min-h-screen text-gray-600 dark:text-gray-300">
       <h1 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white">
         Orders Dashboard
       </h1>

@@ -88,6 +88,7 @@ import OrderDetailsPage from "./components/Restaurant/OrderDetailsPage";
 import OrdersDashboard from "./pages/admin/restaurant/OrdersDashboard";
 import ManageOrder from "./pages/admin/restaurant/ManageOrder";
 import AdminOrderDetails from "./pages/admin/restaurant/AdminOrderDetails";
+import ViewUsers from "./pages/admin/restaurant/ViewUsers";
 
 
 function App() {
@@ -526,6 +527,7 @@ function App() {
         <Route path="/admin/ordersDashboard" element={<AdminProtectedRouter><OrdersDashboard/></AdminProtectedRouter>}/>
         <Route path="/admin/manage-orders" element={<AdminProtectedRouter><ManageOrder/></AdminProtectedRouter>}/>
         <Route path="/admin/AdminOrderDetails/:orderId" element={<AdminProtectedRouter><AdminOrderDetails/></AdminProtectedRouter>}/>
+        <Route path="/admin/ViewUsers" element={<AdminProtectedRouter><ViewUsers/></AdminProtectedRouter>}/>
 
 
       </Routes>

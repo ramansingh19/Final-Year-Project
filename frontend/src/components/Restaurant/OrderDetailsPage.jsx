@@ -15,6 +15,8 @@ function OrderDetailsPage() {
     (state) => state.foodOrder
   );
 
+  console.log(currentOrder);
+
   useEffect(() => {
     if (orderId) {
       dispatch(getOrderById(orderId));
@@ -37,6 +39,8 @@ function OrderDetailsPage() {
       setShowCancelModal(false);
       setCancelReason("");
 
+      dispatch(getOrderById(currentOrder._id));
+
       alert("Order cancelled successfully");
     } catch (err) {
       alert(err);
@@ -44,7 +48,7 @@ function OrderDetailsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 p-4">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 p-4 text-gray-900 dark:text-white">
       <div className="max-w-3xl mx-auto space-y-4">
         {/* HEADER */}
         <div className="flex justify-between items-center">
@@ -153,17 +157,23 @@ function OrderDetailsPage() {
         </div>
 
         {/* RESTAURANT DETAILS */}
-        {restaurantDetails ? (
+        {currentOrder.status !== "pending" && currentOrder.restaurantInfo && (
           <div className="bg-green-50 dark:bg-green-900/20 p-5 rounded-2xl shadow">
             <h2 className="font-semibold mb-2">Restaurant Details</h2>
-            <p className="font-medium">{restaurantDetails.name}</p>
-            <p className="text-sm">{restaurantDetails.phone}</p>
-            <p className="text-xs text-gray-500">{restaurantDetails.address}</p>
+            <p className="font-medium">{currentOrder.restaurantInfo.name}</p>
+            <p className="text-sm">
+              {currentOrder.restaurantInfo.phone || "N/A"}
+            </p>
+            <p className="text-xs text-gray-500">
+              {currentOrder.restaurantInfo.address}
+            </p>
           </div>
-        ) : (
+        )}
+
+        {currentOrder.status === "pending" && (
           <div className="bg-yellow-50 dark:bg-yellow-900/20 p-5 rounded-2xl shadow">
             <p className="text-sm text-yellow-700 dark:text-yellow-300">
-              No restaurant has accepted your order yet.
+              Waiting for restaurant to accept your order...
             </p>
           </div>
         )}
