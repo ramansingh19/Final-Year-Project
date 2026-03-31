@@ -1,27 +1,34 @@
 // DeliveryBoyDashboard.jsx
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MapPin, Bike, Clock } from "lucide-react";
+import { MapPin, Bike, Clock, Wifi, WifiOff, CheckCircle, XCircle, Package, ChevronRight, TrendingUp } from "lucide-react";
 import {
   getDeliveryBoyProfileThunk,
   updateDeliveryBoyStatus,
+  updateLiveLocationThunk,
 } from "../../../features/user/deliveryBoySlice";
+import { Link } from "react-router-dom";
+
+function StatusPill({ active, activeLabel, inactiveLabel, activeColor }) {
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-wide ${
+        active ? activeColor : "bg-gray-100 text-gray-500"
+      }`}
+    >
+      <span className={`w-1.5 h-1.5 rounded-full ${active ? "bg-current animate-pulse" : "bg-gray-400"}`} />
+      {active ? activeLabel : inactiveLabel}
+    </span>
+  );
+}
 
 function DeliveryBoyDashboard() {
   const dispatch = useDispatch();
-  const { profile, loading, error } = useSelector(
-    (state) => state.deliveryBoy
-  );
-  // console.log(profile);
-  // Toggle status handler
+  const { profile, loading, error } = useSelector((state) => state.deliveryBoy);
+
   const handleToggle = (field) => {
-    if (!profile?._id) return; // guard against null
-    dispatch(
-      updateDeliveryBoyStatus({
-        id: profile._id,
-        [field]: !profile[field], // toggle the value
-      })
-    );
+    if (!profile?._id) return;
+    dispatch(updateDeliveryBoyStatus({ id: profile._id, [field]: !profile[field] }));
   };
 
   useEffect(() => {
@@ -30,112 +37,228 @@ function DeliveryBoyDashboard() {
 
   if (loading || !profile) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-xl font-semibold">
-        Loading profile...
+      <div className="min-h-screen flex items-center justify-center bg-[#F7F8FC]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 rounded-full border-4 border-[#3B5BDB] border-t-transparent animate-spin" />
+          <p className="text-[#3B5BDB] font-semibold tracking-wide text-sm">Loading your dashboard…</p>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-red-600 font-semibold">
-        {error}
+      <div className="min-h-screen flex items-center justify-center bg-[#F7F8FC]">
+        <div className="flex flex-col items-center gap-3 text-center px-6">
+          <XCircle className="text-red-500 w-10 h-10" />
+          <p className="text-red-600 font-semibold">{error}</p>
+        </div>
       </div>
     );
   }
 
+  const initials = profile?.name
+    ? profile.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
+    : "DB";
+
   return (
-    <div className="min-h-screen bg-slate-100 p-6">
-      <div className="max-w-6xl mx-auto space-y-8">
+    <div className="min-h-screen bg-[#F7F8FC] font-['DM_Sans',sans-serif]">
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap');`}</style>
 
-        {/* Header with toggles */}
-        <div className="rounded-3xl bg-linear-to-r from-blue-600 to-indigo-700 p-8 text-white shadow-xl">
-          <h1 className="text-3xl font-bold">Delivery Dashboard</h1>
-          <p className="mt-2 text-blue-100">
-            Welcome back! Track your delivery status and current orders here.
-          </p>
+      {/* Top Nav Strip */}
+      <div className="bg-white border-b border-slate-100 px-6 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg bg-[#3B5BDB] flex items-center justify-center">
+            <Bike className="text-white w-4 h-4" />
+          </div>
+          <span className="font-bold text-slate-800 text-sm tracking-tight font-['Syne',sans-serif]">FleetDash</span>
+        </div>
+        <div className="flex items-center gap-3">
+          {profile.isOnline ? (
+            <span className="flex items-center gap-1.5 text-xs text-emerald-600 font-semibold">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              Live
+            </span>
+          ) : (
+            <span className="flex items-center gap-1.5 text-xs text-gray-400 font-medium">
+              <span className="w-2 h-2 rounded-full bg-gray-300" />
+              Offline
+            </span>
+          )}
+          <div className="w-8 h-8 rounded-full bg-[#3B5BDB] flex items-center justify-center text-white text-xs font-bold">
+            {initials}
+          </div>
+        </div>
+      </div>
 
-          <div className="mt-6 flex flex-col md:flex-row gap-4">
-            {/* Online Toggle */}
-            <button
-              onClick={() => handleToggle("isOnline")}
-              disabled={!profile?._id}
-              className={`px-6 py-3 rounded-full font-semibold transition ${
-                profile.isOnline
-                  ? "bg-green-500 text-white"
-                  : "bg-gray-300 text-gray-700 dark:bg-gray-700 dark:text-gray-200"
-              } hover:opacity-90`}
-            >
-              {profile.isOnline ? "Online" : "Offline"}
-            </button>
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6">
 
-            {/* Availability Toggle */}
-            <button
-              onClick={() => handleToggle("isAvailable")}
-              className={`px-6 py-3 rounded-full font-semibold transition ${
-                profile.isAvailable
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-300 text-gray-700 dark:bg-gray-700 dark:text-gray-200"
-              } hover:opacity-90`}
-            >
-              {profile.isAvailable ? "Available" : "Busy"}
-            </button>
+        {/* Hero Header Card */}
+        <div className="relative overflow-hidden rounded-2xl bg-[#1E2A4A] p-6 sm:p-8 text-white shadow-xl">
+          {/* Background decoration */}
+          <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-white/5" />
+          <div className="absolute -bottom-8 -right-4 w-32 h-32 rounded-full bg-[#3B5BDB]/30" />
+          <div className="absolute top-0 left-0 w-1 h-full bg-linear-to-b from-[#3B5BDB] to-[#7048E8]" />
+
+          <div className="relative z-10">
+            <p className="text-xs text-blue-300 font-semibold uppercase tracking-widest mb-1">
+              {new Date().toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" })}
+            </p>
+            <h1 className="text-2xl sm:text-3xl font-bold font-['Syne',sans-serif] leading-tight">
+              {profile.name ? `Hey, ${profile.name.split(" ")[0]} 👋` : "Delivery Dashboard"}
+            </h1>
+            <p className="mt-1 text-blue-200 text-sm">
+              {profile.isOnline ? "You're live and accepting deliveries." : "You're currently offline."}
+            </p>
+
+            {/* Toggle Buttons */}
+            <div className="mt-6 flex flex-wrap gap-3">
+              <button
+                onClick={() => handleToggle("isOnline")}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 shadow-md ${
+                  profile.isOnline
+                    ? "bg-emerald-500 hover:bg-emerald-600 text-white"
+                    : "bg-white/10 hover:bg-white/20 text-white border border-white/20"
+                }`}
+              >
+                {profile.isOnline ? <Wifi className="w-4 h-4" /> : <WifiOff className="w-4 h-4" />}
+                {profile.isOnline ? "Online" : "Go Online"}
+              </button>
+
+              <button
+                onClick={() => handleToggle("isAvailable")}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 shadow-md ${
+                  profile.isAvailable
+                    ? "bg-[#3B5BDB] hover:bg-[#3451C7] text-white"
+                    : "bg-white/10 hover:bg-white/20 text-white border border-white/20"
+                }`}
+              >
+                {profile.isAvailable ? <CheckCircle className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
+                {profile.isAvailable ? "Available" : "Set Available"}
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Info Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Availability */}
-          <div className="rounded-3xl bg-white p-6 shadow-lg border border-slate-200 hover:shadow-xl transition">
-            <div className="flex items-center gap-3 mb-4">
-              <Bike className="text-blue-600" />
-              <h2 className="text-lg font-bold">Availability</h2>
+        {/* Status Summary Row */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {[
+            { label: "Status", value: profile.isOnline ? "Online" : "Offline", color: profile.isOnline ? "text-emerald-600" : "text-gray-400", bg: profile.isOnline ? "bg-emerald-50" : "bg-gray-50" },
+            { label: "Mode", value: profile.isAvailable ? "Available" : "Busy", color: profile.isAvailable ? "text-blue-600" : "text-amber-600", bg: profile.isAvailable ? "bg-blue-50" : "bg-amber-50" },
+            { label: "Orders Today", value: profile.ordersToday ?? "—", color: "text-indigo-700", bg: "bg-indigo-50" },
+            { label: "Rating", value: profile.rating ? `${profile.rating} ★` : "—", color: "text-yellow-600", bg: "bg-yellow-50" },
+          ].map((stat) => (
+            <div key={stat.label} className={`${stat.bg} rounded-xl px-4 py-3 flex flex-col gap-1`}>
+              <p className="text-xs text-gray-500 font-medium">{stat.label}</p>
+              <p className={`text-lg font-bold ${stat.color}`}>{stat.value}</p>
             </div>
-            <p
-              className={`inline-flex px-4 py-2 rounded-2xl text-sm font-semibold ${
-                profile.isAvailable
-                  ? "bg-green-100 text-green-700"
-                  : "bg-red-100 text-red-700"
-              }`}
+          ))}
+        </div>
+
+        {/* Main Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+          {/* Availability Card */}
+          <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center">
+                  <Bike className="text-blue-600 w-4 h-4" />
+                </div>
+                <span className="font-semibold text-slate-800 text-sm">Availability</span>
+              </div>
+              <StatusPill
+                active={profile.isAvailable}
+                activeLabel="Available"
+                inactiveLabel="Busy"
+                activeColor="bg-green-100 text-green-700"
+              />
+            </div>
+            <div className="h-px bg-slate-100 mb-4" />
+            <p className="text-xs text-gray-400 leading-relaxed">
+              {profile.isAvailable
+                ? "You can receive new delivery assignments."
+                : "You're marked as busy. Toggle to receive orders."}
+            </p>
+            <button
+              onClick={() => handleToggle("isAvailable")}
+              className="mt-4 w-full py-2 rounded-xl text-sm font-semibold border border-slate-200 text-slate-600 hover:bg-slate-50 transition"
             >
-              {profile.isAvailable ? "Available" : "Busy"}
-            </p>
+              {profile.isAvailable ? "Mark as Busy" : "Mark as Available"}
+            </button>
           </div>
 
-          {/* Current Address */}
-          <div className="rounded-3xl bg-white p-6 shadow-lg border border-slate-200 hover:shadow-xl transition">
-            <div className="flex items-center gap-3 mb-4">
-              <MapPin className="text-indigo-600" />
-              <h2 className="text-lg font-bold">Current Address</h2>
+          {/* Location Card */}
+          <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <div className="w-9 h-9 rounded-xl bg-indigo-50 flex items-center justify-center">
+                  <MapPin className="text-indigo-600 w-4 h-4" />
+                </div>
+                <span className="font-semibold text-slate-800 text-sm">Location</span>
+              </div>
+              {profile.location && (
+                <span className="text-xs text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full">Tracked</span>
+              )}
             </div>
-            <p className="text-slate-700 leading-7">
-              {profile.fullAddress || "Location not updated yet"}
+            <div className="h-px bg-slate-100 mb-4" />
+            <p className="text-xs text-gray-500 leading-relaxed line-clamp-3">
+              {profile.fullAddress || "Location not updated yet. Go to Live Location to start tracking."}
             </p>
+            <Link
+              to="/admin/livelocation-update"
+              className="mt-4 flex items-center justify-center gap-1.5 w-full py-2 rounded-xl text-sm font-semibold bg-indigo-600 text-white hover:bg-indigo-700 transition"
+            >
+              View Live Map <ChevronRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
 
-          {/* Current Order */}
-          <div className="rounded-3xl bg-white p-6 shadow-lg border border-slate-200 hover:shadow-xl transition">
-            <div className="flex items-center gap-3 mb-4">
-              <Clock className="text-amber-600" />
-              <h2 className="text-lg font-bold">Current Order</h2>
+          {/* Current Order Card */}
+          <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <div className="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center">
+                  <Package className="text-amber-600 w-4 h-4" />
+                </div>
+                <span className="font-semibold text-slate-800 text-sm">Active Order</span>
+              </div>
+              {profile.currentOrder && (
+                <span className="text-xs text-amber-700 font-semibold bg-amber-50 px-2 py-0.5 rounded-full capitalize">
+                  {profile.currentOrder.status}
+                </span>
+              )}
             </div>
+            <div className="h-px bg-slate-100 mb-4" />
             {profile.currentOrder ? (
-              <div>
-                <p className="font-semibold text-slate-900">
-                  Status: {profile.currentOrder.status}
-                </p>
-                <p className="mt-2 text-slate-600">
-                  Customer: {profile.currentOrder.user?.name || "N/A"}
-                </p>
-                <p className="text-slate-600">
-                  Restaurant: {profile.currentOrder.restaurant?.name || "N/A"}
-                </p>
+              <div className="space-y-2">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-xs text-gray-400">Customer</p>
+                    <p className="text-sm font-semibold text-slate-800">{profile.currentOrder.user?.name || "N/A"}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs text-gray-400">Restaurant</p>
+                    <p className="text-sm font-semibold text-slate-800">{profile.currentOrder.restaurant?.name || "N/A"}</p>
+                  </div>
+                </div>
+                <div className="mt-2 bg-amber-50 rounded-lg px-3 py-2 text-xs text-amber-700 font-medium">
+                  {profile.currentOrder.status === "picked_up" ? "🚀 En route to customer" : "⏳ Awaiting pickup"}
+                </div>
               </div>
             ) : (
-              <p className="text-slate-500">No order assigned</p>
+              <div className="flex flex-col items-center py-3 text-center">
+                <Package className="w-8 h-8 text-gray-200 mb-2" />
+                <p className="text-sm text-gray-400">No order assigned</p>
+                <p className="text-xs text-gray-300 mt-0.5">You'll be notified when a new order arrives</p>
+              </div>
             )}
           </div>
         </div>
+
+        {/* Footer hint */}
+        <p className="text-center text-xs text-gray-400 pb-4">
+          FleetDash · Auto-synced · {new Date().toLocaleTimeString("en-IN")}
+        </p>
       </div>
     </div>
   );

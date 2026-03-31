@@ -109,6 +109,52 @@ export const updateDeliveryBoyStatus = async (req, res) => {
   }
 };
 
+// DELIVERY BOY - UPDATE LIVE LOCATION
+export const updateLiveLocation = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { latitude, longitude } = req.body;
+
+    if (latitude == null || longitude == null) {
+      return res.status(400).json({
+        success: false,
+        message: "Both latitude and longitude are required",
+      });
+    }
+
+    const updateData = {
+      location: {
+        type: "Point", 
+        coordinates: [longitude, latitude], 
+      },
+      lastLocationUpdatedAt: new Date(), 
+    };
+
+    const deliveryBoy = await DeliveryBoy.findByIdAndUpdate(id, updateData, {
+      returnDocument: "after", 
+      runValidators: true,
+    });
+
+    if (!deliveryBoy) {
+      return res.status(404).json({
+        success: false,
+        message: "Delivery boy not found or location update failed",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Location updated successfully",
+      deliveryBoy,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 // ASSIGN DELIVERY BOY TO ORDER
 export const assignDeliveryBoy = async (req, res) => {
   const session = await mongoose.startSession();
@@ -195,33 +241,6 @@ export const assignDeliveryBoy = async (req, res) => {
   }
 };
 
-// Update delivery boy location (called from driver app)
-export const updateDeliveryLocation = async (req, res) => {
-  try {
-    const { deliveryBoyId } = req.params;
-    const { coordinates } = req.body; // [lng, lat]
-
-    const deliveryBoy = await DeliveryBoy.findById(deliveryBoyId);
-    if (!deliveryBoy) return res.status(404).json({ message: "Delivery boy not found" });
-
-    deliveryBoy.location.coordinates = coordinates;
-    await deliveryBoy.save();
-
-    // Emit via socket
-    const order = await Order.findOne({ deliveryBoy: deliveryBoy._id });
-    if (order) {
-      req.io.to(order._id.toString()).emit("orderUpdate", {
-        coordinates,
-        status: order.status,
-      });
-    }
-
-    res.status(200).json({ message: "Location updated" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
-  }
-};
 
 // Get order for tracking
 export const getOrderForTracking = async (req, res) => {

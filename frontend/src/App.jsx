@@ -92,6 +92,7 @@ import ViewUsers from "./pages/admin/restaurant/ViewUsers";
 import PlacePage from "./pages/auth/PlacePage";
 import AdminRegisterForm from "./pages/admin/AdminRegisterForm";
 import DeliveryBoyDeshboard from "./pages/admin/deliverBoy/DeliveryBoyDeshboard";
+import LiveLocationUpdate from "./pages/admin/deliverBoy/LiveLocationUpdate";
 
 
 function App() {
@@ -604,6 +605,7 @@ function App() {
         />
         <Route path="/superAdmin/admin-registration" element={<SuperAdminProtectedRouter><AdminRegisterForm/></SuperAdminProtectedRouter>}/>
         <Route path="/admin/deliveryBoy-dashboard" element={<AdminProtectedRouter><DeliveryBoyDeshboard/></AdminProtectedRouter>} />
+        <Route path="/admin/livelocation-update" element={<AdminProtectedRouter><LiveLocationUpdate/></AdminProtectedRouter>}/>
       </Routes>
     </>
   );

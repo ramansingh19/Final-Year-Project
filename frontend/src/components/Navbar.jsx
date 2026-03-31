@@ -440,6 +440,18 @@ function Navbar() {
                           </Link>
                         )}
 
+                        {admin?.host === "delivery_boy" && (
+                          <Link
+                            to="/admin/deliveryBoy-dashboard"
+                            className="flex items-center gap-3 px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200 rounded-lg"
+                          >
+                            <RxDashboard className="text-lg" />
+                            <span className="text-sm">
+                              Delivery Boy Dashboard
+                            </span>
+                          </Link>
+                        )}
+
                         {/* Settings */}
                         <Link
                           to="/settings"

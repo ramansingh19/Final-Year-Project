@@ -43,6 +43,28 @@ export const updateDeliveryBoyStatus = createAsyncThunk(
   }
 );
 
+// DELIVERY BOY - UPDATE LIVE LOCATION
+export const updateLiveLocationThunk = createAsyncThunk(
+  "deliveryBoy/updateLiveLocation",
+  async ({ id, latitude, longitude }, thunkAPI) => {
+    try {
+      const token = localStorage.getItem("adminToken"); // or delivery boy token
+
+      const response = await apiClient.put(
+        `/api/deliveryBoy/location/${id}`,
+        { latitude, longitude },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      return response.deliveryBoy;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to update location"
+      );
+    }
+  }
+);
+
 
 
 const initialState = {
@@ -94,6 +116,21 @@ const deliveryBoySlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     });
+
+    // DELIVERY BOY - UPDATE LIVE LOCATION
+    builder
+  .addCase(updateLiveLocationThunk.pending, (state) => {
+    state.loading = true;
+    state.error = null;
+  })
+  .addCase(updateLiveLocationThunk.fulfilled, (state, action) => {
+    state.loading = false;
+    state.profile = action.payload; // update profile with latest location
+  })
+  .addCase(updateLiveLocationThunk.rejected, (state, action) => {
+    state.loading = false;
+    state.error = action.payload;
+  });
     
   },
 });
