@@ -8,7 +8,7 @@ const COUNTRIES = [
   { name: "France", top: "36%", left: "48%" },
   { name: "Japan", top: "45%", left: "78%" },
   { name: "Australia", top: "72%", left: "82%" },
-];
+];  
 
 export default function WorldMapPage() {
   const navigate = useNavigate();

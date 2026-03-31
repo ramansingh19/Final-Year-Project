@@ -37,8 +37,10 @@ const initialState = {
 export const fetchPlacesByCity = createAsyncThunk(
   "place/fetchPlacesByCity",
   async ({ cityId }, thunkAPI) => {
+    console.log("THUNK RUNNING:", cityId);
     try {
       const res = await apiClient.get(`/api/places?cityId=${cityId}`);
+      console.log("API RESPONSE:", res);
       return res?.data ?? res;
     } catch (error) {
       return thunkAPI.rejectWithValue(
@@ -224,7 +226,7 @@ export const getActivePlacesCityWise = createAsyncThunk(
   "place/getActivePlacesCityWise",
   async (_, thunkAPI) => {
     try {
-      const res = await apiClient.get("/api/place/activePlace/city-wise");
+      const res = await apiClient.get("/api/place/city-wise");
       return res.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response?.data?.message || "Failed");
@@ -374,10 +376,14 @@ const placeSlice = createSlice({
         state.errorPlaces = null;
       })
       .addCase(fetchPlacesByCity.fulfilled, (state, action) => {
+        console.log("REDUCER HIT:", action.payload);
         state.loadingPlaces = false;
-        state.places = action.payload?.data || [];
+        state.places = Array.isArray(action.payload)
+          ? action.payload
+          : action.payload?.data || [];
       })
       .addCase(fetchPlacesByCity.rejected, (state, action) => {
+        console.log("REDUCER HIT:", action.payload);
         state.loadingPlaces = false;
         state.errorPlaces = action.payload;
       });
@@ -389,11 +395,11 @@ const placeSlice = createSlice({
         state.errorNearby = null;
       })
       .addCase(fetchNearbyPlaces.fulfilled, (state, action) => {
-        state.loadingNearby = false;
-        state.nearbyPlaces = action.payload?.data || [];
-        state.usingNearby = true;
+        state.loadingPlaces = false;
+        state.places = action.payload?.data || action.payload || [];
       })
       .addCase(fetchNearbyPlaces.rejected, (state, action) => {
+        console.log("PAYLOAD:", action.payload);
         state.loadingNearby = false;
         state.errorNearby = action.payload;
       });

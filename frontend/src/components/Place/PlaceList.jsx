@@ -38,6 +38,10 @@ export default function PlaceList({ cityName, onPlaceClick }) {
   const error     = usingNearby ? errorNearby   : errorPlaces;
   const list      = usingNearby ? nearby        : places;
   const radiusLabel = KM_MAP[radius] || `${Math.round(radius)} km`;
+  console.log("usingNearby:", usingNearby);
+console.log("places:", places);
+console.log("nearby:", nearby);
+console.log("list:", list);
 
   // Initial fetch
   useEffect(() => {
@@ -62,7 +66,7 @@ export default function PlaceList({ cityName, onPlaceClick }) {
         <button
           onClick={handleRetry}
           className="bg-rose-500 hover:bg-rose-600 text-white text-sm font-semibold
-                     px-5 py-2.5 rounded-xl transition-colors"
+                    px-5 py-2.5 rounded-xl transition-colors"
         >
           Try Again
         </button>
@@ -89,16 +93,18 @@ export default function PlaceList({ cityName, onPlaceClick }) {
       />
     );
   }
+  
 
   // ── Grid ───────────────────────────────────────────────────────────────────
   return (
+    
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
       {/* Nearby mode label */}
       {usingNearby && (
         <div className="flex items-center gap-2 mb-5">
           <div className="h-px flex-1 bg-gray-100" />
           <span className="text-xs font-semibold text-emerald-600 bg-emerald-50
-                           border border-emerald-200 px-3 py-1 rounded-full">
+                          border border-emerald-200 px-3 py-1 rounded-full">
             📡 Sorted by distance — within {radiusLabel}
           </span>
           <div className="h-px flex-1 bg-gray-100" />
@@ -118,9 +124,11 @@ export default function PlaceList({ cityName, onPlaceClick }) {
               distanceInKm={place.distanceInKm ?? null}
               onClick={onPlaceClick}
             />
+            
           </div>
         ))}
       </div>
+      
 
       {/* Pagination info */}
       {!usingNearby && pagination && pagination.totalPages > 1 && (
@@ -130,6 +138,9 @@ export default function PlaceList({ cityName, onPlaceClick }) {
           </p>
         </div>
       )}
+      
     </div>
+    
   );
+  
 }

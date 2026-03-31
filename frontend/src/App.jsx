@@ -104,7 +104,6 @@ function App() {
         <Route path="/explore" element={<WorldMapPage />} />
         <Route path="/country/:name" element={<CountryPage />} />
         <Route path="/city/:id/places" element={<ExploreCityPage />} />
-        <Route path="/city/:id/hotels" element={<HotelPage />} />
         <Route path="/hotels" element={<HotelPage />} />
         {/* <Route path="/places" element={<PlacePage />} /> */}
         <Route path="/hotels/:id" element={<HotelDetailPage />} />

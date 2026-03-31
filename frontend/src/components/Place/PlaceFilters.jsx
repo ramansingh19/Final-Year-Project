@@ -22,16 +22,17 @@ import { useNavigate } from "react-router-dom";
 
 const CATEGORIES = [
   { label: "All", value: "", icon: "🗺️" },
-  { label: "Hotel", value: "hotels", route : "hotels", icon: "🏨" },
-  { label: "Restaurant", value: "Restaurant", icon: "🍽️" },
-  { label: "Cafe", value: "Cafe", icon: "☕" },
-  { label: "Museum", value: "Museum", icon: "🏛️" },
-  { label: "Park", value: "Park", icon: "🌿" },
-  { label: "Shopping", value: "Shopping", icon: "🛍️" },
-  { label: "Adventure", value: "Adventure", icon: "🧗" },
-  { label: "Beach", value: "Beach", icon: "🏖️" },
-  { label: "Historical", value: "Historical", icon: "🏯" },
-  { label: "Entertainment", value: "Entertainment", icon: "🎭" },
+  { label: "Hotel", value: "hotel", route: "hotels", icon: "🏨" },
+  { label: "Restaurant", value: "restaurant", icon: "🍽️" },
+  { label: "Cafe", value: "cafe", icon: "☕" },
+  { label: "Museum", value: "museum", icon: "🏛️" },
+  { label: "Park", value: "park", icon: "🌿" },
+  { label: "Shopping", value: "shopping", icon: "🛍️" },
+  { label: "Adventure", value: "adventure", icon: "🧗" },
+  { label: "Beach", value: "beach", icon: "🏖️" },
+  { label: "Historical", value: "historical", icon: "🏯" },
+  { label: "Entertainment", value: "entertainment", icon: "🎭" },
+  { label: "Temple", value: "temple" , icon : "🔥"},
   // { label: "Wellness", value: "Wellness", icon: "🧘" },
   // { label: "Nightlife", value: "Nightlife", icon: "🌙" },
 ];
@@ -51,7 +52,7 @@ const DISTANCE_OPTIONS = [
 
 export default function PlaceFilters() {
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const category = useSelector(selectActiveCategory);
   const search = useSelector(selectSearchQuery);
   const sort = useSelector(selectSortBy);
@@ -88,12 +89,16 @@ export default function PlaceFilters() {
 
   // ── Category ───────────────────────────────────────────────────────────────
   const handleCategory = (categoryObj) => {
-  dispatch(setActiveCategory(categoryObj.value));
+    dispatch(setActiveCategory(categoryObj.value));
 
-  if (!selectedCity?._id) return;
+    if (!selectedCity?._id) return;
 
-  navigate(`/city/${selectedCity._id}/hotels`);
-};
+    if (categoryObj.route) {
+      navigate(`/city/${selectedCity._id}/${categoryObj.route}`);
+    } else {
+      navigate(`/city/${selectedCity._id}/places`);
+    }
+  };
 
   // ── Search (debounced 400ms) ───────────────────────────────────────────────
   const handleSearch = (val) => {

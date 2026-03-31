@@ -22,6 +22,7 @@ import PlaceSummary from "../../components/Place/PlaceSummary";
 import PlaceList from "../../components/Place/PlaceList";
 
 export default function CityPage() {
+  console.log("CityPage rendered"); 
   const { id } = useParams();
   const dispatch = useDispatch();
   const cityState = useSelector((s) => s.city);
@@ -80,17 +81,18 @@ export default function CityPage() {
   };
 
   const setRadiusAndRefetch = (km) => {
-    dispatch(setDistanceRadius(km));
-    if (usingNearby && userLocation) {
-      dispatch(
-        ({
-          ...userLocation,
-          cityId: id,
-          distance: km,
-        }),
-      );
-    }
-  };
+  dispatch(setDistanceRadius(km));
+
+  if (usingNearby && userLocation) {
+    dispatch(
+      fetchNearbyPlaces({
+        ...userLocation,
+        cityId: id,
+        distance: km,
+      })
+    );
+  }
+};
 
   const cityName = selectedCity?.name || (cityState.city?.data?.name ?? "City");
 
