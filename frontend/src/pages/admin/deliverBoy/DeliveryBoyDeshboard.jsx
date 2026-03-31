@@ -5,7 +5,6 @@ import { MapPin, Bike, Clock, Wifi, WifiOff, CheckCircle, XCircle, Package, Chev
 import {
   getDeliveryBoyProfileThunk,
   updateDeliveryBoyStatus,
-  updateLiveLocationThunk,
 } from "../../../features/user/deliveryBoySlice";
 import { Link } from "react-router-dom";
 
@@ -25,6 +24,8 @@ function StatusPill({ active, activeLabel, inactiveLabel, activeColor }) {
 function DeliveryBoyDashboard() {
   const dispatch = useDispatch();
   const { profile, loading, error } = useSelector((state) => state.deliveryBoy);
+
+  //  console.log(profile);
 
   const handleToggle = (field) => {
     if (!profile?._id) return;
@@ -234,11 +235,11 @@ function DeliveryBoyDashboard() {
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="text-xs text-gray-400">Customer</p>
-                    <p className="text-sm font-semibold text-slate-800">{profile.currentOrder.user?.name || "N/A"}</p>
+                    <p className="text-sm font-semibold text-slate-800">{profile.currentOrder.deliveryAddress.name || "N/A"}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-xs text-gray-400">Restaurant</p>
-                    <p className="text-sm font-semibold text-slate-800">{profile.currentOrder.restaurant?.name || "N/A"}</p>
+                    <p className="text-sm font-semibold text-slate-800">{profile.currentOrder.restaurantInfo.name || "N/A"}</p>
                   </div>
                 </div>
                 <div className="mt-2 bg-amber-50 rounded-lg px-3 py-2 text-xs text-amber-700 font-medium">
@@ -252,6 +253,11 @@ function DeliveryBoyDashboard() {
                 <p className="text-xs text-gray-300 mt-0.5">You'll be notified when a new order arrives</p>
               </div>
             )}
+          </div>
+          <div>
+            <div>
+            <Link to={"/admin/pending-orders"} className=" bg-blue-400 hover:bg-blue-500 duration-300 cursor-pointer px-2 py-1 rounded-xl">View Pending Orders</Link>
+            </div>
           </div>
         </div>
 

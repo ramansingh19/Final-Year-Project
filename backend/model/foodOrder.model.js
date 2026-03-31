@@ -28,6 +28,8 @@ const foodOrderSchema = new mongoose.Schema(
         "pending",
         "confirmed",
         "preparing",
+        "assigned",
+        "accepted_by_delivery_boy",
         "out_for_delivery",
         "delivered",
         "failed",

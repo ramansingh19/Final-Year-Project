@@ -65,11 +65,42 @@ export const updateLiveLocationThunk = createAsyncThunk(
   }
 );
 
+// DELIVERY BOY - GET PENDING ORDERS
+export const getPendingOrdersThunk = createAsyncThunk(
+  "deliveryBoy/getPendingOrders",
+  async (_, thunkAPI) => {
+    try {
+      const token = localStorage.getItem("adminToken");
+      
+      const response = await apiClient.get("/api/deliveryBoy/orders/pending", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.orders;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data?.message || "Failed to fetch orders");
+    }
+  }
+);
+
+// ADMIN - GET AVAILABLE DELIVERY BOY
+export const getAvailableDeliveryBoysThunk = createAsyncThunk(
+  "deliveryBoy/getAvailable",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await apiClient.get("/api/deliveryBoy/available");
+      return res.deliveryBoys;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 
 
 const initialState = {
   deliveryBoys: [],
   profile: null,
+  orders: [],
   loading: false,
   error: null,
 };
@@ -131,6 +162,35 @@ const deliveryBoySlice = createSlice({
     state.loading = false;
     state.error = action.payload;
   });
+
+  // DELIVERY BOY - GET PENDING ORDERS
+  builder
+      .addCase(getPendingOrdersThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getPendingOrdersThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.orders = action.payload;
+      })
+      .addCase(getPendingOrdersThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+
+      builder
+      .addCase(getAvailableDeliveryBoysThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAvailableDeliveryBoysThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.deliveryBoys = action.payload;
+      })
+      .addCase(getAvailableDeliveryBoysThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || "Failed to fetch";
+      });  
     
   },
 });
