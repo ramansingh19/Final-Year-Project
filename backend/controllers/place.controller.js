@@ -570,9 +570,9 @@ export const generateTravelPlan = async (req, res) => {
       avgCostForOne: { $lte: Number(budget) },
     });
     
-    // const sortedRestaurants = restaurants.sort(
-    //   (a, b) => (b.averageRating || 0) - (a.averageRating || 0)
-    // );
+    const sortedRestaurants = restaurants.sort(
+      (a, b) => (b.averageRating || 0) - (a.averageRating || 0)
+    );
 
   
     if (!places.length && !hotels.length && !restaurants.length) {
@@ -581,7 +581,7 @@ export const generateTravelPlan = async (req, res) => {
         .json({ success: false, message: "No options found in this city" });
     }
 
-    // 2️⃣ Sort by priority/ratings
+    // Sort by priority/ratings
     const sortedPlaces = places.sort((a, b) => b.priorityScore - a.priorityScore);
 
     // Map hotels with cheapest room
@@ -599,12 +599,12 @@ export const generateTravelPlan = async (req, res) => {
     const sortedHotels = filteredHotels.sort((a, b) => {
       const scoreA = 1 / (a.cheapestRoom.pricePerNight || 1) + (a.rating || 0);
       const scoreB = 1 / (b.cheapestRoom.pricePerNight || 1) + (b.rating || 0);
-      return scoreB - scoreA; // descending
+      return scoreB - scoreA; 
     });
 
-    const sortedRestaurants = restaurants.sort((a, b) => b.rating - a.rating);
+    // const sortedRestaurants = restaurants.sort((a, b) => b.rating - a.rating);
 
-    // 3️⃣ Allocate per day
+    // Allocate per day
     let totalBudget = budget;
     let plan = [];
     let hoursPerDay = 8;
