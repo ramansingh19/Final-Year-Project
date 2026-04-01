@@ -95,6 +95,8 @@ import DeliveryBoyDeshboard from "./pages/admin/deliverBoy/DeliveryBoyDeshboard"
 import LiveLocationUpdate from "./pages/admin/deliverBoy/LiveLocationUpdate";
 import PendingOrders from "./pages/admin/deliverBoy/PendingOrders";
 import AdminAssignDeliveryBoy from "./pages/admin/deliverBoy/AdminAssignDeliveryBoy";
+import AssistantChat from "./pages/assistantChat/AssistantChat";
+import AssistantRecommendations from "./pages/assistantChat/AssistantRecommendations";
 
 function App() {
   return (
@@ -642,6 +644,15 @@ function App() {
             <AdminProtectedRouter>
               <AdminAssignDeliveryBoy />
             </AdminProtectedRouter>
+          }
+        />
+        <Route path="/assistantChat" element={<UserProtectedRouter><AssistantChat/></UserProtectedRouter>}/>
+        <Route
+          path="/assistantChat/recommendations"
+          element={
+            <UserProtectedRouter>
+              <AssistantRecommendations />
+            </UserProtectedRouter>
           }
         />
       </Routes>

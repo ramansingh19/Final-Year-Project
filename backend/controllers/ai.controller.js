@@ -134,6 +134,7 @@ const getBudgetFromMessage = (message) => {
   return null;
 };
 
+// ASSISTANT CHAT
 export const assistantChat = async (req, res) => {
   try {
     const { message = "", latitude, longitude } = req.body;
@@ -168,71 +169,93 @@ export const assistantChat = async (req, res) => {
     // =================================================
     if (intent === "nearby_places") {
       if (!hasLocation) {
-        return res.status(400).json({
-          success: false,
-          reply: "Please allow location access to find nearby places.",
-        });
-      }
+        const places = await Place.find({ status: "active" })
+          .select("name address averageRating images location category")
+          .sort({ averageRating: -1, createdAt: -1 })
+          .limit(5)
+          .lean();
 
-      const places = await Place.aggregate([
-        {
-          $geoNear: {
-            near: {
-              type: "Point",
-              coordinates: [Number(longitude), Number(latitude)],
-            },
-            distanceField: "distance",
-            maxDistance: radius,
-            spherical: true,
-            query: { status: "active" },
-          },
-        },
-        {
-          $project: {
-            name: 1,
-            address: 1,
-            averageRating: 1,
-            images: 1,
-            location: 1,
-            category: 1,
-            distance: {
-              $round: [{ $divide: ["$distance", 1000] }, 1],
-            },
-          },
-        },
-        { $sort: { averageRating: -1, distance: 1 } },
-        { $limit: 5 },
-      ]);
+        if (!places.length) {
+          reply = "No places found right now.";
+        } else {
+          reply = `Location is off. Showing top places overall:\n\n${places
+            .map(
+              (place, index) =>
+                `${index + 1}. ${place.name}\n${place.address}\n⭐ ${
+                  place.averageRating || 0
+                }`
+            )
+            .join("\n\n")}`;
 
-      if (!places.length) {
-        reply = "No nearby places found within your selected area.";
+          data = {
+            type: "nearby_places",
+            radius: null,
+            count: places.length,
+            places,
+            scope: "overall",
+          };
+        }
       } else {
-        reply = `Best places near you:\n\n${places
-          .map(
-            (place, index) =>
-              `${index + 1}. ${place.name}\n${place.address}\n⭐ ${
-                place.averageRating || 0
-              } • ${place.distance} km away`
-          )
-          .join("\n\n")}`;
+        const places = await Place.aggregate([
+          {
+            $geoNear: {
+              near: {
+                type: "Point",
+                coordinates: [Number(longitude), Number(latitude)],
+              },
+              distanceField: "distance",
+              maxDistance: radius,
+              spherical: true,
+              query: { status: "active" },
+            },
+          },
+          {
+            $project: {
+              name: 1,
+              address: 1,
+              averageRating: 1,
+              images: 1,
+              location: 1,
+              category: 1,
+              distance: {
+                $round: [{ $divide: ["$distance", 1000] }, 1],
+              },
+            },
+          },
+          { $sort: { averageRating: -1, distance: 1 } },
+          { $limit: 5 },
+        ]);
 
-        data = {
-          type: "nearby_places",
-          radius: radius / 1000,
-          count: places.length,
-          places,
-        };
+        if (!places.length) {
+          reply = "No nearby places found within your selected area.";
+        } else {
+          reply = `Best places near you:\n\n${places
+            .map(
+              (place, index) =>
+                `${index + 1}. ${place.name}\n${place.address}\n⭐ ${
+                  place.averageRating || 0
+                } • ${place.distance} km away`
+            )
+            .join("\n\n")}`;
 
-        req.session.assistantContext = {
-          ...previousContext,
-          type: "place",
-          latitude,
-          longitude,
-          selectedPlace: places[0],
-          lastIntent: intent,
-          lastMessage: message,
-          updatedAt: new Date(),
-        };
+          data = {
+            type: "nearby_places",
+            radius: radius / 1000,
+            count: places.length,
+            places,
+          };
+
+          req.session.assistantContext = {
+            ...previousContext,
+            type: "place",
+            latitude,
+            longitude,
+            selectedPlace: places[0],
+            lastIntent: intent,
+            lastMessage: message,
+            updatedAt: new Date(),
+          };
+        }
       }
     }
 
@@ -241,94 +264,151 @@ export const assistantChat = async (req, res) => {
     // =================================================
     else if (intent === "cheapest_hotel") {
       if (!hasLocation) {
-        return res.status(400).json({
-          success: false,
-          reply: "Please allow location access to find nearby hotels.",
-        });
-      }
-
-      const hotels = await Hotel.aggregate([
-        {
-          $geoNear: {
-            near: {
-              type: "Point",
-              coordinates: [Number(longitude), Number(latitude)],
+        const hotels = await Hotel.aggregate([
+          {
+            $match: { status: "active" },
+          },
+          {
+            $lookup: {
+              from: "rooms",
+              localField: "_id",
+              foreignField: "hotelId",
+              as: "rooms",
             },
-            distanceField: "distance",
-            maxDistance: 10000,
-            spherical: true,
-            query: { status: "active" },
           },
-        },
-        {
-          $lookup: {
-            from: "rooms",
-            localField: "_id",
-            foreignField: "hotelId",
-            as: "rooms",
+          {
+            $addFields: {
+              cheapestRoom: { $min: "$rooms.pricePerNight" },
+            },
           },
-        },
-        {
-          $addFields: {
-            cheapestRoom: { $min: "$rooms.pricePerNight" },
-          },
-        },
-        ...(maxBudget
-          ? [
-              {
-                $match: {
-                  cheapestRoom: { $lte: maxBudget },
+          ...(maxBudget
+            ? [
+                {
+                  $match: {
+                    cheapestRoom: { $lte: maxBudget },
+                  },
                 },
-              },
-            ]
-          : []),
-        {
-          $project: {
-            name: 1,
-            address: 1,
-            cheapestRoom: 1,
-            averageRating: 1,
-            images: 1,
-            location: 1,
-            distance: {
-              $round: [{ $divide: ["$distance", 1000] }, 1],
+              ]
+            : []),
+          {
+            $project: {
+              name: 1,
+              address: 1,
+              cheapestRoom: 1,
+              averageRating: 1,
+              images: 1,
+              location: 1,
             },
           },
-        },
-        { $sort: { cheapestRoom: 1, distance: 1 } },
-        { $limit: 5 },
-      ]);
+          { $sort: { cheapestRoom: 1, averageRating: -1 } },
+          { $limit: 5 },
+        ]);
 
-      if (!hotels.length) {
-        reply = maxBudget
-          ? `No hotel found under ₹${maxBudget}.`
-          : "No nearby hotels found.";
+        if (!hotels.length) {
+          reply = maxBudget
+            ? `No hotel found under ₹${maxBudget}.`
+            : "No hotels found right now.";
+        } else {
+          reply = `Location is off. Showing top hotel options overall:\n\n${hotels
+            .map(
+              (hotel, index) =>
+                `${index + 1}. ${hotel.name}\n${hotel.address}\n₹${
+                  hotel.cheapestRoom
+                } per night`
+            )
+            .join("\n\n")}`;
+
+          data = {
+            type: "cheapest_hotel",
+            count: hotels.length,
+            hotels,
+            scope: "overall",
+          };
+        }
       } else {
-        reply = `Best hotel options:\n\n${hotels
-          .map(
-            (hotel, index) =>
-              `${index + 1}. ${hotel.name}\n${hotel.address}\n₹${
-                hotel.cheapestRoom
-              } per night • ${hotel.distance} km away`
-          )
-          .join("\n\n")}`;
+        const hotels = await Hotel.aggregate([
+          {
+            $geoNear: {
+              near: {
+                type: "Point",
+                coordinates: [Number(longitude), Number(latitude)],
+              },
+              distanceField: "distance",
+              maxDistance: 10000,
+              spherical: true,
+              query: { status: "active" },
+            },
+          },
+          {
+            $lookup: {
+              from: "rooms",
+              localField: "_id",
+              foreignField: "hotelId",
+              as: "rooms",
+            },
+          },
+          {
+            $addFields: {
+              cheapestRoom: { $min: "$rooms.pricePerNight" },
+            },
+          },
+          ...(maxBudget
+            ? [
+                {
+                  $match: {
+                    cheapestRoom: { $lte: maxBudget },
+                  },
+                },
+              ]
+            : []),
+          {
+            $project: {
+              name: 1,
+              address: 1,
+              cheapestRoom: 1,
+              averageRating: 1,
+              images: 1,
+              location: 1,
+              distance: {
+                $round: [{ $divide: ["$distance", 1000] }, 1],
+              },
+            },
+          },
+          { $sort: { cheapestRoom: 1, distance: 1 } },
+          { $limit: 5 },
+        ]);
 
-        data = {
-          type: "cheapest_hotel",
-          count: hotels.length,
-          hotels,
-        };
+        if (!hotels.length) {
+          reply = maxBudget
+            ? `No hotel found under ₹${maxBudget}.`
+            : "No nearby hotels found.";
+        } else {
+          reply = `Best hotel options:\n\n${hotels
+            .map(
+              (hotel, index) =>
+                `${index + 1}. ${hotel.name}\n${hotel.address}\n₹${
+                  hotel.cheapestRoom
+                } per night • ${hotel.distance} km away`
+            )
+            .join("\n\n")}`;
 
-        req.session.assistantContext = {
-          ...previousContext,
-          type: "hotel",
-          latitude: hotels[0]?.location?.coordinates?.[1],
-          longitude: hotels[0]?.location?.coordinates?.[0],
-          selectedHotel: hotels[0],
-          lastIntent: intent,
-          lastMessage: message,
-          updatedAt: new Date(),
-        };
+          data = {
+            type: "cheapest_hotel",
+            count: hotels.length,
+            hotels,
+          };
+
+          req.session.assistantContext = {
+            ...previousContext,
+            type: "hotel",
+            latitude: hotels[0]?.location?.coordinates?.[1],
+            longitude: hotels[0]?.location?.coordinates?.[0],
+            selectedHotel: hotels[0],
+            lastIntent: intent,
+            lastMessage: message,
+            updatedAt: new Date(),
+          };
+        }
       }
     }
 
@@ -349,94 +429,132 @@ export const assistantChat = async (req, res) => {
       }
 
       if (!searchLatitude || !searchLongitude) {
-        return res.status(400).json({
-          success: false,
-          reply: "Please allow location access to find nearby restaurants.",
-        });
-      }
+        const restaurantFilter = { status: "active" };
 
-      const restaurantFilter = { status: "active" };
+        if (lowerMessage.includes("veg")) {
+          restaurantFilter.foodType = "veg";
+        }
 
-      if (lowerMessage.includes("veg")) {
-        restaurantFilter.foodType = "veg";
-      }
+        if (lowerMessage.includes("non veg")) {
+          restaurantFilter.foodType = "nonveg";
+        }
 
-      if (lowerMessage.includes("non veg")) {
-        restaurantFilter.foodType = "nonveg";
-      }
+        const restaurants = await Restaurant.find(restaurantFilter)
+          .select("name address averageRating avgCostForOne images location")
+          .sort({ averageRating: -1, createdAt: -1 })
+          .limit(5)
+          .lean();
 
-      const restaurants = await Restaurant.aggregate([
-        {
-          $geoNear: {
-            near: {
-              type: "Point",
-              coordinates: [
-                Number(searchLongitude),
-                Number(searchLatitude),
-              ],
-            },
-            distanceField: "distance",
-            maxDistance: radius,
-            spherical: true,
-            query: restaurantFilter,
-          },
-        },
-        ...(maxBudget
-          ? [
-              {
-                $match: {
-                  avgCostForOne: { $lte: maxBudget },
-                },
-              },
-            ]
-          : []),
-        {
-          $project: {
-            name: 1,
-            address: 1,
-            averageRating: 1,
-            avgCostForOne: 1,
-            images: 1,
-            location: 1,
-            distance: {
-              $round: [{ $divide: ["$distance", 1000] }, 1],
-            },
-          },
-        },
-        { $sort: { averageRating: -1, distance: 1 } },
-        { $limit: 5 },
-      ]);
+        const filteredByBudget = maxBudget
+          ? restaurants.filter((restaurant) => {
+              const cost = Number(restaurant?.avgCostForOne || 0);
+              return cost <= maxBudget;
+            })
+          : restaurants;
 
-      if (!restaurants.length) {
-        reply = "No restaurants found matching your request.";
+        if (!filteredByBudget.length) {
+          reply = "No restaurants found matching your request.";
+        } else {
+          reply = `Location is off. Showing top food places overall:\n\n${filteredByBudget
+            .map(
+              (restaurant, index) =>
+                `${index + 1}. ${restaurant.name}\n${restaurant.address}\n₹${
+                  restaurant.avgCostForOne || 0
+                } for one • ⭐ ${restaurant.averageRating || 0}`
+            )
+            .join("\n\n")}`;
+
+          data = {
+            type: "food_suggestion",
+            count: filteredByBudget.length,
+            restaurants: filteredByBudget,
+            scope: "overall",
+          };
+        }
       } else {
-        reply = `Best food places:\n\n${restaurants
-          .map(
-            (restaurant, index) =>
-              `${index + 1}. ${restaurant.name}\n${restaurant.address}\n₹${
-                restaurant.avgCostForOne || 0
-              } for one • ⭐ ${restaurant.averageRating || 0}\n${
-                restaurant.distance
-              } km away`
-          )
-          .join("\n\n")}`;
+        const restaurantFilter = { status: "active" };
 
-        data = {
-          type: "food_suggestion",
-          count: restaurants.length,
-          restaurants,
-        };
+        if (lowerMessage.includes("veg")) {
+          restaurantFilter.foodType = "veg";
+        }
 
-        req.session.assistantContext = {
-          ...previousContext,
-          type: "restaurant",
-          latitude: searchLatitude,
-          longitude: searchLongitude,
-          selectedRestaurant: restaurants[0],
-          lastIntent: intent,
-          lastMessage: message,
-          updatedAt: new Date(),
-        };
+        if (lowerMessage.includes("non veg")) {
+          restaurantFilter.foodType = "nonveg";
+        }
+
+        const restaurants = await Restaurant.aggregate([
+          {
+            $geoNear: {
+              near: {
+                type: "Point",
+                coordinates: [
+                  Number(searchLongitude),
+                  Number(searchLatitude),
+                ],
+              },
+              distanceField: "distance",
+              maxDistance: radius,
+              spherical: true,
+              query: restaurantFilter,
+            },
+          },
+          ...(maxBudget
+            ? [
+                {
+                  $match: {
+                    avgCostForOne: { $lte: maxBudget },
+                  },
+                },
+              ]
+            : []),
+          {
+            $project: {
+              name: 1,
+              address: 1,
+              averageRating: 1,
+              avgCostForOne: 1,
+              images: 1,
+              location: 1,
+              distance: {
+                $round: [{ $divide: ["$distance", 1000] }, 1],
+              },
+            },
+          },
+          { $sort: { averageRating: -1, distance: 1 } },
+          { $limit: 5 },
+        ]);
+
+        if (!restaurants.length) {
+          reply = "No restaurants found matching your request.";
+        } else {
+          reply = `Best food places:\n\n${restaurants
+            .map(
+              (restaurant, index) =>
+                `${index + 1}. ${restaurant.name}\n${restaurant.address}\n₹${
+                  restaurant.avgCostForOne || 0
+                } for one • ⭐ ${restaurant.averageRating || 0}\n${
+                  restaurant.distance
+                } km away`
+            )
+            .join("\n\n")}`;
+
+          data = {
+            type: "food_suggestion",
+            count: restaurants.length,
+            restaurants,
+          };
+
+          req.session.assistantContext = {
+            ...previousContext,
+            type: "restaurant",
+            latitude: searchLatitude,
+            longitude: searchLongitude,
+            selectedRestaurant: restaurants[0],
+            lastIntent: intent,
+            lastMessage: message,
+            updatedAt: new Date(),
+          };
+        }
       }
     }
 
