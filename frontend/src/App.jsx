@@ -95,7 +95,8 @@ import DeliveryBoyDeshboard from "./pages/admin/deliverBoy/DeliveryBoyDeshboard"
 import LiveLocationUpdate from "./pages/admin/deliverBoy/LiveLocationUpdate";
 import PendingOrders from "./pages/admin/deliverBoy/PendingOrders";
 import AdminAssignDeliveryBoy from "./pages/admin/deliverBoy/AdminAssignDeliveryBoy";
-
+import AssistantChat from "./pages/assistantChat/AssistantChat";
+import AssistantRecommendations from "./pages/assistantChat/AssistantRecommendations";
 
 function App() {
   return (
@@ -605,11 +606,55 @@ function App() {
             </AdminProtectedRouter>
           }
         />
-        <Route path="/superAdmin/admin-registration" element={<SuperAdminProtectedRouter><AdminRegisterForm/></SuperAdminProtectedRouter>}/>
-        <Route path="/admin/deliveryBoy-dashboard" element={<AdminProtectedRouter><DeliveryBoyDeshboard/></AdminProtectedRouter>} />
-        <Route path="/admin/livelocation-update" element={<AdminProtectedRouter><LiveLocationUpdate/></AdminProtectedRouter>}/>
-        <Route path="/admin/pending-orders" element={<AdminProtectedRouter><PendingOrders/></AdminProtectedRouter>}/>
-        <Route path="/admin/AdminAssignDeliveryBoy/:id" element={<AdminProtectedRouter><AdminAssignDeliveryBoy/></AdminProtectedRouter>}/>
+        <Route
+          path="/superAdmin/admin-registration"
+          element={
+            <SuperAdminProtectedRouter>
+              <AdminRegisterForm />
+            </SuperAdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/admin/deliveryBoy-dashboard"
+          element={
+            <AdminProtectedRouter>
+              <DeliveryBoyDeshboard />
+            </AdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/admin/livelocation-update"
+          element={
+            <AdminProtectedRouter>
+              <LiveLocationUpdate />
+            </AdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/admin/pending-orders"
+          element={
+            <AdminProtectedRouter>
+              <PendingOrders />
+            </AdminProtectedRouter>
+          }
+        />
+        <Route
+          path="/admin/AdminAssignDeliveryBoy/:id"
+          element={
+            <AdminProtectedRouter>
+              <AdminAssignDeliveryBoy />
+            </AdminProtectedRouter>
+          }
+        />
+        <Route path="/assistantChat" element={<UserProtectedRouter><AssistantChat/></UserProtectedRouter>}/>
+        <Route
+          path="/assistantChat/recommendations"
+          element={
+            <UserProtectedRouter>
+              <AssistantRecommendations />
+            </UserProtectedRouter>
+          }
+        />
       </Routes>
     </>
   );
