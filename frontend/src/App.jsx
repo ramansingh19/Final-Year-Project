@@ -89,23 +89,22 @@ import OrdersDashboard from "./pages/admin/restaurant/OrdersDashboard";
 import ManageOrder from "./pages/admin/restaurant/ManageOrder";
 import AdminOrderDetails from "./pages/admin/restaurant/AdminOrderDetails";
 import ViewUsers from "./pages/admin/restaurant/ViewUsers";
-import PlacePage from "./pages/auth/PlacePage";
 import WorldMapPage from "./pages/explore/WorldMapPage";
 import CountryPage from "./pages/explore/CountryPage";
 import ExploreCityPage from "./pages/explore/CityPage";
-
+import FloatingAIButton from "./pages/auth/AiPlanner";
 
 function App() {
   return (
     <>
       <Navbar />
+      <FloatingAIButton />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/explore" element={<WorldMapPage />} />
         <Route path="/country/:name" element={<CountryPage />} />
         <Route path="/city/:id/places" element={<ExploreCityPage />} />
         <Route path="/hotels" element={<HotelPage />} />
-        {/* <Route path="/places" element={<PlacePage />} /> */}
         <Route path="/hotels/:id" element={<HotelDetailPage />} />
         <Route path="/my-booking" element={<Booking />} />
         <Route path="/city/:id" element={<CityDetails />} />
