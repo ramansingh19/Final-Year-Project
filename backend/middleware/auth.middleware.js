@@ -23,7 +23,7 @@ export const isAuthenticated = async (req, res, next) => {
         message: "Invalid token user",
       });
     }
-
+    
     if (!user.isActive) {
       return res.status(403).json({
         success: false,

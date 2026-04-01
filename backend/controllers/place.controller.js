@@ -547,7 +547,7 @@ export const generateTravelPlan = async (req, res) => {
         .json({ success: false, message: "All fields are required" });
     }
 
-    // 1️⃣ Fetch active places, hotels, restaurants
+    // Fetch active places, hotels, restaurants
     const places = await Place.find({
       city: cityId,
       status: "active",
@@ -643,8 +643,6 @@ export const generateTravelPlan = async (req, res) => {
 
       usedHours += place.visitDurationHours;
     }
-
-    console.log(plan);
 
     return res.status(200).json({
       success: true,
