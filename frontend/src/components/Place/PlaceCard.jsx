@@ -76,7 +76,7 @@ export default function PlaceCard({ place, distanceInKm, onClick }) {
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-indigo-50 to-gray-100">
+          <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-indigo-50 to-gray-100">
             <span className="text-3xl">🗺️</span>
           </div>
         )}
