@@ -9,8 +9,6 @@ dotenv.config();
 
 // Gemini Client
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-console.log(genAI);
-
 
 // INTENT DETECTION  (scored matching)
 const INTENTS = {
