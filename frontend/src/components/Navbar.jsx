@@ -32,7 +32,7 @@ function Navbar() {
   const { token } = useSelector((state) => state.auth);
   const { user, loading } = useSelector((state) => state.user);
   const { superAdminToken, loginSuccess } = useSelector(
-    (state) => state.superAdminAuth
+    (state) => state.superAdminAuth,
   );
   const { superAdmin } = useSelector((state) => state.superAdmin);
   const { adminToken } = useSelector((state) => state.adminAuth);
@@ -385,7 +385,9 @@ function Navbar() {
                               to="/trips"
                               className="flex items-center gap-3 px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200 rounded-lg"
                             >
-                              <span><BiTrip /></span>
+                              <span>
+                                <BiTrip />
+                              </span>
                               <span className="text-sm">My Trips</span>
                             </Link>
 
@@ -393,7 +395,9 @@ function Navbar() {
                               to="/wishlist"
                               className="flex items-center gap-3 px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200 rounded-lg"
                             >
-                              <span><FaHeart /></span>
+                              <span>
+                                <FaHeart />
+                              </span>
                               <span className="text-sm">Wishlist</span>
                             </Link>
 
@@ -457,7 +461,9 @@ function Navbar() {
                           to="/settings"
                           className="flex items-center gap-3 px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200 rounded-lg"
                         >
-                          <span><IoMdSettings /></span>
+                          <span>
+                            <IoMdSettings />
+                          </span>
                           <span className="text-sm">Settings</span>
                         </Link>
                       </div>
@@ -472,10 +478,10 @@ function Navbar() {
                           token
                             ? handelUserLogout
                             : superAdminToken
-                            ? handeSuperAdminLogout
-                            : adminToken
-                            ? handelAdminLogout
-                            : null
+                              ? handeSuperAdminLogout
+                              : adminToken
+                                ? handelAdminLogout
+                                : null
                         }
                         className="flex items-center gap-3 w-full text-left px-4 py-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-800 transition-colors duration-200 rounded-lg"
                       >
@@ -604,8 +610,6 @@ function Navbar() {
             >
               <MdOutlineCancel />
             </button>
-
-           
 
             {/* Location Component */}
             <UpdateUserLocation />
