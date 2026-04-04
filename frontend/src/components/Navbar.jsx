@@ -184,7 +184,7 @@ function Navbar() {
                   </span>
                 </Link>
               )}
-              {/* global map */}
+              {/* global map section */}
               {token && (
                 <Link to={"/globalMap"}>
                   <div className="flex items-center gap-1 p-1  rounded-full bg-linear-to-br from-gray-600 via-gray-600 to-gray-300 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group">
