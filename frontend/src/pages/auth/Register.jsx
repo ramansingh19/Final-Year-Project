@@ -74,178 +74,189 @@ function Register() {
   }, [registerSuccess]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-gray-100 via-white to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-6 text-gray-800 dark:text-white">
-  
-      {/* BACKGROUND GLOW */}
-      <div className="absolute w-72 h-72 bg-blue-400/30 rounded-full blur-3xl top-10 left-10"></div>
-      <div className="absolute w-72 h-72 bg-indigo-400/30 rounded-full blur-3xl bottom-10 right-10"></div>
-  
-      {/* CARD */}
-      <div className="relative w-full max-w-[60%] bg-white/70 dark:bg-gray-800/70 backdrop-blur-2xl shadow-2xl rounded-3xl p-8 border border-gray-200 dark:border-gray-700">
-  
-        {/* HEADER */}
-        <div className="text-center mb-8">
-          <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-linear-to-r from-blue-600 to-indigo-600 flex items-center justify-center text-white text-xl shadow-lg">
-            📝
-          </div>
-  
-          <h2 className="text-3xl font-bold text-gray-800 dark:text-white">
-            Create Account
-          </h2>
-  
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-            Register your account to continue
-          </p>
-        </div>
-  
-        <form onSubmit={handleSubmit} className="space-y-5">
-  
-          {/* AVATAR */}
-          <div className="flex flex-col items-center">
-            <div className="w-28 h-28 rounded-full border-4 border-blue-500 overflow-hidden shadow-lg mb-3 bg-gray-100 flex items-center justify-center">
-              {preview ? (
-                <img
-                  src={preview}
-                  alt="preview"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <span className="text-gray-400 text-sm">Avatar</span>
-              )}
-            </div>
-  
-            <label className="flex items-center gap-2 cursor-pointer text-sm text-blue-600 hover:underline">
-              <FiUpload />
-              Upload Avatar
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
-              />
-            </label>
-          </div>
-  
-          {/* NAME */}
-          <div>
-            <label className="text-sm text-gray-600 dark:text-gray-300">
-              Full Name
-            </label>
-  
-            <div className="relative mt-1">
-              <FiUser className="absolute left-3 top-4 text-gray-400" />
-  
-              <input
-                name="userName"
-                value={formData.userName}
-                onChange={handleChange}
-                placeholder="Enter your name"
-                required
-                className="w-full pl-10 p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white/60 dark:bg-gray-900/60 focus:ring-2 focus:ring-blue-500 outline-none"
-              />
-            </div>
-          </div>
-  
-          {/* EMAIL */}
-          <div>
-            <label className="text-sm text-gray-600 dark:text-gray-300">
-              Email Address
-            </label>
-  
-            <div className="relative mt-1">
-              <FiMail className="absolute left-3 top-4 text-gray-400" />
-  
-              <input
-                name="email"
-                type="email"
-                onChange={handleChange}
-                placeholder="Enter your email"
-                required
-                className="w-full pl-10 p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white/60 dark:bg-gray-900/60 focus:ring-2 focus:ring-blue-500 outline-none"
-              />
-            </div>
-          </div>
-  
-          {/* PHONE */}
-          <div>
-            <label className="text-sm text-gray-600 dark:text-gray-300">
-              Contact Number
-            </label>
-  
-            <div className="relative mt-1">
-              <FiPhone className="absolute left-3 top-4 text-gray-400" />
-  
-              <input
-                name="contactNumber"
-                type="tel"
-                value={formData.contactNumber}
-                onChange={handleChange}
-                placeholder="Enter phone number"
-                pattern="[0-9]{10}"
-                maxLength="10"
-                required
-                className="w-full pl-10 p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white/60 dark:bg-gray-900/60 focus:ring-2 focus:ring-blue-500 outline-none"
-              />
-            </div>
-          </div>
-  
-          {/* PASSWORD */}
-          <div>
-            <label className="text-sm text-gray-600 dark:text-gray-300">
-              Password
-            </label>
-  
-            <div className="relative mt-1">
-              <FiLock className="absolute left-3 top-4 text-gray-400" />
-  
-              <input
-                name="password"
-                type={showPassword ? "text" : "password"}
-                onChange={handleChange}
-                placeholder="Enter password"
-                required
-                className="w-full pl-10 pr-10 p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white/60 dark:bg-gray-900/60 focus:ring-2 focus:ring-blue-500 outline-none"
-              />
-  
-              <button
-                type="button"
-                onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-3 top-4 text-gray-500 hover:text-gray-700"
-              >
-                {showPassword ? <FiEyeOff /> : <FiEye />}
-              </button>
-            </div>
-          </div>
-  
-          {/* ERROR */}
-          {error && (
-            <div className="bg-red-100 text-red-600 text-sm text-center py-2 px-3 rounded-lg border border-red-200">
-              {error}
-            </div>
-          )}
-  
-          {/* BUTTON */}
-          <button
-            disabled={loading}
-            className="w-full bg-linear-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl font-semibold shadow-md hover:shadow-xl hover:opacity-90 transition"
-          >
-            {loading ? "Registering..." : "Register"}
-          </button>
-  
-          {/* LOGIN LINK */}
-          <p className="text-sm text-center text-gray-600 dark:text-gray-400">
-            Already have an account?{" "}
-            <Link
-              to="/login"
-              className="text-blue-600 font-semibold hover:underline"
-            >
-              Login
-            </Link>
-          </p>
-  
-        </form>
+<div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black px-4 py-6">
+  {/* Background Image */}
+  <div className="absolute inset-0">
+    <img
+      src="/images/forest-login-bg.jpg"
+      alt="background"
+      className="h-full w-full object-cover scale-110 blur-sm"
+    />
+
+    {/* Dark Overlay */}
+    <div className="absolute inset-0 bg-black/55" />
+
+    {/* Extra Gradient */}
+    <div className="absolute inset-0 bg-linear-to-br from-emerald-900/30 via-black/40 to-cyan-900/30" />
+  </div>
+
+  {/* Glow Effects */}
+  <div className="absolute top-10 left-10 h-72 w-72 rounded-full bg-emerald-500/20 blur-3xl" />
+  <div className="absolute bottom-10 right-10 h-72 w-72 rounded-full bg-cyan-500/20 blur-3xl" />
+  <div className="absolute top-1/2 left-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/10 blur-3xl" />
+
+  {/* Center Form Card */}
+  <div className="relative z-10 w-full max-w-2xl rounded-[36px] border border-white/10 bg-white/10 p-1 sm:p-4 md:p-5 shadow-[0_30px_80px_rgba(0,0,0,0.45)] backdrop-blur-3xl">
+    {/* Header */}
+    <div className="mb-8 text-center">
+      <div className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-lg">
+        <FiUser className="h-5 w-5 text-white" />
       </div>
+
+      <h1 className="text-3xl font-bold text-white sm:text-4xl">
+        Create Account
+      </h1>
+
+      <p className="mt-2 text-sm text-gray-300">
+        Join now and start your journey with us
+      </p>
     </div>
+
+    <form onSubmit={handleSubmit} className="space-y-5">
+      {/* Avatar */}
+      <div className="flex flex-col items-center">
+        <div className="mb-3 flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-white/20 bg-white/10 shadow-xl backdrop-blur-xl">
+          {preview ? (
+            <img
+              src={preview}
+              alt="preview"
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <FiUser className="h-10 w-10 text-gray-300" />
+          )}
+        </div>
+
+        <label className="cursor-pointer rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-xl transition hover:bg-white/20">
+          Upload Photo
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="hidden"
+          />
+        </label>
+      </div>
+
+      {/* Name */}
+      <div>
+        <label className="mb-2 block text-sm font-medium text-gray-200">
+          Full Name
+        </label>
+
+        <div className="relative">
+          <FiUser className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+
+          <input
+            name="userName"
+            value={formData.userName}
+            onChange={handleChange}
+            placeholder="Enter your full name"
+            required
+            className="h-14 w-full rounded-2xl border border-white/10 bg-white/10 pl-12 pr-4 text-white placeholder:text-gray-400 backdrop-blur-xl outline-none transition focus:border-emerald-400 focus:bg-white/15"
+          />
+        </div>
+      </div>
+
+      {/* Email + Phone */}
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label className="mb-2 block text-sm font-medium text-gray-200">
+            Email
+          </label>
+
+          <div className="relative">
+            <FiMail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+
+            <input
+              type="email"
+              name="email"
+              onChange={handleChange}
+              placeholder="Enter email"
+              required
+              className="h-14 w-full rounded-2xl border border-white/10 bg-white/10 pl-12 pr-4 text-white placeholder:text-gray-400 backdrop-blur-xl outline-none transition focus:border-emerald-400 focus:bg-white/15"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="mb-2 block text-sm font-medium text-gray-200">
+            Phone
+          </label>
+
+          <div className="relative">
+            <FiPhone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+
+            <input
+              type="tel"
+              name="contactNumber"
+              value={formData.contactNumber}
+              onChange={handleChange}
+              placeholder="Phone Number"
+              maxLength={10}
+              required
+              className="h-14 w-full rounded-2xl border border-white/10 bg-white/10 pl-12 pr-4 text-white placeholder:text-gray-400 backdrop-blur-xl outline-none transition focus:border-emerald-400 focus:bg-white/15"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Password */}
+      <div>
+        <label className="mb-2 block text-sm font-medium text-gray-200">
+          Password
+        </label>
+
+        <div className="relative">
+          <FiLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+
+          <input
+            type={showPassword ? "text" : "password"}
+            name="password"
+            onChange={handleChange}
+            placeholder="Create password"
+            required
+            className="h-14 w-full rounded-2xl border border-white/10 bg-white/10 pl-12 pr-12 text-white placeholder:text-gray-400 backdrop-blur-xl outline-none transition focus:border-emerald-400 focus:bg-white/15"
+          />
+
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+          >
+            {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+          </button>
+        </div>
+      </div>
+
+      {/* Error */}
+      {error && (
+        <div className="rounded-2xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-center text-sm text-red-300 backdrop-blur-xl">
+          {error}
+        </div>
+      )}
+
+      {/* Submit */}
+      <button
+        disabled={loading}
+        className="h-14 w-full rounded-2xl bg-linear-to-r from-emerald-500 to-cyan-500 text-base font-semibold text-white shadow-lg transition hover:scale-[1.02] hover:shadow-emerald-500/20 disabled:opacity-60"
+      >
+        {loading ? "Creating Account..." : "Create Account"}
+      </button>
+
+      {/* Login Link */}
+      <p className="text-center text-sm text-gray-300">
+        Already have an account?{" "}
+        <Link
+          to="/login"
+          className="font-semibold text-white hover:text-emerald-300"
+        >
+          Login
+        </Link>
+      </p>
+    </form>
+  </div>
+</div>
   );
 }
 

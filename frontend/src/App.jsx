@@ -108,24 +108,6 @@ const UpdateUserLocation = lazy(() => import("./components/UpdateUserLocation"))
 const GlobalMap = lazy(() => import("./components/globalMap/GlobalMap"))
 
 
-const Loader = () => (
-  <div className="fixed inset-0 z-9999 flex items-center justify-center bg-[#020617]">
-    <div className="flex flex-col items-center gap-5">
-      <div className="relative">
-        <div className="h-16 w-16 rounded-full border-4 border-slate-700"></div>
-        <div className="absolute inset-0 h-16 w-16 animate-spin rounded-full border-4 border-transparent border-t-blue-500 border-r-cyan-400"></div>
-      </div>
-
-      <div className="text-center">
-        <h2 className="text-lg font-semibold text-white">Loading...</h2>
-        <p className="mt-1 text-sm text-slate-400">
-          Please wait while we prepare your page
-        </p>
-      </div>
-    </div>
-  </div>
-);
-
 function App() {
   return (
     <>
