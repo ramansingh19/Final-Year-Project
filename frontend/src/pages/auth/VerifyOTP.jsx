@@ -5,6 +5,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { IoReload } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { verifyOtp } from "../../features/auth/authSlice";
+import { FiShield } from "react-icons/fi";
 
 function VerifyOTP() {
 
@@ -54,93 +55,135 @@ function VerifyOTP() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4">
-      <div className="bg-white max-w-md w-full p-8 rounded-3xl shadow-xl flex flex-col gap-6">
-        {/* Header */}
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-indigo-700">
-            Verify Your Email
-          </h1>
-          <p className="mt-2 text-gray-600">
-            Enter the 6-digit code sent to your email to verify your account.
+<div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black px-4 py-6">
+  {/* Background */}
+  <div className="absolute inset-0">
+    <img
+      src="/images/forest-login-bg.jpg"
+      alt="background"
+      className="h-full w-full scale-110 object-cover blur-sm"
+    />
+    <div className="absolute inset-0 bg-black/65" />
+    <div className="absolute inset-0 bg-linear-to-br from-emerald-900/30 via-black/50 to-cyan-900/30" />
+  </div>
+
+  {/* Glow Effects */}
+  <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-emerald-500/20 blur-3xl" />
+  <div className="absolute -bottom-20 -right-20 h-72 w-72 rounded-full bg-cyan-500/20 blur-3xl" />
+  <div className="absolute left-1/2 top-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/5 blur-3xl" />
+
+  {/* Verification Card */}
+  <div className="relative z-10 w-full max-w-md rounded-[34px] border border-white/10 bg-white/10 p-6 shadow-[0_30px_80px_rgba(0,0,0,0.45)] backdrop-blur-3xl sm:p-7">
+    {/* Header */}
+    <div className="mb-7 text-center">
+      <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-white/15 bg-white/10 shadow-lg backdrop-blur-xl">
+        <FiShield className="h-6 w-6 text-white" />
+      </div>
+
+      <h1 className="text-2xl font-bold text-white sm:text-3xl">
+        Verify Your Email
+      </h1>
+
+      <p className="mt-2 text-sm leading-6 text-gray-300">
+        Enter the 6-digit verification code sent to your email address.
+      </p>
+    </div>
+
+    {/* Success Message */}
+    {isVerified ? (
+      <div className="rounded-3xl border border-emerald-500/20 bg-emerald-500/10 p-5 text-center backdrop-blur-xl">
+        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500/20">
+          <FiCheck className="h-7 w-7 text-emerald-300" />
+        </div>
+
+        <h2 className="text-lg font-semibold text-white">
+          Verification Successful
+        </h2>
+
+        <p className="mt-2 text-sm text-gray-300">
+          Your email has been verified successfully. Redirecting...
+        </p>
+      </div>
+    ) : (
+      <>
+        {/* Instruction */}
+        <div className="mb-6 text-center">
+          <p className="text-sm font-medium text-gray-300">
+            Enter the code below
           </p>
         </div>
 
-        {/* Status / Instructions */}
-        {isVerified ? (
-          <div className="text-center text-green-600 font-semibold">
-            ✅ Verification successful! Redirecting...
-          </div>
-        ) : (
-          <div className="text-center text-gray-700 font-medium">
-            Enter the 6-digit code below
-          </div>
-        )}
-
         {/* OTP Inputs */}
-        {!isVerified && (
-          <div className="flex justify-center gap-3 mt-4">
-            {otp.map((digit, index) => (
-              <input
-                key={index}
-                type="text"
-                maxLength={1}
-                value={digit}
-                onChange={(e) => handelChange(index, e.target.value)}
-                ref={(el) => (inputRefs.current[index] = el)}
-                id={`otp-${index}`}
-                className="w-12 h-12 text-center text-xl border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
-              />
-            ))}
-          </div>
-        )}
+        <div className="mb-6 flex items-center justify-center gap-2 sm:gap-3">
+          {otp.map((digit, index) => (
+            <input
+              key={index}
+              ref={(el) => (inputRefs.current[index] = el)}
+              id={`otp-${index}`}
+              type="text"
+              inputMode="numeric"
+              maxLength={1}
+              value={digit}
+              onChange={(e) => handelChange(index, e.target.value)}
+              className="h-12 w-12 rounded-2xl border border-white/10 bg-white/10 text-center text-lg font-semibold text-white backdrop-blur-xl outline-none transition-all duration-300 focus:border-emerald-400 focus:bg-white/15 sm:h-14 sm:w-14 sm:text-xl"
+            />
+          ))}
+        </div>
 
-        {/* Buttons */}
-        {!isVerified && (
-          <button
-            onClick={handelVerify}
-            disabled={loading || otp.some((digit) => digit === "")}
-            className="mt-6 w-full py-2 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition disabled:opacity-50"
-          >
-            {loading ? "Verifying..." : "Verify Code"}
-          </button>
-        )}
-
-        {/* Clear OTP */}
-        <button
-          onClick={clearOtp}
-          disabled={loading || isVerified}
-          className="w-full py-2 text-black border border-gray-400 duration-300 font-medium rounded-lg 
-             hover:bg-blue-300 transition disabled:opacity-50
-             flex items-center justify-center gap-2"
-        >
-          <IoReload />
-          Clear
-        </button>
-
-        {/* Resend OTP */}
-        {!isVerified && (
-          <p className="text-center text-sm text-gray-500 mt-2">
-            Wrong email?{" "}
-            <Link to={'/forgotPassword'} className="text-indigo-600 font-medium hover:text-indigo-700 transition">
-              Go back
-            </Link>
-          </p>
-        )}
-
-        {/* Messages */}
+        {/* Error / Success Messages */}
         {errorMessage && (
-          <div className="bg-red-50 border border-red-200 text-red-700 p-3 rounded-lg text-center mt-4">
+          <div className="mb-4 rounded-2xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-center text-sm text-red-300 backdrop-blur-xl">
             {errorMessage}
           </div>
         )}
+
         {successMessage && (
-          <div className="bg-green-50 border border-green-200 text-green-700 p-3 rounded-lg text-center mt-4">
+          <div className="mb-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-center text-sm text-emerald-300 backdrop-blur-xl">
             {successMessage}
           </div>
         )}
-      </div>
-    </div>
+
+        {/* Verify Button */}
+        <button
+          onClick={handelVerify}
+          disabled={loading || otp.some((digit) => digit === "")}
+          className="flex h-13 w-full items-center justify-center rounded-2xl bg-linear-to-r from-emerald-500 to-cyan-500 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.01] hover:shadow-emerald-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {loading ? (
+            <div className="flex items-center gap-2">
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+              Verifying...
+            </div>
+          ) : (
+            "Verify Code"
+          )}
+        </button>
+
+        {/* Secondary Actions */}
+        <div className="mt-4 space-y-3">
+          <button
+            onClick={clearOtp}
+            disabled={loading}
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/10 text-sm font-medium text-white backdrop-blur-xl transition hover:bg-white/15 disabled:opacity-50"
+          >
+            <IoReload className="text-base" />
+            Clear Code
+          </button>
+
+          <p className="text-center text-sm text-gray-300">
+            Wrong email?{" "}
+            <Link
+              to="/forgotPassword"
+              className="font-semibold text-white transition hover:text-emerald-300"
+            >
+              Go Back
+            </Link>
+          </p>
+        </div>
+      </>
+    )}
+  </div>
+</div>
   );
 }
 
