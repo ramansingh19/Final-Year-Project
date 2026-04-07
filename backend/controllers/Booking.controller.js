@@ -308,6 +308,19 @@ export const confirmBooking = async (req, res) => {
     booking.payment.paidAt = new Date();
     booking.status = "confirmed";
     booking.confirmedAt = new Date();
+
+    const COMMISSION_PERCENT = 0.1; // 10%
+    const totalAmount = booking.payment.finalAmount;
+    const commission = Math.round(totalAmount * COMMISSION_PERCENT);
+    const hotelAmount = totalAmount - commission;
+
+    booking.commission = commission;
+    booking.hotelAmount = hotelAmount;
+    booking.payoutStatus = "pending";
+
+    booking.status = "confirmed";
+    booking.confirmedAt = new Date();
+
     await booking.save();
 
     // ── Send confirmation email ────────────────────────────────────────────
@@ -345,6 +358,66 @@ export const getBooking = async (req, res) => {
 };
 
 // ─── Strip internal fields before sending to client ──────────────────────────
+
+//get pending payouts 
+export const getPendingPayouts = async (req, res) => {
+  try {
+    const bookings = await Booking.find({
+      payoutStatus: "pending",
+      status: "confirmed",
+    })
+
+    if (!bookings.length) {
+      return res.json({
+        success: true,
+        message: "No pending payouts.",
+        bookings: [],
+  });
+}
+
+    return res.json({ success: true, bookings });
+  } catch (err) {
+    console.error("[getPendingPayouts]", err);
+    return res.status(500).json({ success: false, message: "Server error." });
+  }
+};
+
+//markPayout Done
+export const markPayoutDone = async (req, res) => {
+  try {
+    const { refNo } = req.body;
+    const booking = await Booking.findOne({ refNo });
+    if (!booking)
+      return res
+        .status(404)
+        .json({ success: false, message: "Booking not found." });
+
+    if (booking.status !== "confirmed") {
+      return res.status(400).json({
+        success: false,
+        message: "Booking not confirmed.",
+      });
+    }
+
+    if (booking.payoutStatus === "processed") {
+      return res.status(400).json({
+        success: false,
+        message: "Payout already processed.",
+      });
+    }
+
+    booking.payoutStatus = "processed";
+    booking.payoutProcessedAt = new Date();
+    await booking.save();
+
+    return res.json({ success: true, message: "Payout marked as done." });
+  } catch (err) {
+    console.error("[markPayoutDone]", err);
+    return res.status(500).json({ success: false, message: "Server error." });
+  }
+};
+
+
 function safeBooking(doc) {
   const b = doc.toObject();
   delete b.otp; // never expose OTP

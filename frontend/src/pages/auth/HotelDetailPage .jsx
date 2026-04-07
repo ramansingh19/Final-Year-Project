@@ -27,6 +27,7 @@ import {
   FaWifi,
   FaBed,
   FaTimes,
+  FaInfoCircle,
 } from "react-icons/fa";
 import {
   MdFreeBreakfast,
@@ -51,6 +52,8 @@ import {
   resetReviewState,
 } from "../../features/user/reviewSlice";
 import { getPublicRooms } from "../../features/user/roomSlice";
+// ✅ FIX: import setFinalAmount (action), NOT selectFinalAmount (selector)
+import { setFinalAmount } from "../../features/user/bookingSlice";
 
 // ── Amenity icon map ──────────────────────────────────────────────────────────
 const AMENITY_MAP = {
@@ -66,6 +69,32 @@ const AMENITY_MAP = {
   breakfast: { icon: <MdFreeBreakfast />, label: "Breakfast" },
   tv: { icon: <FaTv />, label: "Smart TV" },
   concierge: { icon: <FaConciergeBell />, label: "Concierge" },
+};
+
+// ── Indian Hotel GST Slab Calculator ─────────────────────────────────────────
+// Per GST Council: hotel rooms taxed on declared tariff per night
+//   < ₹1,000  → 0% GST
+//   ₹1,000–₹7,500 → 12% GST
+//   > ₹7,500  → 18% GST
+export const getGSTRate = (pricePerNight) => {
+  if (pricePerNight < 1000) return 0;
+  if (pricePerNight <= 7500) return 0.12;
+  return 0.18;
+};
+
+export const getGSTLabel = (pricePerNight) => {
+  if (pricePerNight < 1000) return "0% GST";
+  if (pricePerNight <= 7500) return "12% GST";
+  return "18% GST";
+};
+
+// Compute full price breakdown
+export const computePriceBreakdown = ({ pricePerNight, nights, rooms }) => {
+  const baseAmount = pricePerNight * nights * rooms;
+  const gstRate = getGSTRate(pricePerNight);
+  const gstAmount = Math.round(baseAmount * gstRate);
+  const totalAmount = baseAmount + gstAmount;
+  return { baseAmount, gstRate, gstAmount, totalAmount };
 };
 
 const getToday = () => new Date().toISOString().split("T")[0];
@@ -130,7 +159,10 @@ const Lightbox = ({ imgs, lightbox, setLightbox }) => (
     </button>
     <button
       className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 text-white bg-white/10 w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/20"
-      onClick={(e) => { e.stopPropagation(); setLightbox((l) => Math.max(0, l - 1)); }}
+      onClick={(e) => {
+        e.stopPropagation();
+        setLightbox((l) => Math.max(0, l - 1));
+      }}
     >
       <FaChevronLeft />
     </button>
@@ -142,7 +174,10 @@ const Lightbox = ({ imgs, lightbox, setLightbox }) => (
     />
     <button
       className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 text-white bg-white/10 w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/20"
-      onClick={(e) => { e.stopPropagation(); setLightbox((l) => Math.min(imgs.length - 1, l + 1)); }}
+      onClick={(e) => {
+        e.stopPropagation();
+        setLightbox((l) => Math.min(imgs.length - 1, l + 1));
+      }}
     >
       <FaChevronRight />
     </button>
@@ -161,17 +196,28 @@ const ImageGallery = ({ images, name }) => {
     return (
       <div className="flex h-55 w-full flex-col items-center justify-center rounded-2xl border border-white/10 bg-white/5 sm:h-70">
         <FaMapMarkerAlt className="mb-2 text-3xl text-white/40" />
-        <p className="text-sm font-medium text-white/50">No photos uploaded yet</p>
+        <p className="text-sm font-medium text-white/50">
+          No photos uploaded yet
+        </p>
       </div>
     );
 
   if (count === 1)
     return (
       <>
-        <div className="h-65 sm:h-105 w-full rounded-2xl overflow-hidden cursor-pointer group" onClick={() => setLightbox(0)}>
-          <img src={imgs[0]} alt={name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+        <div
+          className="h-65 sm:h-105 w-full rounded-2xl overflow-hidden cursor-pointer group"
+          onClick={() => setLightbox(0)}
+        >
+          <img
+            src={imgs[0]}
+            alt={name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
         </div>
-        {lightbox !== null && <Lightbox imgs={imgs} lightbox={lightbox} setLightbox={setLightbox} />}
+        {lightbox !== null && (
+          <Lightbox imgs={imgs} lightbox={lightbox} setLightbox={setLightbox} />
+        )}
       </>
     );
 
@@ -180,40 +226,87 @@ const ImageGallery = ({ images, name }) => {
       <>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 h-105 sm:h-105 w-full">
           {imgs.map((src, i) => (
-            <div key={i} className={`relative overflow-hidden cursor-pointer group ${i === 0 ? "sm:rounded-l-2xl rounded-t-2xl sm:rounded-t-none" : "sm:rounded-r-2xl rounded-b-2xl sm:rounded-b-none"}`} onClick={() => setLightbox(i)}>
-              <img src={src} alt={`${name} ${i + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+            <div
+              key={i}
+              className={`relative overflow-hidden cursor-pointer group ${
+                i === 0
+                  ? "sm:rounded-l-2xl rounded-t-2xl sm:rounded-t-none"
+                  : "sm:rounded-r-2xl rounded-b-2xl sm:rounded-b-none"
+              }`}
+              onClick={() => setLightbox(i)}
+            >
+              <img
+                src={src}
+                alt={`${name} ${i + 1}`}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
             </div>
           ))}
         </div>
-        {lightbox !== null && <Lightbox imgs={imgs} lightbox={lightbox} setLightbox={setLightbox} />}
+        {lightbox !== null && (
+          <Lightbox imgs={imgs} lightbox={lightbox} setLightbox={setLightbox} />
+        )}
       </>
     );
 
   return (
     <>
       <div className="grid grid-cols-2 sm:grid-cols-4 grid-rows-4 sm:grid-rows-2 gap-1.5 h-105 sm:h-105 w-full">
-        <div className="col-span-2 row-span-2 relative overflow-hidden rounded-t-2xl sm:rounded-l-2xl sm:rounded-t-none cursor-pointer group" onClick={() => setLightbox(0)}>
-          <img src={imgs[0]} alt={name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+        <div
+          className="col-span-2 row-span-2 relative overflow-hidden rounded-t-2xl sm:rounded-l-2xl sm:rounded-t-none cursor-pointer group"
+          onClick={() => setLightbox(0)}
+        >
+          <img
+            src={imgs[0]}
+            alt={name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
         </div>
         {[1, 2].map((i) => (
-          <div key={i} className={`relative overflow-hidden cursor-pointer group ${i === 2 ? "sm:rounded-tr-2xl" : ""}`} onClick={() => setLightbox(i)}>
-            <img src={imgs[i]} alt={`${name} ${i + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+          <div
+            key={i}
+            className={`relative overflow-hidden cursor-pointer group ${
+              i === 2 ? "sm:rounded-tr-2xl" : ""
+            }`}
+            onClick={() => setLightbox(i)}
+          >
+            <img
+              src={imgs[i]}
+              alt={`${name} ${i + 1}`}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
           </div>
         ))}
-        {[3, 4].map((i) => (
+        {[3, 4].map((i) =>
           imgs[i] ? (
-            <div key={i} className={`relative overflow-hidden cursor-pointer group ${i === 4 ? "rounded-b-2xl sm:rounded-br-2xl sm:rounded-b-none" : ""}`} onClick={() => setLightbox(i)}>
-              <img src={imgs[i]} alt={`${name} ${i + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+            <div
+              key={i}
+              className={`relative overflow-hidden cursor-pointer group ${
+                i === 4
+                  ? "rounded-b-2xl sm:rounded-br-2xl sm:rounded-b-none"
+                  : ""
+              }`}
+              onClick={() => setLightbox(i)}
+            >
+              <img
+                src={imgs[i]}
+                alt={`${name} ${i + 1}`}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
               {i === 4 && count > 5 && (
                 <div className="absolute inset-0 bg-black/55 flex items-center justify-center rounded-br-2xl">
-                  <span className="text-white font-bold text-lg">+{count - 5} photos</span>
+                  <span className="text-white font-bold text-lg">
+                    +{count - 5} photos
+                  </span>
                 </div>
               )}
             </div>
-          ) : null
-        ))}
+          ) : null,
+        )}
       </div>
-      {lightbox !== null && <Lightbox imgs={imgs} lightbox={lightbox} setLightbox={setLightbox} />}
+      {lightbox !== null && (
+        <Lightbox imgs={imgs} lightbox={lightbox} setLightbox={setLightbox} />
+      )}
     </>
   );
 };
@@ -231,24 +324,47 @@ const RoomImageSlider = ({ images }) => {
 
   return (
     <div className="relative w-full sm:w-44 h-48 sm:h-full shrink-0 overflow-hidden bg-slate-100 group">
-      <img src={imgs[idx]} alt="room" className="w-full h-full object-cover transition-opacity duration-300" />
+      <img
+        src={imgs[idx]}
+        alt="room"
+        className="w-full h-full object-cover transition-opacity duration-300"
+      />
       {imgs.length > 1 && (
         <>
           <button
-            onClick={(e) => { e.stopPropagation(); setIdx((i) => Math.max(0, i - 1)); }}
-            className={`absolute left-1.5 top-1/2 -translate-y-1/2 w-6 h-6 bg-black/40 hover:bg-black/60 text-white rounded-full flex items-center justify-center transition-all ${idx === 0 ? "opacity-30 cursor-not-allowed" : ""}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIdx((i) => Math.max(0, i - 1));
+            }}
+            className={`absolute left-1.5 top-1/2 -translate-y-1/2 w-6 h-6 bg-black/40 hover:bg-black/60 text-white rounded-full flex items-center justify-center transition-all ${
+              idx === 0 ? "opacity-30 cursor-not-allowed" : ""
+            }`}
           >
             <FaChevronLeft className="text-[9px]" />
           </button>
           <button
-            onClick={(e) => { e.stopPropagation(); setIdx((i) => Math.min(imgs.length - 1, i + 1)); }}
-            className={`absolute right-1.5 top-1/2 -translate-y-1/2 w-6 h-6 bg-black/40 hover:bg-black/60 text-white rounded-full flex items-center justify-center transition-all ${idx === imgs.length - 1 ? "opacity-30 cursor-not-allowed" : ""}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIdx((i) => Math.min(imgs.length - 1, i + 1));
+            }}
+            className={`absolute right-1.5 top-1/2 -translate-y-1/2 w-6 h-6 bg-black/40 hover:bg-black/60 text-white rounded-full flex items-center justify-center transition-all ${
+              idx === imgs.length - 1 ? "opacity-30 cursor-not-allowed" : ""
+            }`}
           >
             <FaChevronRight className="text-[9px]" />
           </button>
           <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 flex gap-1">
             {imgs.map((_, i) => (
-              <button key={i} onClick={(e) => { e.stopPropagation(); setIdx(i); }} className={`w-1.5 h-1.5 rounded-full transition-all ${i === idx ? "bg-white w-3" : "bg-white/50"}`} />
+              <button
+                key={i}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIdx(i);
+                }}
+                className={`w-1.5 h-1.5 rounded-full transition-all ${
+                  i === idx ? "bg-white w-3" : "bg-white/50"
+                }`}
+              />
             ))}
           </div>
           <div className="absolute top-2 right-2 bg-black/50 text-white text-[9px] px-1.5 py-0.5 rounded-full font-medium">
@@ -260,27 +376,14 @@ const RoomImageSlider = ({ images }) => {
   );
 };
 
-// ── Selected Room Banner inside Booking Widget ────────────────────────────────
-const SelectedRoomBanner = ({ room, onClear }) => (
-  <div className="mx-4 mb-0 -mt-1">
-    <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2.5 flex items-center gap-2">
-      <FaCheckCircle className="text-emerald-500 shrink-0 text-sm" />
-      <div className="flex-1 min-w-0">
-        <p className="text-[10px] font-bold text-emerald-700 uppercase tracking-wide">Room Selected</p>
-        <p className="text-xs text-emerald-800 font-semibold truncate capitalize">{room.roomType}</p>
-      </div>
-      <button
-        onClick={onClear}
-        className="w-5 h-5 rounded-full bg-emerald-200 hover:bg-emerald-300 flex items-center justify-center transition-colors shrink-0"
-      >
-        <FaTimes className="text-[8px] text-emerald-700" />
-      </button>
-    </div>
-  </div>
-);
-
 // ── Sticky Booking Widget ─────────────────────────────────────────────────────
-const BookingWidget = ({ hotel, onSelectRoom, selectedRoom, onClearRoom }) => {
+const BookingWidget = ({
+  hotel,
+  onSelectRoom,
+  selectedRoom,
+  onClearRoom,
+  onDatesChange, // ✅ callback so parent can recompute price on date/room change
+}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { availability } = useSelector((s) => s.hotelBooking);
@@ -288,37 +391,59 @@ const BookingWidget = ({ hotel, onSelectRoom, selectedRoom, onClearRoom }) => {
   const [checkOut, setCheckOut] = useState(getTomorrow());
   const [rooms, setRooms] = useState(1);
   const [guests, setGuests] = useState(2);
-  const [prevPrice, setPrevPrice] = useState(null);
   const [priceChanged, setPriceChanged] = useState(false);
+  const prevPriceRef = useRef(null);
 
   const nights = nightsBetween(checkIn, checkOut);
   const pricePerNight =
     selectedRoom?.pricePerNight ?? hotel?.pricePerNight ?? hotel?.price ?? 3499;
-  const total = pricePerNight * nights * rooms;
-  const taxes = Math.round(total * 0.12);
 
-  const {
-    loading: bookingLoading,
-    success: bookingSuccess,
-    error: bookingError,
-  } = useSelector((s) => s.hotelBooking);
+  // ✅ Proper GST slab calculation
+  const { baseAmount, gstRate, gstAmount, totalAmount } = computePriceBreakdown(
+    {
+      pricePerNight,
+      nights,
+      rooms,
+    },
+  );
 
-  // Animate price change when room is selected
+  const { loading: bookingLoading } = useSelector((s) => s.hotelBooking);
+
+  // Animate when price changes (room selected / dates changed)
   useEffect(() => {
-    if (prevPrice !== null && prevPrice !== pricePerNight) {
+    if (prevPriceRef.current !== null && prevPriceRef.current !== totalAmount) {
       setPriceChanged(true);
       const t = setTimeout(() => setPriceChanged(false), 600);
       return () => clearTimeout(t);
     }
-    setPrevPrice(pricePerNight);
-  }, [pricePerNight]);
+    prevPriceRef.current = totalAmount;
+  }, [totalAmount]);
+
+  // ✅ Notify parent whenever booking params change so Redux stays in sync
+  useEffect(() => {
+    if (onDatesChange) {
+      onDatesChange({
+        checkIn,
+        checkOut,
+        rooms,
+        guests,
+        pricePerNight,
+        nights,
+      });
+    }
+  }, [checkIn, checkOut, rooms, guests, selectedRoom]);
 
   useEffect(() => {
     dispatch(resetBookingState());
   }, []);
 
+  useEffect(() => {
+    if (hotel?._id && checkIn && checkOut) {
+      dispatch(getRoomAvailability({ hotelId: hotel._id, checkIn, checkOut }));
+    }
+  }, [checkIn, checkOut, hotel?._id]);
+
   const handleBook = () => {
-    navigate("/my-booking");
     if (!selectedRoom) return;
     if (guests > selectedRoom.capacity) {
       alert(`Max ${selectedRoom.capacity} guests allowed for this room`);
@@ -332,16 +457,11 @@ const BookingWidget = ({ hotel, onSelectRoom, selectedRoom, onClearRoom }) => {
         checkIn,
         checkOut,
         guests,
-        totalAmount: total + taxes,
+        totalAmount,
       }),
     );
+    navigate("/my-booking");
   };
-
-  useEffect(() => {
-    if (hotel?._id && checkIn && checkOut) {
-      dispatch(getRoomAvailability({ hotelId: hotel._id, checkIn, checkOut }));
-    }
-  }, [checkIn, checkOut, hotel?._id]);
 
   return (
     <div className="ui-card overflow-hidden rounded-2xl bg-[#0f1118] lg:sticky lg:top-24">
@@ -352,7 +472,9 @@ const BookingWidget = ({ hotel, onSelectRoom, selectedRoom, onClearRoom }) => {
         </p>
         <div className="flex flex-wrap items-end gap-2">
           <span
-            className={`text-3xl font-extrabold text-white transition-all duration-300 ${priceChanged ? "scale-110 text-amber-300" : ""}`}
+            className={`text-3xl font-extrabold text-white transition-all duration-300 ${
+              priceChanged ? "scale-110 text-amber-300" : ""
+            }`}
             style={{ display: "inline-block" }}
           >
             ₹{pricePerNight.toLocaleString()}
@@ -364,8 +486,9 @@ const BookingWidget = ({ hotel, onSelectRoom, selectedRoom, onClearRoom }) => {
             {selectedRoom.roomType}
           </p>
         )}
+        {/* ✅ Show proper GST slab label */}
         <p className="text-blue-200 text-[11px] mt-0.5">
-          +₹{Math.round(pricePerNight * 0.12).toLocaleString()} taxes & fees
+          +{getGSTLabel(pricePerNight)} applicable
         </p>
       </div>
 
@@ -375,7 +498,9 @@ const BookingWidget = ({ hotel, onSelectRoom, selectedRoom, onClearRoom }) => {
           <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2.5 flex items-center gap-2">
             <FaCheckCircle className="text-emerald-500 shrink-0 text-sm" />
             <div className="flex-1 min-w-0">
-              <p className="text-[10px] font-bold text-emerald-700 uppercase tracking-wide">Room Selected</p>
+              <p className="text-[10px] font-bold text-emerald-700 uppercase tracking-wide">
+                Room Selected
+              </p>
               <p className="text-xs text-emerald-800 font-semibold truncate capitalize">
                 {selectedRoom.roomType} · Max {selectedRoom.capacity} guests
               </p>
@@ -408,10 +533,17 @@ const BookingWidget = ({ hotel, onSelectRoom, selectedRoom, onClearRoom }) => {
                 }
               },
             },
-            { label: "Check-out", val: checkOut, min: checkIn, set: setCheckOut },
+            {
+              label: "Check-out",
+              val: checkOut,
+              min: checkIn,
+              set: setCheckOut,
+            },
           ].map(({ label, val, min, set }) => (
             <div key={label}>
-              <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-white/45">{label}</p>
+              <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-white/45">
+                {label}
+              </p>
               <div className="relative">
                 <FaCalendarAlt className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-xs text-white/45" />
                 <input
@@ -433,13 +565,23 @@ const BookingWidget = ({ hotel, onSelectRoom, selectedRoom, onClearRoom }) => {
             { label: "Guests", val: guests, set: setGuests },
           ].map(({ label, val, set }) => (
             <div key={label}>
-              <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-white/45">{label}</p>
+              <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-white/45">
+                {label}
+              </p>
               <div className="flex items-center overflow-hidden rounded-lg border border-white/15 bg-white/5">
-                <button onClick={() => set((v) => Math.max(1, v - 1))} className="flex h-8 w-8 items-center justify-center text-white/65 hover:bg-white/10">
+                <button
+                  onClick={() => set((v) => Math.max(1, v - 1))}
+                  className="flex h-8 w-8 items-center justify-center text-white/65 hover:bg-white/10"
+                >
                   <FaMinus className="text-[9px]" />
                 </button>
-                <span className="flex-1 text-center text-sm font-bold text-white">{val}</span>
-                <button onClick={() => set((v) => Math.min(10, v + 1))} className="flex h-8 w-8 items-center justify-center text-white/65 hover:bg-white/10">
+                <span className="flex-1 text-center text-sm font-bold text-white">
+                  {val}
+                </span>
+                <button
+                  onClick={() => set((v) => Math.min(10, v + 1))}
+                  className="flex h-8 w-8 items-center justify-center text-white/65 hover:bg-white/10"
+                >
                   <FaPlus className="text-[9px]" />
                 </button>
               </div>
@@ -454,22 +596,48 @@ const BookingWidget = ({ hotel, onSelectRoom, selectedRoom, onClearRoom }) => {
           </p>
         )}
 
-        {/* Price breakdown */}
+        {/* ✅ Proper GST price breakdown */}
         <div className="space-y-1.5 rounded-xl border border-white/10 bg-white/5 p-3">
           <div className="flex justify-between text-xs text-white/70">
             <span>
-              ₹{pricePerNight.toLocaleString()} × {nights} night{nights > 1 ? "s" : ""} × {rooms} room{rooms > 1 ? "s" : ""}
+              ₹{pricePerNight.toLocaleString()} × {nights} night
+              {nights > 1 ? "s" : ""} × {rooms} room{rooms > 1 ? "s" : ""}
             </span>
-            <span>₹{total.toLocaleString()}</span>
+            <span>₹{baseAmount.toLocaleString()}</span>
           </div>
+          {/* GST line — shows 0% for budget rooms */}
           <div className="flex justify-between text-xs text-white/70">
-            <span>Taxes & fees (12%)</span>
-            <span>₹{taxes.toLocaleString()}</span>
+            <span className="flex items-center gap-1">
+              GST ({(gstRate * 100).toFixed(0)}%)
+              {gstRate === 0 && (
+                <span className="text-emerald-400 text-[10px] font-semibold">
+                  (Exempt)
+                </span>
+              )}
+            </span>
+            <span>
+              {gstRate === 0 ? (
+                <span className="text-emerald-400">₹0</span>
+              ) : (
+                `₹${gstAmount.toLocaleString()}`
+              )}
+            </span>
           </div>
           <div className="my-1 h-px bg-white/10" />
           <div className="flex justify-between text-sm font-extrabold text-white">
             <span>Total</span>
-            <span>₹{(total + taxes).toLocaleString()}</span>
+            <span>₹{totalAmount.toLocaleString()}</span>
+          </div>
+          {/* GST slab info */}
+          <div className="flex items-center gap-1 pt-0.5">
+            <FaInfoCircle className="text-white/30 text-[9px]" />
+            <span className="text-[9px] text-white/35">
+              {pricePerNight < 1000
+                ? "Rooms under ₹1,000/night are GST exempt"
+                : pricePerNight <= 7500
+                  ? "Rooms ₹1,000–₹7,500/night attract 12% GST"
+                  : "Rooms above ₹7,500/night attract 18% GST"}
+            </span>
           </div>
         </div>
 
@@ -477,8 +645,9 @@ const BookingWidget = ({ hotel, onSelectRoom, selectedRoom, onClearRoom }) => {
         {!selectedRoom ? (
           <button
             onClick={() => {
-              // Scroll to rooms section
-              document.getElementById("rooms-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
+              document
+                .getElementById("rooms-section")
+                ?.scrollIntoView({ behavior: "smooth", block: "start" });
             }}
             className="w-full font-bold py-3 rounded-xl shadow-md transition-all text-sm border-2 border-[#1a3a6b] text-[#1a3a6b] hover:bg-[#1a3a6b] hover:text-white active:scale-95"
           >
@@ -487,19 +656,26 @@ const BookingWidget = ({ hotel, onSelectRoom, selectedRoom, onClearRoom }) => {
         ) : (
           <button
             onClick={handleBook}
-            disabled={bookingLoading || (selectedRoom && guests > selectedRoom.capacity)}
+            disabled={
+              bookingLoading || (selectedRoom && guests > selectedRoom.capacity)
+            }
             className={`w-full font-bold py-3 rounded-xl shadow-md transition-all text-sm 
-              ${bookingLoading || (selectedRoom && guests > selectedRoom.capacity)
-                ? "bg-gray-400 cursor-not-allowed text-white"
-                : "bg-[#1a3a6b] hover:bg-[#14305a] active:scale-95 text-white hover:shadow-lg"
+              ${
+                bookingLoading ||
+                (selectedRoom && guests > selectedRoom.capacity)
+                  ? "bg-gray-400 cursor-not-allowed text-white"
+                  : "bg-[#1a3a6b] hover:bg-[#14305a] active:scale-95 text-white hover:shadow-lg"
               }`}
           >
-            {bookingLoading ? "Booking..." : "Book Now"}
+            {bookingLoading
+              ? "Booking..."
+              : `Book Now · ₹${totalAmount.toLocaleString()}`}
           </button>
         )}
 
         <p className="flex items-center justify-center gap-1.5 text-emerald-600 text-xs font-semibold">
-          <FaShieldAlt className="text-[10px]" /> Free cancellation before check-in
+          <FaShieldAlt className="text-[10px]" /> Free cancellation before
+          check-in
         </p>
       </div>
     </div>
@@ -515,20 +691,29 @@ const ReviewCard = ({ review }) => (
           {(review.user?.name || review.userName || "G")[0].toUpperCase()}
         </div>
         <div>
-          <p className="text-xs font-semibold text-white">{review.user?.name || review.userName || "Guest"}</p>
+          <p className="text-xs font-semibold text-white">
+            {review.user?.name || review.userName || "Guest"}
+          </p>
           <p className="text-[10px] text-white/45">
             {review.createdAt
-              ? new Date(review.createdAt).toLocaleDateString("en-IN", { month: "short", year: "numeric" })
+              ? new Date(review.createdAt).toLocaleDateString("en-IN", {
+                  month: "short",
+                  year: "numeric",
+                })
               : review.date || "Recent stay"}
           </p>
         </div>
       </div>
       <div className="flex items-center gap-1 bg-amber-50 border border-amber-200 rounded-lg px-2 py-0.5">
         <FaStar className="text-amber-400 text-[9px]" />
-        <span className="text-xs font-bold text-amber-700">{review.rating}</span>
+        <span className="text-xs font-bold text-amber-700">
+          {review.rating}
+        </span>
       </div>
     </div>
-    <p className="text-xs leading-relaxed text-white/70">{review.comment || review.review}</p>
+    <p className="text-xs leading-relaxed text-white/70">
+      {review.comment || review.review}
+    </p>
   </div>
 );
 
@@ -536,7 +721,9 @@ const ReviewCard = ({ review }) => (
 const AddReviewForm = ({ hotelId }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { submitLoading, submitSuccess, submitError } = useSelector((s) => s.review);
+  const { submitLoading, submitSuccess, submitError } = useSelector(
+    (s) => s.review,
+  );
   const { user } = useSelector((s) => s.user);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
@@ -554,7 +741,12 @@ const AddReviewForm = ({ hotelId }) => {
     return (
       <div className="mt-4 rounded-xl border border-white/15 bg-white/5 p-4 text-center">
         <p className="text-sm text-white/65">
-          <button onClick={() => navigate("/login")} className="text-[#1a3a6b] font-semibold hover:underline">Login</button>{" "}
+          <button
+            onClick={() => navigate("/login")}
+            className="text-[#1a3a6b] font-semibold hover:underline"
+          >
+            Login
+          </button>{" "}
           to write a review
         </p>
       </div>
@@ -572,10 +764,18 @@ const AddReviewForm = ({ hotelId }) => {
             onClick={() => setRating(star)}
             className="text-2xl transition-transform hover:scale-110"
           >
-            <FaStar className={star <= (hovered || rating) ? "text-amber-400" : "text-slate-200"} />
+            <FaStar
+              className={
+                star <= (hovered || rating)
+                  ? "text-amber-400"
+                  : "text-slate-200"
+              }
+            />
           </button>
         ))}
-        {rating > 0 && <span className="ml-2 text-xs text-white/60">{rating}/5</span>}
+        {rating > 0 && (
+          <span className="ml-2 text-xs text-white/60">{rating}/5</span>
+        )}
       </div>
       <textarea
         value={comment}
@@ -584,13 +784,23 @@ const AddReviewForm = ({ hotelId }) => {
         rows={3}
         className="w-full resize-none rounded-xl border border-white/15 bg-white/5 px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#3d6ef5]/25"
       />
-      {submitSuccess && <p className="text-emerald-600 text-xs font-semibold mt-2">✓ Review submitted! It will appear after approval.</p>}
-      {submitError && <p className="text-rose-500 text-xs mt-2">{submitError}</p>}
+      {submitSuccess && (
+        <p className="text-emerald-600 text-xs font-semibold mt-2">
+          ✓ Review submitted! It will appear after approval.
+        </p>
+      )}
+      {submitError && (
+        <p className="text-rose-500 text-xs mt-2">{submitError}</p>
+      )}
       <button
         disabled={!rating || !comment.trim() || submitLoading}
         onClick={() => dispatch(addHotelReview({ hotelId, rating, comment }))}
         className={`mt-3 px-5 py-2 rounded-xl text-white text-xs font-bold transition-all
-          ${!rating || !comment.trim() || submitLoading ? "bg-slate-300 cursor-not-allowed" : "bg-[#1a3a6b] hover:bg-[#14305a] active:scale-95"}`}
+          ${
+            !rating || !comment.trim() || submitLoading
+              ? "bg-slate-300 cursor-not-allowed"
+              : "bg-[#1a3a6b] hover:bg-[#14305a] active:scale-95"
+          }`}
       >
         {submitLoading ? "Submitting..." : "Submit Review"}
       </button>
@@ -603,6 +813,7 @@ const RoomCard = ({ room, isSelected, onSelect, onPreview, availability }) => {
   const roomAvail = availability?.find?.((a) => a._id === room._id);
   const availableRooms = roomAvail?.availableRooms ?? room.totalRooms;
   const isSoldOut = availableRooms === 0;
+  const gstLabel = getGSTLabel(room.pricePerNight);
 
   return (
     <div
@@ -610,20 +821,20 @@ const RoomCard = ({ room, isSelected, onSelect, onPreview, availability }) => {
         isSelected
           ? "border-[#1a3a6b] shadow-lg shadow-[#1a3a6b]/10 scale-[1.01]"
           : isSoldOut
-          ? "border-white/10 opacity-60"
-          : "border-white/15 hover:border-white/30 hover:shadow-md"
+            ? "border-white/10 opacity-60"
+            : "border-white/15 hover:border-white/30 hover:shadow-md"
       }`}
     >
-      {/* Selected indicator strip */}
       {isSelected && (
         <div className="bg-[#1a3a6b] px-4 py-1.5 flex items-center gap-2">
           <FaCheckCircle className="text-white text-xs" />
-          <span className="text-white text-[11px] font-bold tracking-wide">ROOM SELECTED — Scroll up to book</span>
+          <span className="text-white text-[11px] font-bold tracking-wide">
+            ROOM SELECTED — Scroll up to book
+          </span>
         </div>
       )}
 
       <div className="flex flex-col sm:flex-row">
-        {/* Image — clickable to open preview modal */}
         <div
           className="relative w-full sm:w-44 shrink-0 cursor-pointer group"
           onClick={() => onPreview(room)}
@@ -639,7 +850,6 @@ const RoomCard = ({ room, isSelected, onSelect, onPreview, availability }) => {
           )}
         </div>
 
-        {/* Details */}
         <div className="flex-1 p-4 flex flex-col sm:flex-row justify-between gap-3">
           <div className="flex-1">
             <div className="flex items-center gap-2 flex-wrap mb-1">
@@ -650,7 +860,9 @@ const RoomCard = ({ room, isSelected, onSelect, onPreview, availability }) => {
                 {room.roomType}
               </button>
               {isSelected && (
-                <span className="text-[9px] bg-[#1a3a6b] text-white font-bold px-2 py-0.5 rounded-full">SELECTED</span>
+                <span className="text-[9px] bg-[#1a3a6b] text-white font-bold px-2 py-0.5 rounded-full">
+                  SELECTED
+                </span>
               )}
             </div>
             <p className="mb-2 text-xs text-white/55">
@@ -658,7 +870,10 @@ const RoomCard = ({ room, isSelected, onSelect, onPreview, availability }) => {
             </p>
             <div className="flex flex-wrap gap-1.5 mb-2">
               {(room.amenities || []).slice(0, 4).map((f) => (
-                <span key={f} className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] capitalize text-white/70">
+                <span
+                  key={f}
+                  className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] capitalize text-white/70"
+                >
                   {f}
                 </span>
               ))}
@@ -672,21 +887,28 @@ const RoomCard = ({ room, isSelected, onSelect, onPreview, availability }) => {
               )}
             </div>
             {availableRooms <= 5 && availableRooms > 0 && (
-              <span className="text-[10px] text-orange-600 font-semibold">🔥 Only {availableRooms} rooms left!</span>
+              <span className="text-[10px] text-orange-600 font-semibold">
+                🔥 Only {availableRooms} rooms left!
+              </span>
             )}
             {isSoldOut && (
-              <span className="text-[10px] text-rose-600 font-semibold">Sold Out</span>
+              <span className="text-[10px] text-rose-600 font-semibold">
+                Sold Out
+              </span>
             )}
           </div>
 
           <div className="flex flex-row sm:flex-col items-end sm:items-end justify-between sm:justify-start gap-2 shrink-0 w-full sm:w-auto">
             <div className="sm:text-right">
-              <p className="text-xl font-extrabold text-white">₹{room.pricePerNight.toLocaleString()}</p>
-              <p className="text-[10px] text-white/45">per night + taxes</p>
+              <p className="text-xl font-extrabold text-white">
+                ₹{room.pricePerNight.toLocaleString()}
+              </p>
+              <p className="text-[10px] text-white/45">per night</p>
+              {/* ✅ Show GST slab per room card */}
+              <p className="text-[10px] text-white/35">+{gstLabel}</p>
             </div>
 
             <div className="flex flex-col gap-1.5 items-end">
-              {/* Preview button */}
               <button
                 onClick={() => onPreview(room)}
                 className="text-[#1a3a6b] border border-[#1a3a6b]/30 bg-[#1a3a6b]/5 hover:bg-[#1a3a6b]/10 text-[10px] font-bold px-3 py-1.5 rounded-lg transition-all w-full text-center"
@@ -698,7 +920,7 @@ const RoomCard = ({ room, isSelected, onSelect, onPreview, availability }) => {
                 isSelected ? (
                   <button
                     onClick={() => onSelect(null)}
-                    className="text-[#1a3a6b] border-2 border-[#1a3a6b] text-xs font-bold px-4 py-2 rounded-xl transition-all min-w-[7rem] hover:bg-[#1a3a6b]/5 active:scale-95 flex items-center gap-1.5 justify-center"
+                    className="text-[#1a3a6b] border-2 border-[#1a3a6b] text-xs font-bold px-4 py-2 rounded-xl transition-all min-w-28 hover:bg-[#1a3a6b]/5 active:scale-95 flex items-center gap-1.5 justify-center"
                   >
                     <FaCheckCircle className="text-[10px]" />
                     Selected
@@ -706,14 +928,17 @@ const RoomCard = ({ room, isSelected, onSelect, onPreview, availability }) => {
                 ) : (
                   <button
                     onClick={() => onSelect(room)}
-                    className="bg-[#1a3a6b] hover:bg-[#14305a] active:scale-95 text-white text-xs font-bold px-4 py-2 rounded-xl shadow transition-all min-w-[7rem] flex items-center gap-1.5 justify-center"
+                    className="bg-[#1a3a6b] hover:bg-[#14305a] active:scale-95 text-white text-xs font-bold px-4 py-2 rounded-xl shadow transition-all min-w-28 flex items-center gap-1.5 justify-center"
                   >
                     <FaBed className="text-[10px]" />
                     Select Room
                   </button>
                 )
               ) : (
-                <button disabled className="bg-slate-400 cursor-not-allowed text-white text-xs font-bold px-4 py-2 rounded-xl min-w-[7rem]">
+                <button
+                  disabled
+                  className="bg-slate-400 cursor-not-allowed text-white text-xs font-bold px-4 py-2 rounded-xl min-w-28"
+                >
                   Sold Out
                 </button>
               )}
@@ -737,8 +962,12 @@ const RoomSelectedToast = ({ room, onClose }) => {
       <div className="bg-[#1a3a6b] text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 whitespace-nowrap">
         <FaCheckCircle className="text-emerald-300 text-base shrink-0" />
         <div>
-          <p className="text-xs font-bold capitalize">{room.roomType} selected!</p>
-          <p className="text-[10px] text-blue-200">Scroll up to complete your booking</p>
+          <p className="text-xs font-bold capitalize">
+            {room.roomType} selected!
+          </p>
+          <p className="text-[10px] text-blue-200">
+            Scroll up to complete your booking
+          </p>
         </div>
         <button onClick={onClose} className="ml-2 opacity-60 hover:opacity-100">
           <FaTimes className="text-xs" />
@@ -748,7 +977,13 @@ const RoomSelectedToast = ({ room, onClose }) => {
   );
 };
 
-const TABS = ["Overview", "Amenities", "Rooms", "Reviews", "Location & Policies"];
+const TABS = [
+  "Overview",
+  "Amenities",
+  "Rooms",
+  "Reviews",
+  "Location & Policies",
+];
 
 // ── Main Page ─────────────────────────────────────────────────────────────────
 const HotelDetailPage = () => {
@@ -761,6 +996,11 @@ const HotelDetailPage = () => {
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [showToast, setShowToast] = useState(false);
   const [previewRoom, setPreviewRoom] = useState(null);
+  // Track widget state for Redux sync
+  const [widgetParams, setWidgetParams] = useState({
+    nights: 1,
+    rooms: 1,
+  });
 
   const refs = {
     Overview: useRef(null),
@@ -794,17 +1034,55 @@ const HotelDetailPage = () => {
     refs[tab]?.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  // ✅ FIX: Proper handler — uses setFinalAmount action, not the selector
   const handleSelectRoom = (room) => {
     if (!room) {
       setSelectedRoom(null);
       return;
     }
+
     setSelectedRoom(room);
+
+    // Compute the full breakdown and push to Redux
+    const { baseAmount, gstAmount, totalAmount } = computePriceBreakdown({
+      pricePerNight: room.pricePerNight,
+      nights: widgetParams.nights ?? 1,
+      rooms: widgetParams.rooms ?? 1,
+    });
+
+    // ✅ Dispatch the ACTION (setFinalAmount), not the selector
+    dispatch(
+      setFinalAmount({
+        baseAmount,
+        gstAmount,
+        totalAmount,
+      }),
+    );
+
     setShowToast(true);
-    // Scroll booking widget into view (right column on desktop)
+
     setTimeout(() => {
-      bookingRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      bookingRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
     }, 100);
+  };
+
+  // ✅ Called by BookingWidget whenever dates/rooms change — keeps Redux in sync
+  const handleWidgetChange = ({ nights, rooms, pricePerNight }) => {
+    setWidgetParams({ nights, rooms });
+
+    // Only update Redux if a room is already selected
+    if (selectedRoom) {
+      const pricePn = pricePerNight ?? selectedRoom.pricePerNight;
+      const { baseAmount, gstAmount, totalAmount } = computePriceBreakdown({
+        pricePerNight: pricePn,
+        nights,
+        rooms,
+      });
+      dispatch(setFinalAmount({ baseAmount, gstAmount, totalAmount }));
+    }
   };
 
   const openGoogleMaps = () => {
@@ -830,7 +1108,12 @@ const HotelDetailPage = () => {
           </div>
           <h3 className="mb-2 font-bold text-white">Something went wrong</h3>
           <p className="mb-4 text-sm text-white/55">{error}</p>
-          <button onClick={() => navigate(-1)} className="bg-[#1a3a6b] text-white px-6 py-2 rounded-xl text-sm font-semibold">Go Back</button>
+          <button
+            onClick={() => navigate(-1)}
+            className="bg-[#1a3a6b] text-white px-6 py-2 rounded-xl text-sm font-semibold"
+          >
+            Go Back
+          </button>
         </div>
       </div>
     );
@@ -843,23 +1126,31 @@ const HotelDetailPage = () => {
             <FaMapMarkerAlt className="text-slate-300 text-2xl" />
           </div>
           <h3 className="mb-2 font-bold text-white">Hotel not found</h3>
-          <button onClick={() => navigate(-1)} className="bg-[#1a3a6b] text-white px-6 py-2 rounded-xl text-sm font-semibold">Back to results</button>
+          <button
+            onClick={() => navigate(-1)}
+            className="bg-[#1a3a6b] text-white px-6 py-2 rounded-xl text-sm font-semibold"
+          >
+            Back to results
+          </button>
         </div>
       </div>
     );
 
   const facilities = hotel.facilities || hotel.amenities || [];
-  const cityName = hotel.city?.name || (typeof hotel.city === "string" ? hotel.city : "");
+  const cityName =
+    hotel.city?.name || (typeof hotel.city === "string" ? hotel.city : "");
   const avgRating = +(hotel.averageRating ?? hotel.rating ?? 0);
   const displayRating = avgRating > 0 ? avgRating.toFixed(1) : null;
   const totalReviews = hotel.totalReviews ?? hotel.reviews?.length ?? 0;
-  const pricePerNight = hotel.pricePerNight ?? hotel.price ?? 3499;
 
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Toast */}
       {showToast && selectedRoom && (
-        <RoomSelectedToast room={selectedRoom} onClose={() => setShowToast(false)} />
+        <RoomSelectedToast
+          room={selectedRoom}
+          onClose={() => setShowToast(false)}
+        />
       )}
 
       {/* Room Preview Modal */}
@@ -884,26 +1175,44 @@ const HotelDetailPage = () => {
             <FaChevronLeft className="text-xs" /> Back
           </button>
           <div className="flex-1 min-w-0 hidden sm:block">
-            <p className="truncate text-sm font-bold text-white">{hotel.name}</p>
-            <p className="truncate text-xs text-white/45">{hotel.address}{cityName ? `, ${cityName}` : ""}</p>
+            <p className="truncate text-sm font-bold text-white">
+              {hotel.name}
+            </p>
+            <p className="truncate text-xs text-white/45">
+              {hotel.address}
+              {cityName ? `, ${cityName}` : ""}
+            </p>
           </div>
           <div className="flex items-center gap-2">
             {selectedRoom && (
               <div className="hidden items-center gap-1.5 rounded-xl border border-[#3d6ef5]/30 bg-[#3d6ef5]/10 px-3 py-1.5 sm:flex">
                 <FaBed className="text-[#1a3a6b] text-xs" />
-                <span className="text-xs font-semibold text-[#1a3a6b] capitalize truncate max-w-28">{selectedRoom.roomType}</span>
-                <span className="text-[#1a3a6b] font-bold text-xs">· ₹{selectedRoom.pricePerNight.toLocaleString()}</span>
+                <span className="text-xs font-semibold text-[#1a3a6b] capitalize truncate max-w-28">
+                  {selectedRoom.roomType}
+                </span>
+                <span className="text-[#1a3a6b] font-bold text-xs">
+                  · ₹{selectedRoom.pricePerNight.toLocaleString()}
+                </span>
               </div>
             )}
             <button
               onClick={() => setWishlist(!wishlist)}
               className="flex items-center gap-1.5 rounded-xl border border-white/15 px-3 py-2 text-xs font-semibold text-white/70 hover:bg-white/5"
             >
-              {wishlist ? <FaHeart className="text-rose-500" /> : <FaRegHeart />}
+              {wishlist ? (
+                <FaHeart className="text-rose-500" />
+              ) : (
+                <FaRegHeart />
+              )}
               <span className="hidden sm:inline">Save</span>
             </button>
             <button
-              onClick={() => navigator.share?.({ title: hotel.name, url: window.location.href })}
+              onClick={() =>
+                navigator.share?.({
+                  title: hotel.name,
+                  url: window.location.href,
+                })
+              }
               className="flex items-center gap-1.5 rounded-xl border border-white/15 px-3 py-2 text-xs font-semibold text-white/70 hover:bg-white/5"
             >
               <FaShare />
@@ -922,16 +1231,23 @@ const HotelDetailPage = () => {
       <div className="max-w-7xl mx-auto px-4 py-5">
         <div className="flex flex-wrap items-center gap-2 mb-2">
           {hotel.status === "active" && (
-            <span className="rounded-full border border-emerald-500/30 bg-emerald-500/15 px-2.5 py-0.5 text-[10px] font-bold text-emerald-300">Available</span>
+            <span className="rounded-full border border-emerald-500/30 bg-emerald-500/15 px-2.5 py-0.5 text-[10px] font-bold text-emerald-300">
+              Available
+            </span>
           )}
         </div>
-        <h1 className="mb-2 text-2xl font-extrabold leading-tight text-white sm:text-3xl">{hotel.name}</h1>
+        <h1 className="mb-2 text-2xl font-extrabold leading-tight text-white sm:text-3xl">
+          {hotel.name}
+        </h1>
         <button
           onClick={openGoogleMaps}
           className="group mb-3 flex items-start gap-1.5 text-left text-sm text-white/60 transition-colors hover:text-[#3d6ef5] sm:items-center"
         >
           <FaMapMarkerAlt className="text-[#1a3a6b] text-xs shrink-0" />
-          <span className="group-hover:underline">{hotel.address}{cityName ? `, ${cityName}` : ""}</span>
+          <span className="group-hover:underline">
+            {hotel.address}
+            {cityName ? `, ${cityName}` : ""}
+          </span>
           <FaExternalLinkAlt className="text-[9px] opacity-0 group-hover:opacity-100 transition-opacity" />
         </button>
         <div className="flex flex-wrap items-center gap-3">
@@ -943,7 +1259,9 @@ const HotelDetailPage = () => {
                 <span className="text-blue-200 text-xs">/ 5</span>
               </div>
               {totalReviews > 0 && (
-                <span className="text-sm text-white/55">{totalReviews} {totalReviews === 1 ? "review" : "reviews"}</span>
+                <span className="text-sm text-white/55">
+                  {totalReviews} {totalReviews === 1 ? "review" : "reviews"}
+                </span>
               )}
               <StarRating rating={avgRating} size="text-xs" />
             </div>
@@ -952,7 +1270,12 @@ const HotelDetailPage = () => {
           )}
           <div className="flex flex-wrap gap-1.5">
             {facilities.slice(0, 3).map((f) => (
-              <span key={f} className="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-medium capitalize text-white/70">{f}</span>
+              <span
+                key={f}
+                className="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-medium capitalize text-white/70"
+              >
+                {f}
+              </span>
             ))}
           </div>
         </div>
@@ -967,7 +1290,11 @@ const HotelDetailPage = () => {
                 key={tab}
                 onClick={() => scrollTo(tab)}
                 className={`shrink-0 px-4 py-3.5 text-xs sm:text-sm font-semibold border-b-2 transition-colors whitespace-nowrap
-                  ${activeTab === tab ? "border-[#3d6ef5] text-[#3d6ef5]" : "border-transparent text-white/55 hover:text-white"}`}
+                  ${
+                    activeTab === tab
+                      ? "border-[#3d6ef5] text-[#3d6ef5]"
+                      : "border-transparent text-white/55 hover:text-white"
+                  }`}
               >
                 {tab}
               </button>
@@ -981,14 +1308,30 @@ const HotelDetailPage = () => {
         {/* LEFT */}
         <div className="flex-1 min-w-0 space-y-5">
           {/* Overview */}
-          <section ref={refs["Overview"]} className="ui-card scroll-mt-28 rounded-2xl p-5 sm:p-6">
-            <h2 className="mb-3 text-lg font-bold text-white">About this property</h2>
+          <section
+            ref={refs["Overview"]}
+            className="ui-card scroll-mt-28 rounded-2xl p-5 sm:p-6"
+          >
+            <h2 className="mb-3 text-lg font-bold text-white">
+              About this property
+            </h2>
             <p className="text-sm leading-relaxed text-white/70">
-              {hotel.description || "Experience unparalleled comfort at this exceptional property. Nestled in a prime location, our hotel offers world-class amenities, exquisite dining, and personalised service to make your stay truly memorable."}
+              {hotel.description ||
+                "Experience unparalleled comfort at this exceptional property. Nestled in a prime location, our hotel offers world-class amenities, exquisite dining, and personalised service to make your stay truly memorable."}
             </p>
             <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {["Free cancellation", "Instant confirmation", "Best price guarantee", "24/7 support", "Secure payments", "No hidden charges"].map((text) => (
-                <div key={text} className="flex items-center gap-2 text-xs text-white/70">
+              {[
+                "Free cancellation",
+                "Instant confirmation",
+                "Best price guarantee",
+                "24/7 support",
+                "Secure payments",
+                "No hidden charges",
+              ].map((text) => (
+                <div
+                  key={text}
+                  className="flex items-center gap-2 text-xs text-white/70"
+                >
                   <FaCheckCircle className="text-emerald-500 shrink-0" />
                   <span>{text}</span>
                 </div>
@@ -997,29 +1340,54 @@ const HotelDetailPage = () => {
           </section>
 
           {/* Amenities */}
-          <section ref={refs["Amenities"]} className="ui-card scroll-mt-28 rounded-2xl p-5 sm:p-6">
-            <h2 className="mb-4 text-lg font-bold text-white">Amenities & facilities</h2>
+          <section
+            ref={refs["Amenities"]}
+            className="ui-card scroll-mt-28 rounded-2xl p-5 sm:p-6"
+          >
+            <h2 className="mb-4 text-lg font-bold text-white">
+              Amenities & facilities
+            </h2>
             {facilities.length > 0 ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                 {facilities.map((f) => {
                   const key = f.toLowerCase().replace(/\s/g, "");
-                  const item = AMENITY_MAP[key] || AMENITY_MAP[f] || { icon: <FaCheckCircle />, label: f };
+                  const item = AMENITY_MAP[key] ||
+                    AMENITY_MAP[f] || {
+                      icon: <FaCheckCircle />,
+                      label: f,
+                    };
                   return (
-                    <div key={f} className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5">
-                      <span className="text-[#1a3a6b] text-base shrink-0">{item.icon}</span>
-                      <span className="text-xs font-medium capitalize text-white/80">{item.label || f}</span>
+                    <div
+                      key={f}
+                      className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5"
+                    >
+                      <span className="text-[#1a3a6b] text-base shrink-0">
+                        {item.icon}
+                      </span>
+                      <span className="text-xs font-medium capitalize text-white/80">
+                        {item.label || f}
+                      </span>
                     </div>
                   );
                 })}
               </div>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                {Object.entries(AMENITY_MAP).slice(0, 8).map(([key, item]) => (
-                  <div key={key} className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5">
-                    <span className="text-[#1a3a6b] text-base shrink-0">{item.icon}</span>
-                    <span className="text-xs font-medium text-white/80">{item.label}</span>
-                  </div>
-                ))}
+                {Object.entries(AMENITY_MAP)
+                  .slice(0, 8)
+                  .map(([key, item]) => (
+                    <div
+                      key={key}
+                      className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5"
+                    >
+                      <span className="text-[#1a3a6b] text-base shrink-0">
+                        {item.icon}
+                      </span>
+                      <span className="text-xs font-medium text-white/80">
+                        {item.label}
+                      </span>
+                    </div>
+                  ))}
               </div>
             )}
           </section>
@@ -1035,8 +1403,13 @@ const HotelDetailPage = () => {
               {selectedRoom && (
                 <div className="flex items-center gap-2 bg-[#1a3a6b]/5 border border-[#1a3a6b]/20 rounded-xl px-3 py-1.5">
                   <FaCheckCircle className="text-[#1a3a6b] text-xs" />
-                  <span className="text-xs font-semibold text-[#1a3a6b] capitalize">{selectedRoom.roomType} selected</span>
-                  <button onClick={() => setSelectedRoom(null)} className="ml-1 text-white/45 hover:text-white/80">
+                  <span className="text-xs font-semibold text-[#1a3a6b] capitalize">
+                    {selectedRoom.roomType} selected
+                  </span>
+                  <button
+                    onClick={() => setSelectedRoom(null)}
+                    className="ml-1 text-white/45 hover:text-white/80"
+                  >
                     <FaTimes className="text-[9px]" />
                   </button>
                 </div>
@@ -1046,7 +1419,10 @@ const HotelDetailPage = () => {
               {roomsLoading ? (
                 <div className="space-y-3">
                   {[...Array(2)].map((_, i) => (
-                    <div key={i} className="h-32 animate-pulse rounded-xl bg-white/8" />
+                    <div
+                      key={i}
+                      className="h-32 animate-pulse rounded-xl bg-white/8"
+                    />
                   ))}
                 </div>
               ) : publicRooms.length === 0 ? (
@@ -1067,20 +1443,29 @@ const HotelDetailPage = () => {
           </section>
 
           {/* Reviews */}
-          <section ref={refs["Reviews"]} className="ui-card scroll-mt-28 rounded-2xl p-5 sm:p-6">
+          <section
+            ref={refs["Reviews"]}
+            className="ui-card scroll-mt-28 rounded-2xl p-5 sm:p-6"
+          >
             <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
               <h2 className="text-lg font-bold text-white">Guest reviews</h2>
               {displayRating && (
                 <div className="flex items-center gap-2 bg-[#1a3a6b] text-white px-3 py-1.5 rounded-xl">
                   <FaStar className="text-amber-300 text-xs" />
-                  <span className="font-extrabold text-sm">{displayRating}</span>
-                  <span className="text-blue-200 text-xs">({totalReviews})</span>
+                  <span className="font-extrabold text-sm">
+                    {displayRating}
+                  </span>
+                  <span className="text-blue-200 text-xs">
+                    ({totalReviews})
+                  </span>
                 </div>
               )}
             </div>
             {hotelReviews.length > 0 ? (
               <div className="space-y-4">
-                {hotelReviews.slice(0, 5).map((r, i) => <ReviewCard key={r._id || i} review={r} />)}
+                {hotelReviews.slice(0, 5).map((r, i) => (
+                  <ReviewCard key={r._id || i} review={r} />
+                ))}
                 {hotelReviews.length > 5 && (
                   <button className="w-full rounded-xl border border-white/15 py-2.5 text-xs font-semibold text-white/70 transition-colors hover:bg-white/5">
                     View all {hotelReviews.length} reviews
@@ -1092,25 +1477,37 @@ const HotelDetailPage = () => {
                 <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-white/8">
                   <FaStar className="text-xl text-white/35" />
                 </div>
-                <p className="text-sm font-medium text-white/60">No reviews yet</p>
-                <p className="mt-1 text-xs text-white/45">Be the first to review this property</p>
+                <p className="text-sm font-medium text-white/60">
+                  No reviews yet
+                </p>
+                <p className="mt-1 text-xs text-white/45">
+                  Be the first to review this property
+                </p>
               </div>
             )}
             <AddReviewForm hotelId={hotel._id} />
           </section>
 
           {/* Location & Policies */}
-          <section ref={refs["Location & Policies"]} className="ui-card scroll-mt-28 rounded-2xl p-5 sm:p-6">
+          <section
+            ref={refs["Location & Policies"]}
+            className="ui-card scroll-mt-28 rounded-2xl p-5 sm:p-6"
+          >
             <h2 className="mb-4 text-lg font-bold text-white">Location</h2>
             <p className="mb-3 flex items-start gap-2 text-sm text-white/70">
               <FaMapMarkerAlt className="text-[#1a3a6b] mt-0.5 shrink-0" />
-              {hotel.address}{cityName ? `, ${cityName}` : ""}
+              {hotel.address}
+              {cityName ? `, ${cityName}` : ""}
             </p>
             <button
               onClick={openGoogleMaps}
               className="group relative h-44 w-full cursor-pointer overflow-hidden rounded-xl border border-white/15 bg-white/5 transition-all hover:border-[#3d6ef5]/35"
             >
-              <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&q=80" alt="Map" className="w-full h-full object-cover opacity-50 group-hover:opacity-60 transition-opacity" />
+              <img
+                src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&q=80"
+                alt="Map"
+                className="w-full h-full object-cover opacity-50 group-hover:opacity-60 transition-opacity"
+              />
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="flex items-center gap-2 rounded-full bg-[#0f1118]/90 px-4 py-2.5 text-[11px] font-bold text-[#3d6ef5] shadow-md transition-all group-hover:shadow-lg sm:px-5 sm:text-xs">
                   <FaMapMarkerAlt className="text-[#1a3a6b]" />
@@ -1120,20 +1517,51 @@ const HotelDetailPage = () => {
               </div>
             </button>
 
-            <h2 className="mt-6 mb-4 text-lg font-bold text-white">Hotel policies</h2>
+            <h2 className="mt-6 mb-4 text-lg font-bold text-white">
+              Hotel policies
+            </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {[
-                { label: "Check-in", value: "From 2:00 PM", icon: <FaCheckCircle className="text-emerald-500" /> },
-                { label: "Check-out", value: "Until 11:00 AM", icon: <FaCheckCircle className="text-emerald-500" /> },
-                { label: "Cancellation", value: "Free before check-in", icon: <FaShieldAlt className="text-emerald-500" /> },
-                { label: "Smoking", value: "Not allowed", icon: <MdSmokeFree className="text-rose-500" /> },
-                { label: "Pets", value: "Not allowed", icon: <MdPets className="text-slate-400" /> },
-                { label: "Payment", value: "Card & UPI accepted", icon: <FaCheckCircle className="text-emerald-500" /> },
+                {
+                  label: "Check-in",
+                  value: "From 2:00 PM",
+                  icon: <FaCheckCircle className="text-emerald-500" />,
+                },
+                {
+                  label: "Check-out",
+                  value: "Until 11:00 AM",
+                  icon: <FaCheckCircle className="text-emerald-500" />,
+                },
+                {
+                  label: "Cancellation",
+                  value: "Free before check-in",
+                  icon: <FaShieldAlt className="text-emerald-500" />,
+                },
+                {
+                  label: "Smoking",
+                  value: "Not allowed",
+                  icon: <MdSmokeFree className="text-rose-500" />,
+                },
+                {
+                  label: "Pets",
+                  value: "Not allowed",
+                  icon: <MdPets className="text-slate-400" />,
+                },
+                {
+                  label: "Payment",
+                  value: "Card & UPI accepted",
+                  icon: <FaCheckCircle className="text-emerald-500" />,
+                },
               ].map(({ label, value, icon }) => (
-                <div key={label} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3">
+                <div
+                  key={label}
+                  className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3"
+                >
                   <span className="text-base shrink-0">{icon}</span>
                   <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-wide text-white/45">{label}</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-wide text-white/45">
+                      {label}
+                    </p>
                     <p className="text-xs font-medium text-white/80">{value}</p>
                   </div>
                 </div>
@@ -1141,10 +1569,16 @@ const HotelDetailPage = () => {
             </div>
 
             <div className="mt-4 flex flex-wrap gap-3">
-              <a href={`tel:${hotel.phone || ""}`} className="flex items-center gap-2 rounded-xl border border-white/15 px-4 py-2 text-xs font-semibold text-white/75 transition-colors hover:bg-white/5">
+              <a
+                href={`tel:${hotel.phone || ""}`}
+                className="flex items-center gap-2 rounded-xl border border-white/15 px-4 py-2 text-xs font-semibold text-white/75 transition-colors hover:bg-white/5"
+              >
                 <FaPhoneAlt className="text-[#1a3a6b] text-xs" /> Call Hotel
               </a>
-              <a href={`mailto:${hotel.email || ""}`} className="flex items-center gap-2 rounded-xl border border-white/15 px-4 py-2 text-xs font-semibold text-white/75 transition-colors hover:bg-white/5">
+              <a
+                href={`mailto:${hotel.email || ""}`}
+                className="flex items-center gap-2 rounded-xl border border-white/15 px-4 py-2 text-xs font-semibold text-white/75 transition-colors hover:bg-white/5"
+              >
                 <FaEnvelope className="text-[#1a3a6b] text-xs" /> Email Hotel
               </a>
             </div>
@@ -1157,7 +1591,10 @@ const HotelDetailPage = () => {
             hotel={hotel}
             onSelectRoom={handleSelectRoom}
             selectedRoom={selectedRoom}
-            onClearRoom={() => setSelectedRoom(null)}
+            onClearRoom={() => {
+              setSelectedRoom(null);
+            }}
+            onDatesChange={handleWidgetChange} // ✅ keep Redux in sync on date/room changes
           />
         </div>
       </div>
