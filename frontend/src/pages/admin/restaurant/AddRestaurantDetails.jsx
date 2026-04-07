@@ -99,7 +99,8 @@ function AddRestaurantDetails() {
   }, [loading, navigate]);
 
   return (
-    <div className="min-h-screen bg-black px-4 md:px-6 py-6 text-white">
+    <div className="min-h-screen bg-black py-6 text-white">
+      <div className="ui-container">
       {/* Header */}
       <div className="relative mb-8 overflow-hidden rounded-4xl border border-white/10 bg-linear-to-br from-zinc-950 via-zinc-900 to-black p-6 md:p-8 shadow-[0_20px_80px_rgba(0,0,0,0.55)]">
         <div className="absolute -top-10 right-0 h-44 w-44 rounded-full bg-orange-500/20 blur-3xl" />
@@ -133,7 +134,7 @@ function AddRestaurantDetails() {
       </div>
   
       {/* Form Card */}
-      <div className="mx-auto max-w-6xl rounded-4xl border border-white/10 bg-zinc-950/90 p-6 md:p-8 shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl">
+      <div className="ui-card mx-auto max-w-6xl rounded-4xl bg-zinc-950/90 p-6 md:p-8">
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Basic Details */}
           <div>
@@ -517,6 +518,7 @@ function AddRestaurantDetails() {
             )}
           </div>
         </form>
+      </div>
       </div>
     </div>
   );

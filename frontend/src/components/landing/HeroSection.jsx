@@ -119,246 +119,89 @@ export default function HeroSection() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
 
-        :root {
-          --gold:   #C9A84C;
-          --gold-lt:#F0D87C;
-          --ink:    #0F0E0D;
-          --cream:  #FAF7F2;
-          --glass:  rgba(255,255,255,0.07);
-          --border: rgba(255,255,255,0.14);
-        }
-
-        .hero-root { font-family: 'DM Sans', sans-serif; }
-        .serif     { font-family: 'Cormorant Garamond', serif; }
-
-        /* ── slide ── */
-        .slide { position:absolute; inset:0; background-size:cover; background-position:center; transition:opacity 1.2s ease-in-out; }
-        .slide-in  { opacity:1; }
-        .slide-out { opacity:0; }
-
-        /* ── headline ── */
-        .headline {
-          animation: fadeUp .7s ease both;
-        }
         @keyframes fadeUp {
           from { opacity:0; transform:translateY(18px); }
           to   { opacity:1; transform:translateY(0);    }
         }
-
-        /* ── tabs ── */
-        .tab-pill {
-          display:flex; align-items:center; gap:8px;
-          padding:10px 20px; border-radius:100px;
-          font-size:13px; font-weight:500; letter-spacing:.02em;
-          border:1px solid var(--border);
-          background: var(--glass);
-          color: rgba(255,255,255,.65);
-          backdrop-filter: blur(12px);
-          cursor:pointer;
-          transition: all .25s ease;
-          white-space:nowrap;
-        }
-        .tab-pill:hover { color:#fff; border-color:rgba(255,255,255,.35); background:rgba(255,255,255,.12); }
-        .tab-pill.active {
-          background: linear-gradient(135deg, var(--gold), #a8732a);
-          border-color: transparent;
-          color:#fff;
-          box-shadow: 0 4px 20px rgba(201,168,76,.45);
-        }
-        .tab-pill .icon { font-size:16px; }
-
-        /* ── search card ── */
-        .search-card {
-          background: rgba(15,14,13,0.72);
-          border: 1px solid var(--border);
-          backdrop-filter: blur(28px) saturate(1.4);
-          border-radius: 24px;
-          padding: 36px 40px 40px;
-        }
-        @media (max-width:640px) { .search-card { padding:24px 20px 28px; } }
-
-        /* ── inputs ── */
-        .field-wrap { display:flex; flex-direction:column; gap:8px; flex:1; min-width:200px; }
-        .field-label { font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.45); }
-        .field-inner { position:relative; }
-        .field-icon  { position:absolute; left:16px; top:50%; transform:translateY(-50%); color:rgba(255,255,255,.35); pointer-events:none; }
-        .field-input {
-          width:100%; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12);
-          border-radius:14px; padding:14px 16px 14px 44px;
-          color:#fff; font-size:15px; font-family:'DM Sans',sans-serif; outline:none;
-          transition: border-color .2s, box-shadow .2s;
-        }
-        .field-input::placeholder { color:rgba(255,255,255,.28); }
-        .field-input:focus { border-color: var(--gold); box-shadow:0 0 0 3px rgba(201,168,76,.18); }
         input[type="date"]::-webkit-calendar-picker-indicator { filter:invert(.5); cursor:pointer; }
-
-        /* ── divider ── */
-        .field-divider { width:1px; height:56px; background:rgba(255,255,255,.1); align-self:flex-end; margin-bottom:2px; flex-shrink:0; }
-        @media (max-width:768px) { .field-divider { display:none; } }
-
-        /* ── search button ── */
-        .search-btn {
-          display:flex; align-items:center; gap:10px;
-          background: linear-gradient(135deg, var(--gold) 0%, #b8832a 100%);
-          color:#0F0E0D; font-weight:700; font-size:14px; letter-spacing:.04em;
-          padding:0 32px; height:52px; border-radius:14px; border:none; cursor:pointer;
-          white-space:nowrap; flex-shrink:0;
-          box-shadow: 0 6px 28px rgba(201,168,76,.4);
-          transition: transform .2s, box-shadow .2s, filter .2s;
-        }
-        .search-btn:hover { transform:translateY(-2px); box-shadow:0 10px 36px rgba(201,168,76,.55); filter:brightness(1.06); }
-        .search-btn:active { transform:translateY(0); }
-        .search-btn svg { transition: transform .2s; }
-        .search-btn:hover svg { transform:translateX(3px); }
-
-        /* ── dots ── */
-        .dot { height:6px; border-radius:100px; transition: all .35s ease; cursor:pointer; background:rgba(255,255,255,.35); }
-        .dot.active { width:28px !important; background:#fff; }
-        .dot:not(.active) { width:6px; }
-        .dot:hover:not(.active) { background:rgba(255,255,255,.65); }
-
-        /* ── stat chips ── */
-        .stat-chip {
-          display:flex; align-items:center; gap:8px;
-          background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12);
-          backdrop-filter:blur(12px); border-radius:100px;
-          padding:8px 16px; color:rgba(255,255,255,.8); font-size:13px;
-        }
-        .stat-chip strong { color:#fff; font-weight:600; }
       `}</style>
 
-      <section className="hero-root relative w-full min-h-screen overflow-hidden">
+      <section className="relative w-full min-h-screen overflow-hidden font-['DM_Sans',sans-serif] text-white">
         {/* ── Background Slideshow ── */}
-        <div style={{ position: "absolute", inset: 0 }}>
+        <div className="absolute inset-0">
           {IMAGES.map((img, i) => (
             <div
               key={i}
-              className={`slide ${i === currentImage ? "slide-in" : "slide-out"}`}
+              className={`absolute inset-0 bg-cover bg-center transition-opacity duration-[1200ms] ease-in-out ${
+                i === currentImage ? "opacity-100" : "opacity-0"
+              }`}
               style={{ backgroundImage: `url(${img})` }}
             />
           ))}
           {/* dramatic cinematic vignette */}
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              background:
-                "linear-gradient(to top, rgba(10,9,8,0.92) 0%, rgba(10,9,8,0.45) 50%, rgba(10,9,8,0.25) 100%)",
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              background:
-                "linear-gradient(to right, rgba(10,9,8,0.4) 0%, transparent 60%)",
-            }}
-          />
+          <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(10,9,8,0.92)_0%,rgba(10,9,8,0.45)_50%,rgba(10,9,8,0.25)_100%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(10,9,8,0.4)_0%,transparent_60%)]" />
         </div>
 
         {/* ── Content ── */}
-        <div
-          style={{
-            position: "relative",
-            zIndex: 20,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            minHeight: "100vh",
-            padding: "80px 24px 60px",
-          }}
-        >
-          <div style={{ maxWidth: 1100, margin: "0 auto", width: "100%" }}>
+        <div className="relative z-20 flex min-h-screen flex-col justify-center px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+          <div className="mx-auto w-full max-w-6xl">
             {/* ── Eyebrow ── */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                marginBottom: 20,
-              }}
-            >
-              <div
-                style={{ height: 1, width: 32, background: "var(--gold)" }}
-              />
-              <span
-                style={{
-                  color: "var(--gold)",
-                  fontSize: 11,
-                  fontWeight: 600,
-                  letterSpacing: ".15em",
-                  textTransform: "uppercase",
-                }}
-              >
+            <div className="flex items-center gap-3">
+              <div className="h-px w-8 bg-[#3d6ef5]" />
+              <span className="text-[#3d6ef5] text-[11px] font-semibold tracking-[0.18em] uppercase">
                 World-Class Travel Planning
               </span>
             </div>
 
             {/* ── Headline ── */}
-            <div className="headline" key={activeTab}>
+            <div
+              key={activeTab}
+              className="animate-[fadeUp_.7s_ease_both] mt-5"
+            >
               <h1
-                className="serif"
-                style={{
-                  fontSize: "clamp(42px, 7vw, 88px)",
-                  fontWeight: 300,
-                  color: "#fff",
-                  lineHeight: 1.05,
-                  marginBottom: 14,
-                  letterSpacing: "-.01em",
-                }}
+                className="font-['Cormorant_Garamond',serif] font-light leading-[1.05] tracking-[-.01em] text-[clamp(40px,7vw,84px)]"
               >
                 {title}
               </h1>
               <p
-                style={{
-                  color: "rgba(255,255,255,.55)",
-                  fontSize: "clamp(14px,2vw,17px)",
-                  fontWeight: 300,
-                  marginBottom: 40,
-                  maxWidth: 480,
-                }}
+                className="mt-3 max-w-xl text-white/60 text-[clamp(14px,2vw,17px)] font-normal"
               >
                 {sub}
               </p>
             </div>
 
             {/* ── Tab Pills ── */}
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: 8,
-                marginBottom: 36,
-              }}
-            >
+            <div className="mt-8 flex flex-wrap gap-3">
               {TABS.map(({ key, label, icon }) => (
                 <button
                   key={key}
                   onClick={() => handleTabClick(key)}
-                  className={`tab-pill ${activeTab === key ? "active" : ""}`}
+                  className={[
+                    "flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium whitespace-nowrap",
+                    "border backdrop-blur-md transition-all duration-300 ease-in-out",
+                    activeTab === key
+                      ? "border-[#3d6ef5]/40 bg-[#3d6ef5]/15 text-white shadow-[0_12px_30px_rgba(61,110,245,0.18)]"
+                      : "border-white/15 bg-white/5 text-white/70 hover:bg-white/10 hover:border-white/25 hover:text-white",
+                  ].join(" ")}
                 >
-                  <span className="icon">{icon}</span>
+                  <span className="text-base leading-none">{icon}</span>
                   {label}
                 </button>
               ))}
             </div>
 
             {/* ── Search Card ── */}
-            <div className="search-card">
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: 0,
-                  alignItems: "flex-end",
-                }}
-              >
+            <div className="mt-10 ui-card p-5 sm:p-8 bg-black/50">
+              <div className="flex flex-wrap items-end gap-0">
                 {/* City */}
-                <div className="field-wrap" style={{ marginRight: 0 }}>
-                  <span className="field-label">Destination</span>
-                  <div className="field-inner">
+                <div className="flex flex-col gap-2 flex-1 min-w-[200px] max-sm:min-w-full">
+                  <span className="text-[11px] font-semibold tracking-[.1em] uppercase text-white/[0.45]">
+                    Destination
+                  </span>
+                  <div className="relative">
                     <svg
-                      className="field-icon"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-white/[0.35] pointer-events-none"
                       width="18"
                       height="18"
                       fill="none"
@@ -379,7 +222,7 @@ export default function HeroSection() {
                       />
                     </svg>
                     <input
-                      className="field-input"
+                      className="ui-input !pl-11 !pr-4 !py-3.5"
                       type="text"
                       name="city"
                       placeholder="City or destination"
@@ -389,14 +232,16 @@ export default function HeroSection() {
                   </div>
                 </div>
 
-                <div className="field-divider" style={{ margin: "0 20px" }} />
+                <div className="hidden md:block w-px h-12 bg-white/10 self-end mb-1 mx-6 shrink-0" />
 
                 {/* Check-in */}
-                <div className="field-wrap">
-                  <span className="field-label">Check-in</span>
-                  <div className="field-inner">
+                <div className="flex flex-col gap-2 flex-1 min-w-[200px] max-sm:min-w-full">
+                  <span className="text-[11px] font-semibold tracking-[.1em] uppercase text-white/[0.45]">
+                    Check-in
+                  </span>
+                  <div className="relative">
                     <svg
-                      className="field-icon"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-white/[0.35] pointer-events-none"
                       width="18"
                       height="18"
                       fill="none"
@@ -411,7 +256,7 @@ export default function HeroSection() {
                       />
                     </svg>
                     <input
-                      className="field-input"
+                      className="ui-input !pl-11 !pr-4 !py-3.5"
                       type="date"
                       name="checkIn"
                       value={formData.checkIn}
@@ -420,14 +265,16 @@ export default function HeroSection() {
                   </div>
                 </div>
 
-                <div className="field-divider" style={{ margin: "0 20px" }} />
+                <div className="hidden md:block w-px h-12 bg-white/10 self-end mb-1 mx-6 shrink-0" />
 
                 {/* Check-out */}
-                <div className="field-wrap">
-                  <span className="field-label">Check-out</span>
-                  <div className="field-inner">
+                <div className="flex flex-col gap-2 flex-1 min-w-[200px] max-sm:min-w-full">
+                  <span className="text-[11px] font-semibold tracking-[.1em] uppercase text-white/[0.45]">
+                    Check-out
+                  </span>
+                  <div className="relative">
                     <svg
-                      className="field-icon"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-white/[0.35] pointer-events-none"
                       width="18"
                       height="18"
                       fill="none"
@@ -442,7 +289,7 @@ export default function HeroSection() {
                       />
                     </svg>
                     <input
-                      className="field-input"
+                      className="ui-input !pl-11 !pr-4 !py-3.5"
                       type="date"
                       name="checkOut"
                       value={formData.checkOut}
@@ -452,15 +299,11 @@ export default function HeroSection() {
                 </div>
 
                 {/* Search Button */}
-                <div
-                  style={{
-                    marginLeft: "auto",
-                    paddingLeft: 20,
-                    paddingTop: 24,
-                    flexShrink: 0,
-                  }}
-                >
-                  <button className="search-btn" onClick={handleSearch}>
+                <div className="w-full sm:w-auto sm:ml-auto sm:pl-6 pt-6 shrink-0">
+                  <button
+                    className="ui-btn-primary w-full sm:w-auto"
+                    onClick={handleSearch}
+                  >
                     <svg
                       width="16"
                       height="16"
@@ -475,13 +318,14 @@ export default function HeroSection() {
                         d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
                       />
                     </svg>
-                    Search
+                    <span>Search</span>
                     <svg
                       width="14"
                       height="14"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
+                      className="transition-transform duration-200 group-hover:translate-x-[3px]"
                     >
                       <path
                         strokeLinecap="round"
@@ -496,21 +340,17 @@ export default function HeroSection() {
             </div>
 
             {/* ── Stats row ── */}
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: 12,
-                marginTop: 28,
-              }}
-            >
+            <div className="mt-8 flex flex-wrap gap-3">
               {[
                 { label: "Destinations", value: "500+" },
                 { label: "Happy Travellers", value: "2M+" },
                 { label: "Hotels Listed", value: "12K+" },
               ].map(({ label, value }) => (
-                <div key={label} className="stat-chip">
-                  <strong>{value}</strong>
+                <div
+                  key={label}
+                  className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 backdrop-blur-md px-4 py-2 text-sm text-white/80 transition-all duration-300 ease-in-out hover:bg-white/10"
+                >
+                  <strong className="text-white font-semibold">{value}</strong>
                   <span>{label}</span>
                 </div>
               ))}
@@ -519,21 +359,16 @@ export default function HeroSection() {
         </div>
 
         {/* ── Slide Dots ── */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: 28,
-            right: 32,
-            display: "flex",
-            gap: 6,
-            zIndex: 30,
-          }}
-        >
+        <div className="absolute bottom-7 right-8 flex gap-1.5 z-30">
           {IMAGES.map((_, i) => (
             <button
               key={i}
               onClick={() => setCurrentImage(i)}
-              className={`dot ${i === currentImage ? "active" : ""}`}
+              className={`h-1.5 rounded-full cursor-pointer transition-all duration-[350ms] ${
+                i === currentImage
+                  ? "w-7 bg-white"
+                  : "w-1.5 bg-white/[0.35] hover:bg-white/[0.65]"
+              }`}
               aria-label={`Go to image ${i + 1}`}
             />
           ))}

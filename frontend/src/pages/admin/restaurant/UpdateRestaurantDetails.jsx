@@ -111,12 +111,13 @@ function UpdateRestaurantDetails() {
   };
 
   return (
-    <div className="min-h-screen bg-black relative overflow-hidden px-4 py-8 md:px-8">
+    <div className="relative min-h-screen overflow-hidden bg-black py-8">
+      <div className="ui-container">
       {/* Background Effects */}
       <div className="absolute top-0 left-0 h-72 w-72 rounded-full bg-orange-500/20 blur-3xl" />
       <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-blue-500/20 blur-3xl" />
 
-      <div className="relative z-10 max-w-6xl mx-auto">
+      <div className="relative z-10 mx-auto max-w-6xl">
         {/* Header */}
         <div className="mb-8 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.45)] p-6 md:p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="flex items-center gap-5">
@@ -144,7 +145,7 @@ function UpdateRestaurantDetails() {
         </div>
 
         {/* Form Card */}
-        <div className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-2xl shadow-[0_25px_70px_rgba(0,0,0,0.55)] overflow-hidden">
+        <div className="ui-card overflow-hidden rounded-3xl bg-white/5">
           <div className="border-b border-white/10 px-6 md:px-8 py-5 bg-white/5">
             <h2 className="text-xl font-semibold text-white">
               Restaurant Information
@@ -431,6 +432,7 @@ function UpdateRestaurantDetails() {
             </button>
           </form>
         </div>
+      </div>
       </div>
     </div>
   );

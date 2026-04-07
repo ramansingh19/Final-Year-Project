@@ -98,20 +98,20 @@ const StarRating = ({ rating, size = "text-sm" }) => {
 
 // ── Skeleton ──────────────────────────────────────────────────────────────────
 const DetailSkeleton = () => (
-  <div className="animate-pulse min-h-screen bg-slate-50">
-    <div className="h-14 bg-white border-b border-slate-200" />
-    <div className="h-75 sm:h-105 bg-slate-200 w-full mt-0" />
+  <div className="animate-pulse min-h-screen bg-black">
+    <div className="h-14 border-b border-white/10 bg-[#0f1118]" />
+    <div className="mt-0 h-75 w-full bg-white/10 sm:h-105" />
     <div className="max-w-7xl mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">
       <div className="flex-1 space-y-4">
-        <div className="h-8 bg-slate-200 rounded-xl w-2/3" />
-        <div className="h-4 bg-slate-100 rounded w-1/3" />
+        <div className="h-8 w-2/3 rounded-xl bg-white/10" />
+        <div className="h-4 w-1/3 rounded bg-white/5" />
         <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[...Array(8)].map((_, i) => (
-            <div key={i} className="h-16 bg-slate-100 rounded-xl" />
+            <div key={i} className="h-16 rounded-xl bg-white/5" />
           ))}
         </div>
       </div>
-      <div className="w-full lg:w-80 shrink-0 h-72 bg-slate-200 rounded-2xl" />
+      <div className="h-72 w-full shrink-0 rounded-2xl bg-white/10 lg:w-80" />
     </div>
   </div>
 );
@@ -159,9 +159,9 @@ const ImageGallery = ({ images, name }) => {
 
   if (count === 0)
     return (
-      <div className="h-55 sm:h-70 w-full bg-slate-100 rounded-2xl flex flex-col items-center justify-center border border-slate-200">
-        <FaMapMarkerAlt className="text-slate-300 text-3xl mb-2" />
-        <p className="text-slate-400 text-sm font-medium">No photos uploaded yet</p>
+      <div className="flex h-55 w-full flex-col items-center justify-center rounded-2xl border border-white/10 bg-white/5 sm:h-70">
+        <FaMapMarkerAlt className="mb-2 text-3xl text-white/40" />
+        <p className="text-sm font-medium text-white/50">No photos uploaded yet</p>
       </div>
     );
 
@@ -344,7 +344,7 @@ const BookingWidget = ({ hotel, onSelectRoom, selectedRoom, onClearRoom }) => {
   }, [checkIn, checkOut, hotel?._id]);
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-xl shadow-slate-200/40 overflow-hidden lg:sticky lg:top-24">
+    <div className="ui-card overflow-hidden rounded-2xl bg-[#0f1118] lg:sticky lg:top-24">
       {/* Header */}
       <div className="bg-[#1a3a6b] px-5 py-4">
         <p className="text-blue-200 text-xs font-medium mb-0.5">
@@ -411,15 +411,15 @@ const BookingWidget = ({ hotel, onSelectRoom, selectedRoom, onClearRoom }) => {
             { label: "Check-out", val: checkOut, min: checkIn, set: setCheckOut },
           ].map(({ label, val, min, set }) => (
             <div key={label}>
-              <p className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-1">{label}</p>
+              <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-white/45">{label}</p>
               <div className="relative">
-                <FaCalendarAlt className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none" />
+                <FaCalendarAlt className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-xs text-white/45" />
                 <input
                   type="date"
                   value={val}
                   min={min}
                   onChange={(e) => set(e.target.value)}
-                  className="w-full pl-7 pr-2 py-2 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-[#1a3a6b]/20 bg-slate-50"
+                  className="w-full rounded-lg border border-white/15 bg-white/5 py-2 pl-7 pr-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-[#3d6ef5]/25"
                 />
               </div>
             </div>
@@ -433,13 +433,13 @@ const BookingWidget = ({ hotel, onSelectRoom, selectedRoom, onClearRoom }) => {
             { label: "Guests", val: guests, set: setGuests },
           ].map(({ label, val, set }) => (
             <div key={label}>
-              <p className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-1">{label}</p>
-              <div className="flex items-center border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
-                <button onClick={() => set((v) => Math.max(1, v - 1))} className="w-8 h-8 flex items-center justify-center text-slate-500 hover:bg-slate-100">
+              <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-white/45">{label}</p>
+              <div className="flex items-center overflow-hidden rounded-lg border border-white/15 bg-white/5">
+                <button onClick={() => set((v) => Math.max(1, v - 1))} className="flex h-8 w-8 items-center justify-center text-white/65 hover:bg-white/10">
                   <FaMinus className="text-[9px]" />
                 </button>
-                <span className="flex-1 text-center text-sm font-bold text-slate-800">{val}</span>
-                <button onClick={() => set((v) => Math.min(10, v + 1))} className="w-8 h-8 flex items-center justify-center text-slate-500 hover:bg-slate-100">
+                <span className="flex-1 text-center text-sm font-bold text-white">{val}</span>
+                <button onClick={() => set((v) => Math.min(10, v + 1))} className="flex h-8 w-8 items-center justify-center text-white/65 hover:bg-white/10">
                   <FaPlus className="text-[9px]" />
                 </button>
               </div>
@@ -455,19 +455,19 @@ const BookingWidget = ({ hotel, onSelectRoom, selectedRoom, onClearRoom }) => {
         )}
 
         {/* Price breakdown */}
-        <div className="bg-slate-50 rounded-xl p-3 space-y-1.5 border border-slate-100">
-          <div className="flex justify-between text-xs text-slate-600">
+        <div className="space-y-1.5 rounded-xl border border-white/10 bg-white/5 p-3">
+          <div className="flex justify-between text-xs text-white/70">
             <span>
               ₹{pricePerNight.toLocaleString()} × {nights} night{nights > 1 ? "s" : ""} × {rooms} room{rooms > 1 ? "s" : ""}
             </span>
             <span>₹{total.toLocaleString()}</span>
           </div>
-          <div className="flex justify-between text-xs text-slate-600">
+          <div className="flex justify-between text-xs text-white/70">
             <span>Taxes & fees (12%)</span>
             <span>₹{taxes.toLocaleString()}</span>
           </div>
-          <div className="h-px bg-slate-200 my-1" />
-          <div className="flex justify-between text-sm font-extrabold text-slate-900">
+          <div className="my-1 h-px bg-white/10" />
+          <div className="flex justify-between text-sm font-extrabold text-white">
             <span>Total</span>
             <span>₹{(total + taxes).toLocaleString()}</span>
           </div>
@@ -508,15 +508,15 @@ const BookingWidget = ({ hotel, onSelectRoom, selectedRoom, onClearRoom }) => {
 
 // ── Review Card ───────────────────────────────────────────────────────────────
 const ReviewCard = ({ review }) => (
-  <div className="border-b border-slate-100 pb-4 last:border-0 last:pb-0">
+  <div className="border-b border-white/10 pb-4 last:border-0 last:pb-0">
     <div className="flex items-center justify-between mb-2">
       <div className="flex items-center gap-2.5">
         <div className="w-9 h-9 rounded-full bg-[#1a3a6b]/10 flex items-center justify-center text-[#1a3a6b] font-bold text-sm shrink-0">
           {(review.user?.name || review.userName || "G")[0].toUpperCase()}
         </div>
         <div>
-          <p className="text-xs font-semibold text-slate-800">{review.user?.name || review.userName || "Guest"}</p>
-          <p className="text-[10px] text-slate-400">
+          <p className="text-xs font-semibold text-white">{review.user?.name || review.userName || "Guest"}</p>
+          <p className="text-[10px] text-white/45">
             {review.createdAt
               ? new Date(review.createdAt).toLocaleDateString("en-IN", { month: "short", year: "numeric" })
               : review.date || "Recent stay"}
@@ -528,7 +528,7 @@ const ReviewCard = ({ review }) => (
         <span className="text-xs font-bold text-amber-700">{review.rating}</span>
       </div>
     </div>
-    <p className="text-xs text-slate-600 leading-relaxed">{review.comment || review.review}</p>
+    <p className="text-xs leading-relaxed text-white/70">{review.comment || review.review}</p>
   </div>
 );
 
@@ -552,8 +552,8 @@ const AddReviewForm = ({ hotelId }) => {
 
   if (!user)
     return (
-      <div className="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-200 text-center">
-        <p className="text-sm text-slate-500">
+      <div className="mt-4 rounded-xl border border-white/15 bg-white/5 p-4 text-center">
+        <p className="text-sm text-white/65">
           <button onClick={() => navigate("/login")} className="text-[#1a3a6b] font-semibold hover:underline">Login</button>{" "}
           to write a review
         </p>
@@ -561,8 +561,8 @@ const AddReviewForm = ({ hotelId }) => {
     );
 
   return (
-    <div className="mt-5 border-t border-slate-100 pt-5">
-      <h3 className="text-sm font-bold text-slate-800 mb-3">Write a Review</h3>
+    <div className="mt-5 border-t border-white/10 pt-5">
+      <h3 className="mb-3 text-sm font-bold text-white">Write a Review</h3>
       <div className="flex items-center gap-1 mb-3">
         {[1, 2, 3, 4, 5].map((star) => (
           <button
@@ -575,14 +575,14 @@ const AddReviewForm = ({ hotelId }) => {
             <FaStar className={star <= (hovered || rating) ? "text-amber-400" : "text-slate-200"} />
           </button>
         ))}
-        {rating > 0 && <span className="text-xs text-slate-500 ml-2">{rating}/5</span>}
+        {rating > 0 && <span className="ml-2 text-xs text-white/60">{rating}/5</span>}
       </div>
       <textarea
         value={comment}
         onChange={(e) => setComment(e.target.value)}
         placeholder="Share your experience..."
         rows={3}
-        className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1a3a6b]/20 resize-none"
+        className="w-full resize-none rounded-xl border border-white/15 bg-white/5 px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#3d6ef5]/25"
       />
       {submitSuccess && <p className="text-emerald-600 text-xs font-semibold mt-2">✓ Review submitted! It will appear after approval.</p>}
       {submitError && <p className="text-rose-500 text-xs mt-2">{submitError}</p>}
@@ -610,8 +610,8 @@ const RoomCard = ({ room, isSelected, onSelect, onPreview, availability }) => {
         isSelected
           ? "border-[#1a3a6b] shadow-lg shadow-[#1a3a6b]/10 scale-[1.01]"
           : isSoldOut
-          ? "border-slate-200 opacity-60"
-          : "border-slate-200 hover:border-slate-300 hover:shadow-md"
+          ? "border-white/10 opacity-60"
+          : "border-white/15 hover:border-white/30 hover:shadow-md"
       }`}
     >
       {/* Selected indicator strip */}
@@ -645,7 +645,7 @@ const RoomCard = ({ room, isSelected, onSelect, onPreview, availability }) => {
             <div className="flex items-center gap-2 flex-wrap mb-1">
               <button
                 onClick={() => onPreview(room)}
-                className="font-bold text-slate-900 text-sm capitalize hover:text-[#1a3a6b] hover:underline underline-offset-2 transition-colors text-left"
+                className="text-left text-sm font-bold capitalize text-white transition-colors hover:text-[#3d6ef5] hover:underline underline-offset-2"
               >
                 {room.roomType}
               </button>
@@ -653,12 +653,12 @@ const RoomCard = ({ room, isSelected, onSelect, onPreview, availability }) => {
                 <span className="text-[9px] bg-[#1a3a6b] text-white font-bold px-2 py-0.5 rounded-full">SELECTED</span>
               )}
             </div>
-            <p className="text-xs text-slate-500 mb-2">
+            <p className="mb-2 text-xs text-white/55">
               Max {room.capacity} guests · {room.totalRooms} rooms total
             </p>
             <div className="flex flex-wrap gap-1.5 mb-2">
               {(room.amenities || []).slice(0, 4).map((f) => (
-                <span key={f} className="text-[10px] bg-slate-50 border border-slate-100 text-slate-600 px-2 py-0.5 rounded-full capitalize">
+                <span key={f} className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] capitalize text-white/70">
                   {f}
                 </span>
               ))}
@@ -681,8 +681,8 @@ const RoomCard = ({ room, isSelected, onSelect, onPreview, availability }) => {
 
           <div className="flex flex-row sm:flex-col items-end sm:items-end justify-between sm:justify-start gap-2 shrink-0 w-full sm:w-auto">
             <div className="sm:text-right">
-              <p className="text-xl font-extrabold text-slate-900">₹{room.pricePerNight.toLocaleString()}</p>
-              <p className="text-[10px] text-slate-400">per night + taxes</p>
+              <p className="text-xl font-extrabold text-white">₹{room.pricePerNight.toLocaleString()}</p>
+              <p className="text-[10px] text-white/45">per night + taxes</p>
             </div>
 
             <div className="flex flex-col gap-1.5 items-end">
@@ -823,13 +823,13 @@ const HotelDetailPage = () => {
 
   if (error)
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <div className="flex min-h-screen items-center justify-center bg-black">
         <div className="text-center p-8">
           <div className="w-16 h-16 bg-rose-50 rounded-full flex items-center justify-center mx-auto mb-4">
             <FaMapMarkerAlt className="text-rose-300 text-2xl" />
           </div>
-          <h3 className="font-bold text-slate-700 mb-2">Something went wrong</h3>
-          <p className="text-slate-400 text-sm mb-4">{error}</p>
+          <h3 className="mb-2 font-bold text-white">Something went wrong</h3>
+          <p className="mb-4 text-sm text-white/55">{error}</p>
           <button onClick={() => navigate(-1)} className="bg-[#1a3a6b] text-white px-6 py-2 rounded-xl text-sm font-semibold">Go Back</button>
         </div>
       </div>
@@ -837,12 +837,12 @@ const HotelDetailPage = () => {
 
   if (!hotel)
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <div className="flex min-h-screen items-center justify-center bg-black">
         <div className="text-center p-8">
           <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <FaMapMarkerAlt className="text-slate-300 text-2xl" />
           </div>
-          <h3 className="font-bold text-slate-700 mb-2">Hotel not found</h3>
+          <h3 className="mb-2 font-bold text-white">Hotel not found</h3>
           <button onClick={() => navigate(-1)} className="bg-[#1a3a6b] text-white px-6 py-2 rounded-xl text-sm font-semibold">Back to results</button>
         </div>
       </div>
@@ -856,7 +856,7 @@ const HotelDetailPage = () => {
   const pricePerNight = hotel.pricePerNight ?? hotel.price ?? 3499;
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-black text-white">
       {/* Toast */}
       {showToast && selectedRoom && (
         <RoomSelectedToast room={selectedRoom} onClose={() => setShowToast(false)} />
@@ -875,21 +875,21 @@ const HotelDetailPage = () => {
       />
 
       {/* Navbar */}
-      <div className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
+      <div className="sticky top-0 z-50 border-b border-white/10 bg-[#0f1118] shadow-sm">
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-slate-600 hover:text-[#1a3a6b] transition-colors text-sm font-semibold"
+            className="flex items-center gap-2 text-sm font-semibold text-white/70 transition-colors hover:text-[#3d6ef5]"
           >
             <FaChevronLeft className="text-xs" /> Back
           </button>
           <div className="flex-1 min-w-0 hidden sm:block">
-            <p className="text-sm font-bold text-slate-900 truncate">{hotel.name}</p>
-            <p className="text-xs text-slate-400 truncate">{hotel.address}{cityName ? `, ${cityName}` : ""}</p>
+            <p className="truncate text-sm font-bold text-white">{hotel.name}</p>
+            <p className="truncate text-xs text-white/45">{hotel.address}{cityName ? `, ${cityName}` : ""}</p>
           </div>
           <div className="flex items-center gap-2">
             {selectedRoom && (
-              <div className="hidden sm:flex items-center gap-1.5 bg-[#1a3a6b]/5 border border-[#1a3a6b]/20 px-3 py-1.5 rounded-xl">
+              <div className="hidden items-center gap-1.5 rounded-xl border border-[#3d6ef5]/30 bg-[#3d6ef5]/10 px-3 py-1.5 sm:flex">
                 <FaBed className="text-[#1a3a6b] text-xs" />
                 <span className="text-xs font-semibold text-[#1a3a6b] capitalize truncate max-w-28">{selectedRoom.roomType}</span>
                 <span className="text-[#1a3a6b] font-bold text-xs">· ₹{selectedRoom.pricePerNight.toLocaleString()}</span>
@@ -897,14 +897,14 @@ const HotelDetailPage = () => {
             )}
             <button
               onClick={() => setWishlist(!wishlist)}
-              className="flex items-center gap-1.5 border border-slate-200 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-50"
+              className="flex items-center gap-1.5 rounded-xl border border-white/15 px-3 py-2 text-xs font-semibold text-white/70 hover:bg-white/5"
             >
               {wishlist ? <FaHeart className="text-rose-500" /> : <FaRegHeart />}
               <span className="hidden sm:inline">Save</span>
             </button>
             <button
               onClick={() => navigator.share?.({ title: hotel.name, url: window.location.href })}
-              className="flex items-center gap-1.5 border border-slate-200 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-50"
+              className="flex items-center gap-1.5 rounded-xl border border-white/15 px-3 py-2 text-xs font-semibold text-white/70 hover:bg-white/5"
             >
               <FaShare />
               <span className="hidden sm:inline">Share</span>
@@ -922,13 +922,13 @@ const HotelDetailPage = () => {
       <div className="max-w-7xl mx-auto px-4 py-5">
         <div className="flex flex-wrap items-center gap-2 mb-2">
           {hotel.status === "active" && (
-            <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold px-2.5 py-0.5 rounded-full">Available</span>
+            <span className="rounded-full border border-emerald-500/30 bg-emerald-500/15 px-2.5 py-0.5 text-[10px] font-bold text-emerald-300">Available</span>
           )}
         </div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight mb-2">{hotel.name}</h1>
+        <h1 className="mb-2 text-2xl font-extrabold leading-tight text-white sm:text-3xl">{hotel.name}</h1>
         <button
           onClick={openGoogleMaps}
-          className="flex items-start sm:items-center gap-1.5 text-sm text-slate-500 hover:text-[#1a3a6b] transition-colors mb-3 group text-left"
+          className="group mb-3 flex items-start gap-1.5 text-left text-sm text-white/60 transition-colors hover:text-[#3d6ef5] sm:items-center"
         >
           <FaMapMarkerAlt className="text-[#1a3a6b] text-xs shrink-0" />
           <span className="group-hover:underline">{hotel.address}{cityName ? `, ${cityName}` : ""}</span>
@@ -943,23 +943,23 @@ const HotelDetailPage = () => {
                 <span className="text-blue-200 text-xs">/ 5</span>
               </div>
               {totalReviews > 0 && (
-                <span className="text-sm text-slate-500">{totalReviews} {totalReviews === 1 ? "review" : "reviews"}</span>
+                <span className="text-sm text-white/55">{totalReviews} {totalReviews === 1 ? "review" : "reviews"}</span>
               )}
               <StarRating rating={avgRating} size="text-xs" />
             </div>
           ) : (
-            <span className="text-xs text-slate-400 italic">No ratings yet</span>
+            <span className="text-xs italic text-white/45">No ratings yet</span>
           )}
           <div className="flex flex-wrap gap-1.5">
             {facilities.slice(0, 3).map((f) => (
-              <span key={f} className="text-[10px] bg-slate-100 text-slate-600 px-2 py-1 rounded-full font-medium capitalize">{f}</span>
+              <span key={f} className="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-medium capitalize text-white/70">{f}</span>
             ))}
           </div>
         </div>
       </div>
 
       {/* Sticky tabs */}
-      <div className="sticky top-14 z-40 bg-white border-b border-slate-200 shadow-sm">
+      <div className="sticky top-14 z-40 border-b border-white/10 bg-[#0f1118] shadow-sm">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex gap-0 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             {TABS.map((tab) => (
@@ -967,7 +967,7 @@ const HotelDetailPage = () => {
                 key={tab}
                 onClick={() => scrollTo(tab)}
                 className={`shrink-0 px-4 py-3.5 text-xs sm:text-sm font-semibold border-b-2 transition-colors whitespace-nowrap
-                  ${activeTab === tab ? "border-[#1a3a6b] text-[#1a3a6b]" : "border-transparent text-slate-500 hover:text-slate-800"}`}
+                  ${activeTab === tab ? "border-[#3d6ef5] text-[#3d6ef5]" : "border-transparent text-white/55 hover:text-white"}`}
               >
                 {tab}
               </button>
@@ -981,14 +981,14 @@ const HotelDetailPage = () => {
         {/* LEFT */}
         <div className="flex-1 min-w-0 space-y-5">
           {/* Overview */}
-          <section ref={refs["Overview"]} className="bg-white rounded-2xl border border-slate-100 p-5 sm:p-6 shadow-sm scroll-mt-28">
-            <h2 className="text-lg font-bold text-slate-900 mb-3">About this property</h2>
-            <p className="text-sm text-slate-600 leading-relaxed">
+          <section ref={refs["Overview"]} className="ui-card scroll-mt-28 rounded-2xl p-5 sm:p-6">
+            <h2 className="mb-3 text-lg font-bold text-white">About this property</h2>
+            <p className="text-sm leading-relaxed text-white/70">
               {hotel.description || "Experience unparalleled comfort at this exceptional property. Nestled in a prime location, our hotel offers world-class amenities, exquisite dining, and personalised service to make your stay truly memorable."}
             </p>
             <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-3">
               {["Free cancellation", "Instant confirmation", "Best price guarantee", "24/7 support", "Secure payments", "No hidden charges"].map((text) => (
-                <div key={text} className="flex items-center gap-2 text-xs text-slate-600">
+                <div key={text} className="flex items-center gap-2 text-xs text-white/70">
                   <FaCheckCircle className="text-emerald-500 shrink-0" />
                   <span>{text}</span>
                 </div>
@@ -997,17 +997,17 @@ const HotelDetailPage = () => {
           </section>
 
           {/* Amenities */}
-          <section ref={refs["Amenities"]} className="bg-white rounded-2xl border border-slate-100 p-5 sm:p-6 shadow-sm scroll-mt-28">
-            <h2 className="text-lg font-bold text-slate-900 mb-4">Amenities & facilities</h2>
+          <section ref={refs["Amenities"]} className="ui-card scroll-mt-28 rounded-2xl p-5 sm:p-6">
+            <h2 className="mb-4 text-lg font-bold text-white">Amenities & facilities</h2>
             {facilities.length > 0 ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                 {facilities.map((f) => {
                   const key = f.toLowerCase().replace(/\s/g, "");
                   const item = AMENITY_MAP[key] || AMENITY_MAP[f] || { icon: <FaCheckCircle />, label: f };
                   return (
-                    <div key={f} className="flex items-center gap-2.5 bg-slate-50 border border-slate-100 rounded-xl px-3 py-2.5">
+                    <div key={f} className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5">
                       <span className="text-[#1a3a6b] text-base shrink-0">{item.icon}</span>
-                      <span className="text-xs text-slate-700 font-medium capitalize">{item.label || f}</span>
+                      <span className="text-xs font-medium capitalize text-white/80">{item.label || f}</span>
                     </div>
                   );
                 })}
@@ -1015,9 +1015,9 @@ const HotelDetailPage = () => {
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                 {Object.entries(AMENITY_MAP).slice(0, 8).map(([key, item]) => (
-                  <div key={key} className="flex items-center gap-2.5 bg-slate-50 border border-slate-100 rounded-xl px-3 py-2.5">
+                  <div key={key} className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5">
                     <span className="text-[#1a3a6b] text-base shrink-0">{item.icon}</span>
-                    <span className="text-xs text-slate-700 font-medium">{item.label}</span>
+                    <span className="text-xs font-medium text-white/80">{item.label}</span>
                   </div>
                 ))}
               </div>
@@ -1028,15 +1028,15 @@ const HotelDetailPage = () => {
           <section
             id="rooms-section"
             ref={refs["Rooms"]}
-            className="bg-white rounded-2xl border border-slate-100 p-5 sm:p-6 shadow-sm scroll-mt-28"
+            className="ui-card scroll-mt-28 rounded-2xl p-5 sm:p-6"
           >
             <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-              <h2 className="text-lg font-bold text-slate-900">Available rooms</h2>
+              <h2 className="text-lg font-bold text-white">Available rooms</h2>
               {selectedRoom && (
                 <div className="flex items-center gap-2 bg-[#1a3a6b]/5 border border-[#1a3a6b]/20 rounded-xl px-3 py-1.5">
                   <FaCheckCircle className="text-[#1a3a6b] text-xs" />
                   <span className="text-xs font-semibold text-[#1a3a6b] capitalize">{selectedRoom.roomType} selected</span>
-                  <button onClick={() => setSelectedRoom(null)} className="text-slate-400 hover:text-slate-600 ml-1">
+                  <button onClick={() => setSelectedRoom(null)} className="ml-1 text-white/45 hover:text-white/80">
                     <FaTimes className="text-[9px]" />
                   </button>
                 </div>
@@ -1046,11 +1046,11 @@ const HotelDetailPage = () => {
               {roomsLoading ? (
                 <div className="space-y-3">
                   {[...Array(2)].map((_, i) => (
-                    <div key={i} className="h-32 bg-slate-100 rounded-xl animate-pulse" />
+                    <div key={i} className="h-32 animate-pulse rounded-xl bg-white/8" />
                   ))}
                 </div>
               ) : publicRooms.length === 0 ? (
-                <p className="text-slate-400 text-sm">No rooms available</p>
+                <p className="text-sm text-white/45">No rooms available</p>
               ) : (
                 publicRooms.map((room) => (
                   <RoomCard
@@ -1067,9 +1067,9 @@ const HotelDetailPage = () => {
           </section>
 
           {/* Reviews */}
-          <section ref={refs["Reviews"]} className="bg-white rounded-2xl border border-slate-100 p-5 sm:p-6 shadow-sm scroll-mt-28">
+          <section ref={refs["Reviews"]} className="ui-card scroll-mt-28 rounded-2xl p-5 sm:p-6">
             <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
-              <h2 className="text-lg font-bold text-slate-900">Guest reviews</h2>
+              <h2 className="text-lg font-bold text-white">Guest reviews</h2>
               {displayRating && (
                 <div className="flex items-center gap-2 bg-[#1a3a6b] text-white px-3 py-1.5 rounded-xl">
                   <FaStar className="text-amber-300 text-xs" />
@@ -1082,37 +1082,37 @@ const HotelDetailPage = () => {
               <div className="space-y-4">
                 {hotelReviews.slice(0, 5).map((r, i) => <ReviewCard key={r._id || i} review={r} />)}
                 {hotelReviews.length > 5 && (
-                  <button className="w-full py-2.5 border border-slate-200 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
+                  <button className="w-full rounded-xl border border-white/15 py-2.5 text-xs font-semibold text-white/70 transition-colors hover:bg-white/5">
                     View all {hotelReviews.length} reviews
                   </button>
                 )}
               </div>
             ) : (
               <div className="text-center py-8">
-                <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <FaStar className="text-slate-300 text-xl" />
+                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-white/8">
+                  <FaStar className="text-xl text-white/35" />
                 </div>
-                <p className="text-slate-500 text-sm font-medium">No reviews yet</p>
-                <p className="text-slate-400 text-xs mt-1">Be the first to review this property</p>
+                <p className="text-sm font-medium text-white/60">No reviews yet</p>
+                <p className="mt-1 text-xs text-white/45">Be the first to review this property</p>
               </div>
             )}
             <AddReviewForm hotelId={hotel._id} />
           </section>
 
           {/* Location & Policies */}
-          <section ref={refs["Location & Policies"]} className="bg-white rounded-2xl border border-slate-100 p-5 sm:p-6 shadow-sm scroll-mt-28">
-            <h2 className="text-lg font-bold text-slate-900 mb-4">Location</h2>
-            <p className="text-sm text-slate-600 mb-3 flex items-start gap-2">
+          <section ref={refs["Location & Policies"]} className="ui-card scroll-mt-28 rounded-2xl p-5 sm:p-6">
+            <h2 className="mb-4 text-lg font-bold text-white">Location</h2>
+            <p className="mb-3 flex items-start gap-2 text-sm text-white/70">
               <FaMapMarkerAlt className="text-[#1a3a6b] mt-0.5 shrink-0" />
               {hotel.address}{cityName ? `, ${cityName}` : ""}
             </p>
             <button
               onClick={openGoogleMaps}
-              className="w-full h-44 bg-slate-100 rounded-xl overflow-hidden relative border border-slate-200 group cursor-pointer hover:border-[#1a3a6b]/30 transition-all"
+              className="group relative h-44 w-full cursor-pointer overflow-hidden rounded-xl border border-white/15 bg-white/5 transition-all hover:border-[#3d6ef5]/35"
             >
               <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&q=80" alt="Map" className="w-full h-full object-cover opacity-50 group-hover:opacity-60 transition-opacity" />
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="bg-white/95 backdrop-blur px-4 sm:px-5 py-2.5 rounded-full text-[11px] sm:text-xs font-bold text-[#1a3a6b] flex items-center gap-2 shadow-md group-hover:shadow-lg transition-all">
+                <div className="flex items-center gap-2 rounded-full bg-[#0f1118]/90 px-4 py-2.5 text-[11px] font-bold text-[#3d6ef5] shadow-md transition-all group-hover:shadow-lg sm:px-5 sm:text-xs">
                   <FaMapMarkerAlt className="text-[#1a3a6b]" />
                   Open in Google Maps
                   <FaExternalLinkAlt className="text-[9px]" />
@@ -1120,7 +1120,7 @@ const HotelDetailPage = () => {
               </div>
             </button>
 
-            <h2 className="text-lg font-bold text-slate-900 mt-6 mb-4">Hotel policies</h2>
+            <h2 className="mt-6 mb-4 text-lg font-bold text-white">Hotel policies</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {[
                 { label: "Check-in", value: "From 2:00 PM", icon: <FaCheckCircle className="text-emerald-500" /> },
@@ -1130,21 +1130,21 @@ const HotelDetailPage = () => {
                 { label: "Pets", value: "Not allowed", icon: <MdPets className="text-slate-400" /> },
                 { label: "Payment", value: "Card & UPI accepted", icon: <FaCheckCircle className="text-emerald-500" /> },
               ].map(({ label, value, icon }) => (
-                <div key={label} className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
+                <div key={label} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3">
                   <span className="text-base shrink-0">{icon}</span>
                   <div>
-                    <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wide">{label}</p>
-                    <p className="text-xs text-slate-700 font-medium">{value}</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-wide text-white/45">{label}</p>
+                    <p className="text-xs font-medium text-white/80">{value}</p>
                   </div>
                 </div>
               ))}
             </div>
 
             <div className="mt-4 flex flex-wrap gap-3">
-              <a href={`tel:${hotel.phone || ""}`} className="flex items-center gap-2 border border-slate-200 px-4 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors">
+              <a href={`tel:${hotel.phone || ""}`} className="flex items-center gap-2 rounded-xl border border-white/15 px-4 py-2 text-xs font-semibold text-white/75 transition-colors hover:bg-white/5">
                 <FaPhoneAlt className="text-[#1a3a6b] text-xs" /> Call Hotel
               </a>
-              <a href={`mailto:${hotel.email || ""}`} className="flex items-center gap-2 border border-slate-200 px-4 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors">
+              <a href={`mailto:${hotel.email || ""}`} className="flex items-center gap-2 rounded-xl border border-white/15 px-4 py-2 text-xs font-semibold text-white/75 transition-colors hover:bg-white/5">
                 <FaEnvelope className="text-[#1a3a6b] text-xs" /> Email Hotel
               </a>
             </div>

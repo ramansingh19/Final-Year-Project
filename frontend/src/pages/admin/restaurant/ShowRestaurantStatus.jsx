@@ -19,7 +19,8 @@ function ShowRestaurantStatus() {
   }, [dispatch, status]);
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white p-6">
+    <div className="min-h-screen bg-[#050505] py-6 text-white">
+      <div className="ui-container">
       {/* FIXED HEADER */}
       <div className="sticky top-0 z-30 bg-[#050505] pb-6">
         <div className="rounded-3xl border border-white/10 bg-[#111111] px-8 py-6 shadow-2xl flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
@@ -82,16 +83,16 @@ function ShowRestaurantStatus() {
       </div>
 
       {/* TABLE SECTION */}
-      <div className="mt-6 rounded-3xl border border-white/10 bg-[#111111] overflow-hidden shadow-2xl">
+      <div className="ui-table-wrap mt-6">
         <div className="overflow-x-auto">
           <table className="w-full min-w-237.5">
             <thead className="bg-[#181818] border-b border-white/10 sticky top-0 z-20">
               <tr className="text-left text-sm uppercase tracking-wider text-gray-400">
-                <th className="px-6 py-5">Restaurant</th>
-                <th className="px-6 py-5">City</th>
-                <th className="px-6 py-5">Food Type</th>
-                <th className="px-6 py-5">Address</th>
-                <th className="px-6 py-5">Status</th>
+                <th className="ui-th">Restaurant</th>
+                <th className="ui-th">City</th>
+                <th className="ui-th">Food Type</th>
+                <th className="ui-th">Address</th>
+                <th className="ui-th">Status</th>
               </tr>
             </thead>
 
@@ -198,6 +199,7 @@ function ShowRestaurantStatus() {
             </tbody>
           </table>
         </div>
+      </div>
       </div>
     </div>
   );

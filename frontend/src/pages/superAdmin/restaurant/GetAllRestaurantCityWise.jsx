@@ -72,7 +72,7 @@ function GetAllRestaurantCityWise() {
         <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-red-600/10 blur-3xl" />
       </div>
 
-      <div className="relative z-10 p-4 md:p-6 xl:p-8">
+      <div className="relative z-10 p-4 sm:p-6 xl:p-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 25 }}
@@ -178,22 +178,22 @@ function GetAllRestaurantCityWise() {
             <table className="min-w-full text-left">
               <thead className="sticky top-0 border-b border-white/10 bg-zinc-950/95 backdrop-blur">
                 <tr>
-                  <th className="px-6 py-5 text-xs uppercase tracking-[0.2em] text-zinc-400">
+                  <th className="px-4 sm:px-6 py-5 text-xs uppercase tracking-[0.2em] text-zinc-400">
                     Restaurant
                   </th>
-                  <th className="hidden md:table-cell px-6 py-5 text-xs uppercase tracking-[0.2em] text-zinc-400">
+                  <th className="hidden md:table-cell px-4 sm:px-6 py-5 text-xs uppercase tracking-[0.2em] text-zinc-400">
                     City
                   </th>
-                  <th className="hidden lg:table-cell px-6 py-5 text-xs uppercase tracking-[0.2em] text-zinc-400">
+                  <th className="hidden lg:table-cell px-4 sm:px-6 py-5 text-xs uppercase tracking-[0.2em] text-zinc-400">
                     Food Type
                   </th>
-                  <th className="px-6 py-5 text-xs uppercase tracking-[0.2em] text-zinc-400">
+                  <th className="px-4 sm:px-6 py-5 text-xs uppercase tracking-[0.2em] text-zinc-400">
                     Cost
                   </th>
-                  <th className="hidden sm:table-cell px-6 py-5 text-xs uppercase tracking-[0.2em] text-zinc-400">
+                  <th className="hidden sm:table-cell px-4 sm:px-6 py-5 text-xs uppercase tracking-[0.2em] text-zinc-400">
                     Status
                   </th>
-                  <th className="px-6 py-5"></th>
+                  <th className="px-4 sm:px-6 py-5"></th>
                 </tr>
               </thead>
 
@@ -201,7 +201,7 @@ function GetAllRestaurantCityWise() {
                 {loading ? (
                   [...Array(6)].map((_, i) => (
                     <tr key={i} className="animate-pulse border-b border-white/5">
-                      <td className="px-6 py-5" colSpan="6">
+                      <td className="px-4 sm:px-6 py-5" colSpan="6">
                         <div className="h-16 rounded-2xl bg-zinc-800" />
                       </td>
                     </tr>
@@ -216,7 +216,7 @@ function GetAllRestaurantCityWise() {
                       onClick={() => setSelectedRestaurant(restaurant)}
                       className="group cursor-pointer border-b border-white/5 transition-all hover:bg-orange-500/5"
                     >
-                      <td className="px-6 py-5">
+                      <td className="px-4 sm:px-6 py-5">
                         <div className="flex items-center gap-4">
                           <img
                             src={restaurant.images?.[0] || "/no-image.jpg"}
@@ -235,19 +235,19 @@ function GetAllRestaurantCityWise() {
                         </div>
                       </td>
 
-                      <td className="hidden md:table-cell px-6 py-5 text-zinc-300">
+                      <td className="hidden md:table-cell px-4 sm:px-6 py-5 text-zinc-300">
                         {restaurant.city?.name || "-"}
                       </td>
 
-                      <td className="hidden lg:table-cell px-6 py-5 text-zinc-400">
+                      <td className="hidden lg:table-cell px-4 sm:px-6 py-5 text-zinc-400">
                         {restaurant.foodType || "-"}
                       </td>
 
-                      <td className="px-6 py-5 text-orange-300 font-semibold">
+                      <td className="px-4 sm:px-6 py-5 text-orange-300 font-semibold">
                         ₹{restaurant.avgCostForOne || 0}
                       </td>
 
-                      <td className="hidden sm:table-cell px-6 py-5">
+                      <td className="hidden sm:table-cell px-4 sm:px-6 py-5">
                         <span
                           className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${
                             restaurant.status === "active"
@@ -263,7 +263,7 @@ function GetAllRestaurantCityWise() {
                         </span>
                       </td>
 
-                      <td className="px-6 py-5 text-right">
+                      <td className="px-4 sm:px-6 py-5 text-right">
                         <FaChevronRight className="ml-auto text-zinc-500 transition group-hover:text-orange-300" />
                       </td>
                     </motion.tr>

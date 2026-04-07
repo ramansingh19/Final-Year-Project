@@ -26,6 +26,7 @@ import { LuMapPinned } from "react-icons/lu";
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showLocationSection, setShowLocationSection] = useState(false);
@@ -158,7 +159,7 @@ function Navbar() {
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             {/* LEFT */}
-            <div className="flex items-center gap-3">
+            <div className="flex min-w-0 items-center gap-3">
               {/* Logo */}
               <Link
                 to="/"
@@ -186,8 +187,8 @@ function Navbar() {
               )}
               {/* global map section */}
               {token && (
-                <Link to={"/globalMap"}>
-                  <div className="flex items-center gap-1 p-1  rounded-full bg-linear-to-br from-gray-600 via-gray-600 to-gray-300 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group">
+                <Link to={"/globalMap"} className="hidden sm:block">
+                  <div className="flex items-center gap-1 p-1 rounded-full bg-linear-to-br from-gray-600 via-gray-600 to-gray-300 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group">
                     {/* Icon Circle */}
                     <div className="flex items-center justify-center h-8 w-8 rounded-full bg-white/20 text-white shadow-md group-hover:scale-110 transition-transform duration-300">
                       <LuMapPinned className="h-5 w-5 text-white" />
@@ -689,6 +690,8 @@ function Navbar() {
               <button
                 onClick={toggleMenu}
                 className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-zinc-900 text-zinc-300 transition hover:bg-zinc-800 md:hidden"
+                aria-label={isOpen ? "Close menu" : "Open menu"}
+                aria-expanded={isOpen}
               >
                 {isOpen ? (
                   <MdOutlineCancel className="text-xl" />
@@ -701,49 +704,52 @@ function Navbar() {
         </div>
 
         {/* MOBILE MENU */}
-        {isOpen && (
-          <div className="border-t border-white/10 bg-black md:hidden">
-            <div className="space-y-2 px-4 py-4">
-              {[
-                { to: "/", label: "Home" },
-                { to: "/cities", label: "Cities" },
-                { to: "/places", label: "Places" },
-                { to: "/hotels", label: "Hotels" },
-                { to: "/restaurants", label: "Restaurants" },
-                { to: "/travel", label: "Travel Option" },
-              ].map((item) => (
+        <div
+          className={[
+            "border-t border-white/10 bg-black md:hidden overflow-hidden transition-[max-height,opacity] duration-300 ease-out",
+            isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0",
+          ].join(" ")}
+        >
+          <div className="space-y-2 px-4 py-4">
+            {[
+              { to: "/", label: "Home" },
+              { to: "/cities", label: "Cities" },
+              { to: "/places", label: "Places" },
+              { to: "/hotels", label: "Hotels" },
+              { to: "/restaurants", label: "Restaurants" },
+              { to: "/travel", label: "Travel Option" },
+            ].map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                onClick={() => setIsOpen(false)}
+                className="block rounded-2xl px-4 py-3 text-sm font-medium text-zinc-300 transition hover:bg-zinc-900 hover:text-white"
+              >
+                {item.label}
+              </Link>
+            ))}
+
+            {!token && !superAdminToken && !adminToken && (
+              <div className="mt-4 flex flex-col gap-3 border-t border-white/10 pt-4">
                 <Link
-                  key={item.to}
-                  to={item.to}
-                  onClick={toggleMenu}
-                  className="block rounded-2xl px-4 py-3 text-sm font-medium text-zinc-300 transition hover:bg-zinc-900 hover:text-white"
+                  to="/loginPage"
+                  onClick={() => setIsOpen(false)}
+                  className="rounded-2xl border border-white/10 bg-zinc-900 px-4 py-3 text-center text-sm font-medium text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
                 >
-                  {item.label}
+                  Login
                 </Link>
-              ))}
 
-              {!token && !superAdminToken && !adminToken && (
-                <div className="mt-4 flex flex-col gap-3 border-t border-white/10 pt-4">
-                  <Link
-                    to="/loginPage"
-                    onClick={toggleMenu}
-                    className="rounded-2xl border border-white/10 bg-zinc-900 px-4 py-3 text-center text-sm font-medium text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
-                  >
-                    Login
-                  </Link>
-
-                  <Link
-                    to="/signUp"
-                    onClick={toggleMenu}
-                    className="rounded-2xl bg-blue-600 px-4 py-3 text-center text-sm font-medium text-white transition hover:bg-blue-500"
-                  >
-                    Register
-                  </Link>
-                </div>
-              )}
-            </div>
+                <Link
+                  to="/signUp"
+                  onClick={() => setIsOpen(false)}
+                  className="rounded-2xl bg-blue-600 px-4 py-3 text-center text-sm font-medium text-white transition hover:bg-blue-500"
+                >
+                  Register
+                </Link>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </nav>
     </>
   );

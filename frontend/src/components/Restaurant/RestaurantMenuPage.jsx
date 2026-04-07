@@ -129,7 +129,7 @@ const STYLE = `
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 .rmp-search-input::placeholder { color: #6b6b85; }
-.rmp-search-input:focus { border-color: rgba(255,77,0,0.4); box-shadow: 0 0 0 3px rgba(255,77,0,0.08); }
+.rmp-search-input:focus { border-color: rgba(61,110,245,0.4); box-shadow: 0 0 0 3px rgba(61,110,245,0.12); }
 
 .rmp-filter-pills {
   display: flex;
@@ -209,7 +209,7 @@ const STYLE = `
   display: block;
 }
 .rmp-food-card:hover {
-  border-color: rgba(255,77,0,0.3);
+  border-color: rgba(61,110,245,0.3);
   transform: translateY(-3px);
   box-shadow: 0 12px 32px rgba(0,0,0,0.35);
 }
@@ -313,7 +313,7 @@ const STYLE = `
 
 .rmp-spin {
   width: 36px; height: 36px;
-  border: 2px solid rgba(255,77,0,0.15);
+  border: 2px solid rgba(61,110,245,0.15);
   border-top-color: #ff4d00;
   border-radius: 50%;
   animation: rmp-spin 0.7s linear infinite;

@@ -27,7 +27,8 @@ function AdminActiveRestaurant() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white p-6 overflow-hidden">
+    <div className="min-h-screen overflow-hidden bg-black py-6 text-white">
+      <div className="ui-container">
       {/* Fixed Header */}
       <div className="sticky top-0 z-30 mb-6 rounded-3xl border border-white/10 bg-zinc-900/95 backdrop-blur-xl px-8 py-6 shadow-2xl">
         <div className="flex items-center justify-between gap-6">
@@ -66,17 +67,17 @@ function AdminActiveRestaurant() {
             selectedRestaurant ? "w-[68%]" : "w-full"
           }`}
         >
-          <div className="overflow-hidden rounded-3xl border border-white/10 bg-zinc-900 shadow-2xl">
+          <div className="ui-table-wrap">
             <div className="overflow-x-auto">
               <table className="w-full min-w-225">
                 <thead className="bg-zinc-800 text-left text-sm uppercase tracking-wide text-zinc-400">
                   <tr>
-                    <th className="px-6 py-5">Restaurant</th>
-                    <th className="px-6 py-5">City</th>
-                    <th className="px-6 py-5">Food Type</th>
-                    <th className="px-6 py-5">Cost</th>
-                    <th className="px-6 py-5">Status</th>
-                    <th className="px-6 py-5">Action</th>
+                    <th className="ui-th">Restaurant</th>
+                    <th className="ui-th">City</th>
+                    <th className="ui-th">Food Type</th>
+                    <th className="ui-th">Cost</th>
+                    <th className="ui-th">Status</th>
+                    <th className="ui-th">Action</th>
                   </tr>
                 </thead>
 
@@ -165,7 +166,7 @@ function AdminActiveRestaurant() {
                         </td>
 
                         <td className="px-6 py-5">
-                          <button className="rounded-xl border border-white/10 bg-zinc-800 px-4 py-2 text-sm text-white hover:bg-zinc-700">
+                          <button className="ui-btn-secondary !rounded-xl !px-4 !py-2 !text-sm !text-white">
                             View Details
                           </button>
                         </td>
@@ -286,6 +287,7 @@ function AdminActiveRestaurant() {
             </motion.div>
           )}
         </AnimatePresence>
+      </div>
       </div>
     </div>
   );

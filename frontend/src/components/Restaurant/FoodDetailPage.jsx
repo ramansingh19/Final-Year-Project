@@ -74,7 +74,7 @@ function FoodDetailPage() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-gray-50 pb-28 dark:bg-gray-950"
+      className="min-h-screen bg-black pb-28 text-white"
     >
       <div className="relative aspect-4/3 w-full overflow-hidden bg-gray-200 dark:bg-gray-800 sm:aspect-video sm:max-h-105">
         <img
@@ -92,7 +92,7 @@ function FoodDetailPage() {
         </button>
       </div>
 
-      <div className="mx-auto max-w-2xl px-4 py-6 sm:px-6">
+      <div className="ui-container max-w-2xl py-6">
         <p className="text-sm font-medium text-orange-600 dark:text-orange-400">
           {restaurant?.name ?? "Restaurant"}
           {restaurant?.city?.name ? ` · ${restaurant.city.name}` : ""}
@@ -119,12 +119,12 @@ function FoodDetailPage() {
         <div className="mx-auto flex max-w-2xl gap-3">
           <Link
             to="/cart"
-            className="relative inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-gray-300 bg-white py-3.5 text-sm font-semibold text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+          className="ui-btn-secondary relative flex-1 !rounded-2xl !py-3.5"
           >
             <ShoppingBagIcon className="h-5 w-5" />
             Cart
             {cartCount > 0 && (
-              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-orange-500 px-1 text-xs text-white">
+              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[color:var(--ui-primary)] px-1 text-xs text-white">
                 {cartCount > 99 ? "99+" : cartCount}
               </span>
             )}
@@ -132,7 +132,7 @@ function FoodDetailPage() {
           <button
             type="button"
             onClick={handleOrder}
-            className="inline-flex flex-2 items-center justify-center rounded-2xl bg-linear-to-r from-orange-500 to-rose-600 py-3.5 text-sm font-semibold text-white shadow-lg shadow-orange-500/25"
+            className="ui-btn-primary flex-2 !rounded-2xl !py-3.5"
           >
             Order — add to cart
           </button>
@@ -140,7 +140,7 @@ function FoodDetailPage() {
         {restaurantId ? (
           <Link
             to={`/restaurant/${restaurantId}/menu`}
-            className="mt-3 block text-center text-sm text-orange-600 dark:text-orange-400"
+            className="mt-3 block text-center text-sm text-blue-500 dark:text-blue-400"
           >
             Browse more from this restaurant
           </Link>

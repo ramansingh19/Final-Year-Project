@@ -15,20 +15,20 @@ function MyOrdersPage() {
   }, [dispatch, status]);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 p-4">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-black p-4 text-white">
+      <div className="ui-container max-w-4xl">
         {/* HEADER */}
         <h1 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
           My Orders
         </h1>
 
         {/* FILTER BUTTONS */}
-        <div className="flex gap-3 mb-6">
+        <div className="mb-6 flex gap-3">
           {["", "pending", "delivered"].map((s) => (
             <button
               key={s}
               onClick={() => setStatus(s)}
-              className={`px-4 py-2 rounded-xl text-sm font-medium ${
+              className={`ui-btn-secondary !rounded-xl !px-4 !py-2 ${
                 status === s
                   ? "bg-orange-500 text-white"
                   : "bg-white dark:bg-gray-800"
@@ -52,7 +52,7 @@ function MyOrdersPage() {
           {orders.map((order) => (
             <div
               key={order?._id}
-              className="bg-white dark:bg-gray-900 p-5 rounded-2xl shadow"
+              className="ui-card p-5"
             >
               <div className="flex justify-between mb-2">
                 <p className="font-semibold">₹{order?.totalAmount}</p>
@@ -84,7 +84,7 @@ function MyOrdersPage() {
               <div className="mt-3">
                 <Link
                   to={`/OrderDetailsPage/${order?._id}`}
-                  className="inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-orange-500 to-rose-600 px-4 py-2 text-sm font-semibold text-white shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition"
+                  className="ui-btn-primary !rounded-xl !px-4 !py-2"
                 >
                   View Details →
                 </Link>

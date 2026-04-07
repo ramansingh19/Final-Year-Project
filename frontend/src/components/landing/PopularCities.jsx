@@ -53,6 +53,11 @@ const injectMinimalStyles = () => {
       from { opacity: 0; }
       to   { opacity: 1; }
     }
+    @keyframes fxcKenBurns {
+      0%   { transform: scale(1.0); }
+      100% { transform: scale(1.08); }
+    }
+    .anim-ken-burns { animation: fxcKenBurns 20s ease-out forwards; }
     .anim-slide-up   { animation: fxcSlideUp   0.55s cubic-bezier(0.22,1,0.36,1) forwards; }
     .anim-slide-down { animation: fxcSlideDown 0.55s cubic-bezier(0.22,1,0.36,1) forwards; }
     .anim-fade-in-1  { animation: fxcFadeIn 0.55s ease 0.10s both; }
@@ -62,11 +67,13 @@ const injectMinimalStyles = () => {
       animation: fxcShimmer 1.9s ease-in-out infinite;
       background: linear-gradient(
         90deg,
-        rgba(255,255,255,0.04) 0%,
-        rgba(255,255,255,0.10) 50%,
-        rgba(255,255,255,0.04) 100%
+        rgba(255,255,255,0.03) 0%,
+        rgba(255,255,255,0.09) 50%,
+        rgba(255,255,255,0.03) 100%
       );
       background-size: 400% 100%;
+      backdrop-filter: blur(12px);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
     }
     .anim-progress {
       animation: fxcProgress 3s linear forwards;
@@ -98,10 +105,10 @@ injectMinimalStyles();
 ───────────────────────────────────────────────────────────── */
 function Skeleton() {
   return (
-    <div className="w-full h-screen bg-[#0a0a10] relative overflow-hidden">
+    <div className="w-full min-h-screen bg-[#0a0a10] relative overflow-hidden">
       <div className="anim-shimmer absolute inset-0" />
       {/* Desktop shimmer blocks */}
-      <div className="max-md:hidden">
+      <div className="hidden md:block">
         <div className="anim-shimmer absolute left-[72px] bottom-[198px] w-[340px] h-[95px] rounded-md" />
         <div className="anim-shimmer absolute left-[72px] bottom-[172px] w-[200px] h-[10px] rounded-sm" />
         <div className="anim-shimmer absolute left-[72px] bottom-[156px] w-[160px] h-[10px] rounded-sm" />
@@ -110,7 +117,7 @@ function Skeleton() {
         <div className="anim-shimmer absolute right-8 top-1/2 -mt-[172px] w-[220px] h-[345px] rounded-[18px]" />
       </div>
       {/* Mobile shimmer blocks */}
-      <div className="md:hidden">
+      <div className="block md:hidden">
         <div className="anim-shimmer absolute left-9 bottom-[130px] w-[240px] h-[80px] rounded-md" />
         <div className="anim-shimmer absolute left-9 bottom-[108px] w-[160px] h-[8px] rounded-sm" />
         <div className="anim-shimmer absolute left-9 bottom-[72px] w-[110px] h-[38px] rounded-full" />
@@ -142,29 +149,24 @@ const Stars = React.memo(({ rating = 4 }) => (
 ───────────────────────────────────────────────────────────── */
 const cardVariantClasses = {
   sm: [
-    "w-[185px] h-[290px]",
-    "translate-x-6 scale-[0.94] opacity-[0.68] z-[1]",
-    "max-md:!w-[148px] max-md:!h-[200px]",
-    "max-md:!translate-x-0 max-md:!scale-100 max-md:!opacity-100",
+    "w-[140px] h-[190px] md:w-[170px] md:h-[260px] lg:w-[185px] lg:h-[290px] xl:w-[200px] xl:h-[300px]",
+    "translate-x-0 md:translate-x-6 scale-100 md:scale-[0.94] opacity-100 md:opacity-[0.68] z-[1]",
   ].join(" "),
   md: [
-    "w-[220px] h-[345px]",
+    "w-[140px] h-[190px] md:w-[200px] md:h-[300px] lg:w-[220px] lg:h-[345px] xl:w-[240px] xl:h-[360px]",
     "scale-100 opacity-100 z-[2]",
-    "shadow-[0_24px_60px_rgba(0,0,0,0.55)]",
-    "max-md:!w-[148px] max-md:!h-[200px] max-md:!shadow-none",
+    "shadow-none md:shadow-[0_24px_60px_rgba(0,0,0,0.55)]",
   ].join(" "),
   xs: [
-    "w-[165px] h-[260px]",
-    "-translate-x-5 scale-[0.88] opacity-[0.42] z-0",
-    "max-md:!w-[148px] max-md:!h-[200px]",
-    "max-md:!translate-x-0 max-md:!scale-100 max-md:!opacity-100",
+    "w-[140px] h-[190px] md:w-[150px] md:h-[230px] lg:w-[165px] lg:h-[260px] xl:w-[180px] xl:h-[280px]",
+    "translate-x-0 md:-translate-x-5 scale-100 md:scale-[0.88] opacity-100 md:opacity-[0.42] z-0",
   ].join(" "),
 };
 
 const cardHoverClasses = [
   "hover:translate-x-0",
-  "hover:-translate-y-[10px]",
-  "hover:scale-[1.04]",
+  "hover:-translate-y-[1px]",
+  "hover:scale-[1.02]",
   "hover:opacity-100",
   "hover:z-20",
   "hover:shadow-[0_30px_70px_rgba(0,0,0,0.65)]",
@@ -195,9 +197,9 @@ function PopularCities() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   /* Granular selectors — each only re-renders when its own value changes */
-  const cities  = useSelector((s) => s.city.cities);
+  const cities = useSelector((s) => s.city.cities);
   const loading = useSelector((s) => s.city.loading);
-  const error   = useSelector((s) => s.city.error);
+  const error = useSelector((s) => s.city.error);
 
   /* ── UI state ── */
   const [activeCityIndex, setActiveCityIndex] = useState(0);
@@ -211,10 +213,10 @@ function PopularCities() {
   const [slideKey, setSlideKey] = useState(0); // bumped on manual nav to restart interval
   const [savedCities, setSavedCities] = useState(loadSaved);
 
-  const intervalRef  = useRef(null);
-  const exitTimerRef  = useRef(null);
-  const touchStartX   = useRef(null);
-  const touchStartY   = useRef(null);  // track vertical scroll vs horizontal swipe
+  const intervalRef = useRef(null);
+  const exitTimerRef = useRef(null);
+  const touchStartX = useRef(null);
+  const touchStartY = useRef(null);  // track vertical scroll vs horizontal swipe
   const pauseTimerRef = useRef(null);
   const isPointerOver = useRef(false); // true only when pointer is physically inside
   /* Stable refs so the arrow-key listener never needs re-registration */
@@ -288,7 +290,7 @@ function PopularCities() {
   useEffect(() => {
     const handler = (e) => {
       if (e.key === "ArrowRight") goNextRef.current?.();
-      if (e.key === "ArrowLeft")  goPrevRef.current?.();
+      if (e.key === "ArrowLeft") goPrevRef.current?.();
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
@@ -448,7 +450,7 @@ function PopularCities() {
 
   return (
     <div
-      className="relative w-full h-screen overflow-hidden font-['Inter',sans-serif] bg-[#0a0a10]"
+      className="relative w-full min-h-screen overflow-hidden font-['Inter',sans-serif] bg-[#0a0a10]"
       onPointerEnter={onPointerEnter}
       onPointerLeave={onPointerLeave}
       onTouchStart={onTouchStart}
@@ -462,17 +464,18 @@ function PopularCities() {
           aria-hidden="true"
           src={bgPrev}
           alt=""
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ opacity: 0, transition: "opacity 0.85s cubic-bezier(0.4,0,0.2,1)", willChange: "opacity", zIndex: 0 }}
+          className="absolute inset-0 w-full h-full object-cover anim-ken-burns"
+          style={{ opacity: 0, transition: "opacity 0.85s cubic-bezier(0.4,0,0.2,1)", willChange: "opacity, transform", zIndex: 0 }}
         />
       )}
       <img
+        key={bgCurr}
         role="img"
         aria-label={`${activeCity.name} background`}
         src={bgCurr || ph(1600, 900, activeCity.name)}
         alt={`${activeCity.name} cityscape`}
-        className="absolute inset-0 w-full h-full object-cover"
-        style={{ opacity: 1, transition: "opacity 0.85s cubic-bezier(0.4,0,0.2,1)", willChange: "opacity", zIndex: 0 }}
+        className="absolute inset-0 w-full h-full object-cover anim-ken-burns"
+        style={{ opacity: 1, transition: "opacity 0.85s cubic-bezier(0.4,0,0.2,1)", willChange: "opacity, transform", zIndex: 0 }}
       />
 
       {/* Gradient overlay */}
@@ -493,44 +496,54 @@ function PopularCities() {
       />
 
       {/* ── Top Navigation ── */}
-      <nav className="absolute top-0 left-0 right-0 z-[40] flex items-center justify-between py-[30px] px-12 max-md:py-5 max-md:px-[22px]">
-        <div className="flex items-center gap-[10px] text-white">
-          <div className="w-[34px] h-[34px] bg-[#3d6ef5] rounded-lg flex items-center justify-center">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <nav className="absolute top-0 left-0 right-0 z-[40] flex items-center justify-between py-4 px-4 sm:py-5 sm:px-6 md:py-6 md:px-8 lg:py-8 lg:px-12">
+        <div className="flex items-center gap-[6px] md:gap-[10px] text-white">
+          <div className="w-7 h-7 md:w-[34px] md:h-[34px] bg-[#3d6ef5] rounded-lg flex items-center justify-center shrink-0">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="w-[14px] h-[14px] md:w-[18px] md:h-[18px]">
               <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="white" />
               <circle cx="12" cy="9" r="2.5" fill="#3d6ef5" />
             </svg>
           </div>
-          <span className="font-['Barlow_Condensed',sans-serif] text-[20px] font-extrabold tracking-[0.04em]">
+          <span className="font-['Barlow_Condensed',sans-serif] text-[18px] md:text-[20px] font-extrabold tracking-[0.04em]">
             Popular Cities
           </span>
-          {/* FIX: City count badge */}
-          <span className="ml-1 px-[8px] py-[2px] rounded-full bg-white/10 text-white/60 text-[11px] font-medium tracking-wide">
+          {/* City count badge */}
+          <span className="ml-1 px-[8px] py-[2px] rounded-full bg-white/10 text-white/60 text-[10px] md:text-[11px] font-medium tracking-wide">
             {total} destinations
           </span>
         </div>
 
         <div className="flex items-center gap-[14px]">
-          <div className="w-9 h-9 rounded-full bg-white/[0.18] border-2 border-white/[0.18] flex items-center justify-center">
+          {/* Hamburger Menu for Mobile */}
+          <button className="flex md:hidden w-8 h-8 items-center justify-center text-white bg-white/10 rounded-full border-0 focus:outline-none focus:ring-2 focus:ring-white/40 active:bg-white/20">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+
+          {/* Desktop Explore Icon */}
+          <div className="hidden md:flex w-9 h-9 rounded-full bg-white/[0.18] border-2 border-white/[0.18] items-center justify-center">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="rgba(255,255,255,0.8)" aria-hidden="true">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
               <circle cx="12" cy="7" r="4" />
             </svg>
           </div>
-          <span className="text-[13px] text-white/70 max-sm:hidden">Explore the World</span>
+          <span className="text-[13px] text-white/70 hidden md:block">Explore the World</span>
         </div>
       </nav>
 
       {/* ── Left vertical dot tracker ── */}
-      <div className="absolute left-7 top-1/2 -translate-y-1/2 z-[40] flex flex-col items-center max-md:left-3">
+      <div className="absolute left-2 sm:left-3 md:left-5 lg:left-7 top-1/2 -translate-y-1/2 z-[40] flex flex-col items-center">
         {cities.map((_, i) => (
           <React.Fragment key={i}>
             {i > 0 && <div className="w-px h-[30px] bg-white/[0.18] shrink-0" />}
             <button
               className={[
-                "w-[7px] h-[7px] rounded-full border-0 p-0 cursor-pointer",
+                "w-2 h-2 rounded-full border-0 p-0 cursor-pointer outline-none",
                 "transition-all duration-300 relative z-[1] shrink-0",
-                i === activeCityIndex ? "bg-white scale-[1.4]" : "bg-white/40",
+                i === activeCityIndex 
+                  ? "bg-white scale-[1.3] ring-[3px] ring-white/30 ring-offset-2 ring-offset-transparent shadow-[0_0_12px_rgba(255,255,255,0.6)]" 
+                  : "bg-white/40 hover:bg-white/70 hover:scale-[1.1]",
               ].join(" ")}
               onClick={() => { if (i !== activeCityIndex) goToIndex(i, activeCityIndex); }}
               aria-label={`Go to city ${i + 1}`}
@@ -542,7 +555,7 @@ function PopularCities() {
 
       {/* ── Left hero content ── */}
       <div
-        className="absolute left-[72px] bottom-[130px] z-[30] max-w-[520px] max-md:left-9 max-md:bottom-[110px] max-md:max-w-[calc(100vw-72px)]"
+        className="absolute left-6 bottom-[279px] w-[calc(100vw-48px)] z-[30] md:left-[50px] md:bottom-[120px] md:w-[60vw] lg:left-[72px] lg:bottom-[130px] lg:max-w-[520px]"
         style={{
           opacity: isExiting ? 0 : 1,
           transform: isExiting
@@ -554,7 +567,7 @@ function PopularCities() {
       >
         <div key={animKey}>
           <h2
-            className={`${heroEntryClass} font-['Barlow_Condensed',sans-serif] font-black leading-[0.88] text-white tracking-[-0.01em] uppercase m-0 mb-[6px]`}
+            className={`${heroEntryClass} font-['Barlow_Condensed',sans-serif] font-black leading-[0.88] tracking-[-0.01em] uppercase m-0 mb-[6px] text-transparent bg-clip-text bg-gradient-to-b from-white to-white/40 drop-shadow-lg`}
             style={{ fontSize: "clamp(72px, 11vw, 148px)" }}
           >
             {activeCity.name}
@@ -573,7 +586,7 @@ function PopularCities() {
             ))}
           </div>
 
-          <p className="anim-fade-in-2 text-[13px] font-light leading-[1.75] text-white/70 mt-0 mb-8">
+          <p className="anim-fade-in-2 text-[12px] md:text-[13px] font-light leading-[1.6] md:leading-[1.75] text-white/70 mt-0 mb-6 md:mb-8 max-w-[90%] lg:max-w-full">
             {activeCity.description ||
               `Discover the breathtaking landscapes, vibrant culture, and world-class
                experiences that make ${activeCity.name} one of the most sought-after
@@ -585,12 +598,12 @@ function PopularCities() {
               "anim-fade-in-3 group",
               "inline-flex items-center gap-[14px]",
               "py-[14px] px-[30px]",
-              "bg-[#3d6ef5] border-0 rounded-full",
+              "bg-gradient-to-r from-blue-600 to-indigo-500 border-0 rounded-full",
               "font-['Inter',sans-serif] text-sm font-medium text-white",
               "cursor-pointer",
-              "transition-[background,transform,box-shadow] duration-[250ms] ease-in-out",
-              "hover:bg-[#2a55d4] hover:-translate-y-[2px] hover:scale-[1.04]",
-              "hover:shadow-[0_14px_36px_rgba(61,110,245,0.45)]",
+              "transition-all duration-[250ms] ease-in-out",
+              "hover:-translate-y-[2px] hover:scale-[1.04]",
+              "shadow-[0_8px_20px_rgba(61,110,245,0.25)] hover:shadow-[0_14px_36px_rgba(61,110,245,0.55)] hover:from-blue-500 hover:to-indigo-400",
               "active:scale-[0.98]",
             ].join(" ")}
             onClick={() => navigate(`/city/${activeCity._id}`)}
@@ -610,13 +623,9 @@ function PopularCities() {
       {/* ── Preview cards (right side) ── */}
       <div
         className={[
-          "absolute right-0 top-1/2 -translate-y-[46%] z-10",
-          "flex items-end gap-4 pr-8",
-          "max-md:top-auto max-md:bottom-0 max-md:translate-y-0",
-          "max-md:right-0 max-md:left-0",
-          "max-md:px-4 max-md:pb-[86px]",
-          "max-md:gap-3 max-md:overflow-x-auto max-md:items-end",
-          "no-scrollbar",
+          "absolute pb-[86px] px-4 gap-3 overflow-x-auto items-end no-scrollbar left-0 right-0 bottom-0 top-auto translate-y-0",
+          "md:left-auto md:right-0 md:top-1/2 md:bottom-auto md:-translate-y-[46%] md:px-0 md:pr-4 md:pb-0 md:gap-4 md:overflow-x-visible",
+          "lg:pr-8 flex z-10",
         ].join(" ")}
       >
         {cardSlots.map(({ idx, cls }) => {
@@ -719,7 +728,7 @@ function PopularCities() {
       </div>
 
       {/* ── Bottom arrow navigation ── */}
-      <div className="absolute bottom-0 left-0 right-0 z-[40] flex items-center justify-center gap-6 py-7 px-12">
+      <div className="absolute bottom-0 left-0 right-0 z-[40] flex items-center justify-center gap-4 md:gap-6 py-5 md:py-7 px-6 md:px-12">
         <button
           className={[
             "w-11 h-11 rounded-full",

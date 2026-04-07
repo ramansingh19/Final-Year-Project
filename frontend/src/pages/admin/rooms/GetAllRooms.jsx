@@ -38,7 +38,7 @@ function GetAllRooms() {
       <div className="absolute top-0 left-0 h-72 w-72 bg-orange-500/10 blur-3xl rounded-full" />
       <div className="absolute bottom-0 right-0 h-80 w-80 bg-blue-500/10 blur-3xl rounded-full" />
 
-      <div className="relative z-10 p-4 md:p-6 lg:p-8">
+      <div className="relative z-10 p-4 sm:p-6 lg:p-8">
         {/* Header */}
         <div className="mb-8 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-2xl p-6 md:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.45)] flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
           <div>
@@ -80,7 +80,7 @@ function GetAllRooms() {
             placeholder="Search room by number..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="rounded-2xl bg-white/5 border border-white/10 px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 w-full sm:w-64"
+            className="ui-input w-full sm:w-64"
           />
 
           {/* Type Buttons */}
@@ -89,7 +89,7 @@ function GetAllRooms() {
               <button
                 key={type}
                 onClick={() => setActiveType(type)}
-                className={`px-4 py-2 rounded-2xl border font-medium text-sm transition-all ${
+                  className={`px-4 py-2 rounded-2xl border font-medium text-sm transition-all duration-300 ease-in-out ${
                   activeType === type
                     ? "bg-orange-500 text-black border-orange-500"
                     : "bg-white/5 text-white border-white/10 hover:bg-orange-500/10"
@@ -130,30 +130,30 @@ function GetAllRooms() {
 
         {/* Table */}
         {!loading && filteredRooms.length > 0 && (
-          <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-2xl shadow-[0_25px_70px_rgba(0,0,0,0.55)]">
+          <div className="ui-table-wrap">
             <div className="overflow-x-auto">
               <table className="w-full min-w-212.5">
                 <thead className="bg-white/5 border-b border-white/10">
                   <tr>
-                    <th className="px-6 py-5 text-left text-xs font-semibold uppercase tracking-[0.25em] text-gray-400">
+                    <th className="ui-th">
                       Room Number
                     </th>
-                    <th className="px-6 py-5 text-left text-xs font-semibold uppercase tracking-[0.25em] text-gray-400">
+                    <th className="ui-th">
                       Type
                     </th>
-                    <th className="px-6 py-5 text-left text-xs font-semibold uppercase tracking-[0.25em] text-gray-400">
+                    <th className="ui-th">
                       Price
                     </th>
-                    <th className="px-6 py-5 text-left text-xs font-semibold uppercase tracking-[0.25em] text-gray-400">
+                    <th className="ui-th">
                       Capacity
                     </th>
-                    <th className="px-6 py-5 text-left text-xs font-semibold uppercase tracking-[0.25em] text-gray-400">
+                    <th className="ui-th">
                       Status
                     </th>
-                    <th className="px-6 py-5 text-left text-xs font-semibold uppercase tracking-[0.25em] text-gray-400">
+                    <th className="ui-th">
                       Hotel
                     </th>
-                    <th className="px-6 py-5 text-right text-xs font-semibold uppercase tracking-[0.25em] text-gray-400">
+                    <th className="ui-th text-right">
                       Details
                     </th>
                   </tr>
@@ -166,11 +166,11 @@ function GetAllRooms() {
                       className="border-b border-white/5 hover:bg-white/5 transition-all duration-300 cursor-pointer"
                       onClick={() => setSelectedRoom(room)}
                     >
-                      <td className="px-6 py-4">{room.roomNumber}</td>
-                      <td className="px-6 py-4">{room.roomType}</td>
-                      <td className="px-6 py-4">₹{room.pricePerNight}</td>
-                      <td className="px-6 py-4">{room.capacity}</td>
-                      <td className="px-6 py-4">
+                      <td className="ui-td">{room.roomNumber}</td>
+                      <td className="ui-td">{room.roomType}</td>
+                      <td className="ui-td">₹{room.pricePerNight}</td>
+                      <td className="ui-td">{room.capacity}</td>
+                      <td className="ui-td">
                         <span
                           className={`inline-flex rounded-xl px-3 py-1 text-xs font-semibold border ${
                             room.status === "active"
@@ -181,9 +181,9 @@ function GetAllRooms() {
                           {room.status}
                         </span>
                       </td>
-                      <td className="px-6 py-4">{room.hotel?.name || "N/A"}</td>
-                      <td className="px-6 py-4 text-right">
-                        <button className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-gray-300 transition-all duration-300 hover:border-orange-500/30 hover:bg-orange-500/10 hover:text-orange-300">
+                      <td className="ui-td">{room.hotel?.name || "N/A"}</td>
+                      <td className="ui-td text-right">
+                        <button className="ui-btn-secondary !rounded-xl !px-4 !py-2 !text-sm !text-gray-300 hover:!text-white">
                           View Details →
                         </button>
                       </td>

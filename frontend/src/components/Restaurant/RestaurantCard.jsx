@@ -28,7 +28,7 @@ function RestaurantCard({
         delay: Math.min(index * 0.05, 0.4),
         ease: [0.25, 0.46, 0.45, 0.94],
       }}
-      className="group flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-md shadow-gray-900/5 transition-shadow duration-300 hover:shadow-xl hover:shadow-orange-500/10 dark:border-gray-700/80 dark:bg-gray-900/80 dark:shadow-black/20 dark:hover:shadow-orange-500/15"
+      className="group ui-card-soft flex h-full flex-col overflow-hidden border-gray-200/80 bg-white transition-all duration-300 ease-in-out hover:shadow-xl hover:shadow-blue-500/15 dark:border-gray-700/80 dark:bg-gray-900/80 dark:shadow-black/20 dark:hover:shadow-blue-500/20"
     >
       <button
         type="button"
@@ -81,7 +81,7 @@ function RestaurantCard({
             e.stopPropagation();
             if (id) onViewMenu?.(id);
           }}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-orange-500 via-rose-500 to-orange-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-orange-500/25 transition-[box-shadow,transform] hover:shadow-lg hover:shadow-orange-500/35"
+          className="ui-btn-primary w-full !rounded-xl !px-4 !py-2.5 !font-semibold"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
