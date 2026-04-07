@@ -1,5 +1,67 @@
 @import "tailwindcss";
 
+/* -------------------------------------------------------------------------- */
+/* Design system (Tailwind-first, reusable utilities)                          */
+/* -------------------------------------------------------------------------- */
+
+:root {
+  --ui-primary: #3d6ef5;
+}
+
+.ui-container {
+  @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+.ui-card {
+  @apply rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.45)];
+}
+
+.ui-card-soft {
+  @apply rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl shadow-[0_12px_30px_rgba(0,0,0,0.35)];
+}
+
+.ui-input {
+  @apply w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/30 outline-none;
+  @apply transition-all duration-300 ease-in-out;
+  @apply focus:border-[color:var(--ui-primary)]/60 focus:bg-white/10 focus:shadow-[0_0_0_3px_rgba(61,110,245,0.18)];
+}
+
+.ui-btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium;
+  @apply transition-all duration-300 ease-in-out;
+  @apply active:scale-[0.98];
+}
+
+.ui-btn-primary {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium;
+  @apply transition-all duration-300 ease-in-out active:scale-[0.98];
+  @apply bg-[color:var(--ui-primary)] text-white shadow-[0_10px_30px_rgba(61,110,245,0.25)];
+  @apply hover:bg-[#2b59da] hover:scale-[1.02];
+}
+
+.ui-btn-secondary {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium;
+  @apply transition-all duration-300 ease-in-out active:scale-[0.98];
+  @apply border border-white/10 bg-white/5 text-white/80 backdrop-blur-xl;
+  @apply hover:bg-white/10 hover:text-white hover:scale-[1.02];
+}
+
+.ui-pill {
+  @apply inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80 backdrop-blur-xl;
+}
+
+.ui-table-wrap {
+  @apply overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-2xl shadow-[0_25px_70px_rgba(0,0,0,0.55)];
+}
+
+.ui-th {
+  @apply px-4 sm:px-6 py-5 text-left text-xs font-semibold uppercase tracking-[0.25em] text-gray-400;
+}
+
+.ui-td {
+  @apply px-4 sm:px-6 py-4;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

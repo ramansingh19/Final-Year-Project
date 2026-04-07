@@ -49,7 +49,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="w-full bg-[#0a0a10] border-t border-white/5 py-12 px-6 flex flex-col items-center justify-center gap-8 z-10 relative">
+    <footer className="w-full bg-[#0a0a10] border-t border-white/5 py-12 px-4 sm:px-6 flex flex-col items-center justify-center gap-6 z-10 relative">
       <div className="flex items-center gap-4">
         {SOCIALS.map((social) => (
           <a
@@ -58,7 +58,7 @@ export default function Footer() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={social.label}
-            className="w-12 h-12 rounded-full bg-white/[0.03] border border-white/10 hover:bg-[#3d6ef5] hover:border-[#3d6ef5] hover:text-white text-white/50 flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg hover:shadow-[0_0_20px_rgba(61,110,245,0.4)]"
+            className="w-12 h-12 rounded-full bg-white/[0.03] border border-white/10 hover:bg-[#3d6ef5] hover:border-[#3d6ef5] hover:text-white text-white/50 flex items-center justify-center transition-all duration-300 ease-in-out hover:scale-[1.05] shadow-lg hover:shadow-[0_0_20px_rgba(61,110,245,0.4)]"
           >
             {social.icon}
           </a>

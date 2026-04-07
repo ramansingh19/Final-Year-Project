@@ -122,8 +122,8 @@ function CheckoutPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 p-4 text-gray-900 dark:text-white">
-      <div className="max-w-4xl mx-auto space-y-6">
+    <div className="min-h-screen bg-black p-4 text-white">
+      <div className="ui-container max-w-4xl space-y-6 py-4">
 
         {/* 🧾 HEADER */}
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -131,7 +131,7 @@ function CheckoutPage() {
         </h1>
 
         {/* 🛒 ORDER ITEMS */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-5 shadow">
+        <div className="ui-card p-5">
           <h2 className="font-semibold mb-4">Your Order</h2>
 
           <div className="space-y-3">
@@ -160,13 +160,13 @@ function CheckoutPage() {
         </div>
 
         {/* 📍 ADDRESS */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-5 shadow">
+        <div className="ui-card p-5">
           <div className="flex justify-between items-center mb-3">
             <h2 className="font-semibold">Delivery Address</h2>
 
             <button
               onClick={handleDetectLocation}
-              className="flex items-center gap-1 text-sm text-orange-600"
+              className="ui-btn-secondary !px-3 !py-1.5 !text-sm !text-blue-300 hover:!text-white"
             >
               <MapPinIcon className="w-4 h-4" />
               {geoLoading ? "Detecting..." : "Use my location"}
@@ -176,7 +176,7 @@ function CheckoutPage() {
           <div className="space-y-2">
             <input
               placeholder="Receiver Name"
-              className="w-full border p-2 rounded"
+              className="ui-input !rounded-lg !py-2"
               onChange={(e) =>
                 setAddress({ ...address, name: e.target.value })
               }
@@ -185,7 +185,7 @@ function CheckoutPage() {
             <input
               placeholder="Street / Area"
               value={address.street}
-              className="w-full border p-2 rounded"
+              className="ui-input !rounded-lg !py-2"
               onChange={(e) =>
                 setAddress({ ...address, street: e.target.value })
               }
@@ -194,7 +194,7 @@ function CheckoutPage() {
             <input
               placeholder="City"
               value={address.city}
-              className="w-full border p-2 rounded"
+              className="ui-input !rounded-lg !py-2"
               onChange={(e) =>
                 setAddress({ ...address, city: e.target.value })
               }
@@ -203,7 +203,7 @@ function CheckoutPage() {
             <input
               placeholder="Pincode"
               value={address.pincode}
-              className="w-full border p-2 rounded"
+              className="ui-input !rounded-lg !py-2"
               onChange={(e) =>
                 setAddress({ ...address, pincode: e.target.value })
               }
@@ -212,7 +212,7 @@ function CheckoutPage() {
         </div>
 
         {/* 💳 PAYMENT */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-5 shadow">
+        <div className="ui-card p-5">
           <h2 className="font-semibold mb-3">Payment Method</h2>
 
           <div className="space-y-3">
@@ -244,7 +244,7 @@ function CheckoutPage() {
         <button
           onClick={handleOrder}
           disabled={loading}
-          className="w-full bg-linear-to-r from-orange-500 to-rose-600 text-white py-3 rounded-2xl font-semibold shadow-lg"
+          className="ui-btn-primary w-full !rounded-2xl !py-3"
         >
           {loading ? "Placing Order..." : "Place Order"}
         </button>

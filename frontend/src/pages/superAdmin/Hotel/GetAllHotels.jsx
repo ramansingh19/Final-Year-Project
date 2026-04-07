@@ -53,7 +53,7 @@ function GetAllHotels() {
         <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-blue-600/10 blur-3xl" />
       </div>
 
-      <div className="relative z-10 p-4 md:p-6 xl:p-8">
+      <div className="relative z-10 p-4 sm:p-6 xl:p-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -143,27 +143,27 @@ function GetAllHotels() {
         </motion.div>
 
         {/* Table */}
-        <div className="overflow-y-scroll max-h-125 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl p-4">
+        <div className="overflow-y-auto max-h-125 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl p-4">
           <div className="overflow-x-auto">
             <table className="min-w-full text-left">
               <thead className="border-b border-white/10 bg-white/5">
                 <tr>
-                  <th className="px-6 py-5 text-xs uppercase tracking-[0.2em] text-zinc-400">
+                  <th className="px-4 sm:px-6 py-5 text-xs uppercase tracking-[0.2em] text-zinc-400">
                     Hotel
                   </th>
-                  <th className="px-6 py-5 text-xs uppercase tracking-[0.2em] text-zinc-400 hidden md:table-cell">
+                  <th className="px-4 sm:px-6 py-5 text-xs uppercase tracking-[0.2em] text-zinc-400 hidden md:table-cell">
                     City
                   </th>
-                  <th className="px-6 py-5 text-xs uppercase tracking-[0.2em] text-zinc-400 hidden lg:table-cell">
+                  <th className="px-4 sm:px-6 py-5 text-xs uppercase tracking-[0.2em] text-zinc-400 hidden lg:table-cell">
                     Address
                   </th>
-                  <th className="px-6 py-5 text-xs uppercase tracking-[0.2em] text-zinc-400">
+                  <th className="px-4 sm:px-6 py-5 text-xs uppercase tracking-[0.2em] text-zinc-400">
                     Status
                   </th>
-                  <th className="px-6 py-5 text-xs uppercase tracking-[0.2em] text-zinc-400 hidden sm:table-cell">
+                  <th className="px-4 sm:px-6 py-5 text-xs uppercase tracking-[0.2em] text-zinc-400 hidden sm:table-cell">
                     Rating
                   </th>
-                  <th className="px-6 py-5"></th>
+                  <th className="px-4 sm:px-6 py-5"></th>
                 </tr>
               </thead>
 
@@ -171,7 +171,7 @@ function GetAllHotels() {
                 {loading ? (
                   [...Array(6)].map((_, i) => (
                     <tr key={i} className="border-b border-white/5 animate-pulse">
-                      <td className="px-6 py-5">
+                      <td className="px-4 sm:px-6 py-5">
                         <div className="flex items-center gap-4">
                           <div className="h-14 w-14 rounded-2xl bg-zinc-800" />
                           <div>
@@ -180,16 +180,16 @@ function GetAllHotels() {
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-5 hidden md:table-cell">
+                      <td className="px-4 sm:px-6 py-5 hidden md:table-cell">
                         <div className="h-4 w-20 rounded bg-zinc-800" />
                       </td>
-                      <td className="px-6 py-5 hidden lg:table-cell">
+                      <td className="px-4 sm:px-6 py-5 hidden lg:table-cell">
                         <div className="h-4 w-40 rounded bg-zinc-800" />
                       </td>
-                      <td className="px-6 py-5">
+                      <td className="px-4 sm:px-6 py-5">
                         <div className="h-8 w-20 rounded-full bg-zinc-800" />
                       </td>
-                      <td className="px-6 py-5 hidden sm:table-cell">
+                      <td className="px-4 sm:px-6 py-5 hidden sm:table-cell">
                         <div className="h-4 w-12 rounded bg-zinc-800" />
                       </td>
                     </tr>
@@ -204,7 +204,7 @@ function GetAllHotels() {
                       onClick={() => setSelectedHotel(hotel)}
                       className="group cursor-pointer border-b border-white/5 transition-all hover:bg-cyan-500/5"
                     >
-                      <td className="px-6 py-5">
+                      <td className="px-4 sm:px-6 py-5">
                         <div className="flex items-center gap-4">
                           <img
                             src={hotel.images?.[0]}
@@ -223,15 +223,15 @@ function GetAllHotels() {
                         </div>
                       </td>
 
-                      <td className="px-6 py-5 text-zinc-300 hidden md:table-cell">
+                      <td className="px-4 sm:px-6 py-5 text-zinc-300 hidden md:table-cell">
                         {hotel.city?.name || "City"}
                       </td>
 
-                      <td className="px-6 py-5 text-zinc-400 max-w-65 truncate hidden lg:table-cell">
+                      <td className="px-4 sm:px-6 py-5 text-zinc-400 max-w-65 truncate hidden lg:table-cell">
                         {hotel.address}
                       </td>
 
-                      <td className="px-6 py-5">
+                      <td className="px-4 sm:px-6 py-5">
                         <span
                           className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${
                             hotel.status === "active"
@@ -247,14 +247,14 @@ function GetAllHotels() {
                         </span>
                       </td>
 
-                      <td className="px-6 py-5 hidden sm:table-cell">
+                      <td className="px-4 sm:px-6 py-5 hidden sm:table-cell">
                         <div className="flex items-center gap-1 text-yellow-400 font-medium">
                           <FaStar className="text-xs" />
                           {hotel.averageRating || 0}
                         </div>
                       </td>
 
-                      <td className="px-6 py-5 text-right">
+                      <td className="px-4 sm:px-6 py-5 text-right">
                         <FaChevronRight className="ml-auto text-zinc-500 group-hover:text-cyan-300 transition" />
                       </td>
                     </motion.tr>

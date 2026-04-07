@@ -99,7 +99,7 @@ const HotelFilter = ({ onFilterChange, onMapOpen }) => {
   };
 
   return (
-    <div className="w-full lg:w-67 bg-[#0a0a10] sm:bg-white/[0.02] sm:backdrop-blur-md rounded-2xl border border-white/5 shadow-xl shadow-black/40 overflow-hidden lg:sticky lg:top-4 lg:max-h-[calc(100vh-90px)] flex flex-col font-sans">
+    <div className="w-full lg:w-67 ui-card-soft overflow-hidden lg:sticky lg:top-4 lg:max-h-[calc(100vh-90px)] flex flex-col font-sans bg-[#0a0a10]">
       {/* Header */}
       <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between shrink-0 bg-white/[0.01]">
         <div className="flex items-center gap-2">
@@ -148,7 +148,7 @@ const HotelFilter = ({ onFilterChange, onMapOpen }) => {
             placeholder="Search locality or hotel…"
             value={filters.locality}
             onChange={handleLocality}
-            className="w-full pl-7 pr-7 py-2 bg-white/[0.04] border border-white/10 rounded-lg text-xs text-white placeholder:text-white/30 focus:outline-none focus:border-[#3d6ef5] focus:bg-white/[0.06] transition-all"
+            className="ui-input !rounded-xl !py-2 !text-xs !pl-7 !pr-7"
           />
           {filters.locality && (
             <button
@@ -323,13 +323,13 @@ const HotelFilter = ({ onFilterChange, onMapOpen }) => {
       <div className="px-4 py-3 border-t border-white/10 flex gap-2 shrink-0 bg-white/[0.01]">
         <button
           onClick={clearAll}
-          className="flex-1 py-2 rounded-xl border border-white/10 text-xs font-semibold text-white/70 hover:bg-white/5 hover:text-white transition-colors"
+          className="flex-1 ui-btn-secondary !rounded-xl !py-2 !text-xs"
         >
           Clear
         </button>
         <button
           onClick={() => onFilterChange?.(filters)}
-          className="flex-1 py-2 rounded-xl bg-[#3d6ef5] hover:bg-[#2b59da] text-white text-xs font-bold shadow-[0_4px_12px_rgba(61,110,245,0.4)] hover:shadow-[0_6px_16px_rgba(61,110,245,0.6)] transition-all"
+          className="flex-1 ui-btn-primary !rounded-xl !py-2 !text-xs !font-bold"
         >
           Apply Filters
         </button>

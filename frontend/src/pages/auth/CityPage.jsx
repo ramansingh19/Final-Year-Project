@@ -41,6 +41,11 @@ import { getCityById } from "../../features/user/citySlice";
       from { opacity: 0; transform: scale(1.04); }
       to   { opacity: 1; transform: scale(1); }
     }
+    @keyframes cpKenBurns {
+      0%   { transform: scale(1.0); }
+      100% { transform: scale(1.08); }
+    }
+    .cp-ken-burns { animation: cpKenBurns 20s ease-out forwards; }
 
     .cp-fade-up    { animation: cpFadeUp 0.7s cubic-bezier(0.22,1,0.36,1) both; }
     .cp-fade-up-1  { animation: cpFadeUp 0.7s cubic-bezier(0.22,1,0.36,1) 0.10s both; }
@@ -222,12 +227,13 @@ const HeroCrossFade = React.memo(({ src }) => {
     <>
       {showPrev && prev && (
         <div
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0 bg-cover bg-center cp-ken-burns"
           style={{ backgroundImage: `url(${prev})`, opacity: 0, transition: "opacity 0.9s ease" }}
         />
       )}
       <div
-        className="absolute inset-0 bg-cover bg-center cp-fade-in"
+        key={curr}
+        className="absolute inset-0 bg-cover bg-center cp-fade-in cp-ken-burns"
         style={{ backgroundImage: `url(${curr})`, transition: "opacity 0.9s ease" }}
       />
     </>
@@ -435,7 +441,7 @@ function CityDetails() {
         {/* Back button */}
         <button
           onClick={goBack}
-          className="cp-glass cp-btn absolute top-7 left-7 z-10 flex items-center gap-2 px-4 py-2.5 rounded-full text-white/80 text-sm font-medium"
+          className="cp-glass cp-btn absolute top-4 left-4 sm:top-7 sm:left-7 z-10 flex items-center gap-2 px-4 py-2.5 rounded-full text-white/80 text-sm font-medium"
           aria-label="Go back"
         >
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
@@ -447,7 +453,7 @@ function CityDetails() {
 
         {/* Photo dots */}
         {city.images?.length > 1 && (
-          <div className="absolute top-7 right-7 z-10 flex gap-2 cp-glass px-3 py-2 rounded-full">
+          <div className="absolute top-4 right-4 sm:top-7 sm:right-7 z-10 flex gap-2 cp-glass px-3 py-2 rounded-full">
             {city.images.map((_, i) => (
               <button
                 key={i}
@@ -462,9 +468,9 @@ function CityDetails() {
         )}
 
         {/* Hero text */}
-        <div className="absolute bottom-0 left-0 right-0 px-8 lg:px-16 pb-14">
+        <div className="absolute bottom-0 left-0 right-0 px-6 sm:px-8 md:px-10 lg:px-16 pb-8 md:pb-14">
           <div className="max-w-6xl mx-auto">
-            <div className="cp-tag cp-fade-up mb-5 bg-white/10 border border-white/20 text-white/80">
+            <div className="cp-tag cp-fade-up mb-4 sm:mb-5 bg-white/10 border border-white/20 text-white/80">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
               </svg>
@@ -472,14 +478,14 @@ function CityDetails() {
             </div>
 
             <h1
-              className="cp-fade-up-1 font-['Barlow_Condensed',sans-serif] font-black uppercase text-white leading-none mb-4"
+              className="cp-fade-up-1 font-['Barlow_Condensed',sans-serif] font-black uppercase leading-none mb-3 sm:mb-4 text-transparent bg-clip-text bg-gradient-to-b from-white to-white/40 drop-shadow-lg"
               style={{ fontSize: "clamp(52px,10vw,130px)", letterSpacing: "-0.01em" }}
             >
               {city.name}
             </h1>
 
             {city.description && (
-              <p className="cp-fade-up-2 text-white/60 text-base font-light max-w-xl leading-relaxed mb-8">
+              <p className="cp-fade-up-2 text-white/60 text-sm sm:text-base font-light max-w-xl leading-relaxed mb-6 sm:mb-8">
                 {city.description.length > 150
                   ? city.description.slice(0, 150) + "…"
                   : city.description}
@@ -489,7 +495,7 @@ function CityDetails() {
             <div className="cp-fade-up-3 flex flex-wrap gap-3">
               <button
                 onClick={goHotels}
-                className="cp-btn inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-[#6366f1] text-white font-semibold text-sm shadow-[0_8px_32px_rgba(99,102,241,0.4)]"
+                className="cp-btn inline-flex items-center gap-3 px-6 sm:px-7 py-3 sm:py-3.5 rounded-full bg-gradient-to-r from-blue-600 to-indigo-500 text-white font-semibold text-sm shadow-[0_8px_20px_rgba(61,110,245,0.25)] hover:shadow-[0_14px_36px_rgba(61,110,245,0.55)] hover:from-blue-500 hover:to-indigo-400"
               >
                 Explore City
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
@@ -600,7 +606,7 @@ function CityDetails() {
           >
             Explore {city.name}
           </h2>
-          <div className="grid sm:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
             {actions.map((a) => (
               <ActionTile
                 key={a.title}
@@ -623,7 +629,6 @@ function CityDetails() {
       >
         {city.name} · Destination Guide
       </footer>
-y
     </div>
   );
 }
