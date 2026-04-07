@@ -103,6 +103,7 @@ import AssistantChat from "./pages/assistantChat/AssistantChat";
 import AssistantRecommendations from "./pages/assistantChat/AssistantRecommendations";
 import UpdateUserLocation from "./components/UpdateUserLocation";
 import GlobalMap from "./components/globalMap/GlobalMap";
+import PayoutDashboard from "./pages/admin/finance/PayoutDashboard";
 
 function App() {
   return (
@@ -669,6 +670,15 @@ function App() {
             <UserProtectedRouter>
               <AssistantRecommendations />
             </UserProtectedRouter>
+          }
+        />
+        {/* payouts */}
+        <Route
+          path="/admin/payout-dashboard"
+          element={
+            <AdminProtectedRouter>
+              <PayoutDashboard />
+            </AdminProtectedRouter>
           }
         />
         <Route path="/updateUserLocation" element={<UpdateUserLocation/>}/>

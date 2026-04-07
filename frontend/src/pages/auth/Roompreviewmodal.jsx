@@ -44,8 +44,8 @@ const FALLBACK_IMGS = [
 // ─── Swipe direction helper ───────────────────────────────────────────────────
 const SWIPE_THRESHOLD = 50;
 const swipeDirection = (offset) => {
-  if (offset < -SWIPE_THRESHOLD) return 1;   // left swipe → next
-  if (offset > SWIPE_THRESHOLD) return -1;   // right swipe → prev
+  if (offset < -SWIPE_THRESHOLD) return 1; // left swipe → next
+  if (offset > SWIPE_THRESHOLD) return -1; // right swipe → prev
   return 0;
 };
 
@@ -77,17 +77,27 @@ const backdropVariants = {
 const modalVariants = {
   hidden: { opacity: 0, scale: 0.92, y: 24 },
   visible: {
-    opacity: 1, scale: 1, y: 0,
+    opacity: 1,
+    scale: 1,
+    y: 0,
     transition: { type: "spring", stiffness: 380, damping: 32, delay: 0.04 },
   },
   exit: {
-    opacity: 0, scale: 0.94, y: 16,
+    opacity: 0,
+    scale: 0.94,
+    y: 16,
     transition: { duration: 0.18, ease: "easeIn" },
   },
 };
 
 // ─── RoomPreviewModal ─────────────────────────────────────────────────────────
-const RoomPreviewModal = ({ room, isOpen, onClose, onSelectRoom, isSelected }) => {
+const RoomPreviewModal = ({
+  room,
+  isOpen,
+  onClose,
+  onSelectRoom,
+  isSelected,
+}) => {
   const imgs = room?.images?.length ? room.images : FALLBACK_IMGS;
   const [[idx, dir], setPage] = useState([0, 0]);
   const touchStartX = useRef(null);
@@ -113,7 +123,9 @@ const RoomPreviewModal = ({ room, isOpen, onClose, onSelectRoom, isSelected }) =
       document.body.style.overflow = "";
       setPage([0, 0]); // reset on close
     }
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [isOpen]);
 
   // Scroll active thumbnail into view
@@ -121,16 +133,24 @@ const RoomPreviewModal = ({ room, isOpen, onClose, onSelectRoom, isSelected }) =
     const container = thumbnailRef.current;
     if (!container) return;
     const active = container.children[idx];
-    if (active) active.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    if (active)
+      active.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest",
+      });
   }, [idx]);
 
-  const paginate = useCallback((newDir) => {
-    setPage(([cur]) => {
-      const next = cur + newDir;
-      if (next < 0 || next >= imgs.length) return [cur, 0]; // no-op at edges
-      return [next, newDir];
-    });
-  }, [imgs.length]);
+  const paginate = useCallback(
+    (newDir) => {
+      setPage(([cur]) => {
+        const next = cur + newDir;
+        if (next < 0 || next >= imgs.length) return [cur, 0]; // no-op at edges
+        return [next, newDir];
+      });
+    },
+    [imgs.length],
+  );
 
   const goTo = (i) => {
     setPage(([cur]) => [i, i > cur ? 1 : -1]);
@@ -154,11 +174,23 @@ const RoomPreviewModal = ({ room, isOpen, onClose, onSelectRoom, isSelected }) =
 
   // Room metadata with sensible fallbacks
   const meta = [
-    { icon: <FaRulerCombined />, label: "Area", value: room.areaSqFt ? `${room.areaSqFt} sq ft` : "320 sq ft" },
+    {
+      icon: <FaRulerCombined />,
+      label: "Area",
+      value: room.areaSqFt ? `${room.areaSqFt} sq ft` : "320 sq ft",
+    },
     { icon: <FaCompass />, label: "View", value: room.view || "Garden view" },
     { icon: <FaBed />, label: "Bed", value: room.bedType || "King bed" },
-    { icon: <FaBath />, label: "Bathrooms", value: room.bathrooms ? `${room.bathrooms} bath` : "1 bath" },
-    { icon: <FaUsers />, label: "Capacity", value: `Up to ${room.capacity || 2} guests` },
+    {
+      icon: <FaBath />,
+      label: "Bathrooms",
+      value: room.bathrooms ? `${room.bathrooms} bath` : "1 bath",
+    },
+    {
+      icon: <FaUsers />,
+      label: "Capacity",
+      value: `Up to ${room.capacity || 2} guests`,
+    },
   ];
 
   return (
@@ -167,8 +199,11 @@ const RoomPreviewModal = ({ room, isOpen, onClose, onSelectRoom, isSelected }) =
         // Backdrop
         <motion.div
           key="modal-backdrop"
-          className="fixed inset-0 z-[200] flex items-center justify-center p-3 sm:p-6"
-          style={{ backdropFilter: "blur(6px)", backgroundColor: "rgba(5,10,20,0.75)" }}
+          className="fixed inset-0 z-200 flex items-center justify-center p-3 sm:p-6"
+          style={{
+            backdropFilter: "blur(6px)",
+            backgroundColor: "rgba(5,10,20,0.75)",
+          }}
           variants={backdropVariants}
           initial="hidden"
           animate="visible"
@@ -226,9 +261,9 @@ const RoomPreviewModal = ({ room, isOpen, onClose, onSelectRoom, isSelected }) =
               </AnimatePresence>
 
               {/* Gradient overlays */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10 pointer-events-none" />
-              <div className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-black/20 to-transparent pointer-events-none" />
-              <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-black/20 to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-black/10 pointer-events-none" />
+              <div className="absolute inset-y-0 left-0 w-16 bg-linear-to-r from-black/20 to-transparent pointer-events-none" />
+              <div className="absolute inset-y-0 right-0 w-16 bg-linear-to-l from-black/20 to-transparent pointer-events-none" />
 
               {/* Nav buttons */}
               {imgs.length > 1 && (
@@ -263,8 +298,15 @@ const RoomPreviewModal = ({ room, isOpen, onClose, onSelectRoom, isSelected }) =
                     <motion.button
                       key={i}
                       onClick={() => goTo(i)}
-                      animate={{ width: i === idx ? 20 : 6, opacity: i === idx ? 1 : 0.5 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 28 }}
+                      animate={{
+                        width: i === idx ? 20 : 6,
+                        opacity: i === idx ? 1 : 0.5,
+                      }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 28,
+                      }}
                       className="h-1.5 rounded-full bg-white origin-left"
                     />
                   ))}
@@ -287,7 +329,11 @@ const RoomPreviewModal = ({ room, isOpen, onClose, onSelectRoom, isSelected }) =
                     className={`relative shrink-0 w-14 h-10 rounded-lg overflow-hidden border-2 transition-all duration-200
                       ${i === idx ? "border-[#1a3a6b] shadow-md" : "border-transparent opacity-60 hover:opacity-90"}`}
                   >
-                    <img src={src} alt="" className="w-full h-full object-cover" />
+                    <img
+                      src={src}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
                     {i === idx && (
                       <motion.div
                         layoutId="thumb-active"
@@ -309,14 +355,18 @@ const RoomPreviewModal = ({ room, isOpen, onClose, onSelectRoom, isSelected }) =
                       {room.roomType || "Deluxe Room"}
                     </h2>
                     <p className="mt-0.5 text-sm text-white/50">
-                      {room.totalRooms} rooms available · {room.description || "Elegant room with premium furnishings and modern amenities."}
+                      {room.totalRooms} rooms available ·{" "}
+                      {room.description ||
+                        "Elegant room with premium furnishings and modern amenities."}
                     </p>
                   </div>
                   <div className="text-right shrink-0">
                     <p className="text-2xl font-extrabold text-white">
                       ₹{(room.pricePerNight || 0).toLocaleString()}
                     </p>
-                    <p className="text-[11px] font-medium text-white/50">per night + taxes</p>
+                    <p className="text-[11px] font-medium text-white/50">
+                      per night + taxes
+                    </p>
                   </div>
                 </div>
 
@@ -325,14 +375,27 @@ const RoomPreviewModal = ({ room, isOpen, onClose, onSelectRoom, isSelected }) =
                   {meta.map(({ icon, label, value }) => (
                     <motion.div
                       key={label}
-                      whileHover={{ y: -1, boxShadow: "0 4px 16px rgba(26,58,107,0.08)" }}
-                      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                      whileHover={{
+                        y: -1,
+                        boxShadow: "0 4px 16px rgba(26,58,107,0.08)",
+                      }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 25,
+                      }}
                       className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-3.5 py-3"
                     >
-                      <span className="text-[#1a3a6b] text-base shrink-0">{icon}</span>
+                      <span className="text-[#1a3a6b] text-base shrink-0">
+                        {icon}
+                      </span>
                       <div>
-                        <p className="text-[9px] font-bold uppercase tracking-wider text-white/50">{label}</p>
-                        <p className="text-xs font-semibold capitalize text-white/85">{value}</p>
+                        <p className="text-[9px] font-bold uppercase tracking-wider text-white/50">
+                          {label}
+                        </p>
+                        <p className="text-xs font-semibold capitalize text-white/85">
+                          {value}
+                        </p>
                       </div>
                     </motion.div>
                   ))}
@@ -341,7 +404,9 @@ const RoomPreviewModal = ({ room, isOpen, onClose, onSelectRoom, isSelected }) =
                 {/* Amenities */}
                 {amenities.length > 0 && (
                   <div className="mb-5">
-                    <p className="mb-2.5 text-xs font-bold uppercase tracking-widest text-white/50">Included amenities</p>
+                    <p className="mb-2.5 text-xs font-bold uppercase tracking-widest text-white/50">
+                      Included amenities
+                    </p>
                     <div className="flex flex-wrap gap-2">
                       {amenities.map((a) => (
                         <motion.span
@@ -349,7 +414,9 @@ const RoomPreviewModal = ({ room, isOpen, onClose, onSelectRoom, isSelected }) =
                           whileHover={{ scale: 1.04 }}
                           className="flex items-center gap-1.5 text-xs font-semibold text-[#1a3a6b] bg-[#1a3a6b]/6 border border-[#1a3a6b]/15 px-3 py-1.5 rounded-full capitalize"
                         >
-                          <span className="text-[11px]">{resolveAmenityIcon(a)}</span>
+                          <span className="text-[11px]">
+                            {resolveAmenityIcon(a)}
+                          </span>
                           {a}
                         </motion.span>
                       ))}
@@ -366,7 +433,7 @@ const RoomPreviewModal = ({ room, isOpen, onClose, onSelectRoom, isSelected }) =
                     onClick={onClose}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.97 }}
-                    className="min-w-[120px] flex-1 rounded-2xl border-2 border-white/15 py-3 text-sm font-bold text-white/70 transition-colors hover:border-white/30 hover:bg-white/5"
+                    className="min-w-30 flex-1 rounded-2xl border-2 border-white/15 py-3 text-sm font-bold text-white/70 transition-colors hover:border-white/30 hover:bg-white/5"
                   >
                     Back
                   </motion.button>
@@ -380,12 +447,16 @@ const RoomPreviewModal = ({ room, isOpen, onClose, onSelectRoom, isSelected }) =
                       }
                       onClose();
                     }}
-                    whileHover={{ scale: 1.02, boxShadow: "0 8px 28px rgba(26,58,107,0.30)" }}
+                    whileHover={{
+                      scale: 1.02,
+                      boxShadow: "0 8px 28px rgba(26,58,107,0.30)",
+                    }}
                     whileTap={{ scale: 0.97 }}
-                    className={`flex-[2] min-w-[160px] py-3 rounded-2xl text-sm font-extrabold transition-all shadow-lg
-                      ${isSelected
-                        ? "bg-emerald-600 hover:bg-emerald-700 text-white"
-                        : "bg-[#1a3a6b] hover:bg-[#14305a] text-white"
+                    className={`flex-2 min-w-40 py-3 rounded-2xl text-sm font-extrabold transition-all shadow-lg
+                      ${
+                        isSelected
+                          ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                          : "bg-[#1a3a6b] hover:bg-[#14305a] text-white"
                       }`}
                   >
                     {isSelected ? "✓ Room Selected" : "Select This Room"}
