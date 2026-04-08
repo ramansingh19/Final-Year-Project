@@ -135,7 +135,7 @@ const PlacePage = ({ cityId }) => {
   }, [locationStatus, coords, searchQuery]);
 
   return (
-    <section className="mx-auto grid h-[calc(100vh-4rem)] max-w-[1440px] grid-cols-1 gap-4 p-3 md:p-4 lg:grid-cols-12">
+    <section className="mx-auto grid min-h-[calc(100dvh-4rem)] max-w-[1440px] grid-cols-1 gap-4 p-3 md:p-4 lg:grid-cols-12">
       <aside className="order-2 flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-md lg:order-1 lg:col-span-5">
         <div className="space-y-4 border-b border-gray-100 p-4">
           <PlaceHeader
@@ -184,7 +184,7 @@ const PlacePage = ({ cityId }) => {
       {/* NEW: id for mobile scroll-to-map */}
       <div
         id="place-map-section"
-        className="order-1 h-[360px] overflow-hidden rounded-2xl bg-white shadow-md md:h-[420px] lg:order-2 lg:col-span-7 lg:h-full"
+        className="order-1 h-[320px] overflow-hidden rounded-2xl bg-white shadow-md sm:h-[360px] md:h-[420px] lg:order-2 lg:col-span-7 lg:h-full"
       >
         <PlaceMap
           center={coords}

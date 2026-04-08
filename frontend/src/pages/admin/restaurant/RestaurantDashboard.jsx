@@ -56,7 +56,8 @@ function RestaurantDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white px-4 md:px-6 py-6">
+    <div className="min-h-screen bg-black py-6 text-white">
+      <div className="ui-container">
       {/* Top Hero */}
       <motion.div
         initial={{ opacity: 0, y: 25 }}
@@ -199,6 +200,7 @@ function RestaurantDashboard() {
             </motion.div>
           </Link>
         ))}
+      </div>
       </div>
     </div>
   );

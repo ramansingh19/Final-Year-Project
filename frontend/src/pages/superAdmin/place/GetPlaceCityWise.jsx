@@ -52,7 +52,7 @@ function GetPlaceCityWise() {
         <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-blue-600/10 blur-3xl" />
       </div>
 
-      <div className="relative z-10 p-4 md:p-6 xl:p-8">
+      <div className="relative z-10 p-4 sm:p-6 xl:p-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -120,21 +120,21 @@ function GetPlaceCityWise() {
         </div>
 
         {/* Table */}
-        <div className="overflow-y-scroll max-h-125 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl p-4">
+        <div className="overflow-y-auto max-h-125 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl p-4">
           <div className="overflow-x-auto">
             <table className="min-w-full text-left">
               <thead className="border-b border-white/10 bg-white/5">
                 <tr>
-                  <th className="px-6 py-5 text-xs uppercase tracking-[0.2em] text-zinc-400">
+                  <th className="px-4 sm:px-6 py-5 text-xs uppercase tracking-[0.2em] text-zinc-400">
                     Place
                   </th>
-                  <th className="px-6 py-5 text-xs uppercase tracking-[0.2em] text-zinc-400 hidden md:table-cell">
+                  <th className="px-4 sm:px-6 py-5 text-xs uppercase tracking-[0.2em] text-zinc-400 hidden md:table-cell">
                     Category
                   </th>
-                  <th className="px-6 py-5 text-xs uppercase tracking-[0.2em] text-zinc-400">
+                  <th className="px-4 sm:px-6 py-5 text-xs uppercase tracking-[0.2em] text-zinc-400">
                     Status
                   </th>
-                  <th className="px-6 py-5"></th>
+                  <th className="px-4 sm:px-6 py-5"></th>
                 </tr>
               </thead>
 
@@ -142,7 +142,7 @@ function GetPlaceCityWise() {
                 {loading ? (
                   [...Array(6)].map((_, i) => (
                     <tr key={i} className="border-b border-white/5 animate-pulse">
-                      <td className="px-6 py-5 h-12 bg-zinc-800 rounded" colSpan="4" />
+                      <td className="px-4 sm:px-6 py-5 h-12 bg-zinc-800 rounded" colSpan="4" />
                     </tr>
                   ))
                 ) : filteredPlaces.length > 0 ? (
@@ -155,9 +155,9 @@ function GetPlaceCityWise() {
                       onClick={() => setSelectedPlace(place)}
                       className="group cursor-pointer border-b border-white/5 transition-all hover:bg-cyan-500/5"
                     >
-                      <td className="px-6 py-5">{place.name}</td>
-                      <td className="px-6 py-5 hidden md:table-cell">{place.category}</td>
-                      <td className="px-6 py-5">
+                      <td className="px-4 sm:px-6 py-5">{place.name}</td>
+                      <td className="px-4 sm:px-6 py-5 hidden md:table-cell">{place.category}</td>
+                      <td className="px-4 sm:px-6 py-5">
                         <span
                           className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${
                             place.status === "active"
@@ -170,7 +170,7 @@ function GetPlaceCityWise() {
                           {place.status}
                         </span>
                       </td>
-                      <td className="px-6 py-5 text-right">
+                      <td className="px-4 sm:px-6 py-5 text-right">
                         <FaChevronRight className="ml-auto text-zinc-500 group-hover:text-cyan-300 transition" />
                       </td>
                     </motion.tr>

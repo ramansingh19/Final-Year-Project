@@ -106,6 +106,7 @@ const AssistantChat = lazy(() => import("./pages/assistantChat/AssistantChat"))
 const AssistantRecommendations = lazy(() => import("./pages/assistantChat/AssistantRecommendations"))
 const UpdateUserLocation = lazy(() => import("./components/UpdateUserLocation"))
 const GlobalMap = lazy(() => import("./components/globalMap/GlobalMap"))
+import PayoutDashboard from "./pages/admin/finance/PayoutDashboard";
 
 
 function App() {
@@ -674,6 +675,15 @@ function App() {
             <UserProtectedRouter>
               <AssistantRecommendations />
             </UserProtectedRouter>
+          }
+        />
+        {/* payouts */}
+        <Route
+          path="/admin/payout-dashboard"
+          element={
+            <AdminProtectedRouter>
+              <PayoutDashboard />
+            </AdminProtectedRouter>
           }
         />
         <Route path="/updateUserLocation" element={<UpdateUserLocation/>}/>

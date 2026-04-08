@@ -3,7 +3,9 @@ import {
   applyCoupon,
   confirmBooking,
   getBooking,
+  getPendingPayouts,
   initiatePayment,
+  markPayoutDone,
   saveDetails,
   sendOtp,
   verifyOtp,
@@ -121,5 +123,9 @@ BookingRouter.get(
   validate,
   getBooking,
 );
+
+BookingRouter.get("/getpending-payouts" , isAuthenticated , authorize("admin") , getPendingPayouts)
+
+BookingRouter.post("/mark-payout-done" , isAuthenticated , authorize("admin") , markPayoutDone)
 
 export default BookingRouter;

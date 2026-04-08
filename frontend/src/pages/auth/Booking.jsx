@@ -42,8 +42,6 @@ function validate(form) {
   return errs;
 }
 
-const BASE_AMOUNT = Number(import.meta.env.VITE_BASE_AMOUNT) || 999;
-
 // ══════════════════════════════════════════════════════════════════════════════
 export default function BookingFlow() {
   const dispatch = useDispatch();
@@ -51,7 +49,7 @@ export default function BookingFlow() {
   // ── Redux (server / async state) ─────────────────────────────────────────
   const refNo = useSelector(selectRefNo);
   const coupon = useSelector(selectCoupon);
-  const finalAmount = useSelector(selectFinalAmount) ?? BASE_AMOUNT;
+  const finalAmount = useSelector(selectFinalAmount);
   const loading = useSelector(selectLoading);
   const loadingMsg = useSelector(selectLoadingMsg);
   const apiError = useSelector(selectError);
@@ -357,12 +355,7 @@ export default function BookingFlow() {
                 <div className="success-details">
                   <div>{form.name}</div>
                   <div className="success-paid">
-                    ₹{finalAmount.toLocaleString("en-IN")} paid via{" "}
-                    {payMethod === "upi"
-                      ? "UPI"
-                      : payMethod === "card"
-                        ? "Card"
-                        : "Net Banking"}
+                    ₹{finalAmount?.toLocaleString("en-IN") ?? "—"}
                   </div>
                 </div>
                 <button className="new-btn" onClick={handleReset}>
@@ -374,6 +367,7 @@ export default function BookingFlow() {
         </div>
       </>
     );
+  console.log("finalAmount:", finalAmount);
 
   // ── Main flow ──────────────────────────────────────────────────────────────
   return (
@@ -578,13 +572,14 @@ export default function BookingFlow() {
             )}
 
             {/* Step 3 — Payment */}
+
             {step === 3 && (
               <>
                 <div className="price-box">
                   <div className="prow">
                     <span className="pkey">Amount</span>
                     <span className="pval">
-                      ₹{BASE_AMOUNT.toLocaleString("en-IN")}
+                      ₹{finalAmount?.toLocaleString("en-IN") ?? "—"}
                     </span>
                   </div>
                   {coupon && (
@@ -598,7 +593,10 @@ export default function BookingFlow() {
                   <div className="prow">
                     <span className="pkey">Total Payable</span>
                     <span className="pval total">
-                      ₹{finalAmount.toLocaleString("en-IN")}
+                      ₹
+                      {finalAmount !== null && finalAmount !== undefined
+                        ? finalAmount.toLocaleString("en-IN")
+                        : "Loading..."}
                     </span>
                   </div>
                 </div>

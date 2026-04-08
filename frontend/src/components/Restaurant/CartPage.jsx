@@ -89,11 +89,11 @@ function CartPage() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-gray-50 pb-16 dark:bg-gray-950"
+      className="min-h-screen bg-black pb-16 text-white"
     >
       {/* HEADER */}
-      <div className="border-b border-gray-200 bg-white px-4 py-6 dark:border-gray-800 dark:bg-gray-900 sm:px-6">
-        <div className="mx-auto max-w-2xl">
+      <div className="border-b border-white/10 bg-black/70 px-4 py-6 backdrop-blur-xl sm:px-6">
+        <div className="ui-container max-w-2xl">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             Your cart
           </h1>
@@ -103,10 +103,10 @@ function CartPage() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
+      <div className="ui-container max-w-2xl py-8">
         {/* EMPTY CART */}
         {items.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-12 text-center dark:border-gray-700 dark:bg-gray-900">
+          <div className="ui-card-soft border-dashed p-12 text-center">
             <p className="text-gray-600 dark:text-gray-300">
               Your cart is empty
             </p>
@@ -124,7 +124,7 @@ function CartPage() {
               {items.map((line) => (
                 <li
                   key={line.cartLineId}
-                  className="flex gap-4 rounded-2xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900"
+                className="ui-card-soft flex gap-4 p-4"
                 >
                   <img
                     src={
@@ -200,7 +200,7 @@ function CartPage() {
             </ul>
 
             {/* SUMMARY */}
-            <div className="mt-8 rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900">
+            <div className="ui-card mt-8 p-6">
               <div className="flex justify-between text-lg font-bold text-gray-900 dark:text-white">
                 <span>Total</span>
                 <span>₹{total.toFixed(0)}</span>
@@ -213,7 +213,7 @@ function CartPage() {
               <div className="w-full flex items-center justify-center">
               <Link to={"/CheckoutPage"}
                 disabled={loading}
-                className="mt-4 w-[50%] rounded-2xl bg-linear-to-r from-orange-500 to-rose-600 py-3.5 text-sm font-semibold text-white disabled:opacity-60 border text-center"
+                className="ui-btn-primary mt-4 w-[50%] !rounded-2xl !py-3.5 text-center disabled:opacity-60"
               >
                 {loading ? "Placing Order..." : "Place Order"}
               </Link>

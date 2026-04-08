@@ -19,7 +19,7 @@ function RestaurantGridSkeleton({ count = 8 }) {
           variants={item}
           initial="hidden"
           animate="show"
-          className="overflow-hidden rounded-2xl border border-gray-200/80 bg-white dark:border-gray-700/80 dark:bg-gray-900/50"
+          className="ui-card-soft overflow-hidden border-gray-200/80 bg-white dark:border-gray-700/80 dark:bg-gray-900/50"
         >
           <div className="aspect-[16/10] animate-skeleton-shimmer bg-gray-200/50 dark:bg-gray-800/50" />
           <div className="space-y-3 p-4 sm:p-5">

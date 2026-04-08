@@ -119,7 +119,7 @@ const STYLE = `
 .rdp-chip.veg { border-color: rgba(34,197,94,0.3); color: #86efac; }
 .rdp-chip.nonveg { border-color: rgba(239,68,68,0.3); color: #fca5a5; }
 .rdp-chip.both { border-color: rgba(251,191,36,0.3); color: #fde68a; }
-.rdp-chip.rec { border-color: rgba(255,77,0,0.35); color: #ff9a3c; }
+.rdp-chip.rec { border-color: rgba(61,110,245,0.35); color: #8fb2ff; }
 
 .rdp-hero-name {
   font-family: 'Instrument Serif', serif;
@@ -190,7 +190,7 @@ const STYLE = `
   text-align: center;
   transition: border-color 0.2s, transform 0.2s;
 }
-.rdp-stat-card:hover { border-color: rgba(255,77,0,0.25); transform: translateY(-2px); }
+.rdp-stat-card:hover { border-color: rgba(61,110,245,0.25); transform: translateY(-2px); }
 
 .rdp-stat-icon { font-size: 22px; display: block; margin-bottom: 6px; }
 .rdp-stat-val {
@@ -225,7 +225,7 @@ const STYLE = `
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,77,0,0.25), transparent);
+  background: linear-gradient(90deg, transparent, rgba(61,110,245,0.25), transparent);
 }
 
 .rdp-card-title {
@@ -329,9 +329,9 @@ const STYLE = `
   cursor: pointer;
   text-decoration: none;
   transition: all 0.2s;
-  box-shadow: 0 4px 20px rgba(255,77,0,0.3);
+  box-shadow: 0 4px 20px rgba(61,110,245,0.3);
 }
-.rdp-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,77,0,0.45); }
+.rdp-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(61,110,245,0.45); }
 
 .rdp-btn-secondary {
   display: flex;
@@ -365,7 +365,7 @@ const STYLE = `
 
 .rdp-spin {
   width: 40px; height: 40px;
-  border: 2px solid rgba(255,77,0,0.15);
+  border: 2px solid rgba(61,110,245,0.15);
   border-top-color: #ff4d00;
   border-radius: 50%;
   animation: rdp-spin 0.7s linear infinite;

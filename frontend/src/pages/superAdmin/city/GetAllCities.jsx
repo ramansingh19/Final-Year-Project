@@ -17,7 +17,7 @@ function GetAllCities() {
   }, [dispatch]);
 
   return (
-    <div className="min-h-screen bg-black text-white px-4 md:px-8 py-6 relative overflow-hidden">
+    <div className="min-h-screen bg-black text-white px-4 sm:px-6 lg:px-8 py-6 relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute top-0 left-0 w-80 h-80 bg-blue-600/10 blur-3xl rounded-full" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-cyan-500/10 blur-3xl rounded-full" />
@@ -83,7 +83,7 @@ function GetAllCities() {
   
         {/* Empty State */}
         {!loading && cities?.length === 0 && (
-          <div className="rounded-3xl border border-dashed border-white/10 bg-zinc-950/80 p-16 text-center backdrop-blur-xl">
+          <div className="rounded-3xl border border-dashed border-white/10 bg-zinc-950/80 p-8 sm:p-16 text-center backdrop-blur-xl">
             <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-5">
               <FaCity className="text-3xl text-zinc-500" />
             </div>
@@ -99,22 +99,22 @@ function GetAllCities() {
               <table className="w-full min-w-237.5">
                 <thead>
                   <tr className="border-b border-white/10 bg-white/5">
-                    <th className="px-6 py-5 text-left text-xs uppercase tracking-[0.2em] text-zinc-500 font-semibold">
+                    <th className="px-4 sm:px-6 py-5 text-left text-xs uppercase tracking-[0.2em] text-zinc-500 font-semibold">
                       City
                     </th>
-                    <th className="px-6 py-5 text-left text-xs uppercase tracking-[0.2em] text-zinc-500 font-semibold">
+                    <th className="px-4 sm:px-6 py-5 text-left text-xs uppercase tracking-[0.2em] text-zinc-500 font-semibold">
                       State
                     </th>
-                    <th className="px-6 py-5 text-left text-xs uppercase tracking-[0.2em] text-zinc-500 font-semibold">
+                    <th className="px-4 sm:px-6 py-5 text-left text-xs uppercase tracking-[0.2em] text-zinc-500 font-semibold">
                       Country
                     </th>
-                    <th className="px-6 py-5 text-left text-xs uppercase tracking-[0.2em] text-zinc-500 font-semibold">
+                    <th className="px-4 sm:px-6 py-5 text-left text-xs uppercase tracking-[0.2em] text-zinc-500 font-semibold">
                       Best Time
                     </th>
-                    <th className="px-6 py-5 text-left text-xs uppercase tracking-[0.2em] text-zinc-500 font-semibold">
+                    <th className="px-4 sm:px-6 py-5 text-left text-xs uppercase tracking-[0.2em] text-zinc-500 font-semibold">
                       Budget
                     </th>
-                    <th className="px-6 py-5 text-left text-xs uppercase tracking-[0.2em] text-zinc-500 font-semibold">
+                    <th className="px-4 sm:px-6 py-5 text-left text-xs uppercase tracking-[0.2em] text-zinc-500 font-semibold">
                       Status
                     </th>
                   </tr>
@@ -127,7 +127,7 @@ function GetAllCities() {
                       onClick={() => setSelectedCity(city)}
                       className="cursor-pointer border-b border-white/5 hover:bg-white/5 transition-all duration-300 group"
                     >
-                      <td className="px-6 py-5">
+                      <td className="px-4 sm:px-6 py-5">
                         <div className="flex items-center gap-4">
                           <div className="w-14 h-14 rounded-2xl overflow-hidden border border-white/10 bg-white/5 shrink-0">
                             {city.images?.[0] ? (
@@ -154,13 +154,13 @@ function GetAllCities() {
                         </div>
                       </td>
   
-                      <td className="px-6 py-5 text-zinc-300 capitalize">{city.state}</td>
-                      <td className="px-6 py-5 text-zinc-300">{city.country}</td>
-                      <td className="px-6 py-5 text-zinc-400">{city.bestTimeToVisit}</td>
-                      <td className="px-6 py-5 text-green-400 font-semibold">
+                      <td className="px-4 sm:px-6 py-5 text-zinc-300 capitalize">{city.state}</td>
+                      <td className="px-4 sm:px-6 py-5 text-zinc-300">{city.country}</td>
+                      <td className="px-4 sm:px-6 py-5 text-zinc-400">{city.bestTimeToVisit}</td>
+                      <td className="px-4 sm:px-6 py-5 text-green-400 font-semibold">
                         ₹{city.avgDailyBudget}
                       </td>
-                      <td className="px-6 py-5">
+                      <td className="px-4 sm:px-6 py-5">
                         <span className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold border capitalize ${
                           city.status === "active"
                             ? "bg-green-500/10 border-green-500/20 text-green-300"

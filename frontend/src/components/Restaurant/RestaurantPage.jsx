@@ -33,9 +33,9 @@ function RestaurantPage() {
     foods[0]?.restaurantId?.city?.name ?? "City";
 
   return (
-    <div className="flex min-h-screen bg-gray-100 dark:bg-gray-950">
-      <div className="flex-1 p-6">
-        <div className="mb-6 rounded-2xl bg-white p-6 shadow dark:bg-gray-900">
+    <div className="min-h-screen bg-black text-white">
+      <div className="ui-container py-6 sm:py-8">
+        <div className="ui-card mb-6 p-6">
           <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
             {restaurantName}
           </h1>
@@ -44,19 +44,19 @@ function RestaurantPage() {
           </p>
         </div>
 
-        <div className="mb-6 flex flex-wrap gap-4">
+        <div className="mb-6 flex flex-wrap gap-3">
           <input
             type="text"
             placeholder="Search food..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="flex-1 rounded-xl border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+            className="ui-input min-w-[220px] flex-1"
           />
 
           <button
             type="button"
             onClick={() => setVegFilter(null)}
-            className={`rounded-xl px-4 py-2 ${
+            className={`ui-btn-secondary !rounded-xl !px-4 !py-2 ${
               vegFilter === null
                 ? "bg-gray-800 text-white dark:bg-gray-200 dark:text-gray-900"
                 : "bg-gray-200 dark:bg-gray-800 dark:text-gray-200"
@@ -67,7 +67,7 @@ function RestaurantPage() {
           <button
             type="button"
             onClick={() => setVegFilter(true)}
-            className={`rounded-xl px-4 py-2 ${
+            className={`ui-btn-secondary !rounded-xl !px-4 !py-2 ${
               vegFilter === true
                 ? "bg-green-500 text-white"
                 : "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200"
@@ -79,7 +79,7 @@ function RestaurantPage() {
           <button
             type="button"
             onClick={() => setVegFilter(false)}
-            className={`rounded-xl px-4 py-2 ${
+            className={`ui-btn-secondary !rounded-xl !px-4 !py-2 ${
               vegFilter === false
                 ? "bg-red-500 text-white"
                 : "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200"
@@ -92,11 +92,11 @@ function RestaurantPage() {
         {loading ? (
           <p className="text-gray-500 dark:text-gray-400">Loading...</p>
         ) : (
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filteredFoods.map((item) => (
               <div
                 key={item._id}
-                className="rounded-2xl bg-white p-4 shadow transition hover:shadow-lg dark:bg-gray-900"
+                className="ui-card-soft p-4 transition-all duration-300 ease-in-out hover:-translate-y-0.5"
               >
                 <img
                   src={item.images?.[0] || "/no-image.jpg"}

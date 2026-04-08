@@ -81,6 +81,22 @@ const bookingSchema = new mongoose.Schema(
     payment: { type: paymentSchema, default: null },
 
     confirmedAt: { type: Date },
+    // ── Earnings & Payout ─────────────────────────────────────
+commission: {
+  type: Number,
+  default: 0,
+},
+
+hotelAmount: {
+  type: Number,
+  default: 0,
+},
+
+payoutStatus: {
+  type: String,
+  enum: ["pending", "processed"],
+  default: "pending",
+},
   },
   { timestamps: true },
 );
