@@ -9,7 +9,7 @@ export default function DelayedFallback() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShow(true);
-    }, 240); // wait 150ms before showing loader
+    }, 240); // wait 240ms before showing loader
 
     return () => clearTimeout(timer);
   }, []);
