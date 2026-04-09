@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getHotelsStatus } from "../../../features/user/hotelSlice";
 import { createRoom } from "../../../features/user/roomSlice";
+import { motion } from "framer-motion";
 
 function CreateRoom() {
   const dispatch = useDispatch();
@@ -69,180 +70,357 @@ function CreateRoom() {
   };
 
   return (
-<div className="min-h-screen bg-black px-4 md:px-6 py-6 text-white">
-
-{/* Header */}
-<div className="relative mb-8 overflow-hidden rounded-4xl border border-white/10 bg-linear-to-br from-zinc-950 via-zinc-900 to-black p-6 md:p-8 shadow-[0_20px_80px_rgba(0,0,0,0.55)]">
-  <div className="absolute -top-10 right-0 h-44 w-44 rounded-full bg-orange-500/20 blur-3xl" />
-  <div className="absolute bottom-0 left-0 h-36 w-36 rounded-full bg-red-500/20 blur-3xl" />
-
-  <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-    <div className="flex items-center gap-5">
-      <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-linear-to-br from-orange-500 to-red-600 text-3xl shadow-[0_10px_30px_rgba(249,115,22,0.45)]">
-        🏨
+    <div className="relative min-h-screen overflow-hidden bg-[#f8fafc] px-4 py-6 md:px-8">
+      {/* Ecommerce Style Background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -left-20 top-0 h-80 w-80 rounded-full bg-orange-200/40 blur-3xl" />
+        <div className="absolute right-0 top-20 h-96 w-96 rounded-full bg-sky-200/40 blur-3xl" />
+        <div className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-purple-200/30 blur-3xl" />
+        <div className="absolute bottom-10 right-10 h-60 w-60 rounded-full bg-pink-200/30 blur-3xl" />
       </div>
 
-      <div>
-        <p className="mb-2 text-xs uppercase tracking-[0.35em] text-zinc-500">
-          Room Management
-        </p>
-
-        <h1 className="text-3xl md:text-5xl font-black bg-linear-to-r from-white via-orange-100 to-orange-400 bg-clip-text text-transparent">
-          Create Room
-        </h1>
-
-        <p className="mt-2 text-sm md:text-base text-zinc-400">
-          Add room details, pricing, capacity, images, and assign to a hotel
-        </p>
-      </div>
-    </div>
-
-    <div className="rounded-2xl border border-orange-500/20 bg-orange-500/10 px-5 py-3 text-sm text-orange-300 backdrop-blur-xl">
-      Fill all required details carefully
-    </div>
-  </div>
-</div>
-
-{/* Form Card */}
-<div className="mx-auto max-w-4xl rounded-4xl border border-white/10 bg-zinc-950/90 p-6 md:p-8 shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl">
-  <form onSubmit={handleSubmit} className="space-y-8">
-
-    {/* Hotel & Room Type */}
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-      <div>
-        <label className="mb-2 block text-sm font-medium text-zinc-400">Select Hotel</label>
-        <select
-          name="hotelId"
-          value={formData.hotelId}
-          onChange={handleChange}
-          className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none transition-all duration-300 focus:border-orange-500/50 focus:bg-white/10"
+      <div className="relative z-10 mx-auto max-w-6xl">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-8 overflow-hidden rounded-[2rem] border border-white/70 bg-white/80 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-2xl"
         >
-          <option value="">Select Hotel</option>
-          {hotels?.map(hotel => (
-            <option key={hotel._id} value={hotel._id}>{hotel.name}</option>
-          ))}
-        </select>
-      </div>
+          <div className="flex flex-col gap-6 p-6 md:flex-row md:items-center md:justify-between md:p-8">
+            <div className="flex items-start gap-5">
+              <motion.div
+                whileHover={{ rotate: 8, scale: 1.05 }}
+                className="flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-orange-500 via-amber-500 to-red-500 text-3xl text-white shadow-[0_15px_35px_rgba(249,115,22,0.35)]"
+              >
+                🛏️
+              </motion.div>
 
-      <div>
-        <label className="mb-2 block text-sm font-medium text-zinc-400">Room Type</label>
-        <select
-          name="roomType"
-          value={formData.roomType}
-          onChange={handleChange}
-          className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none transition-all duration-300 focus:border-orange-500/50 focus:bg-white/10"
-        >
-          <option value="">Select Room Type</option>
-          <option value="standard">Standard</option>
-          <option value="deluxe">Deluxe</option>
-          <option value="suite">Suite</option>
-          <option value="family">Family</option>
-        </select>
-      </div>
-    </div>
+              <div>
+                <p className="mb-2 text-xs font-bold uppercase tracking-[0.4em] text-orange-500">
+                  Room Management
+                </p>
 
-    {/* Price, Capacity & Total Rooms */}
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-      <input
-        type="number"
-        name="pricePerNight"
-        value={formData.pricePerNight}
-        onChange={handleChange}
-        placeholder="Price per night"
-        className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-zinc-500 outline-none transition-all duration-300 focus:border-orange-500/50 focus:bg-white/10"
-      />
-      <input
-        type="number"
-        name="capacity"
-        value={formData.capacity}
-        onChange={handleChange}
-        placeholder="Capacity"
-        className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-zinc-500 outline-none transition-all duration-300 focus:border-orange-500/50 focus:bg-white/10"
-      />
-      <input
-        type="number"
-        name="totalRooms"
-        value={formData.totalRooms}
-        onChange={handleChange}
-        placeholder="Total Rooms"
-        className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-zinc-500 outline-none transition-all duration-300 focus:border-orange-500/50 focus:bg-white/10"
-      />
-    </div>
+                <h1 className="text-3xl font-black text-slate-900 md:text-5xl">
+                  Create Room
+                </h1>
 
-    {/* Amenities */}
-    <div>
-      <label className="mb-2 block text-sm font-medium text-zinc-400">Amenities</label>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {amenitiesList.map(a => (
-          <div
-            key={a}
-            onClick={() => toggleAmenity(a)}
-            className={`cursor-pointer p-3 rounded-xl text-center transition ${
-              formData.amenities.includes(a)
-                ? "bg-orange-500 text-white shadow-[0_10px_30px_rgba(249,115,22,0.4)]"
-                : "bg-white/5 hover:bg-white/10"
-            }`}
-          >
-            {a}
-          </div>
-        ))}
-      </div>
-    </div>
-
-    {/* Description */}
-    <div>
-      <label className="mb-2 block text-sm font-medium text-zinc-400">Description</label>
-      <textarea
-        name="description"
-        value={formData.description}
-        onChange={handleChange}
-        rows="4"
-        placeholder="Room description"
-        className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-zinc-500 outline-none transition-all duration-300 focus:border-orange-500/50 focus:bg-white/10"
-      />
-    </div>
-
-    {/* Images */}
-    <div>
-      <h2 className="mb-4 text-xl font-bold text-white">Room Images</h2>
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        {formData.images.map((img, i) => (
-          <label
-            key={i}
-            className="group relative flex h-28 cursor-pointer items-center justify-center overflow-hidden rounded-3xl border border-dashed border-white/15 bg-white/5 transition-all duration-300 hover:border-orange-500/40 hover:bg-white/10"
-          >
-            {img ? (
-              <img
-                src={URL.createObjectURL(img)}
-                className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-              />
-            ) : (
-              <div className="text-center">
-                <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-2xl text-zinc-500 group-hover:text-orange-400">
-                  +
-                </div>
-                <p className="text-xs text-zinc-500">Upload</p>
+                <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-500 md:text-base">
+                  Add room details, pricing, amenities, images and assign it to
+                  a hotel with a clean premium interface.
+                </p>
               </div>
-            )}
-            <input hidden type="file" onChange={(e) => handleImageChange(i, e.target.files[0])} />
-          </label>
-        ))}
+            </div>
+
+            <div className="rounded-2xl border border-orange-200 bg-orange-50 px-5 py-4 shadow-sm">
+              <div className="flex items-center gap-3">
+                <span className="h-3 w-3 rounded-full bg-orange-500 animate-pulse" />
+                <p className="text-sm font-semibold text-orange-700">
+                  Complete all room details
+                </p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Form Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 35 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55 }}
+          className="overflow-hidden rounded-[2rem] border border-white/70 bg-white/85 shadow-[0_30px_80px_rgba(15,23,42,0.10)] backdrop-blur-2xl"
+        >
+          <div className="border-b border-slate-200 bg-gradient-to-r from-orange-50 via-white to-sky-50 px-6 py-6 md:px-8">
+            <h2 className="text-2xl font-bold text-slate-900">
+              Room Information
+            </h2>
+            <p className="mt-1 text-sm text-slate-500">
+              Fill in all required room details below.
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-10 p-6 md:p-8">
+            {/* Hotel & Room Type */}
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-slate-700">
+                  Select Hotel
+                </label>
+
+                <select
+                  name="hotelId"
+                  value={formData.hotelId}
+                  onChange={handleChange}
+                  className="h-14 w-full rounded-2xl border border-slate-200 bg-white px-5 text-slate-700 outline-none transition-all duration-300 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
+                >
+                  <option value="">Select Hotel</option>
+                  {hotels?.map((hotel) => (
+                    <option key={hotel._id} value={hotel._id}>
+                      {hotel.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-slate-700">
+                  Room Type
+                </label>
+
+                <select
+                  name="roomType"
+                  value={formData.roomType}
+                  onChange={handleChange}
+                  className="h-14 w-full rounded-2xl border border-slate-200 bg-white px-5 text-slate-700 outline-none transition-all duration-300 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
+                >
+                  <option value="">Select Room Type</option>
+                  <option value="standard">Standard</option>
+                  <option value="deluxe">Deluxe</option>
+                  <option value="suite">Suite</option>
+                  <option value="family">Family</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Price / Capacity / Rooms */}
+            <div className="rounded-[2rem] border border-slate-200 bg-gradient-to-br from-orange-50 via-white to-amber-50 p-6">
+              <div className="mb-6">
+                <h3 className="text-xl font-bold text-slate-900">
+                  Pricing & Capacity
+                </h3>
+                <p className="mt-1 text-sm text-slate-500">
+                  Set room price, guest capacity and total available rooms
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Price Per Night
+                  </label>
+
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                      ₹
+                    </span>
+
+                    <input
+                      type="number"
+                      name="pricePerNight"
+                      value={formData.pricePerNight}
+                      onChange={handleChange}
+                      placeholder="0"
+                      className="h-14 w-full rounded-2xl border border-slate-200 bg-white pl-10 pr-4 text-slate-800 outline-none transition-all duration-300 placeholder:text-slate-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Guest Capacity
+                  </label>
+
+                  <input
+                    type="number"
+                    name="capacity"
+                    value={formData.capacity}
+                    onChange={handleChange}
+                    placeholder="2"
+                    className="h-14 w-full rounded-2xl border border-slate-200 bg-white px-4 text-slate-800 outline-none transition-all duration-300 placeholder:text-slate-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Total Rooms
+                  </label>
+
+                  <input
+                    type="number"
+                    name="totalRooms"
+                    value={formData.totalRooms}
+                    onChange={handleChange}
+                    placeholder="10"
+                    className="h-14 w-full rounded-2xl border border-slate-200 bg-white px-4 text-slate-800 outline-none transition-all duration-300 placeholder:text-slate-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Amenities */}
+            <div>
+              <div className="mb-5">
+                <h3 className="text-xl font-bold text-slate-900">Amenities</h3>
+                <p className="mt-1 text-sm text-slate-500">
+                  Select all room facilities available for guests
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+                {amenitiesList.map((a, index) => (
+                  <motion.div
+                    key={a}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.03 }}
+                    whileHover={{ y: -4, scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => toggleAmenity(a)}
+                    className={`cursor-pointer rounded-2xl border px-4 py-4 text-center text-sm font-semibold transition-all duration-300 ${
+                      formData.amenities.includes(a)
+                        ? "border-orange-300 bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-[0_12px_30px_rgba(249,115,22,0.30)]"
+                        : "border-slate-200 bg-white text-slate-700 hover:border-orange-300 hover:bg-orange-50"
+                    }`}
+                  >
+                    {a}
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            {/* Description */}
+            <div className="rounded-[2rem] border border-slate-200 bg-gradient-to-br from-sky-50 via-white to-cyan-50 p-6">
+              <div className="mb-5">
+                <h3 className="text-xl font-bold text-slate-900">
+                  Room Description
+                </h3>
+                <p className="mt-1 text-sm text-slate-500">
+                  Describe the room, interior and guest experience
+                </p>
+              </div>
+
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                rows="5"
+                placeholder="Write a short room description..."
+                className="w-full rounded-3xl border border-slate-200 bg-white px-5 py-4 text-slate-800 outline-none transition-all duration-300 placeholder:text-slate-400 focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
+              />
+            </div>
+
+            {/* Room Images Upload */}
+            <div className="rounded-[2rem] border border-slate-200 bg-white/80 p-6 shadow-sm backdrop-blur-xl">
+              <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900">
+                    Upload Room Images
+                  </h3>
+                  <p className="mt-1 text-sm text-slate-500">
+                    Add multiple room photos. The first image will be used as
+                    the main preview.
+                  </p>
+                </div>
+
+                <div className="rounded-2xl bg-orange-50 px-4 py-2 text-sm font-semibold text-orange-600">
+                  {formData.images.filter((img) => img).length} / 5 Images Added
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+                {[0, 1, 2, 3, 4].map((index) => (
+                  <label
+                    key={index}
+                    className="group relative flex h-40 cursor-pointer items-center justify-center overflow-hidden rounded-3xl border-2 border-dashed border-slate-300 bg-slate-50 transition-all duration-300 hover:border-orange-400 hover:bg-orange-50"
+                  >
+                    {formData.images[index] ? (
+                      <>
+                        <img
+                          src={URL.createObjectURL(formData.images[index])}
+                          alt={`room-${index}`}
+                          className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
+                        />
+
+                        <div className="absolute inset-0 bg-black/30 opacity-0 transition duration-300 group-hover:opacity-100" />
+
+                        {index === 0 && (
+                          <div className="absolute left-3 top-3 rounded-xl bg-orange-500 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white shadow-lg">
+                            Main Image
+                          </div>
+                        )}
+
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+
+                            const updatedImages = [...formData.images];
+                            updatedImages[index] = null;
+
+                            setFormData((prev) => ({
+                              ...prev,
+                              images: updatedImages,
+                            }));
+                          }}
+                          className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white text-lg font-bold text-red-500 opacity-0 shadow-lg transition-all duration-300 hover:bg-red-500 hover:text-white group-hover:opacity-100"
+                        >
+                          ×
+                        </button>
+
+                        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-2xl bg-white/95 px-4 py-2 text-xs font-semibold text-slate-700 opacity-0 shadow-lg transition-all duration-300 group-hover:opacity-100">
+                          Change Image
+                        </div>
+                      </>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center text-center">
+                        <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-100 to-orange-200 text-3xl text-orange-500 transition-all duration-300 group-hover:scale-110 group-hover:from-orange-500 group-hover:to-red-500 group-hover:text-white">
+                          +
+                        </div>
+
+                        <p className="text-sm font-semibold text-slate-700">
+                          Upload Image
+                        </p>
+
+                        <span className="mt-1 text-xs text-slate-400">
+                          PNG, JPG, WEBP
+                        </span>
+                      </div>
+                    )}
+
+                    <input
+                      type="file"
+                      accept="image/*"
+                      hidden
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        if (!file) return;
+
+                        const updatedImages = [...formData.images];
+                        updatedImages[index] = file;
+
+                        setFormData((prev) => ({
+                          ...prev,
+                          images: updatedImages,
+                        }));
+                      }}
+                    />
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Submit */}
+            <div className="pt-2">
+              <motion.button
+                whileHover={{ y: -3, scale: 1.01 }}
+                whileTap={{ scale: 0.98 }}
+                disabled={loading}
+                className="w-full rounded-3xl bg-gradient-to-r from-orange-500 via-amber-500 to-red-500 py-5 text-lg font-bold text-white shadow-[0_20px_50px_rgba(249,115,22,0.35)] transition-all duration-300 hover:shadow-[0_25px_60px_rgba(249,115,22,0.45)] disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {loading ? (
+                  <span className="flex items-center justify-center gap-3">
+                    <span className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                    Creating Room...
+                  </span>
+                ) : (
+                  "Create Room"
+                )}
+              </motion.button>
+            </div>
+          </form>
+        </motion.div>
       </div>
     </div>
-
-    {/* Submit Button */}
-    <div>
-      <button
-        disabled={loading}
-        className="w-full rounded-3xl bg-linear-to-r from-orange-500 to-red-600 py-4 text-lg font-bold text-white shadow-[0_12px_40px_rgba(249,115,22,0.35)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(249,115,22,0.45)] disabled:cursor-not-allowed disabled:opacity-60"
-      >
-        {loading ? "Creating Room..." : "Create Room"}
-      </button>
-    </div>
-
-  </form>
-</div>
-</div>
   );
 }
 

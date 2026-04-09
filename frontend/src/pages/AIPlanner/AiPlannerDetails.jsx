@@ -128,30 +128,34 @@ function AiPlannerDetails({ embedded = false } = {}) {
     <div className="max-w-275 mx-auto">
       {/* ── HEADER ── */}
       <div
-        className={`animate-apd-fadeup bg-[#141c27] border border-white/[0.07] rounded-[18px] flex items-center justify-between flex-wrap gap-4 mb-6 ${embedded ? "px-5 py-4.5" : "px-6.5 py-5.5"}`}
+        className={`animate-fade-up bg-white border border-gray-200 rounded-[18px] flex items-center justify-between flex-wrap gap-4 mb-6 ${
+          embedded ? "px-5 py-4.5" : "px-6.5 py-5.5"
+        }`}
       >
         <div>
           <div className="text-[10px] tracking-[.18em] uppercase text-[#c9922a] font-semibold mb-1.5">
             ✦ Itinerary
           </div>
           <div
-            className={`font-cormorant font-semibold text-[#f5efe6] leading-[1.1] ${embedded ? "text-[20px]" : "text-[28px]"}`}
+            className={`font-cormorant font-semibold text-[#1f2937] leading-[1.1] ${
+              embedded ? "text-[20px]" : "text-[28px]"
+            }`}
           >
             Plan Overview
           </div>
-          <div className="text-[12px] text-[#7a8a9a] mt-1">
+          <div className="text-[12px] text-gray-500 mt-1">
             Tap a place to see details, images & nearby hotels
           </div>
         </div>
         <div>
           {safeAiPlan?.length ? (
-            <span className="inline-flex items-center gap-2 text-[12px] font-medium px-3.5 py-2 rounded-full border border-white/12 bg-[#1c2738] text-[#d8cfc4] whitespace-nowrap">
-              <span className="w-1.75 h-1.75 rounded-full bg-[#34d399] shadow-[0_0_6px_rgba(52,211,153,0.4)] shrink-0" />
+            <span className="inline-flex items-center gap-2 text-[12px] font-medium px-3.5 py-2 rounded-full border border-gray-300 bg-gray-100 text-gray-800 whitespace-nowrap shadow-sm">
+              <span className="w-1.75 h-1.75 rounded-full bg-green-400 shadow-[0_0_6px_rgba(52,211,153,0.4)] shrink-0" />
               {safeAiPlan.length} day plan loaded
             </span>
           ) : (
-            <span className="inline-flex items-center gap-2 text-[12px] font-medium px-3.5 py-2 rounded-full border border-white/12 bg-[#1c2738] text-[#d8cfc4] whitespace-nowrap">
-              <span className="w-1.75 h-1.75 rounded-full bg-[#7a8a9a] shrink-0" />
+            <span className="inline-flex items-center gap-2 text-[12px] font-medium px-3.5 py-2 rounded-full border border-gray-300 bg-gray-100 text-gray-500 whitespace-nowrap shadow-sm">
+              <span className="w-1.75 h-1.75 rounded-full bg-gray-400 shrink-0" />
               No plan loaded
             </span>
           )}
@@ -160,12 +164,12 @@ function AiPlannerDetails({ embedded = false } = {}) {
 
       {/* ── EMPTY STATE ── */}
       {safeAiPlan?.length === 0 && (
-        <div className="animate-apd-fadeup border border-dashed border-white/10 rounded-[18px] py-13 px-6 text-center">
-          <div className="text-[36px] mb-3 opacity-50">🗺️</div>
-          <div className="font-cormorant text-[22px] text-[#f5efe6] mb-2">
+        <div className="animate-fade-up border border-dashed border-gray-200 rounded-[18px] py-13 px-6 text-center bg-gray-50">
+          <div className="text-[36px] mb-3 opacity-60">🗺️</div>
+          <div className="font-cormorant text-[22px] text-gray-800 mb-2">
             No itinerary yet
           </div>
-          <div className="text-[13px] text-[#7a8a9a]">
+          <div className="text-[13px] text-gray-500">
             Go back to the planner and generate a new trip.
           </div>
         </div>
@@ -174,24 +178,28 @@ function AiPlannerDetails({ embedded = false } = {}) {
       {/* ── DAY CARDS ── */}
       {safeAiPlan?.length > 0 && (
         <div
-          className={`animate-apd-fadeup-1 grid gap-4.5 ${embedded ? "grid-cols-1" : "grid-cols-[repeat(auto-fill,minmax(300px,1fr))]"}`}
+          className={`animate-fade-up-1 grid gap-4.5 ${
+            embedded
+              ? "grid-cols-1"
+              : "grid-cols-[repeat(auto-fill,minmax(300px,1fr))]"
+          }`}
         >
           {safeAiPlan.map((day, index) => (
             <div
               key={index}
-              className="apd-day-card bg-[#141c27] border border-white/[0.07] rounded-[18px] p-5 relative overflow-hidden transition-all duration-250 hover:border-[#c9922a]/25 hover:shadow-[0_0_40px_rgba(201,146,42,0.12)]"
+              className="day-card bg-white border border-gray-200 rounded-[18px] p-5 relative overflow-hidden transition-all duration-250 hover:border-yellow-400 hover:shadow-lg"
             >
               {/* Day header */}
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-[10px] bg-[#c9922a]/12 border border-[#c9922a]/20 grid place-items-center font-cormorant text-[16px] font-semibold text-[#e8b84b] shrink-0">
+                  <div className="w-9 h-9 rounded-[10px] bg-yellow-100 border border-yellow-200 grid place-items-center font-cormorant text-[16px] font-semibold text-yellow-500 shrink-0">
                     {day.day}
                   </div>
-                  <div className="font-cormorant text-[18px] font-semibold text-[#f5efe6]">
+                  <div className="font-cormorant text-[18px] font-semibold text-gray-800">
                     Day {day.day}
                   </div>
                 </div>
-                <span className="text-[11px] text-[#7a8a9a] tracking-[.06em] bg-[#1c2738] px-2.5 py-1 rounded-full border border-white/[0.07]">
+                <span className="text-[11px] text-gray-500 tracking-[.06em] bg-gray-100 px-2.5 py-1 rounded-full border border-gray-200">
                   {day.places?.length || 0} place
                   {(day.places?.length || 0) !== 1 ? "s" : ""}
                 </span>
@@ -201,29 +209,29 @@ function AiPlannerDetails({ embedded = false } = {}) {
               {day.places?.map((p, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center gap-3 p-3 mb-2 last:mb-0 rounded-xl border border-white/[0.07] bg-[#1c2738] cursor-pointer transition-all duration-200 hover:border-[#c9922a]/30 hover:bg-[#243044] hover:translate-x-0.75"
+                  className="flex items-center gap-3 p-3 mb-2 last:mb-0 rounded-xl border border-gray-200 bg-gray-50 cursor-pointer transition-all duration-200 hover:border-yellow-300 hover:bg-yellow-50 hover:translate-x-0.5"
                   onClick={() => setModalData({ type: "place", data: p, day })}
                 >
                   {p.images?.[0] ? (
                     <img
                       src={p.images[0]}
                       alt={p.name}
-                      className="w-13 h-13 object-cover rounded-[10px] shrink-0 border border-white/[0.07]"
+                      className="w-13 h-13 object-cover rounded-[10px] shrink-0 border border-gray-200"
                     />
                   ) : (
-                    <div className="w-13 h-13 rounded-[10px] bg-[#243044] border border-white/[0.07] shrink-0 grid place-items-center text-[20px] opacity-50">
+                    <div className="w-13 h-13 rounded-[10px] bg-gray-200 border border-gray-200 shrink-0 grid place-items-center text-[20px] opacity-50">
                       📍
                     </div>
                   )}
                   <div className="min-w-0 flex-1">
-                    <div className="text-[14px] font-medium text-[#f5efe6] leading-snug whitespace-nowrap overflow-hidden text-ellipsis max-w-45">
+                    <div className="text-[14px] font-medium text-gray-800 leading-snug whitespace-nowrap overflow-hidden text-ellipsis max-w-45">
                       {p.name}
                     </div>
-                    <div className="text-[11px] text-[#7a8a9a] mt-0.75 tracking-[.04em]">
+                    <div className="text-[11px] text-gray-500 mt-0.75 tracking-[.04em]">
                       {p.category}
                     </div>
                   </div>
-                  <span className="ml-auto text-[#7a8a9a] text-[16px] shrink-0 transition-all duration-200 group-hover:text-[#c9922a]">
+                  <span className="ml-auto text-gray-500 text-[16px] shrink-0 transition-all duration-200 group-hover:text-yellow-500">
                     →
                   </span>
                 </div>
@@ -235,23 +243,23 @@ function AiPlannerDetails({ embedded = false } = {}) {
 
       {/* ── MAP ── */}
       {coordinates.length > 0 && (
-        <div className="apd-map-section animate-apd-fadeup-2 mt-7 bg-[#141c27] border border-white/[0.07] rounded-[18px] overflow-hidden">
-          <div className="px-6 pt-5 pb-4 border-b border-white/[0.07] flex items-center justify-between flex-wrap gap-2.5">
+        <div className="map-section animate-fade-up-2 mt-7 bg-white border border-gray-200 rounded-[18px] overflow-hidden">
+          <div className="px-6 pt-5 pb-4 border-b border-gray-200 flex items-center justify-between flex-wrap gap-2.5">
             <div>
-              <div className="font-cormorant text-[22px] font-semibold text-[#f5efe6]">
+              <div className="font-cormorant text-[22px] font-semibold text-gray-800">
                 Route Map
               </div>
-              <div className="text-[12px] text-[#7a8a9a] mt-0.75">
+              <div className="text-[12px] text-gray-500 mt-0.75">
                 Visualize places and hotels across your itinerary
               </div>
             </div>
             <div className="flex items-center gap-3.5 flex-wrap">
-              <div className="flex items-center gap-1.5 text-[11px] text-[#7a8a9a] tracking-[.04em]">
-                <div className="w-2 h-2 rounded-full bg-[#22c55e] shrink-0" />
+              <div className="flex items-center gap-1.5 text-[11px] text-gray-500 tracking-[.04em]">
+                <div className="w-2 h-2 rounded-full bg-green-400 shrink-0" />
                 Places
               </div>
-              <div className="flex items-center gap-1.5 text-[11px] text-[#7a8a9a] tracking-[.04em]">
-                <div className="w-2 h-2 rounded-full bg-[#ef4444] shrink-0" />
+              <div className="flex items-center gap-1.5 text-[11px] text-gray-500 tracking-[.04em]">
+                <div className="w-2 h-2 rounded-full bg-red-400 shrink-0" />
                 Hotels
               </div>
             </div>
@@ -282,7 +290,7 @@ function AiPlannerDetails({ embedded = false } = {}) {
                     {loc.type}
                   </Popup>
                 </Marker>
-              )),
+              ))
             )}
             <Polyline
               positions={coordinates}
@@ -299,17 +307,17 @@ function AiPlannerDetails({ embedded = false } = {}) {
       {modalData &&
         createPortal(
           <div
-            className="animate-apd-fadein fixed inset-0 bg-black/75 backdrop-blur-[6px] flex items-center justify-center z-9999 p-5"
+            className="animate-fade-in fixed inset-0 bg-black/30 backdrop-blur-[6px] flex items-center justify-center z-50 p-5"
             onClick={() => setModalData(null)}
           >
             <div
-              className="animate-apd-slideup bg-[#141c27] border border-white/12 rounded-[22px] w-full max-w-215 max-h-[88vh] overflow-y-auto relative shadow-[0_32px_80px_rgba(0,0,0,0.6),0_0_40px_rgba(201,146,42,0.12)] [scrollbar-width:thin] [scrollbar-color:#1c2738_transparent]"
+              className="animate-slide-up bg-white border border-gray-200 rounded-[22px] w-full max-w-215 max-h-[88vh] overflow-y-auto relative shadow-lg [scrollbar-width:thin] [scrollbar-color:#cfd8dc_transparent]"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Hero image strip */}
               {modalData.data.images?.length > 0 && (
                 <div
-                  className="apd-modal-imgs grid gap-0.75 mb-0"
+                  className="modal-imgs grid gap-0.75 mb-0"
                   style={{
                     gridTemplateColumns:
                       "repeat(auto-fill, minmax(180px, 1fr))",
@@ -329,7 +337,7 @@ function AiPlannerDetails({ embedded = false } = {}) {
               <div className="px-7.5 pt-7 pb-8">
                 {/* Close button */}
                 <button
-                  className="absolute top-4.5 right-4.5 bg-[#1c2738] border border-white/12 text-[#7a8a9a] rounded-[10px] w-9 h-9 grid place-items-center cursor-pointer z-1 transition-all duration-200 hover:text-[#f5efe6] hover:border-[#c9922a] hover:bg-[#c9922a]/8"
+                  className="absolute top-4.5 right-4.5 bg-gray-100 border border-gray-300 text-gray-500 rounded-[10px] w-9 h-9 grid place-items-center cursor-pointer z-10 transition-all duration-200 hover:text-gray-800 hover:border-yellow-400 hover:bg-yellow-50"
                   onClick={() => setModalData(null)}
                   aria-label="Close"
                 >
@@ -338,24 +346,24 @@ function AiPlannerDetails({ embedded = false } = {}) {
 
                 {modalData.type === "place" && (
                   <>
-                    <div className="font-cormorant text-[30px] font-semibold text-[#f5efe6] mb-2.5 pr-11 leading-[1.15]">
+                    <div className="font-cormorant text-[30px] font-semibold text-gray-800 mb-2.5 pr-11 leading-[1.15]">
                       {modalData.data.name}
                     </div>
-                    <div className="text-[14px] text-[#d8cfc4] leading-[1.7] mb-4.5">
+                    <div className="text-[14px] text-gray-700 leading-[1.7] mb-4.5">
                       {modalData.data.description}
                     </div>
 
                     {/* Tags */}
                     <div className="flex flex-wrap gap-2 mb-6">
                       {modalData.data.category && (
-                        <span className="text-[11px] font-medium tracking-[.08em] px-3 py-1.25 rounded-full border border-[#c9922a]/30 bg-[#c9922a]/8 text-[#e8b84b]">
+                        <span className="text-[11px] font-medium tracking-[.08em] px-3 py-1.25 rounded-full border border-yellow-200 bg-yellow-50 text-yellow-500">
                           {modalData.data.category}
                         </span>
                       )}
-                      <span className="text-[11px] font-medium tracking-[.08em] px-3 py-1.25 rounded-full border border-white/12 bg-[#1c2738] text-[#d8cfc4]">
+                      <span className="text-[11px] font-medium tracking-[.08em] px-3 py-1.25 rounded-full border border-gray-200 bg-gray-100 text-gray-700">
                         ₹{modalData.data.entryfees} entry
                       </span>
-                      <span className="text-[11px] font-medium tracking-[.08em] px-3 py-1.25 rounded-full border border-white/12 bg-[#1c2738] text-[#d8cfc4]">
+                      <span className="text-[11px] font-medium tracking-[.08em] px-3 py-1.25 rounded-full border border-gray-200 bg-gray-100 text-gray-700">
                         {modalData.data.timeRequired} hrs
                       </span>
                     </div>
@@ -363,13 +371,13 @@ function AiPlannerDetails({ embedded = false } = {}) {
                     {/* Nearby Hotels */}
                     {modalData.day?.hotels?.length > 0 && (
                       <>
-                        <div className="text-[10px] tracking-[.18em] uppercase font-semibold text-[#c9922a] mb-3.5">
+                        <div className="text-[10px] tracking-[.18em] uppercase font-semibold text-yellow-500 mb-3.5">
                           ✦ Nearby Hotels
                         </div>
                         {modalData.day.hotels.map((h, idx) => (
                           <div
                             key={idx}
-                            className="flex items-center gap-3.5 px-4 py-3.5 mb-2.5 last:mb-0 rounded-[14px] border border-white/[0.07] bg-[#1c2738]"
+                            className="flex items-center gap-3.5 px-4 py-3.5 mb-2.5 last:mb-0 rounded-[14px] border border-gray-200 bg-gray-50"
                           >
                             {h.images?.[0] && (
                               <img
@@ -379,10 +387,10 @@ function AiPlannerDetails({ embedded = false } = {}) {
                               />
                             )}
                             <div>
-                              <div className="text-[14px] font-medium text-[#f5efe6]">
+                              <div className="text-[14px] font-medium text-gray-800">
                                 {h.name}
                               </div>
-                              <div className="text-[12px] text-[#e8b84b] font-medium mt-0.75">
+                              <div className="text-[12px] text-yellow-500 font-medium mt-0.75">
                                 ₹{h.cheapestRoom?.pricePerNight}/night
                               </div>
                             </div>
@@ -395,7 +403,7 @@ function AiPlannerDetails({ embedded = false } = {}) {
               </div>
             </div>
           </div>,
-          document.body,
+          document.body
         )}
     </div>
   );
@@ -404,7 +412,11 @@ function AiPlannerDetails({ embedded = false } = {}) {
     <>
       <style dangerouslySetInnerHTML={{ __html: STYLES }} />
       <div
-        className={`apd-wrap ${embedded ? "p-5" : "min-h-screen bg-[#0d1117] p-9 max-[900px]:p-5"}`}
+        className={`apd-wrap ${
+          embedded
+            ? "p-5"
+            : "min-h-screen bg-linear-to-br from-white via-gray-50 to-gray-100 p-9 max-[900px]:p-5 animate-fade-in"
+        }`}
       >
         {content}
       </div>

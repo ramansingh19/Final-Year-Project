@@ -109,199 +109,193 @@ function AiPlanner() {
       <style dangerouslySetInnerHTML={{ __html: STYLES }} />
 
       {/* ROOT */}
-      <div className="aip-root h-screen flex overflow-hidden bg-[#0d1117] text-[#f5efe6]">
-        {/* ── SIDEBAR ── */}
-        <aside
-          className={`bg-[#141c27] border-r border-white/[0.07] overflow-hidden shrink-0 flex flex-col shadow-[4px_0_10px_rgba(0,0,0,0.3)] transition-all duration-350 ease-in-out ${
-            sidebarOpen ? "w-75" : "w-0"
-          }`}
-        >
-          {/* Header */}
-          <div className="px-6 pt-7 pb-5 border-b border-white/[0.07]">
-            <div className="text-[10px] tracking-[.18em] uppercase text-[#c9922a] font-semibold mb-1">
-              AI Planner
-            </div>
-            <div className="font-cormorant text-[22px] font-semibold text-[#f5efe6]">
-              Trip History
-            </div>
-          </div>
+      <div className="aip-root h-screen flex overflow-hidden bg-[#f5f5f5] text-[#1f1f1f]">
+  {/* ── SIDEBAR ── */}
+  <aside
+    className={`bg-white shadow-[4px_0_10px_rgba(0,0,0,0.05)] border-r border-black/10 overflow-hidden shrink-0 flex flex-col transition-all duration-350 ease-in-out ${
+      sidebarOpen ? "w-75" : "w-0"
+    }`}
+  >
+    {/* Header */}
+    <div className="px-6 pt-7 pb-5 border-b border-black/10">
+      <div className="text-[10px] tracking-[.18em] uppercase text-[#f59e0b] font-semibold mb-1">
+        AI Planner
+      </div>
+      <div className="font-cormorant text-[22px] font-semibold text-[#1f1f1f]">
+        Trip History
+      </div>
+    </div>
 
-          {/* Scroll area */}
-          <div className="flex-1 overflow-y-auto px-4 pt-4 pb-6 [scrollbar-width:thin] [scrollbar-color:#1c2738_transparent]">
-            {planHistory.length === 0 ? (
-              <div className="mt-6 border border-dashed border-white/10 rounded-[14px] p-6 text-center">
-                <div className="text-[28px] mb-2.5 opacity-50">🗺️</div>
-                <p className="text-[13px] text-[#7a8a9a] leading-relaxed">
-                  No history yet.
-                  <br />
-                  Generate your first plan and it will appear here.
-                </p>
-              </div>
-            ) : (
-              planHistory.map((item) => (
-                <div
-                  key={item.id}
-                  className="aip-history-item flex items-center gap-2.5 px-3.5 py-3.5 mb-2 rounded-[14px] border border-white/[0.07] cursor-pointer relative overflow-hidden transition-all duration-200 hover:bg-white/4 hover:border-[#c9922a]/30 hover:translate-x-0.5"
-                >
-                  <div className="w-8.5 h-8.5 rounded-[10px] bg-[#c9922a]/12 grid place-items-center shrink-0 text-[14px]">
-                    ✈️
-                  </div>
-                  <div
-                    className="flex-1 min-w-0"
-                    onClick={() => handleHistoryClick(item.plan)}
-                  >
-                    <div className="text-[13px] font-medium text-[#f5efe6] whitespace-nowrap overflow-hidden text-ellipsis max-w-37.5">
-                      {item.plan[0]?.places?.[0]?.name || "Trip Plan"}
-                    </div>
-                    <div className="text-[11px] text-[#7a8a9a] mt-0.5">
-                      {item.plan.length} Day{item.plan.length !== 1 ? "s" : ""}
-                    </div>
-                  </div>
-                  <button
-                    className="ml-auto bg-transparent border-none text-[#7a8a9a] cursor-pointer p-1.5 rounded-lg shrink-0 transition-all duration-200 hover:text-red-500 hover:bg-red-500/10"
-                    onClick={() => handleDelete(item.id)}
-                    aria-label="Delete plan"
-                  >
-                    <FaTrash size={11} />
-                  </button>
-                </div>
-              ))
-            )}
-          </div>
-        </aside>
-
-        {/* ── MAIN ── */}
-        <main className="flex-1 flex flex-col overflow-hidden">
-          {/* TOPBAR */}
-          <div className="flex items-center gap-4.5 px-8 max-[900px]:px-5 py-4.5 border-b border-white/[0.07] bg-[#0d1117]/80 backdrop-blur-md shrink-0">
-            <button
-              className="w-10 h-10 grid place-items-center rounded-[10px] border border-white/[0.07] bg-transparent text-[#f5efe6] cursor-pointer transition-all duration-200 hover:border-[#c9922a] hover:bg-[#c9922a]/8"
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              aria-label="Toggle sidebar"
+    {/* Scroll area */}
+    <div className="flex-1 overflow-y-auto px-4 pt-4 pb-6 [scrollbar-width:thin] [scrollbar-color:#e0e0e0_transparent]">
+      {planHistory.length === 0 ? (
+        <div className="mt-6 border border-dashed border-black/10 rounded-[14px] p-6 text-center">
+          <div className="text-[28px] mb-2.5 opacity-50 animate-pulse">🗺️</div>
+          <p className="text-[13px] text-[#6b7280] leading-relaxed">
+            No history yet.
+            <br />
+            Generate your first plan and it will appear here.
+          </p>
+        </div>
+      ) : (
+        planHistory.map((item) => (
+          <div
+            key={item.id}
+            className="aip-history-item flex items-center gap-2.5 px-3.5 py-3.5 mb-2 rounded-[14px] border border-black/10 cursor-pointer relative overflow-hidden transition-all duration-200 hover:bg-[#fef3c7] hover:border-[#f59e0b]/30 hover:translate-x-0.5"
+          >
+            <div className="w-8.5 h-8.5 rounded-[10px] bg-[#f59e0b]/12 grid place-items-center shrink-0 text-[14px]">
+              ✈️
+            </div>
+            <div
+              className="flex-1 min-w-0"
+              onClick={() => handleHistoryClick(item.plan)}
             >
-              <FaBars size={14} />
-            </button>
-
-            <div>
-              <div className="font-cormorant text-[24px] font-semibold text-[#f5efe6] leading-[1.1]">
-                AI Travel Planner
+              <div className="text-[13px] font-medium text-[#1f1f1f] whitespace-nowrap overflow-hidden text-ellipsis max-w-37.5">
+                {item.plan[0]?.places?.[0]?.name || "Trip Plan"}
               </div>
-              <div className="text-[12px] text-[#7a8a9a] mt-0.5 font-light tracking-[.02em]">
-                Day-by-day itineraries crafted for your city, budget & pace
+              <div className="text-[11px] text-[#6b7280] mt-0.5">
+                {item.plan.length} Day{item.plan.length !== 1 ? "s" : ""}
               </div>
             </div>
+            <button
+              className="ml-auto bg-transparent border-none text-[#6b7280] cursor-pointer p-1.5 rounded-lg shrink-0 transition-all duration-200 hover:text-red-500 hover:bg-red-500/10"
+              onClick={() => handleDelete(item.id)}
+              aria-label="Delete plan"
+            >
+              <FaTrash size={11} />
+            </button>
+          </div>
+        ))
+      )}
+    </div>
+  </aside>
 
-            <span className="ml-auto text-[10px] tracking-[.12em] uppercase font-semibold text-[#e8b84b] bg-[#c9922a]/12 border border-[#c9922a]/25 px-3 py-1.25 rounded-full">
-              ✦ Powered by AI
+  {/* ── MAIN ── */}
+  <main className="flex-1 flex flex-col overflow-hidden">
+    {/* TOPBAR */}
+    <div className="flex items-center gap-4.5 px-8 max-[900px]:px-5 py-4.5 border-b border-black/10 bg-white/70 backdrop-blur-md shrink-0">
+      <button
+        className="w-10 h-10 grid place-items-center rounded-[10px] border border-black/10 bg-white text-[#1f1f1f] cursor-pointer transition-all duration-200 hover:border-[#f59e0b] hover:bg-[#f59e0b]/10"
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+        aria-label="Toggle sidebar"
+      >
+        <FaBars size={14} />
+      </button>
+
+      <div>
+        <div className="font-cormorant text-[24px] font-semibold text-[#1f1f1f] leading-[1.1]">
+          AI Travel Planner
+        </div>
+        <div className="text-[12px] text-[#6b7280] mt-0.5 font-light tracking-[.02em]">
+          Day-by-day itineraries crafted for your city, budget & pace
+        </div>
+      </div>
+
+      <span className="ml-auto text-[10px] tracking-[.12em] uppercase font-semibold text-[#b45309] bg-[#fcd34d]/12 border border-[#f59e0b]/25 px-3 py-1.25 rounded-full animate-pulse">
+        ✦ Powered by AI
+      </span>
+    </div>
+
+    {/* CONTENT */}
+    <div className="flex-1 overflow-y-auto p-8 max-[900px]:p-5 [scrollbar-width:thin] [scrollbar-color:#e0e0e0_transparent] bg-linear-to-b from-[#fefce8] to-[#fdfaf6]">
+      <div className="max-w-275 mx-auto grid grid-cols-2 max-[900px]:grid-cols-1 gap-6 items-start">
+        {/* FORM CARD */}
+        <form
+          className="animate-fade-up bg-white border border-black/10 rounded-[20px] px-8 py-9 shadow-[0_0_40px_rgba(245,158,11,0.15)] transition-transform hover:-translate-y-1"
+          onSubmit={handleSubmit}
+        >
+          <div className="text-[10px] tracking-[.18em] uppercase text-[#f59e0b] font-semibold mb-2">
+            ✦ New Itinerary
+          </div>
+          <div className="font-cormorant text-[32px] font-semibold text-[#1f1f1f] leading-[1.15] mb-1.5">
+            Plan your
+            <br />
+            next journey
+          </div>
+          <div className="text-[13px] text-[#6b7280] mb-8 leading-relaxed">
+            Share your destination, budget, and trip length —
+            <br />
+            we'll handle the rest.
+          </div>
+
+          {/* City */}
+          <div className="mb-5">
+            <label className="block text-[11px] tracking-widest uppercase font-semibold text-[#6b7280] mb-2">
+              Destination City
+            </label>
+            <select
+              className="w-full bg-[#f9fafb] border border-black/10 text-[#1f1f1f] px-4 py-3.5 rounded-xl text-[14px] outline-none cursor-pointer appearance-none transition-all duration-200 focus:border-[#f59e0b] focus:shadow-[0_0_0_3px_rgba(245,158,11,0.12)] [&>option]:bg-white"
+              value={form.cityId}
+              onChange={(e) => setForm({ ...form, cityId: e.target.value })}
+            >
+              <option value="">Choose a city…</option>
+              {cities.map((city) => (
+                <option key={city._id} value={city._id}>
+                  {city.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Budget + Days */}
+          <div className="grid grid-cols-2 gap-3.5">
+            <div className="mb-5">
+              <label className="block text-[11px] tracking-widest uppercase font-semibold text-[#6b7280] mb-2">
+                Budget (₹)
+              </label>
+              <input
+                className="w-full bg-[#f9fafb] border border-black/10 text-[#1f1f1f] px-4 py-3.5 rounded-xl text-[14px] outline-none transition-all duration-200 placeholder:text-[#9ca3af]/60 focus:border-[#f59e0b] focus:shadow-[0_0_0_3px_rgba(245,158,11,0.12)]"
+                type="number"
+                placeholder="e.g. 15000"
+                value={form.budget}
+                onChange={(e) => setForm({ ...form, budget: e.target.value })}
+                min={0}
+              />
+            </div>
+            <div className="mb-5">
+              <label className="block text-[11px] tracking-widest uppercase font-semibold text-[#6b7280] mb-2">
+                Trip Duration
+              </label>
+              <input
+                className="w-full bg-[#f9fafb] border border-black/10 text-[#1f1f1f] px-4 py-3.5 rounded-xl text-[14px] outline-none transition-all duration-200 placeholder:text-[#9ca3af]/60 focus:border-[#f59e0b] focus:shadow-[0_0_0_3px_rgba(245,158,11,0.12)]"
+                type="number"
+                placeholder="Days"
+                value={form.days}
+                onChange={(e) => setForm({ ...form, days: e.target.value })}
+                min={1}
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="aip-submit w-full mt-7 px-6 py-3.75 border-none rounded-xl bg-linear-to-br from-[#f59e0b] to-[#fcd34d] text-[#1f1f1f] text-[14px] font-semibold tracking-[.04em] cursor-pointer shadow-[0_4px_24px_rgba(245,158,11,0.3)] relative overflow-hidden transition-all duration-200 hover:scale-[1.02]"
+          >
+            Generate My Itinerary →
+          </button>
+
+          <div className="mt-4 text-[12px] text-[#6b7280] flex items-center gap-1.5">
+            <span className="w-1.25 h-1.25 rounded-full bg-[#f59e0b] shrink-0" />
+            Plans are saved for 24 hours in your History panel.
+          </div>
+        </form>
+
+        {/* PREVIEW PANEL */}
+        <div className="animate-fade-up-delay bg-white border border-black/10 rounded-[20px] overflow-hidden h-[78vh] flex flex-col shadow-[0_0_40px_rgba(245,158,11,0.08)]">
+          <div className="px-6 pt-5 pb-4 border-b border-black/10 flex items-center gap-2.5">
+            <div className="animate-pulse-amber w-2 h-2 rounded-full bg-[#f59e0b] shadow-[0_0_8px_#f59e0b]" />
+            <span className="text-[13px] font-medium text-[#1f1f1f] tracking-[.04em]">
+              Live Itinerary Preview
             </span>
           </div>
-
-          {/* CONTENT */}
-          <div className="flex-1 overflow-y-auto p-8 max-[900px]:p-5 [scrollbar-width:thin] [scrollbar-color:#1c2738_transparent]">
-            <div className="max-w-275 mx-auto grid grid-cols-2 max-[900px]:grid-cols-1 gap-6 items-start">
-              {/* FORM CARD */}
-              <form
-                className="animate-fade-up bg-[#141c27] border border-white/[0.07] rounded-[20px] px-8 py-9 shadow-[0_0_40px_rgba(201,146,42,0.15)]"
-                onSubmit={handleSubmit}
-              >
-                <div className="text-[10px] tracking-[.18em] uppercase text-[#c9922a] font-semibold mb-2">
-                  ✦ New Itinerary
-                </div>
-                <div className="font-cormorant text-[32px] font-semibold text-[#f5efe6] leading-[1.15] mb-1.5">
-                  Plan your
-                  <br />
-                  next journey
-                </div>
-                <div className="text-[13px] text-[#7a8a9a] mb-8 leading-relaxed">
-                  Share your destination, budget, and trip length —
-                  <br />
-                  we'll handle the rest.
-                </div>
-
-                {/* City */}
-                <div className="mb-5">
-                  <label className="block text-[11px] tracking-widest uppercase font-semibold text-[#7a8a9a] mb-2">
-                    Destination City
-                  </label>
-                  <select
-                    className="w-full bg-[#1c2738] border border-white/[0.07] text-[#f5efe6] px-4 py-3.5 rounded-xl text-[14px] outline-none cursor-pointer appearance-none transition-all duration-200 focus:border-[#c9922a] focus:shadow-[0_0_0_3px_rgba(201,146,42,0.12)] [&>option]:bg-[#141c27]"
-                    value={form.cityId}
-                    onChange={(e) =>
-                      setForm({ ...form, cityId: e.target.value })
-                    }
-                  >
-                    <option value="">Choose a city…</option>
-                    {cities.map((city) => (
-                      <option key={city._id} value={city._id}>
-                        {city.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Budget + Days */}
-                <div className="grid grid-cols-2 gap-3.5">
-                  <div className="mb-5">
-                    <label className="block text-[11px] tracking-widest uppercase font-semibold text-[#7a8a9a] mb-2">
-                      Budget (₹)
-                    </label>
-                    <input
-                      className="w-full bg-[#1c2738] border border-white/[0.07] text-[#f5efe6] px-4 py-3.5 rounded-xl text-[14px] outline-none transition-all duration-200 placeholder:text-[#7a8a9a]/60 focus:border-[#c9922a] focus:shadow-[0_0_0_3px_rgba(201,146,42,0.12)]"
-                      type="number"
-                      placeholder="e.g. 15000"
-                      value={form.budget}
-                      onChange={(e) =>
-                        setForm({ ...form, budget: e.target.value })
-                      }
-                      min={0}
-                    />
-                  </div>
-                  <div className="mb-5">
-                    <label className="block text-[11px] tracking-widest uppercase font-semibold text-[#7a8a9a] mb-2">
-                      Trip Duration
-                    </label>
-                    <input
-                      className="w-full bg-[#1c2738] border border-white/[0.07] text-[#f5efe6] px-4 py-3.5 rounded-xl text-[14px] outline-none transition-all duration-200 placeholder:text-[#7a8a9a]/60 focus:border-[#c9922a] focus:shadow-[0_0_0_3px_rgba(201,146,42,0.12)]"
-                      type="number"
-                      placeholder="Days"
-                      value={form.days}
-                      onChange={(e) =>
-                        setForm({ ...form, days: e.target.value })
-                      }
-                      min={1}
-                    />
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  className="aip-submit w-full mt-7 px-6 py-3.75 border-none rounded-xl bg-linear-to-br from-[#c9922a] to-[#e8b84b] text-[#0d1117] text-[14px] font-semibold tracking-[.04em] cursor-pointer shadow-[0_4px_24px_rgba(201,146,42,0.3)] relative overflow-hidden transition-all duration-200"
-                >
-                  Generate My Itinerary →
-                </button>
-
-                <div className="mt-4 text-[12px] text-[#7a8a9a] flex items-center gap-1.5">
-                  <span className="w-1.25 h-1.25 rounded-full bg-[#c9922a] shrink-0" />
-                  Plans are saved for 24 hours in your History panel.
-                </div>
-              </form>
-
-              {/* PREVIEW PANEL */}
-              <div className="animate-fade-up-delay bg-[#141c27] border border-white/[0.07] rounded-[20px] overflow-hidden h-[78vh] flex flex-col">
-                <div className="px-6 pt-5 pb-4 border-b border-white/[0.07] flex items-center gap-2.5">
-                  <div className="animate-pulse-amber w-2 h-2 rounded-full bg-[#c9922a] shadow-[0_0_8px_#c9922a]" />
-                  <span className="text-[13px] font-medium text-[#f5efe6] tracking-[.04em]">
-                    Live Itinerary Preview
-                  </span>
-                </div>
-                <div className="flex-1 overflow-y-auto [scrollbar-width:thin] [scrollbar-color:#1c2738_transparent]">
-                  <AiPlannerDetails embedded />
-                </div>
-              </div>
-            </div>
+          <div className="flex-1 overflow-y-auto [scrollbar-width:thin] [scrollbar-color:#e0e0e0_transparent]">
+            <AiPlannerDetails embedded />
           </div>
-        </main>
+        </div>
       </div>
+    </div>
+  </main>
+</div>
     </>
   );
 }

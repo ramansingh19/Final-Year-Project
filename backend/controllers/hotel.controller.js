@@ -6,6 +6,7 @@ import fs from "fs";
 
 import { Place } from "../model/place.model.js";
 import { User } from "../model/user.model.js";
+import { Room } from "../model/room.model.js";
 
 // admin - createHotel
 export const createHotel = async (req, res) => {
@@ -183,7 +184,7 @@ export const updateHotel = async (req, res) => {
 
       { new: true, runValidators: true }, //this is use to validate data
 
-      { new: true, runValidators: true }, //this is use to validate data
+      { new: true, runValidators: true } //this is use to validate data
     )
       .populate("city")
       .populate("createdBy", "name email");
@@ -308,10 +309,33 @@ export const getActiveHotels = async (req, res) => {
       .populate("city", "name state")
       .populate("createdBy", "name email");
 
+    const hotelIds = hotels.map((hotel) => hotel._id);  
+
+    const rooms = await Room.find({
+      hotelId: { $in: hotelIds },
+      status: "active",
+    });
+
+    const hotelsWithRooms = hotels.map((hotel) => {
+      const hotelRooms = rooms.filter(
+        (room) => room.hotelId.toString() === hotel._id.toString()
+      );
+    
+      return {
+        ...hotel.toObject(),
+        rooms: hotelRooms,
+        totalRoomQuantity: hotelRooms.reduce(
+          (sum, room) => sum + room.totalRooms,
+          0
+        ),
+      };
+    });
+
+    // console.log(hotelsWithRooms);
     return res.status(200).json({
       success: true,
       message: "Active hotels fetched successfully",
-      data: hotels,
+      data: hotelsWithRooms,
     });
   } catch (error) {
     return res.status(500).json({

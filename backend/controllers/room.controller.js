@@ -159,7 +159,9 @@ export const getAllRoomsByID = async (req, res) => {
       });
     }
 
-    const rooms = await Room.find({ hotelId }).sort({ createdAt: -1 });
+    const rooms = await Room.find({ hotelId })
+    .populate("hotelId", "name")
+    .sort({ createdAt: -1 })
 
     return res.status(200).json({
       success: true,
@@ -175,7 +177,6 @@ export const getAllRoomsByID = async (req, res) => {
     });
   }
 };
-
 
 export const getPublicRoomsByHotel = async (req, res) => {
   try {
