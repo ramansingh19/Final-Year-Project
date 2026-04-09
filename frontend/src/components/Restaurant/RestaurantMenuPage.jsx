@@ -2,18 +2,21 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeftIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowLeftIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/24/outline";
 import { getAllFoodForUser } from "../../features/user/foodSlice";
 import { getRestaurantByIdPublic } from "../../features/user/restaurantSlice";
 
 const STYLE = `
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Instrument+Serif:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital,wght@0,400;1,400&display=swap');
 
 .rmp-root {
   min-height: 100vh;
-  background: #0c0c10;
-  font-family: 'Bricolage Grotesque', sans-serif;
-  color: #f0f0f8;
+  background: linear-gradient(to bottom, #fffdfb, #faf5ef, #f5ebe0);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #2d1f16;
 }
 
 /* ── TOP BAR ── */
@@ -21,253 +24,238 @@ const STYLE = `
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(12,12,16,0.9);
+  background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(24px);
-  border-bottom: 1px solid rgba(255,255,255,0.055);
-  padding: 14px 24px;
+  border-bottom: 1px solid #eadccf;
+  padding: 18px 24px;
 }
 
 .rmp-topbar-inner {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
   display: flex;
   align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
+  gap: 24px;
 }
 
 .rmp-back {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.09);
+  gap: 8px;
+  padding: 10px 20px;
+  background: white;
+  border: 1px solid #eadccf;
   border-radius: 100px;
-  color: #f0f0f8;
-  font-family: 'Bricolage Grotesque', sans-serif;
+  color: #6f5a4b;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   text-decoration: none;
-  transition: background 0.2s;
-  flex-shrink: 0;
+  transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
 }
-.rmp-back:hover { background: rgba(255,255,255,0.1); }
+.rmp-back:hover { background: #fafafa; border-color: #c67c4e; color: #2d1f16; transform: translateX(-4px); }
 
 .rmp-topbar-info { flex: 1; min-width: 0; }
 
 .rmp-topbar-name {
   font-family: 'Instrument Serif', serif;
-  font-size: 20px;
+  font-size: 28px;
   font-style: italic;
   font-weight: 400;
-  color: #fff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  color: #2d1f16;
   text-transform: capitalize;
+  line-height: 1;
 }
 
 .rmp-topbar-sub {
   font-size: 11px;
-  color: #6b6b85;
-  font-weight: 500;
-  letter-spacing: 0.1em;
+  color: #a07d63;
+  font-weight: 800;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
-  margin-top: 2px;
+  margin-top: 6px;
 }
 
 /* ── FILTER BAR ── */
 .rmp-filter-bar {
   position: sticky;
-  top: 65px;
+  top: 85px;
   z-index: 99;
-  background: rgba(12,12,16,0.88);
+  background: rgba(255, 253, 251, 0.85);
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-  padding: 12px 24px;
+  border-bottom: 1px solid #f5ebe0;
+  padding: 16px 24px;
 }
 
 .rmp-filter-inner {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
   flex-wrap: wrap;
 }
 
 .rmp-search-wrap {
   position: relative;
   flex: 1;
-  min-width: 180px;
+  min-width: 280px;
 }
 
 .rmp-search-icon {
   position: absolute;
-  left: 14px;
+  left: 18px;
   top: 50%;
   transform: translateY(-50%);
-  width: 16px;
-  height: 16px;
-  color: #6b6b85;
+  width: 18px;
+  height: 18px;
+  color: #a07d63;
   pointer-events: none;
 }
 
 .rmp-search-input {
   width: 100%;
-  padding: 10px 14px 10px 40px;
-  background: #131318;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 12px;
-  color: #f0f0f8;
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 13px;
-  font-weight: 500;
+  padding: 14px 20px 14px 50px;
+  background: white;
+  border: 1px solid #eadccf;
+  border-radius: 20px;
+  color: #2d1f16;
+  font-size: 14px;
+  font-weight: 600;
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.02);
 }
-.rmp-search-input::placeholder { color: #6b6b85; }
-.rmp-search-input:focus { border-color: rgba(61,110,245,0.4); box-shadow: 0 0 0 3px rgba(61,110,245,0.12); }
+.rmp-search-input::placeholder { color: #a07d63; }
+.rmp-search-input:focus { border-color: #c67c4e; box-shadow: 0 0 0 4px rgba(198,124,78,0.1); }
 
 .rmp-filter-pills {
   display: flex;
-  gap: 8px;
-  flex-shrink: 0;
+  gap: 10px;
 }
 
 .rmp-pill {
-  padding: 9px 18px;
+  padding: 12px 24px;
   border-radius: 100px;
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 800;
   cursor: pointer;
-  border: 1px solid;
-  transition: all 0.18s;
-  white-space: nowrap;
+  border: 1px solid #eadccf;
+  background: white;
+  color: #6f5a4b;
+  transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.rmp-pill.all {
-  border-color: rgba(255,255,255,0.1);
-  background: transparent;
-  color: #9898b0;
-}
-.rmp-pill.all.active {
-  background: #f0f0f8;
-  border-color: #f0f0f8;
-  color: #0c0c10;
+.rmp-pill.active {
+  background: #2d1f16;
+  border-color: #2d1f16;
+  color: #fff;
+  box-shadow: 0 10px 25px rgba(45, 31, 22, 0.2);
 }
 
-.rmp-pill.veg {
-  border-color: rgba(34,197,94,0.2);
-  background: transparent;
-  color: #86efac;
-}
 .rmp-pill.veg.active {
-  background: rgba(34,197,94,0.15);
-  border-color: rgba(34,197,94,0.4);
-  color: #4ade80;
-  box-shadow: 0 0 14px rgba(34,197,94,0.15);
+  background: #10b981;
+  border-color: #10b981;
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.25);
 }
 
-.rmp-pill.nonveg {
-  border-color: rgba(239,68,68,0.2);
-  background: transparent;
-  color: #fca5a5;
-}
 .rmp-pill.nonveg.active {
-  background: rgba(239,68,68,0.12);
-  border-color: rgba(239,68,68,0.4);
-  color: #f87171;
-  box-shadow: 0 0 14px rgba(239,68,68,0.12);
-}
-
-/* ── MAIN ── */
-.rmp-main {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 32px 24px 80px;
+  background: #ef4444;
+  border-color: #ef4444;
+  box-shadow: 0 10px 25px rgba(239, 68, 68, 0.25);
 }
 
 /* ── GRID ── */
+.rmp-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px 100px;
+}
+
 .rmp-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
 }
 
 /* ── FOOD CARD ── */
 .rmp-food-card {
-  background: #131318;
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 20px;
+  background: white;
+  border: 1px solid #eadccf;
+  border-radius: 28px;
   overflow: hidden;
-  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   text-decoration: none;
   display: block;
+  box-shadow: 0 12px 35px rgba(186,140,102,0.06);
+  position: relative;
 }
+
+.rmp-food-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #c67c4e, #d8b79d, transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 10;
+}
+
 .rmp-food-card:hover {
-  border-color: rgba(61,110,245,0.3);
-  transform: translateY(-3px);
-  box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+  transform: translateY(-8px);
+  border-color: rgba(198, 124, 78, 0.4);
+  box-shadow: 0 25px 60px rgba(186,140,102,0.15);
 }
+.rmp-food-card:hover::before { opacity: 1; }
 
 .rmp-food-img-wrap {
   position: relative;
-  aspect-ratio: 16/9;
+  aspect-ratio: 16/10;
   overflow: hidden;
-  background: #1a1a22;
+  background: #f5ebe0;
 }
 
 .rmp-food-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 }
-.rmp-food-card:hover .rmp-food-img { transform: scale(1.06); }
+.rmp-food-card:hover .rmp-food-img { transform: scale(1.1); }
 
 .rmp-food-badge {
   position: absolute;
-  top: 10px;
-  left: 10px;
-  width: 22px;
-  height: 22px;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  border: 1.5px solid;
+  top: 15px;
+  left: 15px;
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  border: 1px solid #eadccf;
+  color: #2d1f16;
+  z-index: 5;
 }
-.rmp-food-badge.veg { background: rgba(34,197,94,0.15); border-color: #22c55e; color: #22c55e; }
-.rmp-food-badge.nonveg { background: rgba(239,68,68,0.12); border-color: #ef4444; color: #ef4444; }
 
-.rmp-food-body { padding: 16px; }
+.rmp-food-body { padding: 24px; }
 
 .rmp-food-name {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 15px;
-  font-weight: 700;
-  color: #f0f0f8;
-  margin-bottom: 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 18px;
+  font-weight: 800;
+  color: #2d1f16;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
 }
 
 .rmp-food-desc {
-  font-size: 12px;
-  color: #6b6b85;
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  margin-bottom: 12px;
-  min-height: 36px;
+  font-size: 13px;
+  color: #6f5a4b;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  min-height: 42px;
 }
 
 .rmp-food-footer {
@@ -277,29 +265,33 @@ const STYLE = `
 }
 
 .rmp-food-price {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 800;
-  color: #ff7340;
+  color: #c67c4e;
 }
 
 .rmp-food-cat {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-size: 11px;
+  font-weight: 800;
   text-transform: uppercase;
-  color: #6b6b85;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.06);
-  padding: 4px 10px;
+  letter-spacing: 0.1em;
+  color: #a07d63;
+  background: #faf5ef;
+  border: 1px solid #eadccf;
+  padding: 6px 14px;
   border-radius: 100px;
+}
+
+@media (max-width: 768px) {
+  .rmp-filter-bar { top: 75px; }
+  .rmp-grid { grid-template-columns: 1fr; }
 }
 
 /* ── EMPTY ── */
 .rmp-empty {
   text-align: center;
   padding: 80px 24px;
-  color: #6b6b85;
+  color: #a07d63;
 }
 .rmp-empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.6; }
 
@@ -313,8 +305,8 @@ const STYLE = `
 
 .rmp-spin {
   width: 36px; height: 36px;
-  border: 2px solid rgba(61,110,245,0.15);
-  border-top-color: #ff4d00;
+  border: 3px solid #f5ebe0;
+  border-top-color: #c67c4e;
   border-radius: 50%;
   animation: rmp-spin 0.7s linear infinite;
 }
@@ -322,24 +314,14 @@ const STYLE = `
 
 /* ── ERROR ── */
 .rmp-error {
-  padding: 14px 18px;
-  background: rgba(239,68,68,0.08);
-  border: 1px solid rgba(239,68,68,0.18);
-  border-radius: 14px;
-  color: #fca5a5;
+  padding: 16px 20px;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  border-radius: 20px;
+  color: #dc2626;
   font-size: 13px;
-  margin-bottom: 20px;
-}
-
-@media (max-width: 640px) {
-  .rmp-topbar, .rmp-filter-bar { padding: 12px 16px; }
-  .rmp-main { padding: 24px 16px 80px; }
-  .rmp-filter-bar { top: 60px; }
-  .rmp-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
-}
-
-@media (max-width: 440px) {
-  .rmp-grid { grid-template-columns: 1fr; }
+  margin-bottom: 24px;
+  font-weight: 700;
 }
 `;
 
@@ -357,7 +339,9 @@ function RestaurantMenuPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { foods, loading, error } = useSelector((s) => s.food);
-  const { restaurant, restaurantDetailLoading } = useSelector((s) => s.restaurant);
+  const { restaurant, restaurantDetailLoading } = useSelector(
+    (s) => s.restaurant,
+  );
 
   const [search, setSearch] = useState("");
   const [vegFilter, setVegFilter] = useState(null); // null=all, true=veg, false=nonveg
@@ -373,7 +357,15 @@ function RestaurantMenuPage() {
   useEffect(() => {
     if (restaurantId) {
       dispatch(getRestaurantByIdPublic(restaurantId));
-      dispatch(getAllFoodForUser({ page: 1, limit: 100, restaurantId, category: "", isVeg: "" }));
+      dispatch(
+        getAllFoodForUser({
+          page: 1,
+          limit: 100,
+          restaurantId,
+          category: "",
+          isVeg: "",
+        }),
+      );
     }
   }, [dispatch, restaurantId]);
 
@@ -383,21 +375,27 @@ function RestaurantMenuPage() {
     return matchSearch && matchVeg;
   });
 
-  const name = restaurant?.name ?? (restaurantDetailLoading ? "…" : "Restaurant");
+  const name =
+    restaurant?.name ?? (restaurantDetailLoading ? "…" : "Restaurant");
 
   return (
     <div className="rmp-root">
-
       {/* ── TOP BAR ── */}
       <div className="rmp-topbar">
         <div className="rmp-topbar-inner">
-          <button className="rmp-back" onClick={() => navigate(`/restaurant/${restaurantId}`)}>
-            <ArrowLeftIcon style={{ width: 13, height: 13 }} />
+          <button
+            className="rmp-back"
+            onClick={() => navigate(`/restaurant/${restaurantId}`)}
+          >
+            <ArrowLeftIcon style={{ width: 14, height: 14 }} />
             Back
           </button>
           <div className="rmp-topbar-info">
             <p className="rmp-topbar-name">{name}</p>
-            <p className="rmp-topbar-sub">Menu · {filtered.length} item{filtered.length !== 1 ? "s" : ""}</p>
+            <p className="rmp-topbar-sub">
+              Menu · {filtered.length} culinary creation
+              {filtered.length !== 1 ? "s" : ""}
+            </p>
           </div>
         </div>
       </div>
@@ -410,30 +408,46 @@ function RestaurantMenuPage() {
             <input
               type="search"
               className="rmp-search-input"
-              placeholder="Search dishes…"
+              placeholder="Discover your next favorite dish..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
           <div className="rmp-filter-pills">
-            <button className={`rmp-pill all ${vegFilter === null ? "active" : ""}`} onClick={() => setVegFilter(null)}>All</button>
-            <button className={`rmp-pill veg ${vegFilter === true ? "active" : ""}`} onClick={() => setVegFilter(true)}>🥦 Veg</button>
-            <button className={`rmp-pill nonveg ${vegFilter === false ? "active" : ""}`} onClick={() => setVegFilter(false)}>🍖 Non-Veg</button>
+            <button
+              className={`rmp-pill ${vegFilter === null ? "active" : ""}`}
+              onClick={() => setVegFilter(null)}
+            >
+              All Items
+            </button>
+            <button
+              className={`rmp-pill veg ${vegFilter === true ? "active" : ""}`}
+              onClick={() => setVegFilter(true)}
+            >
+              🥦 Pure Veg
+            </button>
+            <button
+              className={`rmp-pill nonveg ${vegFilter === false ? "active" : ""}`}
+              onClick={() => setVegFilter(false)}
+            >
+              🍖 Non-Veg
+            </button>
           </div>
         </div>
       </div>
 
       {/* ── MAIN ── */}
-      <main className="rmp-main">
+      <main className="rmp-main ">
         {error && <div className="rmp-error">⚠️ {String(error)}</div>}
 
         {loading && !foods?.length ? (
-          <div className="rmp-loading"><div className="rmp-spin" /></div>
+          <div className="rmp-loading">
+            <div className="rmp-spin" />
+          </div>
         ) : filtered.length === 0 ? (
           <div className="rmp-empty">
             <div className="rmp-empty-icon">🍽️</div>
-            <p style={{ fontSize: 16, fontWeight: 700, color: "#f0f0f8", marginBottom: 6 }}>No dishes found</p>
-            <p style={{ fontSize: 13 }}>Try adjusting your search or filter</p>
+            <p style={{ fontSize: 20, fontWeight: 800 }}>No matches found</p>
           </div>
         ) : (
           <motion.div
@@ -449,22 +463,40 @@ function RestaurantMenuPage() {
                   state={{ restaurantId }}
                   className="rmp-food-card"
                 >
-                  <div className="rmp-food-img-wrap">
+                  <div className="rmp-card-container ">
                     <img
-                      src={item.images?.[0] || "https://placehold.co/400x225/1a1a22/ff4d00?text=Food"}
+                      src={
+                        item.images?.[0] ||
+                        "https://placehold.co/400x250/f5ebe0/c67c4e?text=Gourmet+Dish"
+                      }
                       alt={item.name}
-                      className="rmp-food-img"
+                      className="rmp-card-image"
                     />
-                    <div className={`rmp-food-badge ${item.isVeg ? "veg" : "nonveg"}`}>
-                      {item.isVeg ? "●" : "●"}
+
+                    <div className="rmp-card-overlay border " />
+
+                    <div className="rmp-card-badge">
+                      {item.isVeg ? "🥦 Veg" : "🍖 Non-Veg"}
                     </div>
-                  </div>
-                  <div className="rmp-food-body">
-                    <p className="rmp-food-name">{item.name}</p>
-                    <p className="rmp-food-desc">{item.description || "A delicious dish crafted with care."}</p>
-                    <div className="rmp-food-footer">
-                      <span className="rmp-food-price">₹{item.price}</span>
-                      {item.category && <span className="rmp-food-cat">{item.category}</span>}
+
+                    <div className="rmp-card-content">
+                      <div className="rmp-card-header">
+                        <p className="rmp-card-title">{item.name}</p>
+                        <span className="rmp-card-price">₹{item.price}</span>
+                      </div>
+
+                      <p className="rmp-card-desc">
+                        {item.description ||
+                          "A masterfully crafted dish using only the finest seasonal ingredients."}
+                      </p>
+
+                      <div className="rmp-card-tags">
+                        {item.category && (
+                          <span className="rmp-card-tag">{item.category}</span>
+                        )}
+                      </div>
+
+                      <button className="rmp-card-btn">Reserve</button>
                     </div>
                   </div>
                 </Link>

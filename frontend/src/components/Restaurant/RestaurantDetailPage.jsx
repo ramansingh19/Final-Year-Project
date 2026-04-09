@@ -1,366 +1,328 @@
-import { useEffect, useState, useRef } from "react";
+import { ArrowLeftIcon, ClockIcon, MapPinIcon } from "@heroicons/react/24/outline";
+import { motion } from "framer-motion";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { motion } from "framer-motion";
-import { ArrowLeftIcon, MapPinIcon, ClockIcon } from "@heroicons/react/24/outline";
 import { getRestaurantByIdPublic } from "../../features/user/restaurantSlice";
 
 const STYLE = `
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Instrument+Serif:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital,wght@0,400;1,400&display=swap');
 
 .rdp-root {
   min-height: 100vh;
-  background: #0c0c10;
-  font-family: 'Bricolage Grotesque', sans-serif;
-  color: #f0f0f8;
+  background: linear-gradient(to bottom, #fffdfb, #faf5ef, #f5ebe0);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #2d1f16;
   overflow-x: hidden;
 }
 
 /* ── HERO ── */
 .rdp-hero {
   position: relative;
-  height: 65vh;
-  min-height: 420px;
+  height: 60vh;
+  min-height: 480px;
   overflow: hidden;
 }
 
 .rdp-hero-img {
   width: 100%; height: 100%;
   object-fit: cover;
-  transition: transform 8s ease;
+  transition: transform 12s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.rdp-hero:hover .rdp-hero-img { transform: scale(1.04); }
+.rdp-hero:hover .rdp-hero-img { transform: scale(1.08); }
 
 .rdp-hero-gradient {
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    160deg,
-    rgba(12,12,16,0.2) 0%,
-    rgba(12,12,16,0.05) 35%,
-    rgba(12,12,16,0.75) 70%,
-    rgba(12,12,16,1) 100%
+    to top,
+    rgba(45, 31, 22, 0.8) 0%,
+    rgba(45, 31, 22, 0.2) 50%,
+    transparent 100%
   );
 }
 
 .rdp-back-btn {
   position: absolute;
-  top: 20px;
-  left: 20px;
-  z-index: 10;
+  top: 30px;
+  left: 30px;
+  z-index: 20;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 9px 18px;
-  background: rgba(12,12,16,0.65);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255,255,255,0.12);
+  gap: 10px;
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid white;
   border-radius: 100px;
-  color: #f0f0f8;
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
+  color: #2d1f16;
+  font-size: 14px;
+  font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
   text-decoration: none;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
-.rdp-back-btn:hover { background: rgba(12,12,16,0.85); }
+.rdp-back-btn:hover { background: #fff; transform: translateX(-4px); box-shadow: 0 15px 40px rgba(186,140,102,0.15); }
 
 /* Status dot top-right */
 .rdp-status-badge {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  z-index: 10;
+  top: 30px;
+  right: 30px;
+  z-index: 20;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 14px;
+  gap: 8px;
+  padding: 10px 20px;
   border-radius: 100px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.3px;
-  backdrop-filter: blur(16px);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  border: 1px solid #eadccf;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
-.rdp-status-badge.open { background: rgba(16,185,129,0.18); border: 1px solid rgba(16,185,129,0.3); color: #34d399; }
-.rdp-status-badge.closed { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.25); color: #f87171; }
-.rdp-status-live { width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: rdp-pulse 2s ease-in-out infinite; }
-@keyframes rdp-pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+.rdp-status-badge.open { color: #10b981; }
+.rdp-status-badge.closed { color: #ef4444; }
+.rdp-status-live { width: 8px; height: 8px; border-radius: 50%; background: currentColor; animation: rdp-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+@keyframes rdp-pulse { 0%,100%{opacity:1; transform: scale(1);} 50%{opacity:0.4; transform: scale(0.85);} }
 
 /* Hero content */
 .rdp-hero-content {
   position: absolute;
   bottom: 0; left: 0; right: 0;
-  padding: 0 32px 36px;
+  padding: 0 40px 60px;
+  z-index: 10;
 }
 
 .rdp-hero-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 14px;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
 .rdp-chip {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 5px 12px;
-  background: rgba(12,12,16,0.6);
+  gap: 6px;
+  padding: 6px 16px;
+  background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 100px;
-  font-size: 11px;
-  font-weight: 600;
-  color: rgba(240,240,248,0.85);
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
 }
-
-.rdp-chip.veg { border-color: rgba(34,197,94,0.3); color: #86efac; }
-.rdp-chip.nonveg { border-color: rgba(239,68,68,0.3); color: #fca5a5; }
-.rdp-chip.both { border-color: rgba(251,191,36,0.3); color: #fde68a; }
-.rdp-chip.rec { border-color: rgba(61,110,245,0.35); color: #8fb2ff; }
 
 .rdp-hero-name {
   font-family: 'Instrument Serif', serif;
-  font-size: clamp(32px, 6vw, 58px);
+  font-size: clamp(40px, 8vw, 84px);
   font-weight: 400;
   font-style: italic;
   color: #fff;
-  text-shadow: 0 2px 24px rgba(0,0,0,0.5);
-  letter-spacing: -0.5px;
-  line-height: 1.05;
-  text-transform: capitalize;
+  text-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  letter-spacing: -0.02em;
+  line-height: 0.95;
   margin: 0;
 }
 
 .rdp-rating-row {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 12px;
-}
-
-.rdp-stars {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 13px;
+  gap: 15px;
+  margin-top: 20px;
 }
 
 .rdp-rating-val {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 22px;
+  font-size: 28px;
   font-weight: 800;
   color: #fbbf24;
 }
 
 .rdp-reviews {
-  font-size: 12px;
-  color: rgba(240,240,248,0.55);
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 /* ── BODY ── */
 .rdp-body {
-  max-width: 960px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 0 24px 80px;
+  padding: 0 32px 100px;
 }
 
 /* ── STAT STRIP ── */
 .rdp-stats-strip {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin: -36px 0 0;
+  gap: 20px;
+  margin: -50px 0 40px;
   position: relative;
-  z-index: 10;
-  margin-bottom: 28px;
+  z-index: 30;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .rdp-stats-strip { grid-template-columns: repeat(2, 1fr); }
 }
 
 .rdp-stat-card {
-  background: #131318;
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 18px;
-  padding: 18px 14px;
+  background: white;
+  border: 1px solid #eadccf;
+  border-radius: 24px;
+  padding: 24px 16px;
   text-align: center;
-  transition: border-color 0.2s, transform 0.2s;
+  box-shadow: 0 15px 40px rgba(186,140,102,0.08);
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
-.rdp-stat-card:hover { border-color: rgba(61,110,245,0.25); transform: translateY(-2px); }
+.rdp-stat-card:hover { transform: translateY(-8px); border-color: #c67c4e; box-shadow: 0 25px 50px rgba(186,140,102,0.15); }
 
-.rdp-stat-icon { font-size: 22px; display: block; margin-bottom: 6px; }
+.rdp-stat-icon { font-size: 26px; display: block; margin-bottom: 8px; }
 .rdp-stat-val {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 800;
-  color: #fbbf24;
+  color: #2d1f16;
   display: block;
 }
 .rdp-stat-lbl {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
+  font-size: 11px;
+  font-weight: 700;
   text-transform: uppercase;
-  color: #6b6b85;
-  margin-top: 3px;
+  letter-spacing: 0.1em;
+  color: #a07d63;
+  margin-top: 6px;
 }
 
 /* ── INFO CARD ── */
 .rdp-card {
-  background: #131318;
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 22px;
-  padding: 24px;
-  margin-bottom: 16px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid #eadccf;
+  border-radius: 32px;
+  padding: 32px;
+  margin-bottom: 24px;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.03);
 }
 
 .rdp-card::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(61,110,245,0.25), transparent);
+  height: 4px;
+  background: linear-gradient(90deg, #c67c4e, #d8b79d, transparent);
 }
 
 .rdp-card-title {
-  font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.2em;
+  font-weight: 800;
+  letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: #6b6b85;
-  margin-bottom: 18px;
+  color: #c67c4e;
+  margin-bottom: 24px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 }
-.rdp-card-title::before {
+.rdp-card-title::after {
   content: '';
-  width: 16px; height: 2px;
-  background: #ff4d00;
-  border-radius: 2px;
+  flex: 1;
+  height: 1px;
+  background: #eadccf;
 }
 
-/* ── INFO GRID ── */
 .rdp-info-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
 }
 
 .rdp-info-item {
-  background: #1a1a22;
-  border: 1px solid rgba(255,255,255,0.05);
-  border-radius: 14px;
-  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid #f5ebe0;
+  border-radius: 20px;
+  padding: 20px;
+  transition: all 0.3s ease;
 }
+.rdp-info-item:hover { border-color: #eadccf; box-shadow: 0 8px 20px rgba(186,140,102,0.05); }
 
 .rdp-info-lbl {
   font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.15em;
+  font-weight: 800;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #6b6b85;
-  margin-bottom: 6px;
+  color: #a07d63;
+  margin-bottom: 8px;
 }
 
 .rdp-info-val {
-  font-size: 14px;
-  font-weight: 600;
-  color: #f0f0f8;
-  line-height: 1.4;
-}
-
-.rdp-info-val.accent { color: #fbbf24; }
-.rdp-info-val.full { grid-column: 1 / -1; }
-
-/* ── HOURS ── */
-.rdp-hours-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 18px;
-  background: #1a1a22;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.05);
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.rdp-open-chip {
-  padding: 5px 14px;
-  border-radius: 100px;
-  font-size: 11px;
+  font-size: 16px;
   font-weight: 700;
-  letter-spacing: 0.3px;
+  color: #2d1f16;
+  line-height: 1.5;
 }
-.rdp-open-chip.open { background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.25); color: #34d399; }
-.rdp-open-chip.closed { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); color: #f87171; }
 
-/* ── CTA ROW ── */
+/* ── CTA BUTTONS ── */
 .rdp-cta-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 16px;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
-@media (max-width: 440px) { .rdp-cta-row { grid-template-columns: 1fr; } }
+@media (max-width: 500px) { .rdp-cta-row { grid-template-columns: 1fr; } }
 
 .rdp-btn-primary {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 16px;
-  background: linear-gradient(135deg, #ff4d00, #cc3a00);
+  gap: 10px;
+  padding: 20px;
+  background: linear-gradient(135deg, #c67c4e, #9f5b31);
   border: none;
-  border-radius: 16px;
+  border-radius: 24px;
   color: #fff;
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 800;
   cursor: pointer;
   text-decoration: none;
-  transition: all 0.2s;
-  box-shadow: 0 4px 20px rgba(61,110,245,0.3);
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 15px 40px rgba(198,124,78,0.3);
 }
-.rdp-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(61,110,245,0.45); }
+.rdp-btn-primary:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 20px 50px rgba(198,124,78,0.45); }
 
 .rdp-btn-secondary {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 16px;
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 16px;
-  color: #f0f0f8;
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
+  gap: 10px;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #eadccf;
+  border-radius: 24px;
+  color: #6f5a4b;
+  font-size: 16px;
+  font-weight: 700;
   cursor: pointer;
   text-decoration: none;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 }
-.rdp-btn-secondary:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.2); }
+.rdp-btn-secondary:hover { background: #fafafa; border-color: #c67c4e; color: #2d1f16; transform: translateY(-2px); }
 
-/* ── LOADING/ERROR ── */
 .rdp-center {
-  min-height: 60vh;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #0c0c10;
-  font-family: 'Bricolage Grotesque', sans-serif;
-  color: #6b6b85;
+  background: #fffdfb;
+  color: #2d1f16;
 }
 
 .rdp-spin {
@@ -588,14 +550,21 @@ function RestaurantDetailPage() {
           <p className="rdp-card-title">Opening Hours</p>
           <div className="rdp-hours-row">
             <div>
-              <p style={{ fontSize: 12, color: "#6b6b85", marginBottom: 4 }}>Today's Timings</p>
-              <p style={{ fontFamily: "'Bricolage Grotesque'", fontWeight: 800, fontSize: 20, color: "#f0f0f8", display: "flex", alignItems: "center", gap: 8 }}>
-                <ClockIcon style={{ width: 18, height: 18, color: "#ff7340" }} />
+              <p style={{ fontSize: 12, color: "#a07d63", marginBottom: 4 }}>Today's Timings</p>
+              <p style={{ fontWeight: 800, fontSize: 24, color: "#2d1f16", display: "flex", alignItems: "center", gap: 8 }}>
+                <ClockIcon style={{ width: 22, height: 22, color: "#c67c4e" }} />
                 {formatTime(r?.openingHours?.open)} — {formatTime(r?.openingHours?.close)}
               </p>
             </div>
             {openStatus !== null && (
-              <span className={`rdp-open-chip ${openStatus ? "open" : "closed"}`}>
+              <span className={`rdp-open-chip ${openStatus ? "open" : "closed"}`} style={{ 
+                background: openStatus ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)",
+                color: openStatus ? "#10b981" : "#ef4444",
+                padding: "8px 20px",
+                borderRadius: "100px",
+                fontWeight: 800,
+                fontSize: 12
+              }}>
                 {openStatus ? "● Open Now" : "● Closed"}
               </span>
             )}

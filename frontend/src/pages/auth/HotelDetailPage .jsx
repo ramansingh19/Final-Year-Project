@@ -148,7 +148,7 @@ const DetailSkeleton = () => (
 // ── Image Gallery ─────────────────────────────────────────────────────────────
 const Lightbox = ({ imgs, lightbox, setLightbox }) => (
   <div
-    className="fixed inset-0 z-[200] bg-slate-900/95 flex items-center justify-center backdrop-blur-sm"
+    className="fixed inset-0 z-200 bg-slate-900/95 flex items-center justify-center backdrop-blur-sm"
     onClick={() => setLightbox(null)}
   >
     <button
@@ -337,7 +337,9 @@ const RoomImageSlider = ({ images }) => {
               setIdx((i) => Math.max(0, i - 1));
             }}
             className={`absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-white/80 hover:bg-white backdrop-blur-md text-slate-800 rounded-full flex items-center justify-center transition-all shadow-sm ${
-              idx === 0 ? "opacity-0 pointer-events-none" : "opacity-0 group-hover:opacity-100"
+              idx === 0
+                ? "opacity-0 pointer-events-none"
+                : "opacity-0 group-hover:opacity-100"
             }`}
           >
             <FaChevronLeft className="text-[10px]" />
@@ -348,7 +350,9 @@ const RoomImageSlider = ({ images }) => {
               setIdx((i) => Math.min(imgs.length - 1, i + 1));
             }}
             className={`absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-white/80 hover:bg-white backdrop-blur-md text-slate-800 rounded-full flex items-center justify-center transition-all shadow-sm ${
-              idx === imgs.length - 1 ? "opacity-0 pointer-events-none" : "opacity-0 group-hover:opacity-100"
+              idx === imgs.length - 1
+                ? "opacity-0 pointer-events-none"
+                : "opacity-0 group-hover:opacity-100"
             }`}
           >
             <FaChevronRight className="text-[10px]" />
@@ -466,7 +470,7 @@ const BookingWidget = ({
   return (
     <div className="ui-card overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-xl shadow-slate-200/50 lg:sticky lg:top-24">
       {/* Header */}
-      <div className="bg-gradient-to-br from-[#3d6ef5] to-[#6366f1] px-5 py-5 sm:py-6">
+      <div className="bg-linear-to-r from-[#c67c4e] to-[#b86c3d] px-5 py-5 sm:py-6">
         <p className="text-white/70 text-[10px] font-bold uppercase tracking-wider mb-1">
           {selectedRoom ? "Selected Room Rate" : "Special Offer From"}
         </p>
@@ -552,7 +556,7 @@ const BookingWidget = ({
                   value={val}
                   min={min}
                   onChange={(e) => set(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-9 pr-2 text-xs text-slate-700 font-semibold focus:outline-none focus:ring-4 focus:ring-[#3d6ef5]/5 focus:border-[#3d6ef5]/40 transition-all [color-scheme:light]"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-9 pr-2 text-xs text-slate-700 font-semibold focus:outline-none focus:ring-4 focus:ring-[#3d6ef5]/5 focus:border-[#3d6ef5]/40 transition-all scheme-light"
                 />
               </div>
             </div>
@@ -604,7 +608,9 @@ const BookingWidget = ({
               ₹{pricePerNight.toLocaleString()} × {nights} night
               {nights > 1 ? "s" : ""} × {rooms} room{rooms > 1 ? "s" : ""}
             </span>
-            <span className="font-bold text-slate-700">₹{baseAmount.toLocaleString()}</span>
+            <span className="font-bold text-slate-700">
+              ₹{baseAmount.toLocaleString()}
+            </span>
           </div>
           {/* GST line — shows 0% for budget rooms */}
           <div className="flex justify-between text-xs text-slate-500 font-medium">
@@ -616,7 +622,13 @@ const BookingWidget = ({
                 </span>
               )}
             </span>
-            <span className={gstRate === 0 ? "text-emerald-600 font-bold" : "font-bold text-slate-700"}>
+            <span
+              className={
+                gstRate === 0
+                  ? "text-emerald-600 font-bold"
+                  : "font-bold text-slate-700"
+              }
+            >
               {gstRate === 0 ? "₹0" : `₹${gstAmount.toLocaleString()}`}
             </span>
           </div>
@@ -646,7 +658,7 @@ const BookingWidget = ({
                 .getElementById("rooms-section")
                 ?.scrollIntoView({ behavior: "smooth", block: "start" });
             }}
-            className="w-full font-bold py-3.5 rounded-xl shadow-lg shadow-[#3d6ef5]/10 active:scale-[0.98] transition-all text-sm border-2 border-[#3d6ef5] text-[#3d6ef5] hover:bg-[#3d6ef5] hover:text-white"
+            className="w-full font-bold py-3.5 rounded-xl shadow-lg shadow-[#3d6ef5]/10 active:scale-[0.98] transition-all text-sm border-2 border-[#c67c4e] text-[#c67c4e] hover:bg-[#b06d42] hover:text-white"
           >
             Choose a Room to Continue
           </button>
@@ -661,7 +673,7 @@ const BookingWidget = ({
                 bookingLoading ||
                 (selectedRoom && guests > selectedRoom.capacity)
                   ? "bg-slate-200 cursor-not-allowed text-slate-400"
-                  : "bg-gradient-to-r from-[#3d6ef5] to-[#6366f1] hover:from-[#3461d9] hover:to-[#5558e6] text-white shadow-lg shadow-[#3d6ef5]/20 hover:shadow-[#3d6ef5]/30"
+                  : "bg-linear-to-r from-[#3d6ef5] to-[#6366f1] hover:from-[#3461d9] hover:to-[#5558e6] text-white shadow-lg shadow-[#3d6ef5]/20 hover:shadow-[#3d6ef5]/30"
               }`}
           >
             {bookingLoading
@@ -751,7 +763,9 @@ const AddReviewForm = ({ hotelId }) => {
 
   return (
     <div className="mt-6 border-t border-slate-100 pt-6">
-      <h3 className="mb-4 text-[15px] font-black text-slate-800 tracking-tight">Write a Review</h3>
+      <h3 className="mb-4 text-[15px] font-black text-slate-800 tracking-tight">
+        Write a Review
+      </h3>
       <div className="flex items-center gap-1.5 mb-5">
         {[1, 2, 3, 4, 5].map((star) => (
           <button
@@ -771,7 +785,9 @@ const AddReviewForm = ({ hotelId }) => {
           </button>
         ))}
         {rating > 0 && (
-          <span className="ml-3 text-[11px] font-bold text-[#3d6ef5] bg-[#3d6ef5]/10 px-2 py-0.5 rounded-full uppercase tracking-widest">{rating} / 5</span>
+          <span className="ml-3 text-[11px] font-bold text-[#3d6ef5] bg-[#3d6ef5]/10 px-2 py-0.5 rounded-full uppercase tracking-widest">
+            {rating} / 5
+          </span>
         )}
       </div>
       <textarea
@@ -783,7 +799,8 @@ const AddReviewForm = ({ hotelId }) => {
       />
       {submitSuccess && (
         <p className="text-emerald-600 text-xs font-bold mt-3 flex items-center gap-1.5">
-          <FaCheckCircle className="text-[10px]" /> Review received! It will be live after a short verification.
+          <FaCheckCircle className="text-[10px]" /> Review received! It will be
+          live after a short verification.
         </p>
       )}
       {submitError && (
@@ -796,7 +813,7 @@ const AddReviewForm = ({ hotelId }) => {
           ${
             !rating || !comment.trim() || submitLoading
               ? "bg-slate-200 text-slate-400 shadow-none cursor-not-allowed"
-              : "bg-gradient-to-r from-[#3d6ef5] to-[#6366f1] hover:from-[#3461d9] hover:to-[#5558e6] shadow-[#3d6ef5]/20"
+              : "bg-linear-to-r from-[#3d6ef5] to-[#6366f1] hover:from-[#3461d9] hover:to-[#5558e6] shadow-[#3d6ef5]/20"
           }`}
       >
         {submitLoading ? "Publishing..." : "Submit Review"}
@@ -823,7 +840,7 @@ const RoomCard = ({ room, isSelected, onSelect, onPreview, availability }) => {
       }`}
     >
       {isSelected && (
-        <div className="bg-gradient-to-r from-[#3d6ef5] to-[#6366f1] px-4 py-2 flex items-center gap-2">
+        <div className="bg-linear-to-r from-[#3d6ef5] to-[#6366f1] px-4 py-2 flex items-center gap-2">
           <FaCheckCircle className="text-white text-[10px]" />
           <span className="text-white text-[10px] font-bold tracking-widest uppercase">
             Currently Selected Room
@@ -900,9 +917,13 @@ const RoomCard = ({ room, isSelected, onSelect, onPreview, availability }) => {
               <p className="text-2xl font-black text-slate-800 tracking-tight">
                 ₹{room.pricePerNight.toLocaleString()}
               </p>
-              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wide">per night</p>
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wide">
+                per night
+              </p>
               {/* ✅ Show GST slab per room card */}
-              <p className="text-[10px] text-slate-400/80 font-medium">+{gstLabel} tax</p>
+              <p className="text-[10px] text-slate-400/80 font-medium">
+                +{gstLabel} tax
+              </p>
             </div>
 
             <div className="flex flex-col gap-2 items-end w-full sm:w-auto">
@@ -917,7 +938,7 @@ const RoomCard = ({ room, isSelected, onSelect, onPreview, availability }) => {
                 isSelected ? (
                   <button
                     onClick={() => onSelect(null)}
-                    className="bg-emerald-50 border-2 border-emerald-500 text-emerald-600 text-xs font-bold px-4 py-2 rounded-xl transition-all min-w-[120px] hover:bg-emerald-100 active:scale-95 flex items-center gap-1.5 justify-center"
+                    className="bg-emerald-50 border-2 border-emerald-500 text-emerald-600 text-xs font-bold px-4 py-2 rounded-xl transition-all min-w-30 hover:bg-emerald-100 active:scale-95 flex items-center gap-1.5 justify-center"
                   >
                     <FaCheckCircle className="text-[11px]" />
                     Selected
@@ -925,7 +946,7 @@ const RoomCard = ({ room, isSelected, onSelect, onPreview, availability }) => {
                 ) : (
                   <button
                     onClick={() => onSelect(room)}
-                    className="bg-gradient-to-r from-[#3d6ef5] to-[#6366f1] hover:from-[#3461d9] hover:to-[#5558e6] active:scale-95 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-lg shadow-[#3d6ef5]/15 transition-all min-w-[120px] flex items-center gap-1.5 justify-center"
+                    className="bg-linear-to-r from-[#c67c4e] to-[#b86c3d] hover:from-[#b06d42] hover:to-[#9e5b33] active:scale-95 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-lg shadow-[#3d6ef5]/15 transition-all min-w-30 flex items-center gap-1.5 justify-center"
                   >
                     <FaBed className="text-[11px]" />
                     Select Room
@@ -934,7 +955,7 @@ const RoomCard = ({ room, isSelected, onSelect, onPreview, availability }) => {
               ) : (
                 <button
                   disabled
-                  className="bg-slate-100 cursor-not-allowed text-slate-400 text-xs font-bold px-4 py-2.5 rounded-xl min-w-[120px]"
+                  className="bg-slate-100 cursor-not-allowed text-slate-400 text-xs font-bold px-4 py-2.5 rounded-xl min-w-30"
                 >
                   Sold Out
                 </button>
@@ -968,7 +989,10 @@ const RoomSelectedToast = ({ room, onClose }) => {
             Scroll up to finalize your booking
           </p>
         </div>
-        <button onClick={onClose} className="ml-2 text-slate-300 hover:text-slate-500 transition-colors">
+        <button
+          onClick={onClose}
+          className="ml-2 text-slate-300 hover:text-slate-500 transition-colors"
+        >
           <FaTimes className="text-sm" />
         </button>
       </div>
@@ -1105,8 +1129,12 @@ const HotelDetailPage = () => {
           <div className="w-20 h-20 bg-rose-50 rounded-3xl flex items-center justify-center mx-auto mb-6 rotate-12 transition-transform hover:rotate-0">
             <FaMapMarkerAlt className="text-rose-400 text-3xl" />
           </div>
-          <h3 className="mb-3 text-[20px] font-black text-slate-800 tracking-tight">Technical Error</h3>
-          <p className="mb-8 text-sm text-slate-500 font-medium leading-relaxed">{error}</p>
+          <h3 className="mb-3 text-[20px] font-black text-slate-800 tracking-tight">
+            Technical Error
+          </h3>
+          <p className="mb-8 text-sm text-slate-500 font-medium leading-relaxed">
+            {error}
+          </p>
           <button
             onClick={() => navigate(-1)}
             className="w-full bg-slate-800 text-white px-8 py-3.5 rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-slate-200 transition-all active:scale-95"
@@ -1124,8 +1152,13 @@ const HotelDetailPage = () => {
           <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto mb-6 -rotate-6 transition-transform hover:rotate-0">
             <FaMapMarkerAlt className="text-slate-300 text-3xl" />
           </div>
-          <h3 className="mb-3 text-[20px] font-black text-slate-800 tracking-tight">Hotel Missing</h3>
-          <p className="mb-8 text-sm text-slate-500 font-medium leading-relaxed">The property you are looking for may have been moved or removed from our listings.</p>
+          <h3 className="mb-3 text-[20px] font-black text-slate-800 tracking-tight">
+            Hotel Missing
+          </h3>
+          <p className="mb-8 text-sm text-slate-500 font-medium leading-relaxed">
+            The property you are looking for may have been moved or removed from
+            our listings.
+          </p>
           <button
             onClick={() => navigate(-1)}
             className="w-full bg-slate-800 text-white px-8 py-3.5 rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-slate-200 transition-all active:scale-95"
@@ -1144,7 +1177,7 @@ const HotelDetailPage = () => {
   const totalReviews = hotel.totalReviews ?? hotel.reviews?.length ?? 0;
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] bg-gradient-to-b from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] text-slate-800 font-sans">
+    <div className="min-h-screen bg-[#f8fafc] bg-linear-to-b from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] text-slate-800 font-sans">
       {/* Toast */}
       {showToast && selectedRoom && (
         <RoomSelectedToast
@@ -1255,7 +1288,7 @@ const HotelDetailPage = () => {
         <div className="flex flex-wrap items-center gap-4">
           {displayRating ? (
             <div className="flex flex-wrap items-center gap-3">
-              <div className="flex items-center gap-2 bg-gradient-to-r from-amber-400 to-amber-500 text-white px-4 py-2 rounded-2xl shadow-lg shadow-amber-400/20">
+              <div className="flex items-center gap-2 bg-linear-to-r from-amber-400 to-amber-500 text-white px-4 py-2 rounded-2xl shadow-lg shadow-amber-400/20">
                 <FaStar className="text-white text-sm" />
                 <span className="font-black text-base">{displayRating}</span>
                 <span className="text-white/80 text-xs font-bold">/ 5</span>
@@ -1268,7 +1301,9 @@ const HotelDetailPage = () => {
               <StarRating rating={avgRating} size="text-sm" />
             </div>
           ) : (
-            <span className="text-xs font-bold uppercase tracking-widest text-slate-400 bg-slate-100 px-3 py-1 rounded-lg">No ratings yet</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-slate-400 bg-slate-100 px-3 py-1 rounded-lg">
+              No ratings yet
+            </span>
           )}
           <div className="flex flex-wrap gap-2">
             {facilities.slice(0, 3).map((f) => (
@@ -1284,7 +1319,7 @@ const HotelDetailPage = () => {
       </div>
 
       {/* Sticky tabs */}
-      <div className="sticky top-[64px] z-40 border-b border-slate-200 bg-white/90 backdrop-blur-xl shadow-sm">
+      <div className="sticky top-16 z-40 border-b border-slate-200 bg-white/90 backdrop-blur-xl shadow-sm">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex gap-4 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             {TABS.map((tab) => (
@@ -1401,7 +1436,9 @@ const HotelDetailPage = () => {
             className="bg-white scroll-mt-32 rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm"
           >
             <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
-              <h2 className="text-[20px] font-black text-slate-800 tracking-tight">Available rooms</h2>
+              <h2 className="text-[20px] font-black text-slate-800 tracking-tight">
+                Available rooms
+              </h2>
               {selectedRoom && (
                 <div className="flex items-center gap-2 bg-[#3d6ef5]/5 border border-[#3d6ef5]/20 rounded-2xl px-4 py-2 shadow-sm">
                   <FaCheckCircle className="text-[#3d6ef5] text-[11px]" />
@@ -1430,7 +1467,9 @@ const HotelDetailPage = () => {
               ) : publicRooms.length === 0 ? (
                 <div className="text-center py-12 rounded-3xl border-2 border-dashed border-slate-100">
                   <FaBed className="text-4xl text-slate-200 mx-auto mb-3" />
-                  <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">No rooms found</p>
+                  <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">
+                    No rooms found
+                  </p>
                 </div>
               ) : (
                 publicRooms.map((room) => (
@@ -1453,12 +1492,16 @@ const HotelDetailPage = () => {
             className="bg-white scroll-mt-32 rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm"
           >
             <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-              <h2 className="text-[20px] font-black text-slate-800 tracking-tight">Guest reviews</h2>
+              <h2 className="text-[20px] font-black text-slate-800 tracking-tight">
+                Guest reviews
+              </h2>
               {displayRating && (
                 <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl shadow-sm">
                   <div className="flex items-center gap-1.5 bg-amber-400 text-white px-2.5 py-1 rounded-xl">
                     <FaStar className="text-white text-[11px]" />
-                    <span className="font-black text-[15px] leading-none">{displayRating}</span>
+                    <span className="font-black text-[15px] leading-none">
+                      {displayRating}
+                    </span>
                   </div>
                   <span className="text-xs font-black text-slate-400 uppercase tracking-widest leading-none">
                     ({totalReviews} Reviews)
@@ -1498,13 +1541,16 @@ const HotelDetailPage = () => {
             ref={refs["Location & Policies"]}
             className="bg-white scroll-mt-32 rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm"
           >
-            <h2 className="mb-6 text-[20px] font-black text-slate-800 tracking-tight">Location Details</h2>
+            <h2 className="mb-6 text-[20px] font-black text-slate-800 tracking-tight">
+              Location Details
+            </h2>
             <div className="mb-5 flex items-start gap-3 text-sm text-slate-500 font-medium">
               <div className="w-8 h-8 rounded-xl bg-[#3d6ef5]/10 flex items-center justify-center shrink-0">
                 <FaMapMarkerAlt className="text-[#3d6ef5] text-xs" />
               </div>
               <span className="mt-1.5">
-                {hotel.address}{cityName ? `, ${cityName}` : ""}
+                {hotel.address}
+                {cityName ? `, ${cityName}` : ""}
               </span>
             </div>
             <button
@@ -1516,7 +1562,7 @@ const HotelDetailPage = () => {
                 alt="Map"
                 className="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent" />
+              <div className="absolute inset-0 bg-linear-to-t from-slate-900/40 to-transparent" />
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="flex items-center gap-2.5 rounded-2xl bg-white/95 backdrop-blur-md px-6 py-3 text-[13px] font-black text-[#3d6ef5] shadow-2xl transition-all group-hover:scale-110 active:scale-100">
                   <FaMapMarkerAlt />
@@ -1571,7 +1617,9 @@ const HotelDetailPage = () => {
                     <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-0.5">
                       {label}
                     </p>
-                    <p className="text-[13px] font-bold text-slate-700">{value}</p>
+                    <p className="text-[13px] font-bold text-slate-700">
+                      {value}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -1588,7 +1636,8 @@ const HotelDetailPage = () => {
                 href={`mailto:${hotel.email || ""}`}
                 className="flex items-center gap-2.5 rounded-2xl border border-slate-200 bg-white px-6 py-3 text-xs font-black uppercase tracking-widest text-slate-600 transition-all hover:text-[#3d6ef5] hover:border-[#3d6ef5]/30 shadow-sm"
               >
-                <FaEnvelope className="text-[#3d6ef5] text-xs" /> Email Inquiries
+                <FaEnvelope className="text-[#3d6ef5] text-xs" /> Email
+                Inquiries
               </a>
             </div>
           </section>

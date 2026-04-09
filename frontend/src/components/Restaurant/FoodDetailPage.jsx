@@ -74,75 +74,89 @@ function FoodDetailPage() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-black pb-28 text-white"
+      className="min-h-screen bg-linear-to-b from-[#fffdfb] via-[#faf5ef] to-[#f5ebe0] pb-32 text-[#2d1f16]"
     >
-      <div className="relative aspect-4/3 w-full overflow-hidden bg-gray-200 dark:bg-gray-800 sm:aspect-video sm:max-h-105">
+      <div className="relative aspect-16/10 w-full overflow-hidden sm:max-h-125 border-b border-[#eadccf]">
         <img
           src={img || "/no-image.jpg"}
           alt=""
           className="h-full w-full object-cover"
         />
+        <div className="absolute inset-0 bg-linear-to-t from-[#2d1f16]/40 to-transparent" />
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full bg-white/90 px-3 py-2 text-sm font-medium text-gray-900 shadow dark:bg-gray-900/90 dark:text-white"
+          className="absolute left-6 top-6 inline-flex items-center gap-2 rounded-full bg-white/80 backdrop-blur-xl px-5 py-2.5 text-xs font-black uppercase tracking-widest text-[#2d1f16] shadow-2xl border border-white/40 active:scale-95 transition-all"
         >
           <ArrowLeftIcon className="h-4 w-4" />
           Back
         </button>
       </div>
 
-      <div className="ui-container max-w-2xl py-6">
-        <p className="text-sm font-medium text-orange-600 dark:text-orange-400">
-          {restaurant?.name ?? "Restaurant"}
-          {restaurant?.city?.name ? ` · ${restaurant.city.name}` : ""}
-        </p>
-        <h1 className="mt-1 text-3xl font-bold text-gray-900 dark:text-white">
+      <div className="ui-container max-w-2xl py-10 px-6">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="h-1 w-8 bg-[#c67c4e] rounded-full" />
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-[#a07d63]">
+            {restaurant?.name ?? "Restaurant"}
+          </p>
+        </div>
+        
+        <h1 className="text-4xl sm:text-5xl font-black text-[#2d1f16] tracking-tight leading-[1.1]">
           {food?.name}
         </h1>
-        <p
-          className={`mt-2 text-sm font-medium ${
-            food?.isVeg ? "text-green-600" : "text-red-600"
-          }`}
-        >
-          {food?.isVeg ? "Vegetarian" : "Non-vegetarian"} · {food?.category}
+
+        <div className="mt-6 flex flex-wrap items-center gap-3">
+          <span className={`px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest border ${
+            food?.isVeg ? "bg-emerald-50 border-emerald-200 text-emerald-600" : "bg-red-50 border-red-200 text-red-600"
+          }`}>
+            {food?.isVeg ? "Vegetarian" : "Non-Veg"}
+          </span>
+          <span className="px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest bg-white border border-[#eadccf] text-[#6f5a4b]">
+            {food?.category}
+          </span>
+        </div>
+
+        <p className="mt-8 text-lg leading-relaxed text-[#6f5a4b] font-medium">
+          {food?.description ?? "Experience a symphony of flavors crafted with the finest ingredients and culinary expertise."}
         </p>
-        <p className="mt-4 text-gray-700 dark:text-gray-300">
-          {food?.description ?? "No description."}
-        </p>
-        <p className="mt-6 text-2xl font-bold text-gray-900 dark:text-white">
-          ₹{food?.price}
-        </p>
+
+        <div className="mt-10 flex items-baseline gap-2">
+          <span className="text-sm font-black text-[#a07d63]">₹</span>
+          <span className="text-5xl font-black text-[#2d1f16] tracking-tighter">
+            {food?.price}
+          </span>
+        </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 z-30 border-t border-gray-200 bg-white/95 px-4 py-4 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] backdrop-blur dark:border-gray-800 dark:bg-gray-900/95">
-        <div className="mx-auto flex max-w-2xl gap-3">
+      <div className="fixed bottom-0 left-0 right-0 z-30 border-t border-[#eadccf] bg-white/80 backdrop-blur-2xl px-6 py-6 shadow-2xl">
+        <div className="mx-auto flex max-w-2xl gap-4">
           <Link
             to="/cart"
-          className="ui-btn-secondary relative flex-1 !rounded-2xl !py-3.5"
+            className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white border border-[#eadccf] text-[#2d1f16] shadow-sm active:scale-95 transition-all group"
           >
-            <ShoppingBagIcon className="h-5 w-5" />
-            Cart
-            {cartCount > 0 && (
-              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[color:var(--ui-primary)] px-1 text-xs text-white">
-                {cartCount > 99 ? "99+" : cartCount}
-              </span>
-            )}
+            <div className="relative">
+              <ShoppingBagIcon className="h-6 w-6 group-hover:scale-110 transition-transform" />
+              {cartCount > 0 && (
+                <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#c67c4e] text-white text-[10px] font-black border-2 border-white">
+                  {cartCount > 99 ? "99+" : cartCount}
+                </span>
+              )}
+            </div>
           </Link>
           <button
             type="button"
             onClick={handleOrder}
-            className="ui-btn-primary flex-2 !rounded-2xl !py-3.5"
+            className="ui-btn-primary flex-1 rounded-2xl! py-4! text-sm! font-black! tracking-widest! uppercase! shadow-xl shadow-[#c67c4e]/20"
           >
-            Order — add to cart
+            Add to Basket — ₹{food?.price}
           </button>
         </div>
         {restaurantId ? (
           <Link
             to={`/restaurant/${restaurantId}/menu`}
-            className="mt-3 block text-center text-sm text-blue-500 dark:text-blue-400"
+            className="mt-4 block text-center text-[10px] font-black uppercase tracking-widest text-[#a07d63] hover:text-[#c67c4e] transition-colors"
           >
-            Browse more from this restaurant
+            Explore the full menu
           </Link>
         ) : null}
       </div>

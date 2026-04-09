@@ -89,16 +89,16 @@ function CartPage() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-black pb-16 text-white"
+      className="min-h-screen bg-linear-to-b from-[#fffdfb] via-[#faf5ef] to-[#f5ebe0] pb-16 text-[#2d1f16]"
     >
       {/* HEADER */}
-      <div className="border-b border-white/10 bg-black/70 px-4 py-6 backdrop-blur-xl sm:px-6">
-        <div className="ui-container max-w-2xl">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Your cart
+      <div className="border-b border-[#eadccf] bg-white/70 px-4 py-8 backdrop-blur-xl sm:px-6">
+        <div className="ui-container max-w-2xl text-center">
+          <h1 className="text-3xl font-black tracking-tight text-[#2d1f16]">
+            Your shopping basket
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Review items before checkout
+          <p className="mt-2 text-sm font-medium text-[#6f5a4b]">
+            Review your gourmet selection before checkout
           </p>
         </div>
       </div>
@@ -135,10 +135,10 @@ function CartPage() {
                     className="h-20 w-20 rounded-xl object-cover"
                   />
 
-                  <div className="flex-1">
-                    <p className="font-semibold text-gray-900 dark:text-white">
-                      {line.name}
-                    </p>
+                    <div className="flex-1">
+                      <p className="text-lg font-black text-[#2d1f16]">
+                        {line.name}
+                      </p>
 
                     {line.restaurantName && (
                       <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -146,9 +146,9 @@ function CartPage() {
                       </p>
                     )}
 
-                    <p className="mt-1 text-sm font-medium text-orange-600 dark:text-orange-400">
-                      ₹{line.price} each
-                    </p>
+                      <p className="mt-1 text-sm font-bold text-[#c67c4e]">
+                        ₹{line.price} each
+                      </p>
 
                     <div className="mt-2 flex items-center gap-3">
                       <button
@@ -160,7 +160,7 @@ function CartPage() {
                             })
                           )
                         }
-                        className="rounded-lg bg-gray-100 px-3 py-1 dark:bg-gray-800"
+                        className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#eadccf] bg-white text-[#2d1f16] shadow-sm transition-all hover:bg-[#faf5ef] active:scale-90"
                       >
                         −
                       </button>
@@ -176,7 +176,7 @@ function CartPage() {
                             })
                           )
                         }
-                        className="rounded-lg bg-gray-100 px-3 py-1 dark:bg-gray-800"
+                        className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#eadccf] bg-white text-[#2d1f16] shadow-sm transition-all hover:bg-[#faf5ef] active:scale-90"
                       >
                         +
                       </button>
@@ -201,9 +201,9 @@ function CartPage() {
 
             {/* SUMMARY */}
             <div className="ui-card mt-8 p-6">
-              <div className="flex justify-between text-lg font-bold text-gray-900 dark:text-white">
-                <span>Total</span>
-                <span>₹{total.toFixed(0)}</span>
+              <div className="flex justify-between text-xl font-black text-[#2d1f16]">
+                <span>Total Amount</span>
+                <span className="text-[#c67c4e]">₹{total.toFixed(0)}</span>
               </div>
 
               {/* ERROR */}
@@ -213,7 +213,7 @@ function CartPage() {
               <div className="w-full flex items-center justify-center">
               <Link to={"/CheckoutPage"}
                 disabled={loading}
-                className="ui-btn-primary mt-4 w-[50%] !rounded-2xl !py-3.5 text-center disabled:opacity-60"
+                className="ui-btn-primary mt-4 w-[50%] rounded-2xl! py-3.5! text-center disabled:opacity-60"
               >
                 {loading ? "Placing Order..." : "Place Order"}
               </Link>

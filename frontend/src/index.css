@@ -5,7 +5,16 @@
 /* -------------------------------------------------------------------------- */
 
 :root {
-  --ui-primary: #3d6ef5;
+  --ui-primary: #c67c4e;
+  --ui-primary-accent: #b86c3d;
+  --ui-primary-dark: #9f5b31;
+  --bg-beige-light: #fffdfb;
+  --bg-beige-mid: #faf5ef;
+  --bg-beige-deep: #f5ebe0;
+  --border-beige: #eadccf;
+  --text-main: #2d1f16;
+  --text-desc: #6f5a4b;
+  --text-muted: #a07d63;
 }
 
 .ui-container {
@@ -13,17 +22,17 @@
 }
 
 .ui-card {
-  @apply rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.45)];
+  @apply rounded-[24px] border border-[#eadccf] bg-white/80 backdrop-blur-xl shadow-[0_12px_35px_rgba(0,0,0,0.05)] transition-all duration-300;
 }
 
 .ui-card-soft {
-  @apply rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl shadow-[0_12px_30px_rgba(0,0,0,0.35)];
+  @apply rounded-[20px] border border-[#eadccf] bg-white/80 transition-all duration-300 shadow-[0_8px_25px_rgba(186,140,102,0.08)];
 }
 
 .ui-input {
-  @apply w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/30 outline-none;
+  @apply w-full rounded-2xl border border-[#eadccf] bg-[#fffdfb] px-4 py-3 text-sm text-[#2d1f16] placeholder:text-[#a07d63]/50 outline-none;
   @apply transition-all duration-300 ease-in-out;
-  @apply focus:border-[color:var(--ui-primary)]/60 focus:bg-white/10 focus:shadow-[0_0_0_3px_rgba(61,110,245,0.18)];
+  @apply focus:border-[#c67c4e]/60 focus:bg-white focus:shadow-[0_0_0_4px_rgba(198,124,78,0.08)];
 }
 
 .ui-btn {
@@ -33,21 +42,22 @@
 }
 
 .ui-btn-primary {
-  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium;
+  @apply inline-flex items-center justify-center gap-2 rounded-[24px] px-6 py-3 text-sm font-bold;
   @apply transition-all duration-300 ease-in-out active:scale-[0.98];
-  @apply bg-[color:var(--ui-primary)] text-white shadow-[0_10px_30px_rgba(61,110,245,0.25)];
-  @apply hover:bg-[#2b59da] hover:scale-[1.02];
+  @apply bg-linear-to-r from-[#c67c4e] via-[#b86c3d] to-[#9f5b31] text-white shadow-[0_18px_40px_rgba(198,124,78,0.3)];
+  @apply hover:translate-y-[-4px] hover:brightness-110 hover:shadow-[0_22px_45px_rgba(198,124,78,0.4)];
 }
 
 .ui-btn-secondary {
-  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium;
+  @apply inline-flex items-center justify-center gap-2 rounded-[24px] px-6 py-3 text-sm font-bold;
   @apply transition-all duration-300 ease-in-out active:scale-[0.98];
-  @apply border border-white/10 bg-white/5 text-white/80 backdrop-blur-xl;
-  @apply hover:bg-white/10 hover:text-white hover:scale-[1.02];
+  @apply border border-[#eadccf] bg-white/80 backdrop-blur-sm text-[#6f5a4b];
+  @apply hover:bg-white hover:border-[#d9c2ad] hover:shadow-lg hover:text-[#2d1f16];
 }
 
 .ui-pill {
-  @apply inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80 backdrop-blur-xl;
+  @apply inline-flex items-center gap-2 rounded-full border border-[#eadccf] bg-white/80 px-4 py-1.5 text-xs font-semibold text-[#6f5a4b] transition-all duration-200;
+  @apply hover:translate-y-[-1px] hover:shadow-sm;
 }
 
 .ui-table-wrap {
@@ -108,21 +118,127 @@ html {
 .animate-skeleton-shimmer {
   background: linear-gradient(
     90deg,
-    rgb(229 231 235 / 0.85) 0%,
-    rgb(243 244 246 / 0.95) 50%,
-    rgb(229 231 235 / 0.85) 100%
+    rgba(255, 253, 251, 0.8) 0%,
+    rgba(250, 245, 239, 0.9) 50%,
+    rgba(255, 253, 251, 0.8) 100%
   );
   background-size: 200% 100%;
   animation: skeleton-shimmer 1.4s ease-in-out infinite;
 }
 
-.dark .animate-skeleton-shimmer {
-  background: linear-gradient(
-    90deg,
-    rgb(55 65 81 / 0.85) 0%,
-    rgb(75 85 99 / 0.95) 50%,
-    rgb(55 65 81 / 0.85) 100%
-  );
-  background-size: 200% 100%;
+
+.rmp-food-card {
+  text-decoration: none;
 }
+
+/* Card Container */
+.rmp-card-container {
+  position: relative;
+  height: 320px;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.rmp-card-container:hover {
+  transform: scale(1.04);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+}
+
+/* Image */
+.rmp-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Gradient Overlay */
+.rmp-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.75),
+    rgba(0,0,0,0.2),
+    transparent
+  );
+}
+
+/* Badge */
+.rmp-card-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(255,255,255,0.9);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Content */
+.rmp-card-content {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 16px;
+  color: white;
+  backdrop-filter: blur(6px);
+}
+
+/* Header */
+.rmp-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rmp-card-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.rmp-card-price {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* Description */
+.rmp-card-desc {
+  font-size: 12px;
+  opacity: 0.85;
+  margin: 6px 0 10px;
+}
+
+/* Tags */
+.rmp-card-tags {
+  margin-bottom: 10px;
+}
+
+.rmp-card-tag {
+  background: rgba(255,255,255,0.2);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  margin-right: 6px;
+}
+
+/* Button */
+.rmp-card-btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: 999px;
+  border: none;
+  background: white;
+  color: #222;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.rmp-card-btn:hover {
+  background: #f1f1f1;
+}
+
 

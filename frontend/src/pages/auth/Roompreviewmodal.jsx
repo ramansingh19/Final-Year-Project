@@ -213,7 +213,7 @@ const RoomPreviewModal = ({
           {/* Modal panel */}
           <motion.div
             key="modal-panel"
-            className="relative flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#0f1118] text-white shadow-2xl"
+            className="relative flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#4A5C6A] text-white shadow-2xl"
             variants={modalVariants}
             initial="hidden"
             animate="visible"

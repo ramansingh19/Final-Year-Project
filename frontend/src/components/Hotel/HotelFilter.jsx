@@ -105,7 +105,7 @@ const HotelFilter = ({ onFilterChange, onMapOpen }) => {
         <div className="flex items-center gap-2">
           <span className="text-sm font-bold text-slate-800">Filters</span>
           {activeCount > 0 && (
-            <span className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none shadow-sm">
+            <span className="bg-linear-to-r from-blue-500 to-indigo-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none shadow-sm">
               {activeCount}
             </span>
           )}
@@ -135,7 +135,7 @@ const HotelFilter = ({ onFilterChange, onMapOpen }) => {
             alt="Map"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/10 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-slate-900/10 to-transparent" />
           <div className="absolute inset-x-0 bottom-2.5 flex justify-center">
             <div className="flex items-center gap-1.5 bg-white/90 backdrop-blur-sm text-slate-800 text-[11px] font-bold px-3 py-1.5 rounded-full shadow-md transition-transform group-hover:scale-105 border border-slate-200">
               <FaMapMarkerAlt className="text-blue-500 text-[9px]" /> Explore on Map
@@ -332,7 +332,7 @@ const HotelFilter = ({ onFilterChange, onMapOpen }) => {
         </button>
         <button
           onClick={() => onFilterChange?.(filters)}
-          className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-bold py-2 rounded-xl text-xs shadow-sm transition-all"
+          className="flex-1 bg-linear-to-r from-[#c67c4e] to-[#b86c3d] hover:from-[#b06d42] hover:to-[#9e5b33]  text-white font-bold py-2 rounded-xl text-xs shadow-sm transition-all"
         >
           Apply Filters
         </button>

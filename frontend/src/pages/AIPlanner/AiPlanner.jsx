@@ -1,13 +1,13 @@
-import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import { FaBars, FaTrash } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { getActiveCities } from "../../features/user/citySlice";
 import {
   generatePlan,
   loadAiPlan,
   loadPlanHistory,
 } from "../../features/user/placeSlice";
-import { useNavigate } from "react-router-dom";
-import { FaBars, FaTrash } from "react-icons/fa";
 import AiPlannerDetails from "./AiPlannerDetails";
 
 /* ── Only pseudo-elements, keyframes & font import stay here ── */
@@ -191,9 +191,18 @@ function AiPlanner() {
               </div>
             </div>
 
-            <span className="ml-auto text-[10px] tracking-[.12em] uppercase font-semibold text-[#e8b84b] bg-[#c9922a]/12 border border-[#c9922a]/25 px-3 py-1.25 rounded-full">
-              ✦ Powered by AI
-            </span>
+            <button
+              className="ml-auto w-12 h-11 grid place-items-center rounded-[10px] border border-white/[0.07] bg-transparent text-[#f5efe6] cursor-pointer transition-all duration-200 hover:border-[#c9922a] hover:bg-[#c9922a]/8"
+              onClick={() => navigate("/assistantChat")}
+              aria-label="Open AI Assistant"
+              title="Chat with AI Assistant"
+            >
+              <img
+                src="/robot.png"
+                alt="AI Assistant"
+                className="w-20 h-8 object-contain"
+              />
+            </button>
           </div>
 
           {/* CONTENT */}
