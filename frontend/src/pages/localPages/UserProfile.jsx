@@ -37,22 +37,23 @@ function UserProfile() {
   }
 
   return (
-<div className="relative mx-auto mt-10 w-[94%] overflow-hidden rounded-4xl border border-white/10 bg-[#07090f] shadow-[0_25px_80px_rgba(0,0,0,0.7)] md:w-[88%] lg:w-[75%]">
-  {/* Background Glow */}
+<div className="relative mx-auto mt-10 w-[94%] overflow-hidden rounded-4xl border border-amber-100  md:w-[88%] lg:w-[75%]">
+  {/* Ecommerce Light Background */}
   <div className="absolute inset-0 overflow-hidden">
-    <div className="absolute -left-16 top-0 h-72 w-72 animate-pulse rounded-full bg-blue-500/10 blur-3xl" />
-    <div className="absolute right-0 top-10 h-64 w-64 animate-pulse rounded-full bg-cyan-500/10 blur-3xl [animation-delay:1s]" />
-    <div className="absolute bottom-0 left-1/2 h-72 w-72 -translate-x-1/2 animate-pulse rounded-full bg-indigo-500/5 blur-3xl [animation-delay:2s]" />
-    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.08),transparent_45%)]" />
+    <div className="" />
+    <div className="" />
+    <div className="" />
+    <div className="" />
+    <div className="" />
   </div>
 
-  <div className="relative z-10 p-5 sm:p-6 lg:p-8">
+  <div className="relative z-10 p-4 sm:p-6 lg:p-8">
     {/* Header */}
-    <div className="group relative overflow-hidden rounded-[28px] border border-white/10 bg-linear-to-br from-[#111827]/95 via-[#0f172a]/95 to-[#020617] p-6 shadow-2xl transition-all duration-500 hover:border-blue-500/30 hover:shadow-blue-500/10 lg:p-8">
+    <div className="group relative overflow-hidden rounded-[28px] border border-amber-100 transition-all duration-500 hover:-translate-y-1 hover:border-amber-100  sm:p-6 lg:p-8">
       {/* Hover Glow */}
       <div className="absolute inset-0 opacity-0 transition duration-500 group-hover:opacity-100">
-        <div className="absolute -left-10 top-0 h-44 w-44 rounded-full bg-blue-500/10 blur-3xl" />
-        <div className="absolute bottom-0 right-0 h-44 w-44 rounded-full bg-cyan-500/10 blur-3xl" />
+        <div className="" />
+        <div className="" />
       </div>
 
       <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center">
@@ -60,9 +61,9 @@ function UserProfile() {
         <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-center">
           {/* Avatar */}
           <div className="relative">
-            <div className="absolute -inset-1 rounded-[30px] bg-linear-to-r from-blue-500 via-cyan-500 to-indigo-500 opacity-70 blur-sm transition duration-500 group-hover:opacity-100" />
+            <div className="absolute -inset-1 rounded-[30px] opacity-60 blur-sm transition duration-500 group-hover:scale-105 group-hover:opacity-100" />
 
-            <div className="relative flex h-28 w-28 items-center justify-center overflow-hidden rounded-[28px] border border-white/10 bg-linear-to-br from-blue-500 via-cyan-600 to-indigo-700 text-3xl font-bold text-white shadow-2xl transition duration-500 group-hover:scale-[1.03] sm:h-32 sm:w-32 sm:text-4xl">
+            <div className="relative flex h-28 w-28 items-center justify-center overflow-hidden rounded-[28px] border border-white  text-3xl font-black text-white  transition duration-500 group-hover:scale-[1.03] sm:h-32 sm:w-32 sm:text-4xl">
               {user?.avatar ? (
                 <img
                   src={user.avatar}
@@ -75,7 +76,7 @@ function UserProfile() {
             </div>
 
             {/* Status Indicator */}
-            <div className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-2xl border-2 border-[#07090f] bg-emerald-500 shadow-lg shadow-emerald-500/30">
+            <div className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-2xl border-2 border-[#fffaf4] bg-emerald-500 shadow-lg shadow-emerald-200 transition duration-300 group-hover:scale-110">
               <div className="h-3 w-3 animate-pulse rounded-full bg-white" />
             </div>
           </div>
@@ -83,13 +84,13 @@ function UserProfile() {
           {/* User Name + Buttons */}
           <div className="text-center sm:text-left">
             <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-center">
-              <h2 className="bg-linear-to-r from-white via-blue-200 to-cyan-400 bg-clip-text text-3xl font-bold tracking-tight text-transparent sm:text-4xl">
+              <h2 className="bg-linear-to-r from-amber-900 via-orange-400 to-yellow-700 bg-clip-text text-3xl font-black tracking-tight text-transparent sm:text-4xl">
                 {user?.userName || "User"}
               </h2>
 
               <button
                 onClick={() => setShowForm(!showForm)}
-                className="group/edit flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-blue-400 transition-all duration-300 hover:scale-105 hover:border-blue-500/30 hover:bg-blue-500/10 hover:text-blue-300"
+                className="group/edit flex h-11 w-11 items-center justify-center rounded-2xl border border-amber-200 bg-white text-amber-600 shadow-sm transition-all duration-300 hover:scale-105 hover:border-amber-300 hover:bg-amber-50 hover:text-amber-700"
               >
                 <FiEdit
                   size={18}
@@ -99,21 +100,21 @@ function UserProfile() {
             </div>
 
             <div className="mt-4 flex flex-wrap items-center justify-center gap-3 sm:justify-start">
-              <span className="inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-blue-300">
-                <span className="h-2 w-2 rounded-full bg-blue-400" />
+              <span className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-amber-700 transition duration-300 hover:scale-105">
+                <span className="h-2 w-2 rounded-full bg-amber-500" />
                 {user?.role || "User"}
               </span>
 
               <span
-                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] ${
+                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] transition duration-300 hover:scale-105 ${
                   user?.isVerified
-                    ? "border border-emerald-500/20 bg-emerald-500/10 text-emerald-300"
-                    : "border border-red-500/20 bg-red-500/10 text-red-300"
+                    ? "border border-emerald-200 bg-emerald-50 text-emerald-600"
+                    : "border border-red-200 bg-red-50 text-red-500"
                 }`}
               >
                 <span
                   className={`h-2 w-2 rounded-full ${
-                    user?.isVerified ? "bg-emerald-400" : "bg-red-400"
+                    user?.isVerified ? "bg-emerald-500" : "bg-red-400"
                   }`}
                 />
                 {user?.isVerified ? "Verified" : "Not Verified"}
@@ -124,41 +125,41 @@ function UserProfile() {
 
         {/* Contact Cards */}
         <div className="grid flex-1 grid-cols-1 gap-4 sm:grid-cols-2 lg:max-w-130">
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl transition duration-300 hover:border-blue-500/20 hover:bg-blue-500/5">
-            <div className="mb-2 flex items-center gap-2 text-zinc-400">
-              <MdOutlineEmail className="text-blue-400" size={18} />
-              <span className="text-xs uppercase tracking-[0.18em]">
+          <div className="rounded-2xl border border-amber-100 bg-white/90 p-4 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-amber-300 hover:bg-amber-50">
+            <div className="mb-2 flex items-center gap-2 text-amber-500">
+              <MdOutlineEmail className="text-amber-500" size={18} />
+              <span className="text-xs font-bold uppercase tracking-[0.18em]">
                 Email Address
               </span>
             </div>
 
-            <p className="truncate text-sm font-medium text-white sm:text-base">
+            <p className="truncate text-sm font-semibold text-amber-950 sm:text-base">
               {user?.email || "No Email Found"}
             </p>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl transition duration-300 hover:border-emerald-500/20 hover:bg-emerald-500/5">
-            <div className="mb-2 flex items-center gap-2 text-zinc-400">
-              <IoCallOutline className="text-emerald-400" size={18} />
-              <span className="text-xs uppercase tracking-[0.18em]">
+          <div className="rounded-2xl border border-amber-100 bg-white/90 p-4 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-emerald-300 hover:bg-emerald-50/50">
+            <div className="mb-2 flex items-center gap-2 text-emerald-500">
+              <IoCallOutline className="text-emerald-500" size={18} />
+              <span className="text-xs font-bold uppercase tracking-[0.18em]">
                 Contact Number
               </span>
             </div>
 
-            <p className="text-sm font-medium text-white sm:text-base">
+            <p className="text-sm font-semibold text-amber-950 sm:text-base">
               {user?.contactNumber || "Not Available"}
             </p>
           </div>
 
-          <div className="sm:col-span-2 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl transition duration-300 hover:border-red-500/20 hover:bg-red-500/5">
-            <div className="mb-2 flex items-center gap-2 text-zinc-400">
-              <IoLocationOutline className="text-red-400" size={18} />
-              <span className="text-xs uppercase tracking-[0.18em]">
+          <div className="sm:col-span-2 rounded-2xl border border-amber-100 bg-white/90 p-4 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-orange-300 hover:bg-orange-50/50">
+            <div className="mb-2 flex items-center gap-2 text-orange-500">
+              <IoLocationOutline className="text-orange-500" size={18} />
+              <span className="text-xs font-bold uppercase tracking-[0.18em]">
                 Location
               </span>
             </div>
 
-            <p className="text-sm font-medium text-white sm:text-base">
+            <p className="text-sm font-semibold text-amber-950 sm:text-base">
               {user?.location?.city
                 ? `${user.location.city}, ${user.location.state}`
                 : "Location not added"}
@@ -170,9 +171,9 @@ function UserProfile() {
 
     {/* Bottom Info Cards */}
     <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
-      <div className="group rounded-3xl border border-white/10 bg-[#0f1117]/90 p-5 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/20 hover:shadow-blue-500/10">
+      <div className="group rounded-3xl border border-amber-100 bg-white/90 p-5 shadow-[0_15px_40px_rgba(251,191,36,0.08)] transition-all duration-300 hover:-translate-y-1 hover:border-amber-300 hover:shadow-[0_20px_50px_rgba(251,191,36,0.15)]">
         <div className="mb-3 flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-500/10 text-blue-400">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-100 text-amber-600 transition duration-300 group-hover:scale-110">
             <svg
               className="h-6 w-6"
               fill="none"
@@ -180,42 +181,33 @@ function UserProfile() {
               strokeWidth="2"
               viewBox="0 0 24 24"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 14l9-5-9-5-9 5 9 5z"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 14l6.16-3.422A12.083 12.083 0 0112 20.055a12.083 12.083 0 01-6.16-9.477L12 14z"
-              />
+              ...
             </svg>
           </div>
 
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-500">
               User Role
             </p>
-            <h3 className="text-lg font-semibold text-white">
+            <h3 className="text-lg font-bold text-amber-950">
               {user?.role || "User"}
             </h3>
           </div>
         </div>
 
-        <p className="text-sm leading-6 text-zinc-400">
+        <p className="text-sm leading-6 font-medium text-amber-700">
           Your account allows you to manage your profile, save favorite places,
           browse food listings and access personalized features.
         </p>
       </div>
 
-      <div className="group rounded-3xl border border-white/10 bg-[#0f1117]/90 p-5 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-emerald-500/20 hover:shadow-emerald-500/10">
+      <div className="group rounded-3xl border border-amber-100 bg-white/90 p-5 shadow-[0_15px_40px_rgba(251,191,36,0.08)] transition-all duration-300 hover:-translate-y-1 hover:border-emerald-300 hover:shadow-[0_20px_50px_rgba(16,185,129,0.12)]">
         <div className="mb-3 flex items-center gap-3">
           <div
-            className={`flex h-12 w-12 items-center justify-center rounded-2xl ${
+            className={`flex h-12 w-12 items-center justify-center rounded-2xl transition duration-300 group-hover:scale-110 ${
               user?.isVerified
-                ? "bg-emerald-500/10 text-emerald-400"
-                : "bg-red-500/10 text-red-400"
+                ? "bg-emerald-100 text-emerald-600"
+                : "bg-red-100 text-red-500"
             }`}
           >
             <svg
@@ -225,21 +217,17 @@ function UserProfile() {
               strokeWidth="2"
               viewBox="0 0 24 24"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M9 12l2 2 4-4"
-              />
+              ...
             </svg>
           </div>
 
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-500">
               Account Status
             </p>
             <h3
-              className={`text-lg font-semibold ${
-                user?.isVerified ? "text-emerald-400" : "text-red-400"
+              className={`text-lg font-bold ${
+                user?.isVerified ? "text-emerald-600" : "text-red-500"
               }`}
             >
               {user?.isVerified ? "Verified" : "Not Verified"}
@@ -247,7 +235,7 @@ function UserProfile() {
           </div>
         </div>
 
-        <p className="text-sm leading-6 text-zinc-400">
+        <p className="text-sm leading-6 font-medium text-amber-700">
           {user?.isVerified
             ? "Your account is verified and ready to use all features securely."
             : "Please verify your account to unlock all features and improve trust."}
@@ -258,20 +246,20 @@ function UserProfile() {
     {/* Update Form */}
     <div
       className={`overflow-hidden transition-all duration-700 ease-in-out ${
-        showForm ? "mt-6 max-h-500 opacity-100" : "max-h-0 opacity-0"
+        showForm ? "mt-6 max-h-250 opacity-100" : "max-h-0 opacity-0"
       }`}
     >
-      <div className="rounded-[28px] border border-white/10 bg-[#0b0d13]/95 p-4 shadow-2xl backdrop-blur-xl sm:p-6">
-        <div className="mb-5 flex items-center gap-3 border-b border-white/10 pb-4">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-500/10 text-blue-400">
+      <div className="rounded-[28px] border border-amber-100 bg-[#fffdf8]/95 p-4 shadow-[0_20px_60px_rgba(251,191,36,0.10)] backdrop-blur-xl transition-all duration-500 sm:p-6">
+        <div className="mb-5 flex items-center gap-3 border-b border-amber-100 pb-4">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-100 text-amber-600">
             <FiEdit size={18} />
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold text-white">
+            <h3 className="text-lg font-bold text-amber-950">
               Update User Information
             </h3>
-            <p className="text-sm text-zinc-400">
+            <p className="text-sm font-medium text-amber-700">
               Edit your profile details and save your changes securely.
             </p>
           </div>
