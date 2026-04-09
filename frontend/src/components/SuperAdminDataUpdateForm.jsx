@@ -59,48 +59,49 @@ function SuperAdminDataUpdateForm() {
   return (
 <form
   onSubmit={handleSubmit}
-  className="mx-auto w-full max-w-5xl overflow-hidden rounded-4xl border border-white/10 bg-[#0b0b0f] shadow-[0_30px_80px_rgba(0,0,0,0.65)]"
+  className="mx-auto w-full max-w-5xl overflow-hidden rounded-4xl border border-gray-200 bg-white shadow-[0_30px_80px_rgba(0,0,0,0.15)] transition-all duration-300"
 >
   <div className="grid lg:grid-cols-[340px_1fr]">
     {/* LEFT PANEL */}
-    <div className="relative border-b border-white/10 bg-linear-to-b from-[#111827] via-[#0f172a] to-[#020617] p-6 sm:p-8 lg:border-b-0 lg:border-r lg:border-white/10">
-      <div className="absolute -left-20 top-0 h-56 w-56 rounded-full bg-blue-500/10 blur-3xl" />
-      <div className="absolute bottom-0 right-0 h-48 w-48 rounded-full bg-indigo-600/10 blur-3xl" />
+    <div className="relative border-b border-gray-200 bg-linear-to-b from-gray-50 via-gray-100 to-gray-50 p-6 sm:p-8 lg:border-b-0 lg:border-r lg:border-gray-200">
+      {/* Decorative blobs */}
+      <div className="absolute -left-20 top-0 h-56 w-56 rounded-full bg-blue-200/30 blur-3xl" />
+      <div className="absolute bottom-0 right-0 h-48 w-48 rounded-full bg-indigo-200/30 blur-3xl" />
 
       <div className="relative z-10 flex h-full flex-col">
         <div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.25em] text-blue-300">
+          <div className="inline-flex items-center gap-2 rounded-full border border-blue-200/50 bg-blue-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.25em] text-blue-700">
             <span className="h-2 w-2 rounded-full bg-blue-400" />
             Super Admin Settings
           </div>
 
-          <h2 className="mt-5 text-3xl font-bold leading-tight text-white sm:text-4xl">
+          <h2 className="mt-5 text-3xl font-bold leading-tight text-gray-900 sm:text-4xl">
             Update Super Admin Profile
           </h2>
 
-          <p className="mt-3 text-sm leading-7 text-zinc-400 sm:text-base">
+          <p className="mt-3 text-sm leading-7 text-gray-600 sm:text-base">
             Manage your super admin details, upload a professional profile
             image and keep your account information updated.
           </p>
         </div>
 
         {/* Profile Preview Card */}
-        <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+        <div className="mt-10 rounded-3xl border border-gray-200 bg-gray-50 p-6 backdrop-blur-xl transition hover:shadow-lg">
           <div className="flex flex-col items-center text-center">
             <div className="group relative">
               {avatarPreview ? (
                 <img
                   src={avatarPreview}
                   alt="Avatar Preview"
-                  className="h-28 w-28 rounded-3xl object-cover ring-4 ring-blue-500/20 transition duration-300 group-hover:scale-[1.02]"
+                  className="h-28 w-28 rounded-3xl object-cover ring-4 ring-blue-200 transition duration-300 group-hover:scale-105"
                 />
               ) : (
-                <div className="flex h-28 w-28 items-center justify-center rounded-3xl bg-linear-to-br from-blue-500 via-indigo-600 to-purple-700 text-4xl font-bold text-white ring-4 ring-blue-500/20 transition duration-300 group-hover:scale-[1.02]">
+                <div className="flex h-28 w-28 items-center justify-center rounded-3xl bg-linear-to-br from-blue-400 via-indigo-400 to-purple-500 text-4xl font-bold text-white ring-4 ring-blue-200 transition duration-300 group-hover:scale-105">
                   {superAdmin?.userName?.[0]?.toUpperCase() || "U"}
                 </div>
               )}
 
-              <label className="absolute -bottom-2 -right-2 flex h-10 w-10 cursor-pointer items-center justify-center rounded-2xl border border-white/10 bg-blue-500 text-white shadow-lg transition hover:scale-105 hover:bg-blue-400">
+              <label className="absolute -bottom-2 -right-2 flex h-10 w-10 cursor-pointer items-center justify-center rounded-2xl border border-gray-200 bg-blue-500 text-white shadow-lg transition hover:scale-110 hover:bg-blue-400">
                 <svg
                   className="h-5 w-5"
                   fill="none"
@@ -124,19 +125,19 @@ function SuperAdminDataUpdateForm() {
               </label>
             </div>
 
-            <h3 className="mt-5 text-xl font-semibold text-white">
+            <h3 className="mt-5 text-xl font-semibold text-gray-900">
               {formData.userName || "Super Admin"}
             </h3>
 
-            <p className="mt-1 text-sm text-zinc-400">
+            <p className="mt-1 text-sm text-gray-500">
               {formData.email || "superadmin@email.com"}
             </p>
 
-            <div className="mt-6 w-full rounded-2xl border border-white/10 bg-black/30 p-4">
+            <div className="mt-6 w-full rounded-2xl border border-gray-200 bg-gray-100 p-4 transition hover:shadow-sm">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-zinc-400">Role</span>
+                <span className="text-sm text-gray-500">Role</span>
 
-                <span className="inline-flex items-center gap-2 rounded-full bg-blue-500/10 px-3 py-1 text-xs font-medium text-blue-400">
+                <span className="inline-flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
                   <span className="h-2 w-2 rounded-full bg-blue-400" />
                   Super Admin
                 </span>
@@ -146,7 +147,7 @@ function SuperAdminDataUpdateForm() {
         </div>
 
         <div className="mt-auto hidden pt-8 lg:block">
-          <p className="text-xs leading-6 text-zinc-500">
+          <p className="text-xs leading-6 text-gray-500">
             Tip: Use an official profile photo and updated contact details to
             maintain a more trusted and professional super admin account.
           </p>
@@ -155,19 +156,19 @@ function SuperAdminDataUpdateForm() {
     </div>
 
     {/* RIGHT PANEL */}
-    <div className="bg-[#0f1117] p-6 sm:p-8 lg:p-10">
-      <div className="mb-8 flex items-center justify-between border-b border-white/10 pb-5">
+    <div className="bg-gray-50 p-6 sm:p-8 lg:p-10 transition-colors duration-300">
+      <div className="mb-8 flex items-center justify-between border-b border-gray-200 pb-5">
         <div>
-          <h3 className="text-2xl font-semibold text-white">
+          <h3 className="text-2xl font-semibold text-gray-900">
             Personal Information
           </h3>
-          <p className="mt-1 text-sm text-zinc-400">
+          <p className="mt-1 text-sm text-gray-500">
             Edit your super admin account details below
           </p>
         </div>
 
-        <div className="hidden rounded-2xl border border-white/10 bg-white/5 px-4 py-3 sm:flex sm:items-center sm:gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400">
+        <div className="hidden rounded-2xl border border-gray-200 bg-gray-100 px-4 py-3 sm:flex sm:items-center sm:gap-3 transition hover:shadow-md">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 text-blue-700">
             <svg
               className="h-5 w-5"
               fill="none"
@@ -184,10 +185,10 @@ function SuperAdminDataUpdateForm() {
           </div>
 
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
+            <p className="text-xs uppercase tracking-[0.2em] text-gray-500">
               Super Admin Access
             </p>
-            <p className="text-sm font-medium text-white">
+            <p className="text-sm font-medium text-gray-900">
               High Level Permissions
             </p>
           </div>
@@ -197,13 +198,13 @@ function SuperAdminDataUpdateForm() {
       <div className="grid gap-6 md:grid-cols-2">
         {/* Name */}
         <div className="md:col-span-2">
-          <label className="mb-2 block text-sm font-medium text-zinc-300">
+          <label className="mb-2 block text-sm font-medium text-gray-700">
             Full Name
           </label>
 
-          <div className="group flex items-center rounded-2xl border border-white/10 bg-[#151922] px-4 transition duration-300 focus-within:border-blue-500/50 focus-within:ring-2 focus-within:ring-blue-500/10">
+          <div className="group flex items-center rounded-2xl border border-gray-200 bg-white px-4 transition duration-300 focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-200">
             <svg
-              className="mr-3 h-5 w-5 text-zinc-500 transition group-focus-within:text-blue-400"
+              className="mr-3 h-5 w-5 text-gray-400 transition group-focus-within:text-blue-400"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
@@ -222,20 +223,20 @@ function SuperAdminDataUpdateForm() {
               value={formData.userName}
               onChange={handleChange}
               placeholder="Enter your full name"
-              className="w-full bg-transparent py-4 text-white placeholder:text-zinc-500 focus:outline-none"
+              className="w-full bg-transparent py-4 text-gray-900 placeholder:text-gray-400 focus:outline-none"
             />
           </div>
         </div>
 
         {/* Email */}
         <div>
-          <label className="mb-2 block text-sm font-medium text-zinc-300">
+          <label className="mb-2 block text-sm font-medium text-gray-700">
             Email Address
           </label>
 
-          <div className="group flex items-center rounded-2xl border border-white/10 bg-[#151922] px-4 transition duration-300 focus-within:border-blue-500/50 focus-within:ring-2 focus-within:ring-blue-500/10">
+          <div className="group flex items-center rounded-2xl border border-gray-200 bg-white px-4 transition duration-300 focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-200">
             <svg
-              className="mr-3 h-5 w-5 text-zinc-500 transition group-focus-within:text-blue-400"
+              className="mr-3 h-5 w-5 text-gray-400 transition group-focus-within:text-blue-400"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
@@ -254,20 +255,20 @@ function SuperAdminDataUpdateForm() {
               value={formData.email}
               onChange={handleChange}
               placeholder="Enter your email"
-              className="w-full bg-transparent py-4 text-white placeholder:text-zinc-500 focus:outline-none"
+              className="w-full bg-transparent py-4 text-gray-900 placeholder:text-gray-400 focus:outline-none"
             />
           </div>
         </div>
 
         {/* Contact Number */}
         <div>
-          <label className="mb-2 block text-sm font-medium text-zinc-300">
+          <label className="mb-2 block text-sm font-medium text-gray-700">
             Contact Number
           </label>
 
-          <div className="group flex items-center rounded-2xl border border-white/10 bg-[#151922] px-4 transition duration-300 focus-within:border-blue-500/50 focus-within:ring-2 focus-within:ring-blue-500/10">
+          <div className="group flex items-center rounded-2xl border border-gray-200 bg-white px-4 transition duration-300 focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-200">
             <svg
-              className="mr-3 h-5 w-5 text-zinc-500 transition group-focus-within:text-blue-400"
+              className="mr-3 h-5 w-5 text-gray-400 transition group-focus-within:text-blue-400"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
@@ -286,27 +287,27 @@ function SuperAdminDataUpdateForm() {
               value={formData.contactNumber}
               onChange={handleChange}
               placeholder="Enter your contact number"
-              className="w-full bg-transparent py-4 text-white placeholder:text-zinc-500 focus:outline-none"
+              className="w-full bg-transparent py-4 text-gray-900 placeholder:text-gray-400 focus:outline-none"
             />
           </div>
         </div>
       </div>
 
       {error && (
-        <div className="mt-6 rounded-2xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+        <div className="mt-6 rounded-2xl border border-red-300 bg-red-100 px-4 py-3 text-sm text-red-700">
           {error}
         </div>
       )}
 
-      <div className="mt-10 flex flex-col-reverse gap-4 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm text-zinc-500">
+      <div className="mt-10 flex flex-col-reverse gap-4 border-t border-gray-200 pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm text-gray-500">
           Your super admin profile changes will be saved securely.
         </p>
 
         <button
           type="submit"
           disabled={loading}
-          className="inline-flex items-center justify-center gap-3 rounded-2xl bg-blue-500 px-7 py-4 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 transition duration-300 hover:bg-blue-400 hover:shadow-blue-500/30 disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex items-center justify-center gap-3 rounded-2xl bg-blue-500 px-7 py-4 text-sm font-semibold text-white shadow-lg shadow-blue-200/40 transition duration-300 hover:bg-blue-400 hover:shadow-blue-300/50 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loading ? (
             <>

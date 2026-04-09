@@ -221,7 +221,7 @@ function RestaurantLandingPage() {
                 onChange={(e) => {
                   setSearchInput(e.target.value);
                 }}
-                className="ui-input w-full !rounded-2xl !py-3.5 !pl-12 !pr-4 !text-sm !text-gray-900 placeholder:!text-gray-400 dark:!border-gray-700 dark:!bg-gray-900/80 dark:!text-white dark:placeholder:!text-gray-500"
+                className="ui-input w-full rounded-2xl! py-3.5! pl-12! pr-4! text-sm! text-gray-900! placeholder:text-gray-400! dark:border-gray-700! dark:bg-gray-900/80! dark:text-white! dark:placeholder:text-gray-500!"
                 aria-label="Search restaurants"
               />
             </div>
@@ -229,7 +229,7 @@ function RestaurantLandingPage() {
               type="button"
               onClick={handleDetectLocation}
               disabled={geoLoading}
-              className="ui-btn-primary !rounded-2xl !px-5 !py-3.5 disabled:cursor-not-allowed disabled:opacity-70"
+              className="ui-btn-primary rounded-2xl! px-5! py-3.5! disabled:cursor-not-allowed disabled:opacity-70"
               whileHover={{ scale: geoLoading ? 1 : 1.02 }}
               whileTap={{ scale: geoLoading ? 1 : 0.98 }}
             >
@@ -282,7 +282,7 @@ function RestaurantLandingPage() {
                 onClick={() => handleCitySelect("")}
                 className={`shrink-0 rounded-2xl border px-4 py-3 text-left text-sm font-medium shadow-sm transition ${
                   !city && !isNearbyMode
-                    ? "border-[color:var(--ui-primary)] bg-[color:var(--ui-primary)] text-white shadow-blue-500/25"
+                    ? "border-(--ui-primary) bg-(--ui-primary) text-white shadow-blue-500/25"
                     : "border-gray-200/90 bg-white/90 text-gray-800 hover:border-blue-200 dark:border-gray-700 dark:bg-gray-900/90 dark:text-gray-100 dark:hover:border-blue-500/40"
                 }`}
                 whileHover={{ scale: 1.03 }}
@@ -300,7 +300,7 @@ function RestaurantLandingPage() {
                     onClick={() => handleCitySelect(name)}
                     className={`min-w-35 shrink-0 rounded-2xl border px-4 py-3 text-left shadow-sm transition ${
                       active
-                        ? "border-[color:var(--ui-primary)] bg-[color:var(--ui-primary)] text-white shadow-lg shadow-blue-500/25"
+                        ? "border-(--ui-primary) bg-(--ui-primary) text-white shadow-lg shadow-blue-500/25"
                         : "border-gray-200/90 bg-white/90 text-gray-800 hover:border-blue-200 dark:border-gray-700 dark:bg-gray-900/90 dark:text-gray-100 dark:hover:border-blue-500/40"
                     }`}
                     whileHover={{ scale: 1.03 }}
@@ -390,7 +390,7 @@ function RestaurantLandingPage() {
                   </p>
                   <motion.button
                     type="button"
-                    className="ui-btn-primary mt-6 !rounded-2xl !px-6 !py-2.5"
+                    className="ui-btn-primary mt-6 rounded-2xl! px-6! py-2.5!"
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => {

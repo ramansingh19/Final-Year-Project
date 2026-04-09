@@ -25,22 +25,22 @@ function AdminProfile() {
    }, [profileUpdate])
   // console.log(admin);
   return (
-<div className="relative mx-auto mt-10 w-[94%] overflow-hidden rounded-4xl border border-white/10 bg-[#07090f] shadow-[0_25px_80px_rgba(0,0,0,0.7)] md:w-[88%] lg:w-[75%]">
+<div className="relative mx-auto mt-10 w-[94%] overflow-hidden rounded-[36px] border border-white/70 bg-[#f6f8fc] shadow-[0_25px_80px_rgba(15,23,42,0.08)] md:w-[88%] lg:w-[75%]">
   {/* Background Glow */}
   <div className="absolute inset-0 overflow-hidden">
-    <div className="absolute -left-16 top-0 h-72 w-72 rounded-full bg-orange-500/10 blur-3xl animate-pulse" />
-    <div className="absolute right-0 top-10 h-64 w-64 rounded-full bg-red-500/10 blur-3xl animate-pulse [animation-delay:1s]" />
-    <div className="absolute bottom-0 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-amber-500/5 blur-3xl animate-pulse [animation-delay:2s]" />
-    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(249,115,22,0.08),transparent_45%)]" />
+    <div className="absolute -left-16 top-0 h-72 w-72 rounded-full bg-orange-200/40 blur-3xl animate-pulse" />
+    <div className="absolute right-0 top-10 h-64 w-64 rounded-full bg-sky-200/40 blur-3xl animate-pulse [animation-delay:1s]" />
+    <div className="absolute bottom-0 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-pink-200/30 blur-3xl animate-pulse [animation-delay:2s]" />
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(251,146,60,0.12),transparent_45%)]" />
   </div>
 
   <div className="relative z-10 p-5 sm:p-6 lg:p-8">
     {/* Header */}
-    <div className="group relative overflow-hidden rounded-[28px] border border-white/10 bg-linear-to-br from-[#18181b]/95 via-[#111827]/95 to-[#09090b] p-6 shadow-2xl transition-all duration-500 hover:border-orange-500/30 hover:shadow-orange-500/10 lg:p-8">
+    <div className="group relative overflow-hidden rounded-4xl border border-white/70 bg-white/85 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.06)] backdrop-blur-2xl transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_30px_70px_rgba(15,23,42,0.1)] lg:p-8">
       {/* Hover Glow */}
       <div className="absolute inset-0 opacity-0 transition duration-500 group-hover:opacity-100">
-        <div className="absolute -left-10 top-0 h-44 w-44 rounded-full bg-orange-500/10 blur-3xl" />
-        <div className="absolute bottom-0 right-0 h-44 w-44 rounded-full bg-red-500/10 blur-3xl" />
+        <div className="absolute -left-10 top-0 h-44 w-44 rounded-full bg-orange-100 blur-3xl" />
+        <div className="absolute bottom-0 right-0 h-44 w-44 rounded-full bg-sky-100 blur-3xl" />
       </div>
 
       <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center">
@@ -48,9 +48,9 @@ function AdminProfile() {
         <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-center">
           {/* Avatar */}
           <div className="relative">
-            <div className="absolute -inset-1 rounded-[30px] bg-linear-to-r  opacity-70 blur-sm transition duration-500 group-hover:opacity-100" />
+            <div className="absolute -inset-1 rounded-4xl bg-linear-to-r from-orange-400 via-amber-400 to-pink-400 opacity-40 blur-md transition duration-500 group-hover:opacity-70" />
 
-            <div className="relative flex h-28 w-28 items-center shadow-sm shadow-gray-400 justify-center overflow-hidden rounded-[28px] border border-white/10  text-3xl font-bold text-white  transition duration-500 group-hover:scale-[1.03] sm:h-32 sm:w-32 sm:text-4xl">
+            <div className="relative flex h-28 w-28 items-center justify-center overflow-hidden rounded-[30px] border border-white/80 bg-linear-to-br from-orange-500 to-amber-500 text-3xl font-black text-white shadow-[0_20px_40px_rgba(249,115,22,0.25)] transition duration-500 group-hover:scale-[1.03] sm:h-32 sm:w-32 sm:text-4xl">
               {admin?.avatar ? (
                 <img
                   src={admin.avatar}
@@ -63,7 +63,7 @@ function AdminProfile() {
             </div>
 
             {/* Online Status */}
-            <div className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-2xl border-2 border-[#07090f] bg-emerald-500 shadow-lg shadow-emerald-500/30">
+            <div className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-2xl border-2 border-[#f6f8fc] bg-emerald-500 shadow-lg shadow-emerald-300/40">
               <div className="h-3 w-3 animate-pulse rounded-full bg-white" />
             </div>
           </div>
@@ -71,13 +71,13 @@ function AdminProfile() {
           {/* Name + Edit + Badges */}
           <div className="text-center sm:text-left">
             <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-center">
-              <h2 className="bg-linear-to-r from-white via-orange-200 to-orange-500 bg-clip-text text-3xl font-bold tracking-tight text-transparent sm:text-4xl">
+              <h2 className="bg-linear-to-r from-slate-900 via-orange-500 to-amber-500 bg-clip-text text-3xl font-black tracking-tight text-transparent sm:text-4xl">
                 {admin?.userName || "Admin"}
               </h2>
 
               <button
                 onClick={() => setShowForm(!showForm)}
-                className="group/edit flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-orange-400 transition-all duration-300 hover:scale-105 hover:border-orange-500/30 hover:bg-orange-500/10 hover:text-orange-300"
+                className="group/edit flex h-11 w-11 items-center justify-center rounded-2xl border border-orange-100 bg-orange-50 text-orange-500 shadow-sm transition-all duration-300 hover:scale-105 hover:border-orange-200 hover:bg-orange-100 hover:text-orange-600"
               >
                 <FiEdit
                   size={18}
@@ -87,21 +87,21 @@ function AdminProfile() {
             </div>
 
             <div className="mt-4 flex flex-wrap items-center justify-center gap-3 sm:justify-start">
-              <span className="inline-flex items-center gap-2 rounded-full border border-orange-500/20 bg-orange-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-orange-300">
-                <span className="h-2 w-2 rounded-full bg-orange-400" />
+              <span className="inline-flex items-center gap-2 rounded-full border border-orange-200 bg-orange-50 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-orange-600">
+                <span className="h-2 w-2 rounded-full bg-orange-500" />
                 {admin?.role || "Admin"}
               </span>
 
               <span
-                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] ${
+                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] ${
                   admin?.isVerified
-                    ? "border border-emerald-500/20 bg-emerald-500/10 text-emerald-300"
-                    : "border border-red-500/20 bg-red-500/10 text-red-300"
+                    ? "border border-emerald-200 bg-emerald-50 text-emerald-600"
+                    : "border border-red-200 bg-red-50 text-red-500"
                 }`}
               >
                 <span
                   className={`h-2 w-2 rounded-full ${
-                    admin?.isVerified ? "bg-emerald-400" : "bg-red-400"
+                    admin?.isVerified ? "bg-emerald-500" : "bg-red-500"
                   }`}
                 />
                 {admin?.isVerified ? "Verified" : "Not Verified"}
@@ -111,42 +111,42 @@ function AdminProfile() {
         </div>
 
         {/* Contact Cards */}
-        <div className="grid flex-1 grid-cols-1 gap-4 sm:grid-cols-2 lg:max-w-120">
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl transition duration-300 hover:border-blue-500/20 hover:bg-blue-500/5">
-            <div className="mb-2 flex items-center gap-2 text-zinc-400">
-              <MdOutlineEmail className="text-blue-400" size={18} />
-              <span className="text-xs uppercase tracking-[0.18em]">
+        <div className="grid flex-1 grid-cols-1 gap-4 sm:grid-cols-2 lg:max-w-125">
+          <div className="rounded-3xl border border-white/80 bg-white/80 p-4 shadow-[0_10px_30px_rgba(15,23,42,0.04)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-sky-200 hover:shadow-[0_15px_35px_rgba(14,165,233,0.08)]">
+            <div className="mb-2 flex items-center gap-2 text-slate-500">
+              <MdOutlineEmail className="text-sky-500" size={18} />
+              <span className="text-xs font-bold uppercase tracking-[0.18em]">
                 Email Address
               </span>
             </div>
 
-            <p className="truncate text-sm font-medium text-white sm:text-base">
+            <p className="truncate text-sm font-semibold text-slate-900 sm:text-base">
               {admin?.email || "No Email Found"}
             </p>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl transition duration-300 hover:border-emerald-500/20 hover:bg-emerald-500/5">
-            <div className="mb-2 flex items-center gap-2 text-zinc-400">
-              <IoCallOutline className="text-emerald-400" size={18} />
-              <span className="text-xs uppercase tracking-[0.18em]">
+          <div className="rounded-3xl border border-white/80 bg-white/80 p-4 shadow-[0_10px_30px_rgba(15,23,42,0.04)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-[0_15px_35px_rgba(16,185,129,0.08)]">
+            <div className="mb-2 flex items-center gap-2 text-slate-500">
+              <IoCallOutline className="text-emerald-500" size={18} />
+              <span className="text-xs font-bold uppercase tracking-[0.18em]">
                 Contact Number
               </span>
             </div>
 
-            <p className="text-sm font-medium text-white sm:text-base">
+            <p className="text-sm font-semibold text-slate-900 sm:text-base">
               {admin?.contactNumber || "Not Available"}
             </p>
           </div>
 
-          <div className="sm:col-span-2 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl transition duration-300 hover:border-orange-500/20 hover:bg-orange-500/5">
-            <div className="mb-2 flex items-center gap-2 text-zinc-400">
-              <FaUserSecret className="text-orange-400" size={18} />
-              <span className="text-xs uppercase tracking-[0.18em]">
+          <div className="sm:col-span-2 rounded-3xl border border-white/80 bg-white/80 p-4 shadow-[0_10px_30px_rgba(15,23,42,0.04)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-orange-200 hover:shadow-[0_15px_35px_rgba(249,115,22,0.08)]">
+            <div className="mb-2 flex items-center gap-2 text-slate-500">
+              <FaUserSecret className="text-orange-500" size={18} />
+              <span className="text-xs font-bold uppercase tracking-[0.18em]">
                 Host Type
               </span>
             </div>
 
-            <p className="text-sm font-medium capitalize text-white sm:text-base">
+            <p className="text-sm font-semibold capitalize text-slate-900 sm:text-base">
               {admin?.host || "Not Available"}
             </p>
           </div>
@@ -156,9 +156,9 @@ function AdminProfile() {
 
     {/* Bottom Cards */}
     <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
-      <div className="group rounded-3xl border border-white/10 bg-[#0f1117]/90 p-5 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-orange-500/20 hover:shadow-orange-500/10">
+      <div className="group rounded-[30px] border border-white/70 bg-white/85 p-5 shadow-[0_15px_40px_rgba(15,23,42,0.05)] transition-all duration-300 hover:-translate-y-1 hover:border-orange-200 hover:shadow-[0_20px_45px_rgba(249,115,22,0.08)]">
         <div className="mb-3 flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-500/10 text-orange-400">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-100 text-orange-500">
             <svg
               className="h-6 w-6"
               fill="none"
@@ -180,28 +180,29 @@ function AdminProfile() {
           </div>
 
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
               Role
             </p>
-            <h3 className="text-lg font-semibold text-white">
+
+            <h3 className="text-lg font-black text-slate-900">
               {admin?.role || "Admin"}
             </h3>
           </div>
         </div>
 
-        <p className="text-sm leading-6 text-zinc-400">
+        <p className="text-sm leading-7 text-slate-500">
           You currently have access to manage your assigned host data, profile,
           food listings and administrative controls.
         </p>
       </div>
 
-      <div className="group rounded-3xl border border-white/10 bg-[#0f1117]/90 p-5 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-emerald-500/20 hover:shadow-emerald-500/10">
+      <div className="group rounded-[30px] border border-white/70 bg-white/85 p-5 shadow-[0_15px_40px_rgba(15,23,42,0.05)] transition-all duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-[0_20px_45px_rgba(16,185,129,0.08)]">
         <div className="mb-3 flex items-center gap-3">
           <div
             className={`flex h-12 w-12 items-center justify-center rounded-2xl ${
               admin?.isVerified
-                ? "bg-emerald-500/10 text-emerald-400"
-                : "bg-red-500/10 text-red-400"
+                ? "bg-emerald-100 text-emerald-500"
+                : "bg-red-100 text-red-500"
             }`}
           >
             <svg
@@ -220,12 +221,13 @@ function AdminProfile() {
           </div>
 
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
               Account Status
             </p>
+
             <h3
-              className={`text-lg font-semibold ${
-                admin?.isVerified ? "text-emerald-400" : "text-red-400"
+              className={`text-lg font-black ${
+                admin?.isVerified ? "text-emerald-500" : "text-red-500"
               }`}
             >
               {admin?.isVerified ? "Verified" : "Not Verified"}
@@ -233,7 +235,7 @@ function AdminProfile() {
           </div>
         </div>
 
-        <p className="text-sm leading-6 text-zinc-400">
+        <p className="text-sm leading-7 text-slate-500">
           {admin?.isVerified
             ? "Your account is verified and active. You can use all available features."
             : "Your account is not verified yet. Please complete verification to access all features."}
@@ -244,20 +246,21 @@ function AdminProfile() {
     {/* Form Section */}
     <div
       className={`overflow-hidden transition-all duration-700 ease-in-out ${
-        showForm ? "mt-6 max-h-500 opacity-100" : "max-h-0 opacity-0"
+        showForm ? "mt-6 max-h-300 opacity-100" : "max-h-0 opacity-0"
       }`}
     >
-      <div className="rounded-[28px] border border-white/10 bg-[#0b0d13]/95 p-4 shadow-2xl backdrop-blur-xl sm:p-6">
-        <div className="mb-5 flex items-center gap-3 border-b border-white/10 pb-4">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-orange-500/10 text-orange-400">
+      <div className="rounded-4xl border border-white/70 bg-white/90 p-4 shadow-[0_20px_50px_rgba(15,23,42,0.06)] backdrop-blur-2xl sm:p-6">
+        <div className="mb-5 flex items-center gap-3 border-b border-slate-200 pb-4">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-orange-100 text-orange-500">
             <FiEdit size={18} />
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold text-white">
+            <h3 className="text-lg font-black text-slate-900">
               Update Admin Information
             </h3>
-            <p className="text-sm text-zinc-400">
+
+            <p className="text-sm text-slate-500">
               Edit your admin profile details and save the changes securely.
             </p>
           </div>

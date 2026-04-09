@@ -81,7 +81,7 @@ function RestaurantCard({
             e.stopPropagation();
             if (id) onViewMenu?.(id);
           }}
-          className="ui-btn-primary w-full !rounded-xl !px-4 !py-2.5 !font-semibold"
+          className="ui-btn-primary w-full rounded-xl! px-4! py-2.5! font-semibold!"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
