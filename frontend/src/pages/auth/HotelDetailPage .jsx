@@ -127,20 +127,20 @@ const StarRating = ({ rating, size = "text-sm" }) => {
 
 // ── Skeleton ──────────────────────────────────────────────────────────────────
 const DetailSkeleton = () => (
-  <div className="animate-pulse min-h-screen bg-black">
-    <div className="h-14 border-b border-white/10 bg-[#0f1118]" />
-    <div className="mt-0 h-75 w-full bg-white/10 sm:h-105" />
+  <div className="animate-pulse min-h-screen bg-[#f8fafc]">
+    <div className="h-14 border-b border-slate-200 bg-white/80 backdrop-blur-md" />
+    <div className="mt-0 h-75 w-full bg-slate-200 sm:h-105" />
     <div className="max-w-7xl mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">
       <div className="flex-1 space-y-4">
-        <div className="h-8 w-2/3 rounded-xl bg-white/10" />
-        <div className="h-4 w-1/3 rounded bg-white/5" />
+        <div className="h-8 w-2/3 rounded-xl bg-slate-200" />
+        <div className="h-4 w-1/3 rounded bg-slate-100" />
         <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[...Array(8)].map((_, i) => (
-            <div key={i} className="h-16 rounded-xl bg-white/5" />
+            <div key={i} className="h-16 rounded-xl bg-slate-100" />
           ))}
         </div>
       </div>
-      <div className="h-72 w-full shrink-0 rounded-2xl bg-white/10 lg:w-80" />
+      <div className="h-72 w-full shrink-0 rounded-2xl bg-slate-200 lg:w-80" />
     </div>
   </div>
 );
@@ -148,17 +148,17 @@ const DetailSkeleton = () => (
 // ── Image Gallery ─────────────────────────────────────────────────────────────
 const Lightbox = ({ imgs, lightbox, setLightbox }) => (
   <div
-    className="fixed inset-0 z-200 bg-black/93 flex items-center justify-center"
+    className="fixed inset-0 z-[200] bg-slate-900/95 flex items-center justify-center backdrop-blur-sm"
     onClick={() => setLightbox(null)}
   >
     <button
-      className="absolute top-4 right-4 text-white text-2xl bg-white/10 w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/20"
+      className="absolute top-4 right-4 text-white text-xl bg-white/10 hover:bg-white/20 w-10 h-10 rounded-full flex items-center justify-center transition-colors"
       onClick={() => setLightbox(null)}
     >
       ✕
     </button>
     <button
-      className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 text-white bg-white/10 w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/20"
+      className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 text-white bg-white/10 hover:bg-white/20 w-10 h-10 rounded-full flex items-center justify-center transition-all"
       onClick={(e) => {
         e.stopPropagation();
         setLightbox((l) => Math.max(0, l - 1));
@@ -169,11 +169,11 @@ const Lightbox = ({ imgs, lightbox, setLightbox }) => (
     <img
       src={imgs[lightbox]}
       alt=""
-      className="max-w-[90vw] max-h-[85vh] object-contain rounded-xl"
+      className="max-w-[90vw] max-h-[85vh] object-contain rounded-xl shadow-2xl"
       onClick={(e) => e.stopPropagation()}
     />
     <button
-      className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 text-white bg-white/10 w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/20"
+      className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 text-white bg-white/10 hover:bg-white/20 w-10 h-10 rounded-full flex items-center justify-center transition-all"
       onClick={(e) => {
         e.stopPropagation();
         setLightbox((l) => Math.min(imgs.length - 1, l + 1));
@@ -181,7 +181,7 @@ const Lightbox = ({ imgs, lightbox, setLightbox }) => (
     >
       <FaChevronRight />
     </button>
-    <p className="absolute bottom-4 text-white/60 text-sm">
+    <p className="absolute bottom-6 text-white/60 text-xs font-semibold tracking-wide">
       {lightbox + 1} / {imgs.length}
     </p>
   </div>
@@ -194,9 +194,9 @@ const ImageGallery = ({ images, name }) => {
 
   if (count === 0)
     return (
-      <div className="flex h-55 w-full flex-col items-center justify-center rounded-2xl border border-white/10 bg-white/5 sm:h-70">
-        <FaMapMarkerAlt className="mb-2 text-3xl text-white/40" />
-        <p className="text-sm font-medium text-white/50">
+      <div className="flex h-55 w-full flex-col items-center justify-center rounded-2xl border border-slate-200 bg-slate-50/50 sm:h-70">
+        <FaMapMarkerAlt className="mb-2 text-3xl text-slate-300" />
+        <p className="text-sm font-medium text-slate-400">
           No photos uploaded yet
         </p>
       </div>
@@ -327,7 +327,7 @@ const RoomImageSlider = ({ images }) => {
       <img
         src={imgs[idx]}
         alt="room"
-        className="w-full h-full object-cover transition-opacity duration-300"
+        className="w-full h-full object-cover transition-opacity duration-500"
       />
       {imgs.length > 1 && (
         <>
@@ -336,24 +336,24 @@ const RoomImageSlider = ({ images }) => {
               e.stopPropagation();
               setIdx((i) => Math.max(0, i - 1));
             }}
-            className={`absolute left-1.5 top-1/2 -translate-y-1/2 w-6 h-6 bg-black/40 hover:bg-black/60 text-white rounded-full flex items-center justify-center transition-all ${
-              idx === 0 ? "opacity-30 cursor-not-allowed" : ""
+            className={`absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-white/80 hover:bg-white backdrop-blur-md text-slate-800 rounded-full flex items-center justify-center transition-all shadow-sm ${
+              idx === 0 ? "opacity-0 pointer-events-none" : "opacity-0 group-hover:opacity-100"
             }`}
           >
-            <FaChevronLeft className="text-[9px]" />
+            <FaChevronLeft className="text-[10px]" />
           </button>
           <button
             onClick={(e) => {
               e.stopPropagation();
               setIdx((i) => Math.min(imgs.length - 1, i + 1));
             }}
-            className={`absolute right-1.5 top-1/2 -translate-y-1/2 w-6 h-6 bg-black/40 hover:bg-black/60 text-white rounded-full flex items-center justify-center transition-all ${
-              idx === imgs.length - 1 ? "opacity-30 cursor-not-allowed" : ""
+            className={`absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-white/80 hover:bg-white backdrop-blur-md text-slate-800 rounded-full flex items-center justify-center transition-all shadow-sm ${
+              idx === imgs.length - 1 ? "opacity-0 pointer-events-none" : "opacity-0 group-hover:opacity-100"
             }`}
           >
-            <FaChevronRight className="text-[9px]" />
+            <FaChevronRight className="text-[10px]" />
           </button>
-          <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 flex gap-1">
+          <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex gap-1.5">
             {imgs.map((_, i) => (
               <button
                 key={i}
@@ -362,12 +362,12 @@ const RoomImageSlider = ({ images }) => {
                   setIdx(i);
                 }}
                 className={`w-1.5 h-1.5 rounded-full transition-all ${
-                  i === idx ? "bg-white w-3" : "bg-white/50"
+                  i === idx ? "bg-white w-3 shadow-sm" : "bg-white/40 shadow-sm"
                 }`}
               />
             ))}
           </div>
-          <div className="absolute top-2 right-2 bg-black/50 text-white text-[9px] px-1.5 py-0.5 rounded-full font-medium">
+          <div className="absolute top-2.5 right-2.5 bg-black/40 backdrop-blur-sm text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
             {idx + 1}/{imgs.length}
           </div>
         </>
@@ -464,31 +464,32 @@ const BookingWidget = ({
   };
 
   return (
-    <div className="ui-card overflow-hidden rounded-2xl bg-[#0f1118] lg:sticky lg:top-24">
+    <div className="ui-card overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-xl shadow-slate-200/50 lg:sticky lg:top-24">
       {/* Header */}
-      <div className="bg-[#1a3a6b] px-5 py-4">
-        <p className="text-blue-200 text-xs font-medium mb-0.5">
-          {selectedRoom ? "Selected room price" : "Starting from"}
+      <div className="bg-gradient-to-br from-[#3d6ef5] to-[#6366f1] px-5 py-5 sm:py-6">
+        <p className="text-white/70 text-[10px] font-bold uppercase tracking-wider mb-1">
+          {selectedRoom ? "Selected Room Rate" : "Special Offer From"}
         </p>
-        <div className="flex flex-wrap items-end gap-2">
+        <div className="flex flex-wrap items-baseline gap-2">
           <span
-            className={`text-3xl font-extrabold text-white transition-all duration-300 ${
-              priceChanged ? "scale-110 text-amber-300" : ""
+            className={`text-3xl font-extrabold text-white tracking-tight transition-all duration-300 ${
+              priceChanged ? "scale-110" : ""
             }`}
             style={{ display: "inline-block" }}
           >
             ₹{pricePerNight.toLocaleString()}
           </span>
-          <span className="text-blue-200 text-sm mb-1">/ night</span>
+          <span className="text-white/80 text-sm font-medium">/ night</span>
         </div>
         {selectedRoom && (
-          <p className="text-blue-100 text-[11px] mt-0.5 font-semibold capitalize">
+          <p className="text-white font-bold text-xs mt-1 capitalize flex items-center gap-1.5">
+            <FaBed className="text-white/60 text-[10px]" />
             {selectedRoom.roomType}
           </p>
         )}
         {/* ✅ Show proper GST slab label */}
-        <p className="text-blue-200 text-[11px] mt-0.5">
-          +{getGSTLabel(pricePerNight)} applicable
+        <p className="text-white/60 text-[10px] mt-1.5 font-medium border-t border-white/10 pt-1.5">
+          +{getGSTLabel(pricePerNight)} applicable taxes
         </p>
       </div>
 
@@ -518,7 +519,7 @@ const BookingWidget = ({
 
       <div className="p-4 space-y-3">
         {/* Dates */}
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-2.5">
           {[
             {
               label: "Check-in",
@@ -541,17 +542,17 @@ const BookingWidget = ({
             },
           ].map(({ label, val, min, set }) => (
             <div key={label}>
-              <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-white/45">
+              <p className="mb-1.5 text-[10px] font-bold uppercase tracking-widest text-slate-400 px-1">
                 {label}
               </p>
-              <div className="relative">
-                <FaCalendarAlt className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-xs text-white/45" />
+              <div className="relative group">
+                <FaCalendarAlt className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 transition-colors group-focus-within:text-[#3d6ef5]" />
                 <input
                   type="date"
                   value={val}
                   min={min}
                   onChange={(e) => set(e.target.value)}
-                  className="w-full rounded-lg border border-white/15 bg-white/5 py-2 pl-7 pr-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-[#3d6ef5]/25"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-9 pr-2 text-xs text-slate-700 font-semibold focus:outline-none focus:ring-4 focus:ring-[#3d6ef5]/5 focus:border-[#3d6ef5]/40 transition-all [color-scheme:light]"
                 />
               </div>
             </div>
@@ -559,28 +560,28 @@ const BookingWidget = ({
         </div>
 
         {/* Rooms & Guests */}
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-2.5">
           {[
             { label: "Rooms", val: rooms, set: setRooms },
             { label: "Guests", val: guests, set: setGuests },
           ].map(({ label, val, set }) => (
             <div key={label}>
-              <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-white/45">
+              <p className="mb-1.5 text-[10px] font-bold uppercase tracking-widest text-slate-400 px-1">
                 {label}
               </p>
-              <div className="flex items-center overflow-hidden rounded-lg border border-white/15 bg-white/5">
+              <div className="flex items-center overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
                 <button
                   onClick={() => set((v) => Math.max(1, v - 1))}
-                  className="flex h-8 w-8 items-center justify-center text-white/65 hover:bg-white/10"
+                  className="flex h-10 w-10 items-center justify-center text-slate-400 hover:bg-slate-100 transition-colors"
                 >
                   <FaMinus className="text-[9px]" />
                 </button>
-                <span className="flex-1 text-center text-sm font-bold text-white">
+                <span className="flex-1 text-center text-sm font-bold text-slate-700">
                   {val}
                 </span>
                 <button
                   onClick={() => set((v) => Math.min(10, v + 1))}
-                  className="flex h-8 w-8 items-center justify-center text-white/65 hover:bg-white/10"
+                  className="flex h-10 w-10 items-center justify-center text-slate-400 hover:bg-slate-100 transition-colors"
                 >
                   <FaPlus className="text-[9px]" />
                 </button>
@@ -597,46 +598,42 @@ const BookingWidget = ({
         )}
 
         {/* ✅ Proper GST price breakdown */}
-        <div className="space-y-1.5 rounded-xl border border-white/10 bg-white/5 p-3">
-          <div className="flex justify-between text-xs text-white/70">
+        <div className="space-y-2 rounded-2xl border border-slate-100 bg-slate-50/50 p-4">
+          <div className="flex justify-between text-xs text-slate-600 font-medium">
             <span>
               ₹{pricePerNight.toLocaleString()} × {nights} night
               {nights > 1 ? "s" : ""} × {rooms} room{rooms > 1 ? "s" : ""}
             </span>
-            <span>₹{baseAmount.toLocaleString()}</span>
+            <span className="font-bold text-slate-700">₹{baseAmount.toLocaleString()}</span>
           </div>
           {/* GST line — shows 0% for budget rooms */}
-          <div className="flex justify-between text-xs text-white/70">
+          <div className="flex justify-between text-xs text-slate-500 font-medium">
             <span className="flex items-center gap-1">
               GST ({(gstRate * 100).toFixed(0)}%)
               {gstRate === 0 && (
-                <span className="text-emerald-400 text-[10px] font-semibold">
-                  (Exempt)
+                <span className="text-emerald-600 text-[10px] font-bold bg-emerald-50 px-1.5 py-0.5 rounded-md">
+                  Exempt
                 </span>
               )}
             </span>
-            <span>
-              {gstRate === 0 ? (
-                <span className="text-emerald-400">₹0</span>
-              ) : (
-                `₹${gstAmount.toLocaleString()}`
-              )}
+            <span className={gstRate === 0 ? "text-emerald-600 font-bold" : "font-bold text-slate-700"}>
+              {gstRate === 0 ? "₹0" : `₹${gstAmount.toLocaleString()}`}
             </span>
           </div>
-          <div className="my-1 h-px bg-white/10" />
-          <div className="flex justify-between text-sm font-extrabold text-white">
-            <span>Total</span>
-            <span>₹{totalAmount.toLocaleString()}</span>
+          <div className="my-2 h-px bg-slate-200/60" />
+          <div className="flex justify-between items-center text-[15px] font-extrabold text-slate-800">
+            <span>Total Payable</span>
+            <span className="text-lg">₹{totalAmount.toLocaleString()}</span>
           </div>
           {/* GST slab info */}
-          <div className="flex items-center gap-1 pt-0.5">
-            <FaInfoCircle className="text-white/30 text-[9px]" />
-            <span className="text-[9px] text-white/35">
+          <div className="flex items-start gap-1.5 pt-1">
+            <FaInfoCircle className="text-slate-300 text-[10px] mt-0.5 shrink-0" />
+            <span className="text-[10px] text-slate-400 leading-tight">
               {pricePerNight < 1000
-                ? "Rooms under ₹1,000/night are GST exempt"
+                ? "Rooms under ₹1,000/night are GST exempt."
                 : pricePerNight <= 7500
-                  ? "Rooms ₹1,000–₹7,500/night attract 12% GST"
-                  : "Rooms above ₹7,500/night attract 18% GST"}
+                  ? "Standard occupancy taxes of 12% GST applied."
+                  : "Luxury occupancy taxes of 18% GST applied."}
             </span>
           </div>
         </div>
@@ -649,9 +646,9 @@ const BookingWidget = ({
                 .getElementById("rooms-section")
                 ?.scrollIntoView({ behavior: "smooth", block: "start" });
             }}
-            className="w-full font-bold py-3 rounded-xl shadow-md transition-all text-sm border-2 border-[#1a3a6b] text-[#1a3a6b] hover:bg-[#1a3a6b] hover:text-white active:scale-95"
+            className="w-full font-bold py-3.5 rounded-xl shadow-lg shadow-[#3d6ef5]/10 active:scale-[0.98] transition-all text-sm border-2 border-[#3d6ef5] text-[#3d6ef5] hover:bg-[#3d6ef5] hover:text-white"
           >
-            Select a Room First
+            Choose a Room to Continue
           </button>
         ) : (
           <button
@@ -659,17 +656,17 @@ const BookingWidget = ({
             disabled={
               bookingLoading || (selectedRoom && guests > selectedRoom.capacity)
             }
-            className={`w-full font-bold py-3 rounded-xl shadow-md transition-all text-sm 
+            className={`w-full font-bold py-3.5 rounded-xl text-sm transition-all active:scale-[0.98]
               ${
                 bookingLoading ||
                 (selectedRoom && guests > selectedRoom.capacity)
-                  ? "bg-gray-400 cursor-not-allowed text-white"
-                  : "bg-[#1a3a6b] hover:bg-[#14305a] active:scale-95 text-white hover:shadow-lg"
+                  ? "bg-slate-200 cursor-not-allowed text-slate-400"
+                  : "bg-gradient-to-r from-[#3d6ef5] to-[#6366f1] hover:from-[#3461d9] hover:to-[#5558e6] text-white shadow-lg shadow-[#3d6ef5]/20 hover:shadow-[#3d6ef5]/30"
               }`}
           >
             {bookingLoading
-              ? "Booking..."
-              : `Book Now · ₹${totalAmount.toLocaleString()}`}
+              ? "Securing your stay..."
+              : `Reserve Now · ₹${totalAmount.toLocaleString()}`}
           </button>
         )}
 
@@ -684,34 +681,34 @@ const BookingWidget = ({
 
 // ── Review Card ───────────────────────────────────────────────────────────────
 const ReviewCard = ({ review }) => (
-  <div className="border-b border-white/10 pb-4 last:border-0 last:pb-0">
-    <div className="flex items-center justify-between mb-2">
-      <div className="flex items-center gap-2.5">
-        <div className="w-9 h-9 rounded-full bg-[#1a3a6b]/10 flex items-center justify-center text-[#1a3a6b] font-bold text-sm shrink-0">
-          {(review.user?.name || review.userName || "G")[0].toUpperCase()}
+  <div className="border-b border-slate-100 pb-5 last:border-0 last:pb-0">
+    <div className="flex items-center justify-between mb-2.5">
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 font-black text-[15px] shrink-0 border border-slate-200/50 uppercase">
+          {(review.user?.name || review.userName || "Guest")[0]}
         </div>
         <div>
-          <p className="text-xs font-semibold text-white">
+          <p className="text-[13px] font-bold text-slate-800">
             {review.user?.name || review.userName || "Guest"}
           </p>
-          <p className="text-[10px] text-white/45">
+          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wide">
             {review.createdAt
               ? new Date(review.createdAt).toLocaleDateString("en-IN", {
-                  month: "short",
+                  month: "long",
                   year: "numeric",
                 })
-              : review.date || "Recent stay"}
+              : review.date || "Verified stay"}
           </p>
         </div>
       </div>
-      <div className="flex items-center gap-1 bg-amber-50 border border-amber-200 rounded-lg px-2 py-0.5">
-        <FaStar className="text-amber-400 text-[9px]" />
-        <span className="text-xs font-bold text-amber-700">
+      <div className="flex items-center gap-1.5 bg-amber-50 border border-amber-200/50 rounded-lg px-2 py-1 shadow-sm shadow-amber-200/20">
+        <FaStar className="text-amber-400 text-[10px]" />
+        <span className="text-xs font-black text-amber-700">
           {review.rating}
         </span>
       </div>
     </div>
-    <p className="text-xs leading-relaxed text-white/70">
+    <p className="text-[13px] leading-relaxed text-slate-600 font-medium">
       {review.comment || review.review}
     </p>
   </div>
@@ -739,70 +736,70 @@ const AddReviewForm = ({ hotelId }) => {
 
   if (!user)
     return (
-      <div className="mt-4 rounded-xl border border-white/15 bg-white/5 p-4 text-center">
-        <p className="text-sm text-white/65">
+      <div className="mt-6 rounded-2xl border border-slate-100 bg-slate-50/50 p-6 text-center">
+        <p className="text-sm text-slate-500 font-medium">
           <button
             onClick={() => navigate("/login")}
-            className="text-[#1a3a6b] font-semibold hover:underline"
+            className="text-[#3d6ef5] font-black hover:underline underline-offset-4"
           >
-            Login
+            Sign in
           </button>{" "}
-          to write a review
+          to write a review and help other travelers.
         </p>
       </div>
     );
 
   return (
-    <div className="mt-5 border-t border-white/10 pt-5">
-      <h3 className="mb-3 text-sm font-bold text-white">Write a Review</h3>
-      <div className="flex items-center gap-1 mb-3">
+    <div className="mt-6 border-t border-slate-100 pt-6">
+      <h3 className="mb-4 text-[15px] font-black text-slate-800 tracking-tight">Write a Review</h3>
+      <div className="flex items-center gap-1.5 mb-5">
         {[1, 2, 3, 4, 5].map((star) => (
           <button
             key={star}
             onMouseEnter={() => setHovered(star)}
             onMouseLeave={() => setHovered(0)}
             onClick={() => setRating(star)}
-            className="text-2xl transition-transform hover:scale-110"
+            className="text-2xl transition-all duration-200 hover:scale-110 active:scale-95"
           >
             <FaStar
               className={
                 star <= (hovered || rating)
-                  ? "text-amber-400"
+                  ? "text-amber-400 filter drop-shadow-[0_2px_4px_rgba(251,191,36,0.2)]"
                   : "text-slate-200"
               }
             />
           </button>
         ))}
         {rating > 0 && (
-          <span className="ml-2 text-xs text-white/60">{rating}/5</span>
+          <span className="ml-3 text-[11px] font-bold text-[#3d6ef5] bg-[#3d6ef5]/10 px-2 py-0.5 rounded-full uppercase tracking-widest">{rating} / 5</span>
         )}
       </div>
       <textarea
         value={comment}
         onChange={(e) => setComment(e.target.value)}
-        placeholder="Share your experience..."
-        rows={3}
-        className="w-full resize-none rounded-xl border border-white/15 bg-white/5 px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#3d6ef5]/25"
+        placeholder="How was your stay? Any tips for other travelers?"
+        rows={4}
+        className="w-full resize-none rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-[#3d6ef5]/5 focus:border-[#3d6ef5]/30 transition-all"
       />
       {submitSuccess && (
-        <p className="text-emerald-600 text-xs font-semibold mt-2">
-          ✓ Review submitted! It will appear after approval.
+        <p className="text-emerald-600 text-xs font-bold mt-3 flex items-center gap-1.5">
+          <FaCheckCircle className="text-[10px]" /> Review received! It will be live after a short verification.
         </p>
       )}
       {submitError && (
-        <p className="text-rose-500 text-xs mt-2">{submitError}</p>
+        <p className="text-rose-500 text-xs font-bold mt-3">{submitError}</p>
       )}
       <button
         disabled={!rating || !comment.trim() || submitLoading}
         onClick={() => dispatch(addHotelReview({ hotelId, rating, comment }))}
-        className={`mt-3 px-5 py-2 rounded-xl text-white text-xs font-bold transition-all
+        className={`mt-4 px-8 py-3 rounded-xl text-white text-xs font-black uppercase tracking-widest shadow-lg transition-all active:scale-95
           ${
             !rating || !comment.trim() || submitLoading
-              ? "bg-slate-300 cursor-not-allowed"
-              : "bg-[#1a3a6b] hover:bg-[#14305a] active:scale-95"
+              ? "bg-slate-200 text-slate-400 shadow-none cursor-not-allowed"
+              : "bg-gradient-to-r from-[#3d6ef5] to-[#6366f1] hover:from-[#3461d9] hover:to-[#5558e6] shadow-[#3d6ef5]/20"
           }`}
       >
-        {submitLoading ? "Submitting..." : "Submit Review"}
+        {submitLoading ? "Publishing..." : "Submit Review"}
       </button>
     </div>
   );
@@ -819,17 +816,17 @@ const RoomCard = ({ room, isSelected, onSelect, onPreview, availability }) => {
     <div
       className={`border-2 rounded-2xl overflow-hidden transition-all duration-300 ${
         isSelected
-          ? "border-[#1a3a6b] shadow-lg shadow-[#1a3a6b]/10 scale-[1.01]"
+          ? "border-[#3d6ef5] shadow-xl shadow-[#3d6ef5]/10 scale-[1.01] bg-white"
           : isSoldOut
-            ? "border-white/10 opacity-60"
-            : "border-white/15 hover:border-white/30 hover:shadow-md"
+            ? "border-slate-100 opacity-60 bg-slate-50"
+            : "border-slate-200 bg-white hover:border-[#3d6ef5]/30 hover:shadow-lg hover:shadow-slate-200/50"
       }`}
     >
       {isSelected && (
-        <div className="bg-[#1a3a6b] px-4 py-1.5 flex items-center gap-2">
-          <FaCheckCircle className="text-white text-xs" />
-          <span className="text-white text-[11px] font-bold tracking-wide">
-            ROOM SELECTED — Scroll up to book
+        <div className="bg-gradient-to-r from-[#3d6ef5] to-[#6366f1] px-4 py-2 flex items-center gap-2">
+          <FaCheckCircle className="text-white text-[10px]" />
+          <span className="text-white text-[10px] font-bold tracking-widest uppercase">
+            Currently Selected Room
           </span>
         </div>
       )}
@@ -840,39 +837,39 @@ const RoomCard = ({ room, isSelected, onSelect, onPreview, availability }) => {
           onClick={() => onPreview(room)}
         >
           <RoomImageSlider images={room.images} />
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-200 flex items-center justify-center pointer-events-none">
-            <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-white/90 text-[#1a3a6b] text-[10px] font-bold px-2.5 py-1 rounded-full shadow-md">
-              Preview
+          <div className="absolute inset-0 bg-slate-900/0 group-hover:bg-slate-900/20 transition-all duration-200 flex items-center justify-center pointer-events-none">
+            <span className="opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 bg-white/95 backdrop-blur-md text-[#3d6ef5] text-[10px] font-extrabold px-3 py-1.5 rounded-full shadow-xl">
+              Preview Room
             </span>
           </div>
           {isSelected && (
-            <div className="absolute inset-0 ring-2 ring-inset ring-[#1a3a6b]/30 pointer-events-none" />
+            <div className="absolute inset-0 ring-2 ring-inset ring-[#3d6ef5]/30 pointer-events-none" />
           )}
         </div>
 
         <div className="flex-1 p-4 flex flex-col sm:flex-row justify-between gap-3">
           <div className="flex-1">
-            <div className="flex items-center gap-2 flex-wrap mb-1">
+            <div className="flex items-center gap-2 flex-wrap mb-1.5">
               <button
                 onClick={() => onPreview(room)}
-                className="text-left text-sm font-bold capitalize text-white transition-colors hover:text-[#3d6ef5] hover:underline underline-offset-2"
+                className="text-left text-[15px] font-extrabold capitalize text-slate-800 transition-colors hover:text-[#3d6ef5]"
               >
                 {room.roomType}
               </button>
               {isSelected && (
-                <span className="text-[9px] bg-[#1a3a6b] text-white font-bold px-2 py-0.5 rounded-full">
+                <span className="text-[9px] bg-[#3d6ef5]/10 text-[#3d6ef5] font-extrabold px-2 py-0.5 rounded-full border border-[#3d6ef5]/20">
                   SELECTED
                 </span>
               )}
             </div>
-            <p className="mb-2 text-xs text-white/55">
+            <p className="mb-2.5 text-xs text-slate-500 font-medium">
               Max {room.capacity} guests · {room.totalRooms} rooms total
             </p>
-            <div className="flex flex-wrap gap-1.5 mb-2">
+            <div className="flex flex-wrap gap-1.5 mb-3">
               {(room.amenities || []).slice(0, 4).map((f) => (
                 <span
                   key={f}
-                  className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] capitalize text-white/70"
+                  className="rounded-lg border border-slate-100 bg-slate-50 px-2 py-1 text-[10px] font-bold capitalize text-slate-500"
                 >
                   {f}
                 </span>
@@ -880,7 +877,7 @@ const RoomCard = ({ room, isSelected, onSelect, onPreview, availability }) => {
               {(room.amenities || []).length > 4 && (
                 <button
                   onClick={() => onPreview(room)}
-                  className="text-[10px] text-[#1a3a6b] font-semibold hover:underline"
+                  className="text-[10px] text-[#3d6ef5] font-bold hover:underline underline-offset-2"
                 >
                   +{room.amenities.length - 4} more
                 </button>
@@ -898,46 +895,46 @@ const RoomCard = ({ room, isSelected, onSelect, onPreview, availability }) => {
             )}
           </div>
 
-          <div className="flex flex-row sm:flex-col items-end sm:items-end justify-between sm:justify-start gap-2 shrink-0 w-full sm:w-auto">
+          <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-3 shrink-0 w-full sm:w-auto mt-2 sm:mt-0 pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100">
             <div className="sm:text-right">
-              <p className="text-xl font-extrabold text-white">
+              <p className="text-2xl font-black text-slate-800 tracking-tight">
                 ₹{room.pricePerNight.toLocaleString()}
               </p>
-              <p className="text-[10px] text-white/45">per night</p>
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wide">per night</p>
               {/* ✅ Show GST slab per room card */}
-              <p className="text-[10px] text-white/35">+{gstLabel}</p>
+              <p className="text-[10px] text-slate-400/80 font-medium">+{gstLabel} tax</p>
             </div>
 
-            <div className="flex flex-col gap-1.5 items-end">
+            <div className="flex flex-col gap-2 items-end w-full sm:w-auto">
               <button
                 onClick={() => onPreview(room)}
-                className="text-[#1a3a6b] border border-[#1a3a6b]/30 bg-[#1a3a6b]/5 hover:bg-[#1a3a6b]/10 text-[10px] font-bold px-3 py-1.5 rounded-lg transition-all w-full text-center"
+                className="text-slate-500 bg-slate-50 hover:bg-slate-100 text-[10px] font-bold px-3 py-2 rounded-lg transition-all w-full text-center border border-slate-200/50"
               >
-                📸 Preview Room
+                Room Details
               </button>
 
               {!isSoldOut ? (
                 isSelected ? (
                   <button
                     onClick={() => onSelect(null)}
-                    className="text-[#1a3a6b] border-2 border-[#1a3a6b] text-xs font-bold px-4 py-2 rounded-xl transition-all min-w-28 hover:bg-[#1a3a6b]/5 active:scale-95 flex items-center gap-1.5 justify-center"
+                    className="bg-emerald-50 border-2 border-emerald-500 text-emerald-600 text-xs font-bold px-4 py-2 rounded-xl transition-all min-w-[120px] hover:bg-emerald-100 active:scale-95 flex items-center gap-1.5 justify-center"
                   >
-                    <FaCheckCircle className="text-[10px]" />
+                    <FaCheckCircle className="text-[11px]" />
                     Selected
                   </button>
                 ) : (
                   <button
                     onClick={() => onSelect(room)}
-                    className="bg-[#1a3a6b] hover:bg-[#14305a] active:scale-95 text-white text-xs font-bold px-4 py-2 rounded-xl shadow transition-all min-w-28 flex items-center gap-1.5 justify-center"
+                    className="bg-gradient-to-r from-[#3d6ef5] to-[#6366f1] hover:from-[#3461d9] hover:to-[#5558e6] active:scale-95 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-lg shadow-[#3d6ef5]/15 transition-all min-w-[120px] flex items-center gap-1.5 justify-center"
                   >
-                    <FaBed className="text-[10px]" />
+                    <FaBed className="text-[11px]" />
                     Select Room
                   </button>
                 )
               ) : (
                 <button
                   disabled
-                  className="bg-slate-400 cursor-not-allowed text-white text-xs font-bold px-4 py-2 rounded-xl min-w-28"
+                  className="bg-slate-100 cursor-not-allowed text-slate-400 text-xs font-bold px-4 py-2.5 rounded-xl min-w-[120px]"
                 >
                   Sold Out
                 </button>
@@ -958,19 +955,21 @@ const RoomSelectedToast = ({ room, onClose }) => {
   }, []);
 
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-bounce-once">
-      <div className="bg-[#1a3a6b] text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 whitespace-nowrap">
-        <FaCheckCircle className="text-emerald-300 text-base shrink-0" />
+    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 animate-bounce-once">
+      <div className="bg-white/90 backdrop-blur-xl border border-[#3d6ef5]/20 text-slate-800 px-6 py-3.5 rounded-2xl shadow-[0_20px_50px_rgba(59,130,246,0.2)] flex items-center gap-4 whitespace-nowrap">
+        <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center shrink-0 border border-emerald-100">
+          <FaCheckCircle className="text-emerald-500 text-lg" />
+        </div>
         <div>
-          <p className="text-xs font-bold capitalize">
+          <p className="text-xs font-black capitalize text-slate-800">
             {room.roomType} selected!
           </p>
-          <p className="text-[10px] text-blue-200">
-            Scroll up to complete your booking
+          <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-0.5">
+            Scroll up to finalize your booking
           </p>
         </div>
-        <button onClick={onClose} className="ml-2 opacity-60 hover:opacity-100">
-          <FaTimes className="text-xs" />
+        <button onClick={onClose} className="ml-2 text-slate-300 hover:text-slate-500 transition-colors">
+          <FaTimes className="text-sm" />
         </button>
       </div>
     </div>
@@ -1101,16 +1100,16 @@ const HotelDetailPage = () => {
 
   if (error)
     return (
-      <div className="flex min-h-screen items-center justify-center bg-black">
-        <div className="text-center p-8">
-          <div className="w-16 h-16 bg-rose-50 rounded-full flex items-center justify-center mx-auto mb-4">
-            <FaMapMarkerAlt className="text-rose-300 text-2xl" />
+      <div className="flex min-h-screen items-center justify-center bg-[#f8fafc]">
+        <div className="text-center p-12 bg-white rounded-3xl border border-slate-200 shadow-xl max-w-sm mx-4">
+          <div className="w-20 h-20 bg-rose-50 rounded-3xl flex items-center justify-center mx-auto mb-6 rotate-12 transition-transform hover:rotate-0">
+            <FaMapMarkerAlt className="text-rose-400 text-3xl" />
           </div>
-          <h3 className="mb-2 font-bold text-white">Something went wrong</h3>
-          <p className="mb-4 text-sm text-white/55">{error}</p>
+          <h3 className="mb-3 text-[20px] font-black text-slate-800 tracking-tight">Technical Error</h3>
+          <p className="mb-8 text-sm text-slate-500 font-medium leading-relaxed">{error}</p>
           <button
             onClick={() => navigate(-1)}
-            className="bg-[#1a3a6b] text-white px-6 py-2 rounded-xl text-sm font-semibold"
+            className="w-full bg-slate-800 text-white px-8 py-3.5 rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-slate-200 transition-all active:scale-95"
           >
             Go Back
           </button>
@@ -1120,17 +1119,18 @@ const HotelDetailPage = () => {
 
   if (!hotel)
     return (
-      <div className="flex min-h-screen items-center justify-center bg-black">
-        <div className="text-center p-8">
-          <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <FaMapMarkerAlt className="text-slate-300 text-2xl" />
+      <div className="flex min-h-screen items-center justify-center bg-[#f8fafc]">
+        <div className="text-center p-12 bg-white rounded-3xl border border-slate-200 shadow-xl max-w-sm mx-4">
+          <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto mb-6 -rotate-6 transition-transform hover:rotate-0">
+            <FaMapMarkerAlt className="text-slate-300 text-3xl" />
           </div>
-          <h3 className="mb-2 font-bold text-white">Hotel not found</h3>
+          <h3 className="mb-3 text-[20px] font-black text-slate-800 tracking-tight">Hotel Missing</h3>
+          <p className="mb-8 text-sm text-slate-500 font-medium leading-relaxed">The property you are looking for may have been moved or removed from our listings.</p>
           <button
             onClick={() => navigate(-1)}
-            className="bg-[#1a3a6b] text-white px-6 py-2 rounded-xl text-sm font-semibold"
+            className="w-full bg-slate-800 text-white px-8 py-3.5 rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-slate-200 transition-all active:scale-95"
           >
-            Back to results
+            Browse Others
           </button>
         </div>
       </div>
@@ -1144,7 +1144,7 @@ const HotelDetailPage = () => {
   const totalReviews = hotel.totalReviews ?? hotel.reviews?.length ?? 0;
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-[#f8fafc] bg-gradient-to-b from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] text-slate-800 font-sans">
       {/* Toast */}
       {showToast && selectedRoom && (
         <RoomSelectedToast
@@ -1166,38 +1166,38 @@ const HotelDetailPage = () => {
       />
 
       {/* Navbar */}
-      <div className="sticky top-0 z-50 border-b border-white/10 bg-[#0f1118] shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
+      <div className="sticky top-0 z-50 border-b border-slate-200/60 bg-white/80 backdrop-blur-xl shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-sm font-semibold text-white/70 transition-colors hover:text-[#3d6ef5]"
+            className="flex items-center gap-2 text-sm font-bold text-slate-500 transition-colors hover:text-[#3d6ef5] bg-slate-50 px-3 py-2 rounded-xl border border-slate-100"
           >
-            <FaChevronLeft className="text-xs" /> Back
+            <FaChevronLeft className="text-[10px]" /> Back
           </button>
           <div className="flex-1 min-w-0 hidden sm:block">
-            <p className="truncate text-sm font-bold text-white">
+            <p className="truncate text-[15px] font-black text-slate-800 tracking-tight">
               {hotel.name}
             </p>
-            <p className="truncate text-xs text-white/45">
+            <p className="truncate text-[11px] text-slate-400 font-bold uppercase tracking-wide">
               {hotel.address}
               {cityName ? `, ${cityName}` : ""}
             </p>
           </div>
           <div className="flex items-center gap-2">
             {selectedRoom && (
-              <div className="hidden items-center gap-1.5 rounded-xl border border-[#3d6ef5]/30 bg-[#3d6ef5]/10 px-3 py-1.5 sm:flex">
-                <FaBed className="text-[#1a3a6b] text-xs" />
-                <span className="text-xs font-semibold text-[#1a3a6b] capitalize truncate max-w-28">
+              <div className="hidden items-center gap-1.5 rounded-xl border border-[#3d6ef5]/20 bg-[#3d6ef5]/5 px-3 py-2 sm:flex">
+                <FaBed className="text-[#3d6ef5] text-xs" />
+                <span className="text-xs font-bold text-slate-700 capitalize truncate max-w-28">
                   {selectedRoom.roomType}
                 </span>
-                <span className="text-[#1a3a6b] font-bold text-xs">
+                <span className="text-[#3d6ef5] font-black text-xs">
                   · ₹{selectedRoom.pricePerNight.toLocaleString()}
                 </span>
               </div>
             )}
             <button
               onClick={() => setWishlist(!wishlist)}
-              className="flex items-center gap-1.5 rounded-xl border border-white/15 px-3 py-2 text-xs font-semibold text-white/70 hover:bg-white/5"
+              className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-bold text-slate-500 hover:text-rose-500 hover:border-rose-200 transition-all shadow-sm"
             >
               {wishlist ? (
                 <FaHeart className="text-rose-500" />
@@ -1213,7 +1213,7 @@ const HotelDetailPage = () => {
                   url: window.location.href,
                 })
               }
-              className="flex items-center gap-1.5 rounded-xl border border-white/15 px-3 py-2 text-xs font-semibold text-white/70 hover:bg-white/5"
+              className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-bold text-slate-500 hover:text-[#3d6ef5] hover:border-[#3d6ef5]/30 transition-all shadow-sm"
             >
               <FaShare />
               <span className="hidden sm:inline">Share</span>
@@ -1228,51 +1228,53 @@ const HotelDetailPage = () => {
       </div>
 
       {/* Hotel header */}
-      <div className="max-w-7xl mx-auto px-4 py-5">
-        <div className="flex flex-wrap items-center gap-2 mb-2">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="flex flex-wrap items-center gap-2 mb-3">
           {hotel.status === "active" && (
-            <span className="rounded-full border border-emerald-500/30 bg-emerald-500/15 px-2.5 py-0.5 text-[10px] font-bold text-emerald-300">
-              Available
+            <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-emerald-600 shadow-sm">
+              Live Listing
             </span>
           )}
         </div>
-        <h1 className="mb-2 text-2xl font-extrabold leading-tight text-white sm:text-3xl">
+        <h1 className="mb-3 text-3xl font-black leading-tight text-slate-800 sm:text-4xl tracking-tight">
           {hotel.name}
         </h1>
         <button
           onClick={openGoogleMaps}
-          className="group mb-3 flex items-start gap-1.5 text-left text-sm text-white/60 transition-colors hover:text-[#3d6ef5] sm:items-center"
+          className="group mb-5 flex items-start gap-2 text-left text-sm text-slate-500 transition-colors hover:text-[#3d6ef5] sm:items-center font-medium"
         >
-          <FaMapMarkerAlt className="text-[#1a3a6b] text-xs shrink-0" />
-          <span className="group-hover:underline">
+          <div className="w-7 h-7 rounded-lg bg-[#3d6ef5]/10 flex items-center justify-center shrink-0">
+            <FaMapMarkerAlt className="text-[#3d6ef5] text-xs" />
+          </div>
+          <span className="group-hover:underline underline-offset-4 decoration-[#3d6ef5]/30">
             {hotel.address}
             {cityName ? `, ${cityName}` : ""}
           </span>
-          <FaExternalLinkAlt className="text-[9px] opacity-0 group-hover:opacity-100 transition-opacity" />
+          <FaExternalLinkAlt className="text-[10px] opacity-40 group-hover:opacity-100 transition-opacity" />
         </button>
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-4">
           {displayRating ? (
-            <div className="flex flex-wrap items-center gap-2">
-              <div className="flex items-center gap-2 bg-[#1a3a6b] text-white px-3 py-1.5 rounded-xl">
-                <FaStar className="text-amber-300 text-xs" />
-                <span className="font-extrabold text-sm">{displayRating}</span>
-                <span className="text-blue-200 text-xs">/ 5</span>
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex items-center gap-2 bg-gradient-to-r from-amber-400 to-amber-500 text-white px-4 py-2 rounded-2xl shadow-lg shadow-amber-400/20">
+                <FaStar className="text-white text-sm" />
+                <span className="font-black text-base">{displayRating}</span>
+                <span className="text-white/80 text-xs font-bold">/ 5</span>
               </div>
               {totalReviews > 0 && (
-                <span className="text-sm text-white/55">
+                <span className="text-sm text-slate-400 font-bold uppercase tracking-wide">
                   {totalReviews} {totalReviews === 1 ? "review" : "reviews"}
                 </span>
               )}
-              <StarRating rating={avgRating} size="text-xs" />
+              <StarRating rating={avgRating} size="text-sm" />
             </div>
           ) : (
-            <span className="text-xs italic text-white/45">No ratings yet</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-slate-400 bg-slate-100 px-3 py-1 rounded-lg">No ratings yet</span>
           )}
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-2">
             {facilities.slice(0, 3).map((f) => (
               <span
                 key={f}
-                className="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-medium capitalize text-white/70"
+                className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-[10px] font-black tracking-widest uppercase text-slate-500 shadow-sm"
               >
                 {f}
               </span>
@@ -1282,18 +1284,18 @@ const HotelDetailPage = () => {
       </div>
 
       {/* Sticky tabs */}
-      <div className="sticky top-14 z-40 border-b border-white/10 bg-[#0f1118] shadow-sm">
+      <div className="sticky top-[64px] z-40 border-b border-slate-200 bg-white/90 backdrop-blur-xl shadow-sm">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex gap-0 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          <div className="flex gap-4 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             {TABS.map((tab) => (
               <button
                 key={tab}
                 onClick={() => scrollTo(tab)}
-                className={`shrink-0 px-4 py-3.5 text-xs sm:text-sm font-semibold border-b-2 transition-colors whitespace-nowrap
+                className={`shrink-0 px-2 py-4 text-xs sm:text-[13px] font-black tracking-widest uppercase transition-all border-b-[3px]
                   ${
                     activeTab === tab
                       ? "border-[#3d6ef5] text-[#3d6ef5]"
-                      : "border-transparent text-white/55 hover:text-white"
+                      : "border-transparent text-slate-400 hover:text-slate-600"
                   }`}
               >
                 {tab}
@@ -1310,16 +1312,16 @@ const HotelDetailPage = () => {
           {/* Overview */}
           <section
             ref={refs["Overview"]}
-            className="ui-card scroll-mt-28 rounded-2xl p-5 sm:p-6"
+            className="bg-white scroll-mt-32 rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm"
           >
-            <h2 className="mb-3 text-lg font-bold text-white">
+            <h2 className="mb-5 text-[20px] font-black text-slate-800 tracking-tight">
               About this property
             </h2>
-            <p className="text-sm leading-relaxed text-white/70">
+            <p className="text-[15px] leading-relaxed text-slate-600 font-medium">
               {hotel.description ||
                 "Experience unparalleled comfort at this exceptional property. Nestled in a prime location, our hotel offers world-class amenities, exquisite dining, and personalised service to make your stay truly memorable."}
             </p>
-            <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-4">
               {[
                 "Free cancellation",
                 "Instant confirmation",
@@ -1330,9 +1332,9 @@ const HotelDetailPage = () => {
               ].map((text) => (
                 <div
                   key={text}
-                  className="flex items-center gap-2 text-xs text-white/70"
+                  className="flex items-center gap-2.5 text-xs font-bold text-slate-500 bg-slate-50 px-3 py-2.5 rounded-xl border border-slate-100"
                 >
-                  <FaCheckCircle className="text-emerald-500 shrink-0" />
+                  <FaCheckCircle className="text-emerald-500 shrink-0 text-[11px]" />
                   <span>{text}</span>
                 </div>
               ))}
@@ -1342,9 +1344,9 @@ const HotelDetailPage = () => {
           {/* Amenities */}
           <section
             ref={refs["Amenities"]}
-            className="ui-card scroll-mt-28 rounded-2xl p-5 sm:p-6"
+            className="bg-white scroll-mt-32 rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm"
           >
-            <h2 className="mb-4 text-lg font-bold text-white">
+            <h2 className="mb-6 text-[20px] font-black text-slate-800 tracking-tight">
               Amenities & facilities
             </h2>
             {facilities.length > 0 ? (
@@ -1359,12 +1361,12 @@ const HotelDetailPage = () => {
                   return (
                     <div
                       key={f}
-                      className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5"
+                      className="flex items-center gap-3.5 rounded-2xl border border-slate-100 bg-slate-50/50 px-4 py-3.5 group hover:bg-white hover:border-[#3d6ef5]/20 hover:shadow-sm transition-all"
                     >
-                      <span className="text-[#1a3a6b] text-base shrink-0">
+                      <span className="text-[#3d6ef5] text-lg shrink-0 opacity-80 group-hover:opacity-100 transition-opacity">
                         {item.icon}
                       </span>
-                      <span className="text-xs font-medium capitalize text-white/80">
+                      <span className="text-[13px] font-bold capitalize text-slate-700">
                         {item.label || f}
                       </span>
                     </div>
@@ -1396,21 +1398,21 @@ const HotelDetailPage = () => {
           <section
             id="rooms-section"
             ref={refs["Rooms"]}
-            className="ui-card scroll-mt-28 rounded-2xl p-5 sm:p-6"
+            className="bg-white scroll-mt-32 rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm"
           >
-            <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-              <h2 className="text-lg font-bold text-white">Available rooms</h2>
+            <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
+              <h2 className="text-[20px] font-black text-slate-800 tracking-tight">Available rooms</h2>
               {selectedRoom && (
-                <div className="flex items-center gap-2 bg-[#1a3a6b]/5 border border-[#1a3a6b]/20 rounded-xl px-3 py-1.5">
-                  <FaCheckCircle className="text-[#1a3a6b] text-xs" />
-                  <span className="text-xs font-semibold text-[#1a3a6b] capitalize">
-                    {selectedRoom.roomType} selected
+                <div className="flex items-center gap-2 bg-[#3d6ef5]/5 border border-[#3d6ef5]/20 rounded-2xl px-4 py-2 shadow-sm">
+                  <FaCheckCircle className="text-[#3d6ef5] text-[11px]" />
+                  <span className="text-xs font-black text-[#3d6ef5] uppercase tracking-wider">
+                    {selectedRoom.roomType} Selected
                   </span>
                   <button
                     onClick={() => setSelectedRoom(null)}
-                    className="ml-1 text-white/45 hover:text-white/80"
+                    className="ml-2 text-slate-300 hover:text-rose-500 transition-colors"
                   >
-                    <FaTimes className="text-[9px]" />
+                    <FaTimes className="text-[10px]" />
                   </button>
                 </div>
               )}
@@ -1426,7 +1428,10 @@ const HotelDetailPage = () => {
                   ))}
                 </div>
               ) : publicRooms.length === 0 ? (
-                <p className="text-sm text-white/45">No rooms available</p>
+                <div className="text-center py-12 rounded-3xl border-2 border-dashed border-slate-100">
+                  <FaBed className="text-4xl text-slate-200 mx-auto mb-3" />
+                  <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">No rooms found</p>
+                </div>
               ) : (
                 publicRooms.map((room) => (
                   <RoomCard
@@ -1445,18 +1450,18 @@ const HotelDetailPage = () => {
           {/* Reviews */}
           <section
             ref={refs["Reviews"]}
-            className="ui-card scroll-mt-28 rounded-2xl p-5 sm:p-6"
+            className="bg-white scroll-mt-32 rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm"
           >
-            <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
-              <h2 className="text-lg font-bold text-white">Guest reviews</h2>
+            <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
+              <h2 className="text-[20px] font-black text-slate-800 tracking-tight">Guest reviews</h2>
               {displayRating && (
-                <div className="flex items-center gap-2 bg-[#1a3a6b] text-white px-3 py-1.5 rounded-xl">
-                  <FaStar className="text-amber-300 text-xs" />
-                  <span className="font-extrabold text-sm">
-                    {displayRating}
-                  </span>
-                  <span className="text-blue-200 text-xs">
-                    ({totalReviews})
+                <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl shadow-sm">
+                  <div className="flex items-center gap-1.5 bg-amber-400 text-white px-2.5 py-1 rounded-xl">
+                    <FaStar className="text-white text-[11px]" />
+                    <span className="font-black text-[15px] leading-none">{displayRating}</span>
+                  </div>
+                  <span className="text-xs font-black text-slate-400 uppercase tracking-widest leading-none">
+                    ({totalReviews} Reviews)
                   </span>
                 </div>
               )}
@@ -1491,36 +1496,40 @@ const HotelDetailPage = () => {
           {/* Location & Policies */}
           <section
             ref={refs["Location & Policies"]}
-            className="ui-card scroll-mt-28 rounded-2xl p-5 sm:p-6"
+            className="bg-white scroll-mt-32 rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm"
           >
-            <h2 className="mb-4 text-lg font-bold text-white">Location</h2>
-            <p className="mb-3 flex items-start gap-2 text-sm text-white/70">
-              <FaMapMarkerAlt className="text-[#1a3a6b] mt-0.5 shrink-0" />
-              {hotel.address}
-              {cityName ? `, ${cityName}` : ""}
-            </p>
+            <h2 className="mb-6 text-[20px] font-black text-slate-800 tracking-tight">Location Details</h2>
+            <div className="mb-5 flex items-start gap-3 text-sm text-slate-500 font-medium">
+              <div className="w-8 h-8 rounded-xl bg-[#3d6ef5]/10 flex items-center justify-center shrink-0">
+                <FaMapMarkerAlt className="text-[#3d6ef5] text-xs" />
+              </div>
+              <span className="mt-1.5">
+                {hotel.address}{cityName ? `, ${cityName}` : ""}
+              </span>
+            </div>
             <button
               onClick={openGoogleMaps}
-              className="group relative h-44 w-full cursor-pointer overflow-hidden rounded-xl border border-white/15 bg-white/5 transition-all hover:border-[#3d6ef5]/35"
+              className="group relative h-52 w-full cursor-pointer overflow-hidden rounded-3xl border border-slate-200 bg-slate-50 shadow-inner transition-all hover:border-[#3d6ef5]/40"
             >
               <img
                 src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&q=80"
                 alt="Map"
-                className="w-full h-full object-cover opacity-50 group-hover:opacity-60 transition-opacity"
+                className="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent" />
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="flex items-center gap-2 rounded-full bg-[#0f1118]/90 px-4 py-2.5 text-[11px] font-bold text-[#3d6ef5] shadow-md transition-all group-hover:shadow-lg sm:px-5 sm:text-xs">
-                  <FaMapMarkerAlt className="text-[#1a3a6b]" />
-                  Open in Google Maps
-                  <FaExternalLinkAlt className="text-[9px]" />
+                <div className="flex items-center gap-2.5 rounded-2xl bg-white/95 backdrop-blur-md px-6 py-3 text-[13px] font-black text-[#3d6ef5] shadow-2xl transition-all group-hover:scale-110 active:scale-100">
+                  <FaMapMarkerAlt />
+                  Find on Google Maps
+                  <FaExternalLinkAlt className="text-[10px]" />
                 </div>
               </div>
             </button>
 
-            <h2 className="mt-6 mb-4 text-lg font-bold text-white">
+            <h2 className="mt-10 mb-6 text-[20px] font-black text-slate-800 tracking-tight">
               Hotel policies
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
                 {
                   label: "Check-in",
@@ -1555,31 +1564,31 @@ const HotelDetailPage = () => {
               ].map(({ label, value, icon }) => (
                 <div
                   key={label}
-                  className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3"
+                  className="flex items-center gap-4 rounded-2xl border border-slate-100 bg-slate-50/50 p-4 hover:shadow-sm transition-shadow"
                 >
-                  <span className="text-base shrink-0">{icon}</span>
+                  <span className="text-xl shrink-0 opacity-80">{icon}</span>
                   <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-wide text-white/45">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-0.5">
                       {label}
                     </p>
-                    <p className="text-xs font-medium text-white/80">{value}</p>
+                    <p className="text-[13px] font-bold text-slate-700">{value}</p>
                   </div>
                 </div>
               ))}
             </div>
 
-            <div className="mt-4 flex flex-wrap gap-3">
+            <div className="mt-8 flex flex-wrap gap-4 pt-6 border-t border-slate-100">
               <a
                 href={`tel:${hotel.phone || ""}`}
-                className="flex items-center gap-2 rounded-xl border border-white/15 px-4 py-2 text-xs font-semibold text-white/75 transition-colors hover:bg-white/5"
+                className="flex items-center gap-2.5 rounded-2xl border border-slate-200 bg-white px-6 py-3 text-xs font-black uppercase tracking-widest text-slate-600 transition-all hover:text-[#3d6ef5] hover:border-[#3d6ef5]/30 shadow-sm"
               >
-                <FaPhoneAlt className="text-[#1a3a6b] text-xs" /> Call Hotel
+                <FaPhoneAlt className="text-[#3d6ef5] text-xs" /> Call Property
               </a>
               <a
                 href={`mailto:${hotel.email || ""}`}
-                className="flex items-center gap-2 rounded-xl border border-white/15 px-4 py-2 text-xs font-semibold text-white/75 transition-colors hover:bg-white/5"
+                className="flex items-center gap-2.5 rounded-2xl border border-slate-200 bg-white px-6 py-3 text-xs font-black uppercase tracking-widest text-slate-600 transition-all hover:text-[#3d6ef5] hover:border-[#3d6ef5]/30 shadow-sm"
               >
-                <FaEnvelope className="text-[#1a3a6b] text-xs" /> Email Hotel
+                <FaEnvelope className="text-[#3d6ef5] text-xs" /> Email Inquiries
               </a>
             </div>
           </section>

@@ -1,21 +1,21 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  saveDetails,
-  sendOtp,
-  verifyOtp,
   applyCoupon,
-  initiatePayment,
-  confirmBooking,
-  resetBooking,
   clearError,
-  selectRefNo,
+  confirmBooking,
+  initiatePayment,
+  resetBooking,
+  saveDetails,
+  selectConfirmed,
   selectCoupon,
+  selectError,
   selectFinalAmount,
   selectLoading,
   selectLoadingMsg,
-  selectError,
-  selectConfirmed,
+  selectRefNo,
+  sendOtp,
+  verifyOtp,
 } from "../../features/user/bookingSlice";
 
 // ─── Razorpay script loader (loads once, idempotent) ─────────────────────────
@@ -238,100 +238,234 @@ export default function BookingFlow() {
 
   // ── Styles ────────────────────────────────────────────────────────────────
   const styles = `
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
     *{box-sizing:border-box;margin:0;padding:0;}
-    .root{min-height:100vh;background:#f5f4f1;font-family:'Plus Jakarta Sans',sans-serif;display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;}
-    .card{background:#ffffff;border:1px solid #e8e4de;border-radius:16px;width:100%;max-width:600px;box-shadow:0 2px 24px rgba(0,0,0,.06);animation:fadeUp .4s ease;overflow:hidden;}
-    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-    .card-header{padding:28px 32px 22px;border-bottom:1px solid #f0ede8;display:flex;align-items:center;gap:14px;background:#fff;}
-    .back-btn{background:#f5f4f1;border:1px solid #e8e4de;color:#6b6560;cursor:pointer;padding:7px 12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:500;border-radius:8px;transition:all .2s;white-space:nowrap;}
-    .back-btn:hover{background:#eceae5;color:#333;}
+    .root{
+      min-height:100vh;
+      background: #f8fafc;
+      background: linear-gradient(to bottom, #f8fafc, #f1f5f9, #e2e8f0);
+      font-family:'Plus Jakarta Sans',sans-serif;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+      padding:40px 16px;
+    }
+    .card{
+      background:rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border:1px solid rgba(226, 232, 240, 0.8);
+      border-radius:24px;
+      width:100%;
+      max-width:640px;
+      box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.08);
+      animation:fadeUp .6s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow:hidden;
+    }
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    
+    .card-header{padding:32px 32px 24px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;gap:16px;}
+    .back-btn{
+      background:#f8fafc;
+      border:1px solid #e2e8f0;
+      color:#64748b;
+      cursor:pointer;
+      padding:8px 16px;
+      font-family:'Plus Jakarta Sans',sans-serif;
+      font-size:12px;
+      font-weight:700;
+      border-radius:12px;
+      transition:all .2s;
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+    .back-btn:hover{background:#fff;color:#334155;border-color:#cbd5e1;box-shadow:0 4px 6px -1px rgba(0,0,0,0.05);}
+    
     .htext{flex:1;}
-    .htitle{font-family:'Instrument Serif',serif;font-size:24px;font-weight:400;color:#1a1714;letter-spacing:-.01em;}
-    .hsub{font-size:11px;color:#a09890;margin-top:3px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;}
-    .stepper{display:flex;align-items:center;padding:0 32px;border-bottom:1px solid #f0ede8;background:#faf9f7;overflow-x:auto;height:52px;}
+    .htitle{font-size:26px;font-weight:800;color:#0f172a;letter-spacing:-0.02em;}
+    .hsub{font-size:11px;color:#94a3b8;margin-top:4px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
+    
+    .stepper{display:flex;items-center;padding:0 32px;border-bottom:1px solid #f1f5f9;background:rgba(248, 250, 252, 0.5);overflow-x:auto;height:60px;}
     .stepper::-webkit-scrollbar{display:none;}
-    .sitem{display:flex;align-items:center;gap:7px;flex-shrink:0;}
-    .sdot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;border:1.5px solid #ddd;color:#bbb;transition:all .3s;flex-shrink:0;}
-    .sdot.active{border-color:#c8855a;color:#c8855a;background:#fdf2ec;}
-    .sdot.done{border-color:#c8855a;background:#c8855a;color:#fff;}
-    .slabel{font-size:10px;color:#bbb;letter-spacing:.05em;font-weight:500;text-transform:uppercase;}
-    .slabel.active{color:#c8855a;}
-    .slabel.done{color:#c8855a;opacity:.7;}
-    .sline{flex:1;height:1px;background:#e8e4de;margin:0 8px;min-width:12px;}
-    .sline.done{background:#c8855a;opacity:.4;}
-    .body{padding:28px 32px;}
-    .sec-label{font-size:11px;color:#a09890;letter-spacing:.08em;text-transform:uppercase;font-weight:600;margin-bottom:14px;}
-    .api-error{font-size:12px;color:#ef4444;font-weight:600;background:#fff5f5;border:1px solid #fecaca;border-radius:8px;padding:10px 14px;margin-bottom:14px;}
-    .form-group{margin-bottom:16px;}
-    .form-label{font-size:11px;color:#6b6560;letter-spacing:.06em;text-transform:uppercase;font-weight:600;margin-bottom:7px;display:block;}
-    .form-input{width:100%;background:#faf9f7;border:1.5px solid #ede9e3;border-radius:10px;padding:11px 14px;color:#1a1714;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:500;outline:none;transition:all .2s;}
-    .form-input:focus{border-color:#c8855a;background:#fff;box-shadow:0 0 0 3px rgba(200,133,90,.1);}
-    .form-input::placeholder{color:#c8c3bc;font-weight:400;}
-    .form-input.err{border-color:#ef4444;background:#fff5f5;}
-    .err-msg{font-size:11px;color:#ef4444;margin-top:5px;font-weight:500;}
-    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-    textarea.form-input{resize:none;height:80px;}
-    .otp-wrap{display:flex;justify-content:center;gap:10px;margin:24px 0;}
-    .otp-input{width:46px;height:54px;text-align:center;background:#faf9f7;border:1.5px solid #ede9e3;border-radius:10px;color:#1a1714;font-family:'Instrument Serif',serif;font-size:26px;outline:none;transition:all .2s;}
-    .otp-input:focus{border-color:#c8855a;background:#fff;box-shadow:0 0 0 3px rgba(200,133,90,.1);}
-    .otp-input.filled{border-color:#c8855a;background:#fdf5ef;color:#c8855a;}
-    .otp-err{text-align:center;font-size:12px;color:#ef4444;margin-top:6px;font-weight:500;}
-    .otp-verified{text-align:center;padding:16px;border:1.5px solid #bbf7d0;background:#f0fdf4;border-radius:10px;color:#15803d;font-size:12px;font-weight:600;letter-spacing:.06em;}
-    .resend-btn{background:none;border:none;color:#c8855a;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;text-decoration:underline;margin-top:10px;}
+    .sitem{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+    .sdot{width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;border:1.5px solid #e2e8f0;color:#94a3b8;transition:all .3s;}
+    .sdot.active{border-color:#3d6ef5;color:#3d6ef5;background:rgba(61, 110, 245, 0.08);}
+    .sdot.done{border-color:#3d6ef5;background:#3d6ef5;color:#fff;}
+    .slabel{font-size:11px;color:#94a3b8;letter-spacing:.05em;font-weight:700;text-transform:uppercase;}
+    .slabel.active{color:#0f172a;}
+    .slabel.done{color:#3d6ef5;}
+    .sline{flex:1;height:2px;background:#e2e8f0;margin:0 12px;min-width:20px;border-radius:4px;}
+    .sline.done{background:#3d6ef5;opacity:.2;}
+    
+    .body{padding:32px;}
+    .sec-label{font-size:12px;color:#0f172a;letter-spacing:.06em;text-transform:uppercase;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+    .sec-label::after{content:'';flex:1;height:1px;background:#f1f5f9;}
+    
+    .api-error{font-size:13px;color:#e11d48;font-weight:700;background:#fff1f2;border:1px solid #fecdd3;border-radius:12px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:8px;}
+    
+    .form-group{margin-bottom:20px;}
+    .form-label{font-size:11px;color:#64748b;letter-spacing:.08em;text-transform:uppercase;font-weight:700;margin-bottom:8px;display:block;padding-left:4px;}
+    .form-input{
+      width:100%;
+      background:#f8fafc;
+      border:1.5px solid #e2e8f0;
+      border-radius:14px;
+      padding:12px 16px;
+      color:#0f172a;
+      font-family:'Plus Jakarta Sans',sans-serif;
+      font-size:14px;
+      font-weight:600;
+      outline:none;
+      transition:all .2s;
+    }
+    .form-input:focus{border-color:#3d6ef5;background:#fff;box-shadow:0 0 0 4px rgba(61, 110, 245, 0.08);}
+    .form-input::placeholder{color:#94a3b8;font-weight:500;}
+    .form-input.err{border-color:#f43f5e;background:#fff1f2;}
+    .err-msg{font-size:11px;color:#f43f5e;margin-top:6px;font-weight:700;padding-left:4px;}
+    
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    textarea.form-input{resize:none;height:100px;line-height:1.6;}
+    
+    .otp-wrap{display:flex;justify-content:center;gap:12px;margin:32px 0;}
+    .otp-input{
+      width:52px;
+      height:64px;
+      text-align:center;
+      background:#f8fafc;
+      border:2px solid #e2e8f0;
+      border-radius:16px;
+      color:#0f172a;
+      font-size:28px;
+      font-weight:800;
+      outline:none;
+      transition:all .2s;
+    }
+    .otp-input:focus{border-color:#3d6ef5;background:#fff;box-shadow:0 0 0 4px rgba(61, 110, 245, 0.08);transform:translateY(-2px);}
+    .otp-input.filled{border-color:#3d6ef5;background:#fff;color:#3d6ef5;}
+    
+    .otp-err{text-align:center;font-size:13px;color:#f43f5e;margin-top:10px;font-weight:700;}
+    .otp-verified{text-align:center;padding:20px;border:1.5px solid #bbf7d0;background:#f0fdf4;border-radius:16px;color:#15803d;font-size:13px;font-weight:700;letter-spacing:.04em;}
+    
+    .resend-btn{background:none;border:none;color:#3d6ef5;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;text-decoration:underline;text-underline-offset:4px;margin-top:12px;transition:all .2s;}
+    .resend-btn:hover{color:#2563eb;}
     .resend-btn:disabled{opacity:.4;cursor:not-allowed;text-decoration:none;}
-    .pay-methods{display:flex;gap:8px;margin-bottom:20px;}
-    .pay-tab{flex:1;padding:10px;border:1.5px solid #ede9e3;border-radius:8px;background:#fff;color:#6b6560;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;transition:all .2s;}
-    .pay-tab:hover{border-color:#d4a882;background:#fdf9f6;}
-    .pay-tab.sel{border-color:#c8855a;background:#fdf5ef;color:#c8855a;box-shadow:0 0 0 3px rgba(200,133,90,.1);}
-    .coupon-row{display:flex;gap:8px;margin-bottom:8px;}
-    .coupon-input{flex:1;background:#faf9f7;border:1.5px solid #ede9e3;border-radius:10px;padding:10px 14px;color:#1a1714;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;outline:none;text-transform:uppercase;transition:all .2s;}
-    .coupon-input:focus{border-color:#c8855a;background:#fff;box-shadow:0 0 0 3px rgba(200,133,90,.1);}
-    .coupon-input::placeholder{text-transform:none;font-weight:400;color:#c8c3bc;}
-    .coupon-btn{background:#c8855a;border:none;color:#fff;cursor:pointer;padding:10px 18px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;border-radius:10px;letter-spacing:.06em;text-transform:uppercase;transition:all .2s;}
-    .coupon-btn:hover{background:#b5744a;}
-    .coupon-ok{font-size:11px;color:#16a34a;font-weight:600;margin-bottom:14px;}
-    .coupon-no{font-size:11px;color:#ef4444;font-weight:600;margin-bottom:14px;}
-    .price-box{background:#faf9f7;border:1.5px solid #ede9e3;border-radius:12px;padding:16px 18px;margin-bottom:18px;}
-    .prow{display:flex;justify-content:space-between;align-items:center;padding:6px 0;}
-    .prow+.prow{border-top:1px solid #f0ede8;}
-    .pkey{font-size:12px;color:#9a9490;font-weight:500;}
-    .pval{font-size:13px;color:#1a1714;font-weight:600;}
-    .pval.disc{color:#16a34a;}
-    .pval.total{color:#c8855a;font-size:17px;font-weight:700;}
-    .sum-box{background:#faf9f7;border:1.5px solid #ede9e3;border-radius:12px;padding:20px;margin-bottom:20px;}
-    .sum-title{font-family:'Instrument Serif',serif;font-size:20px;color:#1a1714;margin-bottom:16px;}
-    .srow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #f0ede8;}
+    
+    .pay-methods{display:flex;gap:10px;margin-bottom:24px;}
+    .pay-tab{
+      flex:1;
+      padding:14px;
+      border:1.5px solid #e2e8f0;
+      border-radius:14px;
+      background:#fff;
+      color:#64748b;
+      cursor:pointer;
+      font-family:'Plus Jakarta Sans',sans-serif;
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      transition:all .2s;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:4px;
+    }
+    .pay-tab:hover{border-color:#cbd5e1;background:#f8fafc;}
+    .pay-tab.sel{border-color:#3d6ef5;background:rgba(61, 110, 245, 0.05);color:#3d6ef5;box-shadow:0 0 0 4px rgba(61, 110, 245, 0.08);}
+    
+    .coupon-row{display:flex;gap:10px;margin-bottom:12px;}
+    .coupon-input{flex:1;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:14px;padding:12px 16px;color:#0f172a;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;outline:none;text-transform:uppercase;transition:all .2s;}
+    .coupon-input:focus{border-color:#3d6ef5;background:#fff;box-shadow:0 0 0 4px rgba(61, 110, 245, 0.08);}
+    
+    .coupon-btn{background:#3d6ef5;border:none;color:#fff;cursor:pointer;padding:0 24px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;border-radius:14px;letter-spacing:.06em;text-transform:uppercase;transition:all .2s;}
+    .coupon-btn:hover{background:#2563eb;transform:translateY(-1px);box-shadow:0 4px 12px rgba(61, 110, 245, 0.2);}
+    
+    .price-box{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:20px;padding:20px;margin-bottom:24px;}
+    .prow{display:flex;justify-content:space-between;align-items:center;padding:8px 0;}
+    .prow+.prow{border-top:1px solid #f1f5f9;}
+    .pkey{font-size:13px;color:#64748b;font-weight:600;}
+    .pval{font-size:14px;color:#0f172a;font-weight:700;}
+    .pval.disc{color:#10b981;}
+    .pval.total{color:#3d6ef5;font-size:20px;font-weight:800;}
+    
+    .sum-box{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:20px;padding:24px;margin-bottom:24px;}
+    .sum-title{font-size:20px;font-weight:800;color:#0f172a;margin-bottom:20px;letter-spacing:-0.01em;}
+    .srow{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #f1f5f9;}
     .srow:last-child{border-bottom:none;}
-    .skey{font-size:11px;color:#9a9490;font-weight:600;text-transform:uppercase;letter-spacing:.06em;}
-    .sval{font-size:13px;color:#1a1714;font-weight:600;}
-    .sval.amber{color:#c8855a;font-size:17px;font-weight:700;}
-    .btn-row{display:flex;gap:10px;margin-top:24px;}
-    .btn-primary{flex:1;padding:14px;background:#c8855a;border:none;border-radius:10px;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;letter-spacing:.04em;cursor:pointer;transition:all .2s;box-shadow:0 2px 12px rgba(200,133,90,.25);}
-    .btn-primary:hover{background:#b5744a;box-shadow:0 4px 16px rgba(200,133,90,.35);}
-    .btn-primary:disabled{opacity:.35;cursor:not-allowed;box-shadow:none;}
-    .btn-ghost{padding:14px 20px;background:#fff;border:1.5px solid #ede9e3;border-radius:10px;color:#6b6560;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;}
-    .btn-ghost:hover{border-color:#c8855a;color:#c8855a;}
-    .loading-overlay{position:fixed;inset:0;background:rgba(250,249,247,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;}
-    .spinner{width:36px;height:36px;border:2px solid #ede9e3;border-top-color:#c8855a;border-radius:50%;animation:spin .7s linear infinite;}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .loading-text{font-size:13px;color:#9a9490;margin-top:16px;font-weight:500;}
-    .success-wrap{text-align:center;padding:20px 0;}
-    .success-icon{width:72px;height:72px;border-radius:50%;background:#fdf5ef;border:2px solid #c8855a;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:28px;color:#c8855a;animation:pulse 1.8s ease infinite;}
-    @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(200,133,90,.25)}50%{box-shadow:0 0 0 14px rgba(200,133,90,0)}}
-    .success-title{font-family:'Instrument Serif',serif;font-size:32px;color:#1a1714;margin-bottom:6px;}
-    .success-sub{font-size:12px;color:#9a9490;font-weight:500;margin-bottom:28px;}
-    .ref-box{display:inline-block;background:#faf9f7;border:1.5px solid #ede9e3;border-radius:12px;padding:14px 28px;}
-    .ref-label{font-size:10px;color:#b0aaa4;text-transform:uppercase;letter-spacing:.1em;font-weight:600;margin-bottom:4px;}
-    .ref-num{font-size:16px;color:#c8855a;font-weight:700;letter-spacing:.12em;}
-    .success-details{margin-top:20px;font-size:13px;color:#9a9490;line-height:1.9;font-weight:500;}
-    .success-paid{color:#16a34a;font-weight:600;}
-    .new-btn{margin-top:24px;background:#fff;border:1.5px solid #ede9e3;color:#6b6560;padding:10px 24px;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;}
-    .new-btn:hover{border-color:#c8855a;color:#c8855a;}
-    .hint{font-size:11px;color:#b0aaa4;margin-top:6px;font-weight:400;}
-    .bank-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;}
-    .bank-btn{padding:10px;border:1.5px solid #ede9e3;border-radius:8px;background:#fff;color:#6b6560;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:600;transition:all .2s;}
-    .bank-btn:hover{border-color:#d4a882;background:#fdf9f6;color:#c8855a;}
+    .skey{font-size:11px;color:#94a3b8;font-weight:700;text-transform:uppercase;letter-spacing:.08em;}
+    .sval{font-size:14px;color:#0f172a;font-weight:700;}
+    .sval.amber{color:#3d6ef5;font-size:20px;font-weight:800;}
+    
+    .btn-row{display:flex;gap:12px;margin-top:32px;}
+    .btn-primary{
+      flex:1;
+      padding:16px;
+      background: linear-gradient(135deg, #3d6ef5 0%, #6366f1 100%);
+      border:none;
+      border-radius:16px;
+      color:#fff;
+      font-family:'Plus Jakarta Sans',sans-serif;
+      font-size:14px;
+      font-weight:800;
+      letter-spacing:.02em;
+      cursor:pointer;
+      transition:all .3s;
+      box-shadow:0 10px 15px -3px rgba(61, 110, 245, 0.25);
+    }
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 20px 25px -5px rgba(61, 110, 245, 0.3);}
+    .btn-primary:disabled{opacity:.4;cursor:not-allowed;box-shadow:none;transform:none;}
+    
+    .btn-ghost{
+      padding:16px 24px;
+      background:#fff;
+      border:1.5px solid #e2e8f0;
+      border-radius:16px;
+      color:#64748b;
+      font-family:'Plus Jakarta Sans',sans-serif;
+      font-size:14px;
+      font-weight:700;
+      cursor:pointer;
+      transition:all .2s;
+    }
+    .btn-ghost:hover{border-color:#3d6ef5;color:#3d6ef5;background:#f8fafc;}
+    
+    .loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,0.8);backdrop-filter:blur(8px);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;animation:fadeIn .3s ease;}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    .spinner{width:40px;height:40px;border:3px solid #e2e8f0;border-top-color:#3d6ef5;border-radius:50%;animation:spin .8s cubic-bezier(0.5, 0, 0.5, 1) infinite;}
+    .loading-text{font-size:14px;color:#64748b;margin-top:20px;font-weight:700;letter-spacing:.02em;}
+    
+    .success-wrap{text-align:center;padding:10px 0;}
+    .success-icon{
+      width:80px;height:80px;border-radius:28px;
+      background:linear-gradient(135deg, #10b981 0%, #059669 100%);
+      display:flex;align-items:center;justify-content:center;margin:0 auto 28px;
+      font-size:36px;color:#fff;
+      box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.3);
+      animation:popIn .6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes popIn{from{transform:scale(0.5);opacity:0}to{transform:scale(1);opacity:1}}
+    
+    .success-title{font-size:32px;font-weight:800;color:#0f172a;margin-bottom:8px;letter-spacing:-0.03em;}
+    .success-sub{font-size:14px;color:#64748b;font-weight:600;margin-bottom:32px;}
+    .ref-box{display:inline-block;background:#f8fafc;border:2px solid #e2e8f0;border-radius:20px;padding:16px 36px;margin-bottom:24px;}
+    .ref-label{font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:.12em;font-weight:800;margin-bottom:6px;}
+    .ref-num{font-size:20px;color:#3d6ef5;font-weight:800;letter-spacing:.1em;}
+    .success-details{margin-top:24px;font-size:15px;color:#64748b;line-height:2;font-weight:600;}
+    .success-paid{color:#059669;font-weight:800;font-size:20px;}
+    .new-btn{
+      margin-top:32px;background:#fff;border:1.5px solid #e2e8f0;color:#64748b;padding:12px 32px;border-radius:14px;
+      font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;
+    }
+    .new-btn:hover{border-color:#3d6ef5;color:#3d6ef5;background:#f8fafc;}
+    
+    .hint{font-size:11px;color:#94a3b8;margin-top:8px;font-weight:600;padding-left:4px;}
+    .bank-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+    .bank-btn{
+      padding:12px;border:1.5px solid #e2e8f0;border-radius:12px;background:#fff;color:#64748b;
+      cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;transition:all .2s;
+    }
+    .bank-btn:hover{border-color:#3d6ef5;background:#f8fafc;color:#3d6ef5;box-shadow:0 4px 6px -1px rgba(61, 110, 245, 0.1);}
   `;
 
   // ── Success screen ─────────────────────────────────────────────────────────
@@ -344,22 +478,23 @@ export default function BookingFlow() {
             <div className="body">
               <div className="success-wrap">
                 <div className="success-icon">✓</div>
-                <div className="success-title">Booking Confirmed!</div>
-                <div className="success-sub">
-                  Confirmation sent to {form.email}
-                </div>
+                <h1 className="success-title">Payment Successful!</h1>
+                <p className="success-sub">
+                  Your reservation is confirmed. A receipt has been sent to {form.email}.
+                </p>
                 <div className="ref-box">
-                  <div className="ref-label">Reference Number</div>
-                  <div className="ref-num">{refNo}</div>
+                  <p className="ref-label">Booking Reference</p>
+                  <p className="ref-num">{refNo}</p>
                 </div>
                 <div className="success-details">
-                  <div>{form.name}</div>
-                  <div className="success-paid">
+                  <p className="text-slate-800 font-bold mb-1">{form.name}</p>
+                  <p className="success-paid">
                     ₹{finalAmount?.toLocaleString("en-IN") ?? "—"}
-                  </div>
+                  </p>
+                  <p className="text-[11px] text-slate-400 mt-2 font-bold uppercase tracking-widest">Paid via {payMethod === 'upi' ? 'UPI' : 'Card'}</p>
                 </div>
                 <button className="new-btn" onClick={handleReset}>
-                  + Make Another Booking
+                  + New Reservation
                 </button>
               </div>
             </div>
@@ -389,19 +524,19 @@ export default function BookingFlow() {
                 className="back-btn"
                 onClick={() => setStep((s) => s - 1)}
               >
-                ← Back
+                ←
               </button>
             )}
             <div className="htext">
-              <div className="htitle">
-                {step === 1 && "Your Details"}
-                {step === 2 && "Verify Phone"}
-                {step === 3 && "Payment"}
-                {step === 4 && "Review & Confirm"}
-              </div>
-              <div className="hsub">
+              <h2 className="htitle">
+                {step === 1 && "Guest Details"}
+                {step === 2 && "Verification"}
+                {step === 3 && "Fast Checkout"}
+                {step === 4 && "Final Review"}
+              </h2>
+              <p className="hsub">
                 Step {step} of 4 — {stepLabels[step - 1]}
-              </div>
+              </p>
             </div>
           </div>
 
@@ -431,13 +566,13 @@ export default function BookingFlow() {
             {/* Step 1 — Details */}
             {step === 1 && (
               <>
-                {apiError && <div className="api-error">⚠ {apiError}</div>}
+                {apiError && <div className="api-error"><span>⚠</span> {apiError}</div>}
                 <div className="form-row">
                   <div className="form-group">
                     <label className="form-label">Full Name</label>
                     <input
                       className={`form-input ${formErrs.name ? "err" : ""}`}
-                      placeholder="Your name"
+                      placeholder="e.g. John Doe"
                       value={form.name}
                       onChange={(e) =>
                         setForm((p) => ({ ...p, name: e.target.value }))
@@ -448,7 +583,7 @@ export default function BookingFlow() {
                     )}
                   </div>
                   <div className="form-group">
-                    <label className="form-label">Phone</label>
+                    <label className="form-label">Mobile Number</label>
                     <input
                       className={`form-input ${formErrs.phone ? "err" : ""}`}
                       placeholder="+91 00000 00000"
@@ -463,11 +598,11 @@ export default function BookingFlow() {
                   </div>
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Email Address</label>
+                  <label className="form-label">Email for Confirmation</label>
                   <input
                     className={`form-input ${formErrs.email ? "err" : ""}`}
                     type="email"
-                    placeholder="you@example.com"
+                    placeholder="john@example.com"
                     value={form.email}
                     onChange={(e) =>
                       setForm((p) => ({ ...p, email: e.target.value }))
@@ -478,10 +613,10 @@ export default function BookingFlow() {
                   )}
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Special Note (optional)</label>
+                  <label className="form-label">Additional Requests (Optional)</label>
                   <textarea
                     className="form-input"
-                    placeholder="Any specific requirements..."
+                    placeholder="Quiet room, late check-in, etc."
                     value={form.note}
                     onChange={(e) =>
                       setForm((p) => ({ ...p, note: e.target.value }))
@@ -494,7 +629,7 @@ export default function BookingFlow() {
                     onClick={handleNext1}
                     disabled={loading}
                   >
-                    Send OTP & Continue →
+                    Send Secure OTP & Continue
                   </button>
                 </div>
               </>
@@ -577,26 +712,29 @@ export default function BookingFlow() {
               <>
                 <div className="price-box">
                   <div className="prow">
-                    <span className="pkey">Amount</span>
+                    <span className="pkey">Subtotal</span>
                     <span className="pval">
                       ₹{finalAmount?.toLocaleString("en-IN") ?? "—"}
                     </span>
                   </div>
                   {coupon && (
                     <div className="prow">
-                      <span className="pkey">Discount ({coupon.code})</span>
+                      <span className="pkey flex items-center gap-2">
+                        Promo Applied
+                        <span className="bg-emerald-100 text-emerald-600 px-2 py-0.5 rounded-full text-[10px] uppercase font-black tracking-widest">{coupon.code}</span>
+                      </span>
                       <span className="pval disc">
                         −₹{coupon.discountAmt.toLocaleString("en-IN")}
                       </span>
                     </div>
                   )}
                   <div className="prow">
-                    <span className="pkey">Total Payable</span>
+                    <span className="pkey text-slate-800 font-bold">Total Amount</span>
                     <span className="pval total">
                       ₹
                       {finalAmount !== null && finalAmount !== undefined
                         ? finalAmount.toLocaleString("en-IN")
-                        : "Loading..."}
+                        : "..."}
                     </span>
                   </div>
                 </div>
@@ -737,17 +875,17 @@ export default function BookingFlow() {
               <>
                 {apiError && <div className="api-error">⚠ {apiError}</div>}
                 <div className="sum-box">
-                  <div className="sum-title">Booking Summary</div>
+                  <p className="sum-title">Final Confirmation</p>
                   {[
-                    ["Name", form.name],
-                    ["Email", form.email],
-                    ["Contact", form.phone],
+                    ["Guest Name", form.name],
+                    ["Email Address", form.email],
+                    ["Primary Phone", form.phone],
                     [
-                      "Payment",
+                      "Method",
                       payMethod === "upi"
-                        ? `UPI · ${upiId}`
+                        ? `UPI Integrated PAYMENT`
                         : payMethod === "card"
-                          ? `Card ····${cardNo.slice(-4)}`
+                          ? `Credit/Debit Card`
                           : "Net Banking",
                     ],
                   ].map(([k, v]) => (
@@ -758,15 +896,15 @@ export default function BookingFlow() {
                   ))}
                   {coupon && (
                     <div className="srow">
-                      <div className="skey">Coupon</div>
-                      <div className="sval" style={{ color: "#16a34a" }}>
+                      <div className="skey">Redemption</div>
+                      <div className="sval text-emerald-600">
                         −₹{coupon.discountAmt.toLocaleString("en-IN")} (
                         {coupon.code})
                       </div>
                     </div>
                   )}
                   <div className="srow">
-                    <div className="skey">Total</div>
+                    <div className="skey text-slate-400">Total Charged</div>
                     <div className="sval amber">
                       ₹{finalAmount.toLocaleString("en-IN")}
                     </div>
