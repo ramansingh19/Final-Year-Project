@@ -31,26 +31,26 @@ const useDebounce = (value, delay) => {
 const CounterRow = ({ label, sub, value, min = 0, max = 10, onChange }) => (
   <div className="flex items-center justify-between py-3 border-b border-white/10 last:border-0">
     <div>
-      <p className="text-sm font-semibold text-white">{label}</p>
-      {sub && <p className="text-xs text-white/50">{sub}</p>}
+      <p className="text-sm font-semibold text-slate-700">{label}</p>
+      {sub && <p className="text-xs text-slate-400">{sub}</p>}
     </div>
-    <div className="flex items-center border border-white/10 rounded-xl overflow-hidden bg-white/5">
+    <div className="flex items-center border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
       <button
         type="button"
         onClick={() => onChange(Math.max(min, value - 1))}
         disabled={value <= min}
-        className="w-9 h-9 flex items-center justify-center text-white/70 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        className="w-9 h-9 flex items-center justify-center text-slate-400 hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
       >
         <FaMinus className="text-[10px]" />
       </button>
-      <span className="w-8 text-center text-sm font-bold text-white">
+      <span className="w-8 text-center text-sm font-bold text-slate-700">
         {value}
       </span>
       <button
         type="button"
         onClick={() => onChange(Math.min(max, value + 1))}
         disabled={value >= max}
-        className="w-9 h-9 flex items-center justify-center text-white/70 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        className="w-9 h-9 flex items-center justify-center text-slate-400 hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
       >
         <FaPlus className="text-[10px]" />
       </button>
@@ -60,16 +60,16 @@ const CounterRow = ({ label, sub, value, min = 0, max = 10, onChange }) => (
 
 const Field = ({ icon, label, error, children }) => (
   <div className="flex-1 min-w-0">
-    <p className="text-[10px] font-bold tracking-widest uppercase text-white/50 mb-1.5 px-1">
+    <p className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-1.5 px-1">
       {label}
     </p>
     <div
       className={`relative flex items-center rounded-xl border transition-all duration-200 group
-      ${error ? "border-rose-500/50 bg-rose-500/10" : "border-white/10 bg-white/[0.02] focus-within:border-[#3d6ef5]/60 focus-within:bg-white/[0.04] focus-within:shadow-[0_0_15px_rgba(61,110,245,0.15)] hover:border-white/20"}`}
+      ${error ? "border-rose-300 bg-rose-50" : "border-slate-200 bg-slate-50/50 focus-within:border-blue-300 focus-within:bg-white focus-within:shadow-[0_0_12px_rgba(59,130,246,0.1)] hover:border-slate-300"}`}
     >
       <span
         className={`absolute left-3 text-sm pointer-events-none z-10 transition-colors
-        ${error ? "text-rose-400" : "text-white/40 group-focus-within:text-[#3d6ef5]"}`}
+        ${error ? "text-rose-500" : "text-slate-400 group-focus-within:text-blue-500"}`}
       >
         {icon}
       </span>
@@ -82,7 +82,7 @@ const Field = ({ icon, label, error, children }) => (
 );
 
 const inputCls =
-  "w-full bg-transparent pl-9 pr-4 py-3 text-sm text-white placeholder:text-white/30 focus:outline-none";
+  "w-full bg-transparent pl-9 pr-4 py-3 text-sm text-slate-700 placeholder:text-slate-300 focus:outline-none";
 
 const HeroSearch = () => {
   const navigate = useNavigate();
@@ -189,19 +189,19 @@ const HeroSearch = () => {
 
   return (
     <div className="w-full max-w-6xl mx-auto font-sans">
-      <div className="bg-[#0a0a10] sm:bg-white/[0.02] sm:backdrop-blur-md rounded-2xl shadow-xl shadow-black/40 border border-white/5 px-3 sm:px-4 py-3.5">
+      <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-[0_12px_40px_-8px_rgba(100,130,180,0.15)] border border-white/60 px-3 sm:px-4 py-3.5">
         <div className="flex flex-col lg:flex-row gap-3 lg:gap-0 lg:items-end">
           {/* City */}
           <div className="flex-1 min-w-0" id="city-field">
-            <p className="text-[10px] font-bold tracking-widest uppercase text-white/50 mb-1.5 px-1">
+            <p className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-1.5 px-1">
               Destination
             </p>
             <div
               className={`relative flex items-center rounded-xl border transition-all duration-200 group
-              ${cityError ? "border-rose-500/50 bg-rose-500/10" : "border-white/10 bg-white/[0.02] focus-within:border-[#3d6ef5]/60 focus-within:bg-white/[0.04] focus-within:shadow-[0_0_15px_rgba(61,110,245,0.15)] hover:border-white/20"}`}
+              ${cityError ? "border-rose-300 bg-rose-50" : "border-slate-200 bg-slate-50/50 focus-within:border-blue-300 focus-within:bg-white focus-within:shadow-[0_0_12px_rgba(59,130,246,0.1)] hover:border-slate-300"}`}
             >
               <FaMapMarkerAlt
-                className={`absolute left-3 text-sm pointer-events-none z-10 ${cityError ? "text-rose-400" : "text-white/40 group-focus-within:text-[#3d6ef5]"}`}
+                className={`absolute left-3 text-sm pointer-events-none z-10 ${cityError ? "text-rose-500" : "text-slate-400 group-focus-within:text-blue-500"}`}
               />
               <input
                 type="text"
@@ -222,26 +222,26 @@ const HeroSearch = () => {
                     setSearchData((p) => ({ ...p, city: "" }));
                     setShowSuggestions(false);
                   }}
-                  className="absolute right-3 text-white/40 hover:text-white transition-colors z-10"
+                  className="absolute right-3 text-slate-300 hover:text-slate-500 transition-colors z-10"
                 >
                   <FaTimes className="text-xs" />
                 </button>
               )}
               {showSuggestions && suggestions.length > 0 && (
-                <div className="absolute top-full left-0 right-0 mt-1.5 bg-[#12141d] border border-white/10 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.5)] z-50 overflow-hidden max-h-48 overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 mt-1.5 bg-white border border-slate-200 rounded-xl shadow-[0_12px_40px_rgba(100,130,180,0.12)] z-50 overflow-hidden max-h-48 overflow-y-auto">
                   {suggestions.map((city) => (
                     <button
                       key={city}
                       type="button"
                       onClick={() => selectCity(city)}
-                      className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-white/5 transition-colors"
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-slate-50 transition-colors"
                     >
-                      <FaMapMarkerAlt className="text-[#3d6ef5]/70 text-xs shrink-0" />
+                      <FaMapMarkerAlt className="text-blue-500/60 text-xs shrink-0" />
                       <div>
-                        <p className="text-sm font-semibold text-white">
+                        <p className="text-sm font-semibold text-slate-700">
                           {city}
                         </p>
-                        <p className="text-xs text-white/40">
+                        <p className="text-xs text-slate-400">
                           Hotel destination
                         </p>
                       </div>
@@ -257,7 +257,7 @@ const HeroSearch = () => {
             )}
           </div>
 
-          <div className="hidden lg:block w-px h-8 bg-white/10 self-center mx-2" />
+          <div className="hidden lg:block w-px h-8 bg-slate-200 self-center mx-2" />
 
           {/* Check-in + Check-out */}
           <div className="flex gap-3 flex-1">
@@ -268,7 +268,7 @@ const HeroSearch = () => {
                 value={searchData.checkIn}
                 min={getToday()}
                 onChange={onChange}
-                className={`${inputCls} [color-scheme:dark]`}
+                className={`${inputCls} [color-scheme:light]`}
               />
             </Field>
             <Field icon={<FaCalendarAlt />} label="Check-out">
@@ -278,38 +278,38 @@ const HeroSearch = () => {
                 value={searchData.checkOut}
                 min={searchData.checkIn}
                 onChange={onChange}
-                className={`${inputCls} [color-scheme:dark]`}
+                className={`${inputCls} [color-scheme:light]`}
               />
             </Field>
           </div>
 
-          <div className="hidden lg:block w-px h-8 bg-white/10 self-center mx-2" />
+          <div className="hidden lg:block w-px h-8 bg-slate-200 self-center mx-2" />
 
           {/* Guests + Search */}
           <div className="flex items-end gap-3">
             <div className="flex-1 min-w-0" id="guests-panel">
-              <p className="text-[10px] font-bold tracking-widest uppercase text-white/50 mb-1.5 px-1">
+              <p className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-1.5 px-1">
                 Guests & rooms
               </p>
               <div className="relative">
                 <button
                   type="button"
                   onClick={() => setShowGuests((v) => !v)}
-                  className="w-full flex items-center justify-between pl-3 pr-3 py-3 border border-white/10 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.04] rounded-xl transition-all text-sm focus:outline-none"
+                  className="w-full flex items-center justify-between pl-3 pr-3 py-3 border border-slate-200 bg-slate-50/50 hover:border-slate-300 hover:bg-white rounded-xl transition-all text-sm focus:outline-none"
                 >
                   <div className="flex items-center gap-2 min-w-0">
-                    <FaUsers className="text-white/40 text-sm shrink-0" />
-                    <span className="text-white font-medium truncate">
+                    <FaUsers className="text-slate-400 text-sm shrink-0" />
+                    <span className="text-slate-700 font-medium truncate">
                       {guestLabel}
                     </span>
                   </div>
                   <FaChevronDown
-                    className={`text-white/40 text-xs ml-2 shrink-0 transition-transform duration-200 ${showGuests ? "rotate-180" : ""}`}
+                    className={`text-slate-400 text-xs ml-2 shrink-0 transition-transform duration-200 ${showGuests ? "rotate-180" : ""}`}
                   />
                 </button>
 
                 {showGuests && (
-                  <div className="absolute top-full left-0 right-0 lg:left-auto lg:right-0 sm:min-w-75 mt-2 bg-[#12141d] border border-white/10 rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.6)] z-50 overflow-hidden">
+                  <div className="absolute top-full left-0 right-0 lg:left-auto lg:right-0 sm:min-w-75 mt-2 bg-white border border-slate-200 rounded-2xl shadow-[0_12px_40px_rgba(100,130,180,0.15)] z-50 overflow-hidden">
                     <div className="px-5 py-4">
                       <CounterRow
                         label="Rooms"
@@ -340,7 +340,7 @@ const HeroSearch = () => {
                           setShowGuests(false);
                           if (searchData.city.trim()) onSearch();
                         }}
-                        className="mt-4 w-full bg-[#3d6ef5] hover:bg-[#2b59da] text-white font-bold py-2.5 rounded-xl text-sm shadow-[0_4px_16px_rgba(61,110,245,0.4)] transition-all"
+                        className="mt-4 w-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-bold py-2.5 rounded-xl text-sm shadow-[0_4px_16px_rgba(99,102,241,0.2)] transition-all"
                       >
                         Apply
                       </button>
@@ -356,7 +356,7 @@ const HeroSearch = () => {
               </p>
               <button
                 onClick={onSearch}
-                className="h-[46px] px-6 sm:px-7 bg-[#3d6ef5] hover:bg-[#2b59da] active:scale-95 text-white font-bold text-sm rounded-xl shadow-[0_4px_16px_rgba(61,110,245,0.4)] hover:shadow-[0_6px_24px_rgba(61,110,245,0.5)] transition-all flex items-center gap-2 whitespace-nowrap"
+                className="h-[46px] px-6 sm:px-7 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 active:scale-95 text-white font-bold text-sm rounded-xl shadow-[0_4px_16px_rgba(99,102,241,0.3)] hover:shadow-[0_6px_24px_rgba(99,102,241,0.45)] transition-all flex items-center gap-2 whitespace-nowrap"
               >
                 <FaSearch className="text-xs" />
                 <span className="hidden sm:inline">Search</span>

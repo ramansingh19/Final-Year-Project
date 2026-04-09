@@ -30,6 +30,7 @@ import {
   searchHotel,
 } from "../../features/user/hotelSlice";
 
+/* ─── unchanged constants ─── */
 const AMENITY_ICONS = {
   wifi: <FaWifi />,
   pool: <FaSwimmingPool />,
@@ -78,7 +79,6 @@ const applyFilters = (
   requestedAdults = 0,
 ) => {
   let result = [...hotels];
-
   if (filters.locality) {
     const q = filters.locality.toLowerCase();
     result = result.filter(
@@ -120,31 +120,33 @@ const applyFilters = (
   return result;
 };
 
+/* ─── SkeletonCard ─── */
 const SkeletonCard = ({ index = 0 }) => (
   <motion.div
-    initial={{ opacity: 0, y: 30, scale: 0.95 }}
+    initial={{ opacity: 0, y: 30, scale: 0.97 }}
     whileInView={{ opacity: 1, y: 0, scale: 1 }}
     viewport={{ once: true, margin: "-50px" }}
-    transition={{ duration: 0.6, delay: index * 0.1, ease: [0.25, 0.1, 0.25, 1] }}
-    className="bg-white/[0.02] rounded-2xl overflow-hidden border border-white/10 flex flex-col sm:flex-row animate-pulse min-h-80 sm:min-h-42.5 backdrop-blur-sm will-change-transform"
+    transition={{ duration: 0.5, delay: index * 0.08, ease: [0.25, 0.1, 0.25, 1] }}
+    className="bg-white rounded-2xl overflow-hidden border border-slate-200/80 flex flex-col sm:flex-row animate-pulse min-h-80 sm:min-h-42.5 shadow-sm"
   >
-    <div className="w-full sm:w-52 h-44 sm:h-full bg-white/5 shrink-0" />
+    <div className="w-full sm:w-52 h-44 sm:h-full bg-slate-100 shrink-0" />
     <div className="flex-1 p-4 space-y-3">
-      <div className="h-4 bg-white/10 rounded w-2/3" />
-      <div className="h-3 bg-white/5 rounded w-1/2" />
+      <div className="h-4 bg-slate-100 rounded w-2/3" />
+      <div className="h-3 bg-slate-50 rounded w-1/2" />
       <div className="flex gap-2 mt-3">
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="h-6 w-14 bg-white/5 rounded-lg" />
+          <div key={i} className="h-6 w-14 bg-slate-100 rounded-lg" />
         ))}
       </div>
     </div>
-    <div className="w-36 p-4 border-l border-white/10 hidden sm:flex flex-col justify-between items-end">
-      <div className="h-6 bg-white/10 rounded w-20" />
-      <div className="h-9 bg-white/10 rounded-xl w-24" />
+    <div className="w-36 p-4 border-l border-slate-100 hidden sm:flex flex-col justify-between items-end">
+      <div className="h-6 bg-slate-100 rounded w-20" />
+      <div className="h-9 bg-slate-100 rounded-xl w-24" />
     </div>
   </motion.div>
 );
 
+/* ─── StarDisplay ─── */
 const StarDisplay = ({ count }) => {
   if (!count) return null;
   return (
@@ -156,6 +158,7 @@ const StarDisplay = ({ count }) => {
   );
 };
 
+/* ─── HotelCard ─── */
 const HotelCard = ({
   hotel,
   nights = 1,
@@ -185,19 +188,20 @@ const HotelCard = ({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30, scale: 0.95, filter: "blur(4px)" }}
-      whileInView={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
-      exit={{ opacity: 0, y: -20, scale: 0.95, filter: "blur(4px)" }}
+      initial={{ opacity: 0, y: 24, scale: 0.98 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -16, scale: 0.98 }}
       viewport={{ once: false, margin: "-10% 0px -10% 0px" }}
-      transition={{ duration: 0.6, delay: (index % 10) * 0.1, ease: [0.25, 0.1, 0.25, 1] }}
-      className="group bg-white/[0.02] backdrop-blur-md rounded-2xl overflow-hidden border border-white/5 hover:border-white/20 hover:bg-white/[0.04] transition-all duration-300 flex flex-col sm:flex-row cursor-pointer hover:shadow-[0_0_25px_rgba(61,110,245,0.1)] will-change-transform"
+      transition={{ duration: 0.5, delay: (index % 10) * 0.07, ease: [0.25, 0.1, 0.25, 1] }}
+      className="group bg-white rounded-2xl overflow-hidden border border-slate-200/70 hover:border-blue-200 transition-all duration-300 flex flex-col sm:flex-row cursor-pointer shadow-[0_2px_12px_rgba(100,130,180,0.08)] hover:shadow-[0_8px_32px_rgba(99,130,200,0.18)] will-change-transform"
       onClick={() => navigate(`/hotels/${hotel._id}`)}
     >
-      <div className="relative w-full sm:w-52 h-48 sm:h-48 shrink-0 overflow-hidden bg-white/5">
+      {/* Image */}
+      <div className="relative w-full sm:w-52 h-48 sm:h-48 shrink-0 overflow-hidden bg-slate-100">
         <img
           src={images[0]}
           alt={hotel.name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
 
         <button
@@ -205,55 +209,56 @@ const HotelCard = ({
             e.stopPropagation();
             setWishlist(!wishlist);
           }}
-          className="absolute top-3 right-3 w-7 h-7 bg-black/40 backdrop-blur-md border border-white/10 rounded-full flex items-center justify-center shadow hover:scale-110 transition-transform z-10 hover:bg-black/60"
+          className="absolute top-3 right-3 w-7 h-7 bg-white/80 backdrop-blur-sm border border-slate-200 rounded-full flex items-center justify-center shadow-sm hover:scale-110 transition-transform z-10 hover:bg-white"
         >
           {wishlist ? (
-            <FaHeart className="text-rose-500 text-xs shadow-[0_0_8px_rgba(244,63,94,0.6)]" />
+            <FaHeart className="text-rose-500 text-xs" />
           ) : (
-            <FaRegHeart className="text-white/60 text-xs" />
+            <FaRegHeart className="text-slate-400 text-xs" />
           )}
         </button>
 
         {isSoldOut && (
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px] flex items-center justify-center z-10">
-            <span className="bg-white/10 border border-white/20 text-white backdrop-blur-md text-xs font-bold px-3 py-1.5 rounded-full shadow">
+          <div className="absolute inset-0 bg-white/50 backdrop-blur-[2px] flex items-center justify-center z-10">
+            <span className="bg-white/90 border border-slate-200 text-slate-600 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
               Sold Out
             </span>
           </div>
         )}
 
         {discount > 0 && (
-          <div className="absolute top-3 left-3 bg-[#3d6ef5]/90 backdrop-blur-sm border border-white/10 text-white text-[10px] font-bold px-2 py-1 rounded-lg flex items-center gap-1 z-10 shadow-[0_0_10px_rgba(61,110,245,0.4)]">
+          <div className="absolute top-3 left-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-[10px] font-bold px-2 py-1 rounded-lg flex items-center gap-1 z-10 shadow-md">
             <FaPercent className="text-[8px]" />
             {discount}% OFF
           </div>
         )}
 
         {hotel.images?.length > 1 && (
-          <div className="absolute bottom-2 right-2 bg-black/50 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded-md backdrop-blur-sm border border-white/10">
+          <div className="absolute bottom-2 right-2 bg-black/30 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded-md backdrop-blur-sm">
             +{hotel.images.length} photos
           </div>
         )}
       </div>
 
+      {/* Body */}
       <div className="flex-1 p-4 flex flex-col justify-between min-w-0">
         <div>
           <div className="flex items-start justify-between gap-2 mb-1">
             <div className="min-w-0">
-              <h3 className="font-bold text-white text-sm sm:text-base leading-snug group-hover:text-[#3d6ef5] transition-colors line-clamp-1">
+              <h3 className="font-bold text-slate-800 text-sm sm:text-base leading-snug group-hover:text-blue-600 transition-colors line-clamp-1">
                 {hotel.name}
               </h3>
               {hotel.starCategory && <StarDisplay count={hotel.starCategory} />}
             </div>
 
             {rating !== null && rating > 0 && (
-              <div className="flex items-center gap-1 shrink-0 bg-[#3d6ef5]/20 border border-[#3d6ef5]/30 rounded-lg px-2 py-1 shadow-[0_0_10px_rgba(61,110,245,0.2)]">
+              <div className="flex items-center gap-1 shrink-0 bg-blue-50 border border-blue-100 rounded-lg px-2 py-1">
                 <FaStar className="text-amber-400 text-[10px]" />
-                <span className="text-xs font-bold text-white">
+                <span className="text-xs font-bold text-slate-700">
                   {Number(rating).toFixed(1)}
                 </span>
                 {totalReviews > 0 && (
-                  <span className="text-[10px] text-white/50">
+                  <span className="text-[10px] text-slate-400">
                     ({totalReviews})
                   </span>
                 )}
@@ -261,8 +266,8 @@ const HotelCard = ({
             )}
           </div>
 
-          <p className="text-xs text-white/50 flex items-center gap-1.5 mb-2.5">
-            <FaMapMarkerAlt className="text-[#3d6ef5] text-[10px] shrink-0" />
+          <p className="text-xs text-slate-400 flex items-center gap-1.5 mb-2.5">
+            <FaMapMarkerAlt className="text-blue-400 text-[10px] shrink-0" />
             <span className="line-clamp-1">
               {[hotel.address, cityName].filter(Boolean).join(", ") || "City Centre"}
             </span>
@@ -275,9 +280,9 @@ const HotelCard = ({
                 return (
                   <span
                     key={f}
-                    className="flex items-center gap-1 text-[10px] text-white/70 bg-white/5 border border-white/10 px-2 py-1 rounded-lg capitalize"
+                    className="flex items-center gap-1 text-[10px] text-slate-500 bg-slate-50 border border-slate-200 px-2 py-1 rounded-lg capitalize hover:bg-blue-50 hover:border-blue-100 hover:text-blue-600 transition-colors"
                   >
-                    <span className="text-[#3d6ef5] text-[9px]">
+                    <span className="text-blue-400 text-[9px]">
                       {AMENITY_ICONS[key] ?? <FaWifi />}
                     </span>
                     {f}
@@ -294,8 +299,8 @@ const HotelCard = ({
               const adultsPerRoom = Math.ceil(requestedAdults / requestedRooms);
               if (adultsPerRoom > maxCapacityPerRoom) {
                 return (
-                  <p className="text-[10px] text-rose-400 mt-1 flex items-center gap-1">
-                    <span className="text-rose-500">⚠️</span> Room capacity: {maxCapacityPerRoom} adults max
+                  <p className="text-[10px] text-rose-500 mt-1 flex items-center gap-1">
+                    <span>⚠️</span> Room capacity: {maxCapacityPerRoom} adults max
                   </p>
                 );
               }
@@ -307,8 +312,8 @@ const HotelCard = ({
               className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border mt-1.5
                 ${
                   availableRooms <= 3
-                    ? "text-rose-400 bg-rose-500/10 border-rose-500/30 animate-pulse shadow-[0_0_8px_rgba(244,63,94,0.3)]"
-                    : "text-amber-400 bg-amber-500/10 border-amber-500/30"
+                    ? "text-rose-600 bg-rose-50 border-rose-200"
+                    : "text-amber-600 bg-amber-50 border-amber-200"
                 }`}
             >
               {availableRooms <= 3 ? "🔥 " : ""}Only {availableRooms} rooms left!
@@ -320,7 +325,7 @@ const HotelCard = ({
               {hotel.tags.slice(0, 2).map((tag) => (
                 <span
                   key={tag}
-                  className="text-[10px] bg-[#3d6ef5]/10 text-[#3d6ef5] border border-[#3d6ef5]/20 px-2 py-0.5 rounded-full font-semibold"
+                  className="text-[10px] bg-indigo-50 text-indigo-600 border border-indigo-100 px-2 py-0.5 rounded-full font-semibold"
                 >
                   {tag}
                 </span>
@@ -330,28 +335,29 @@ const HotelCard = ({
         </div>
 
         {hotel.offers?.length > 0 && (
-          <div className="mt-2 flex items-center gap-1 text-emerald-400 text-[11px] font-semibold">
+          <div className="mt-2 flex items-center gap-1 text-emerald-600 text-[11px] font-semibold">
             <MdOutlineLocalOffer className="text-sm shrink-0" />
             <span className="line-clamp-1">{hotel.offers[0]}</span>
           </div>
         )}
       </div>
 
-      <div className="sm:w-44 p-4 border-t sm:border-t-0 sm:border-l border-white/5 group-hover:border-white/10 flex flex-row sm:flex-col justify-between sm:justify-start items-start sm:items-end gap-3 transition-colors">
+      {/* Price panel */}
+      <div className="sm:w-44 p-4 border-t sm:border-t-0 sm:border-l border-slate-100 group-hover:border-blue-100 flex flex-row sm:flex-col justify-between sm:justify-start items-start sm:items-end gap-3 transition-colors bg-gradient-to-b from-white to-slate-50/60">
         <div className="text-left sm:text-right">
           {hotel.originalPrice && (
-            <p className="text-[11px] text-white/40 line-through">
+            <p className="text-[11px] text-slate-400 line-through">
               ₹{hotel.originalPrice.toLocaleString()}
             </p>
           )}
 
-          <p className="text-xl sm:text-2xl font-extrabold text-white tracking-tight" style={{ fontFamily: "'Inter', sans-serif" }}>
+          <p className="text-xl sm:text-2xl font-extrabold text-slate-800 tracking-tight" style={{ fontFamily: "'DM Sans', 'Inter', sans-serif" }}>
             {price > 0 ? `₹${price.toLocaleString()}` : "On request"}
           </p>
-          {price > 0 && <p className="text-[10px] text-white/40">per night + taxes</p>}
+          {price > 0 && <p className="text-[10px] text-slate-400">per night + taxes</p>}
 
           {price > 0 && nights > 1 && (
-            <p className="text-[11px] text-[#3d6ef5] font-semibold mt-1 flex items-center justify-end gap-1">
+            <p className="text-[11px] text-blue-500 font-semibold mt-1 flex items-center justify-end gap-1">
               <FaMoon className="text-[9px]" />₹{totalPrice.toLocaleString()} · {nights} nights
             </p>
           )}
@@ -359,7 +365,7 @@ const HotelCard = ({
 
         <div className="flex flex-col items-start sm:items-end gap-1.5 shrink-0">
           {hotel.freeCancellation && (
-            <span className="hidden sm:flex items-center gap-1 text-emerald-400 text-[10px] font-semibold whitespace-nowrap">
+            <span className="hidden sm:flex items-center gap-1 text-emerald-500 text-[10px] font-semibold whitespace-nowrap">
               <FaShieldAlt className="text-[8px]" /> Free cancellation
             </span>
           )}
@@ -369,11 +375,11 @@ const HotelCard = ({
               e.stopPropagation();
               if (!isSoldOut) navigate(`/hotels/${hotel._id}`);
             }}
-            className={`text-white text-xs font-bold px-4 sm:px-5 py-2.5 rounded-xl shadow transition-all whitespace-nowrap min-w-27.5
+            className={`text-white text-xs font-bold px-4 sm:px-5 py-2.5 rounded-xl shadow-sm transition-all duration-200 whitespace-nowrap min-w-27.5
             ${
               isSoldOut
-                ? "bg-white/10 text-white/40 cursor-not-allowed border border-white/5"
-                : "bg-[#3d6ef5] hover:bg-[#2b59da] border border-[#3d6ef5]/50 active:scale-95 shadow-[0_4px_14px_rgba(61,110,245,0.4)] hover:shadow-[0_6px_20px_rgba(61,110,245,0.6)]"
+                ? "bg-slate-200 text-slate-400 cursor-not-allowed"
+                : "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 active:scale-95 shadow-[0_4px_14px_rgba(99,102,241,0.35)] hover:shadow-[0_6px_20px_rgba(99,102,241,0.45)]"
             }`}
           >
             {isSoldOut ? "Sold Out" : "Book Now"}
@@ -384,19 +390,20 @@ const HotelCard = ({
   );
 };
 
+/* ─── EmptyState ─── */
 const EmptyState = ({ cityParam }) => (
-  <motion.div 
-    initial={{ opacity: 0, scale: 0.9 }}
+  <motion.div
+    initial={{ opacity: 0, scale: 0.95 }}
     animate={{ opacity: 1, scale: 1 }}
-    className="flex flex-col items-center justify-center py-20 text-center px-4 bg-white/[0.02] border border-white/5 rounded-2xl"
+    className="flex flex-col items-center justify-center py-20 text-center px-4 bg-white border border-slate-200 rounded-2xl shadow-sm"
   >
-    <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-full flex items-center justify-center mb-4">
-      <FaMapMarkerAlt className="text-white/20 text-2xl" />
+    <div className="w-16 h-16 bg-blue-50 border border-blue-100 rounded-full flex items-center justify-center mb-4">
+      <FaMapMarkerAlt className="text-blue-300 text-2xl" />
     </div>
-    <h3 className="text-lg font-bold text-white mb-2">
+    <h3 className="text-lg font-bold text-slate-700 mb-2">
       {cityParam ? `No hotels found in "${cityParam}"` : "No hotels found"}
     </h3>
-    <p className="text-white/50 text-sm max-w-xs">
+    <p className="text-slate-400 text-sm max-w-xs">
       {cityParam
         ? "Try a different city or remove some filters."
         : "Try searching for a city or adjusting your filters."}
@@ -404,6 +411,7 @@ const EmptyState = ({ cityParam }) => (
   </motion.div>
 );
 
+/* ─── HotelPage ─── */
 function HotelPage() {
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
@@ -413,7 +421,7 @@ function HotelPage() {
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
-    restDelta: 0.001
+    restDelta: 0.001,
   });
 
   const cityParam = searchParams.get("city") || "";
@@ -465,7 +473,11 @@ function HotelPage() {
   const requestedAdults = Number(adultsParam) || 0;
 
   const processedHotels = useMemo(
-    () => sortHotels(applyFilters(hotels, filters, bulkAvailability, requestedRooms, requestedAdults), sortBy),
+    () =>
+      sortHotels(
+        applyFilters(hotels, filters, bulkAvailability, requestedRooms, requestedAdults),
+        sortBy,
+      ),
     [hotels, filters, sortBy, bulkAvailability, requestedRooms, requestedAdults],
   );
   const totalCount = processedHotels.length;
@@ -488,67 +500,134 @@ function HotelPage() {
 
   return (
     <ReactLenis root options={{ lerp: 0.08, smoothWheel: true }}>
-      <div className="min-h-screen bg-[#0a0a10] font-sans selection:bg-[#3d6ef5]/30 relative overflow-hidden">
-        
-        {/* Parallax Background subtle layers */}
-        <div className="fixed inset-0 pointer-events-none z-0">
-          <div className="absolute top-[20%] left-[-10%] w-[40vw] h-[40vw] bg-[#3d6ef5]/5 blur-[120px] rounded-full mix-blend-screen" />
-          <div className="absolute bottom-[10%] right-[-5%] w-[30vw] h-[30vw] bg-purple-500/5 blur-[100px] rounded-full mix-blend-screen" />
+      {/*
+       * ─── ROOT: soft SaaS gradient background ───────────────────────────
+       * Replacing #0a0a10 dark canvas with an airy light gradient.
+       * All layout structure, flex/grid, spacing preserved exactly.
+       */}
+      <div
+        className="min-h-screen font-sans selection:bg-blue-200/60 relative overflow-hidden"
+        style={{
+          background: "linear-gradient(145deg, #eef3fb 0%, #e8f0f9 40%, #dfe9f5 70%, #d8e4f2 100%)",
+        }}
+      >
+        {/* Soft floating ambient blobs – very low opacity, no interactivity */}
+        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+          {/* top-left warm highlight */}
+          <div
+            className="absolute top-[-8%] left-[-6%] w-[45vw] h-[45vw] rounded-full"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(147,197,253,0.28) 0%, rgba(199,228,255,0.08) 70%, transparent 100%)",
+              filter: "blur(60px)",
+            }}
+          />
+          {/* bottom-right cool blob */}
+          <div
+            className="absolute bottom-[-5%] right-[-4%] w-[38vw] h-[38vw] rounded-full"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(165,180,252,0.22) 0%, rgba(224,231,255,0.06) 70%, transparent 100%)",
+              filter: "blur(70px)",
+            }}
+          />
+          {/* center soft glow */}
+          <div
+            className="absolute top-[45%] left-[40%] w-[30vw] h-[30vw] rounded-full"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(186,230,253,0.15) 0%, transparent 70%)",
+              filter: "blur(80px)",
+            }}
+          />
         </div>
 
-        {/* Global Progress Bar */}
+        {/* Scroll progress bar – blue gradient */}
         <motion.div
-          className="fixed top-0 left-0 right-0 h-1 bg-[#3d6ef5] origin-left z-[100] shadow-[0_0_15px_rgba(61,110,245,0.8)]"
-          style={{ scaleX }}
+          className="fixed top-0 left-0 right-0 h-[3px] origin-left z-[100]"
+          style={{
+            scaleX,
+            background: "linear-gradient(90deg, #3b82f6, #6366f1)",
+            boxShadow: "0 0 10px rgba(99,102,241,0.5)",
+          }}
         />
 
-        {/* Sticky search */}
-        <motion.div 
+        {/* ── Sticky Search Bar ── */}
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="sticky top-0 sm:top-1 z-40 bg-[#0a0a10]/80 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.5)]"
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="sticky top-0 sm:top-1 z-40 backdrop-blur-xl border-b border-white/60"
+          style={{
+            background: "rgba(238,243,251,0.85)",
+            boxShadow: "0 2px 20px rgba(100,130,180,0.10)",
+          }}
         >
           <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3">
             <HeroSearch />
           </div>
         </motion.div>
 
+        {/* ── Main Layout ── */}
         <div className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-6 flex gap-5 items-start relative z-10">
-          {/* Desktop sidebar */}
-          <motion.aside 
-            initial={{ opacity: 0, x: -30 }}
+
+          {/* Desktop Sidebar */}
+          <motion.aside
+            initial={{ opacity: 0, x: -24 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
+            transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
             className="hidden lg:block shrink-0"
           >
-            <HotelFilter onFilterChange={handleFilters} onMapOpen={() => setMapOpen(true)} />
+            {/*
+             * Wrap sidebar in a frosted-card shell.
+             * Inner component (HotelFilter) is untouched.
+             */}
+            <div
+              className="rounded-2xl overflow-hidden border border-white/70"
+              style={{
+                background: "rgba(255,255,255,0.72)",
+                backdropFilter: "blur(16px)",
+                boxShadow: "0 4px 24px rgba(100,130,180,0.10)",
+              }}
+            >
+              <HotelFilter onFilterChange={handleFilters} onMapOpen={() => setMapOpen(true)} />
+            </div>
           </motion.aside>
 
+          {/* Main content */}
           <main className="flex-1 min-w-0">
+
             {/* Results header */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+              transition={{ duration: 0.5, delay: 0.15, ease: "easeOut" }}
               className="flex items-start sm:items-center justify-between mb-3 sm:mb-4 flex-wrap gap-2"
             >
               <div className="min-w-0">
                 {loading ? (
-                  <div className="h-5 w-40 bg-white/10 rounded animate-pulse" />
+                  <div className="h-5 w-40 bg-slate-200 rounded animate-pulse" />
                 ) : (
                   <>
-                    <h1 className="text-base sm:text-lg font-extrabold text-white">
-                      <span className="text-[#3d6ef5] drop-shadow-[0_0_8px_rgba(61,110,245,0.5)]">{totalCount}</span> Hotels Found
+                    <h1 className="text-base sm:text-lg font-extrabold text-slate-800">
+                      <span className="text-blue-600">{totalCount}</span> Hotels Found
                       {cityParam && (
-                        <span className="text-white/50 font-normal text-sm sm:text-base ml-2">
-                          in <span className="text-white/90">{cityParam}</span>
+                        <span className="text-slate-400 font-normal text-sm sm:text-base ml-2">
+                          in <span className="text-slate-700">{cityParam}</span>
                         </span>
                       )}
                     </h1>
                     {cityParam && (checkInParam || adultsParam) && (
-                      <p className="text-[11px] text-white/40 mt-1 wrap-break-word font-medium">
-                        {checkInParam && checkOutParam && `${new Date(checkInParam).toLocaleDateString("en-IN", { day: "numeric", month: "short" })} → ${new Date(checkOutParam).toLocaleDateString("en-IN", { day: "numeric", month: "short" })} · `}
+                      <p className="text-[11px] text-slate-400 mt-1 font-medium">
+                        {checkInParam &&
+                          checkOutParam &&
+                          `${new Date(checkInParam).toLocaleDateString("en-IN", {
+                            day: "numeric",
+                            month: "short",
+                          })} → ${new Date(checkOutParam).toLocaleDateString("en-IN", {
+                            day: "numeric",
+                            month: "short",
+                          })} · `}
                         {nights > 1 && `${nights} nights · `}
                         {roomsParam && `${roomsParam} Room · `}
                         {adultsParam && `${adultsParam} Adults`}
@@ -556,7 +635,7 @@ function HotelPage() {
                       </p>
                     )}
                     {!cityParam && (
-                      <p className="text-[10px] sm:text-[11px] text-white/40 mt-1 hidden sm:block">
+                      <p className="text-[10px] sm:text-[11px] text-slate-400 mt-1 hidden sm:block">
                         Prices include taxes · Free cancellation available on select rates
                       </p>
                     )}
@@ -565,36 +644,46 @@ function HotelPage() {
               </div>
 
               <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-                {/* Mobile filter */}
+
+                {/* Mobile filter button */}
                 <button
                   onClick={() => setShowMobileFilter(true)}
-                  className="lg:hidden flex items-center gap-1.5 border border-white/10 bg-white/5 hover:bg-white/10 px-3 py-2 rounded-xl text-xs font-semibold text-white transition-colors backdrop-blur-md"
+                  className="lg:hidden flex items-center gap-1.5 border border-slate-200 bg-white hover:bg-blue-50 hover:border-blue-200 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 transition-colors shadow-sm"
                 >
-                  <FaFilter className="text-[#3d6ef5] text-[10px]" />
+                  <FaFilter className="text-blue-500 text-[10px]" />
                   Filters
                   {Object.values(filters).flat().filter(Boolean).length > 0 && (
-                    <span className="bg-[#3d6ef5] text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center shadow-[0_0_8px_rgba(61,110,245,0.4)]">
+                    <span className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
                       {Object.values(filters).flat().filter(Boolean).length}
                     </span>
                   )}
                 </button>
 
-                {/* Sort */}
+                {/* Sort dropdown */}
                 <div className="relative" id="sort-menu">
                   <button
                     onClick={() => setShowSortMenu(!showSortMenu)}
-                    className="flex items-center gap-1.5 border border-white/10 bg-white/5 hover:bg-white/10 px-3 py-2 rounded-xl text-xs font-semibold text-white transition-colors backdrop-blur-md"
+                    className="flex items-center gap-1.5 border border-slate-200 bg-white hover:bg-blue-50 hover:border-blue-200 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 transition-colors shadow-sm"
                   >
-                    <FaSortAmountDown className="text-[#3d6ef5] text-[10px]" />
+                    <FaSortAmountDown className="text-blue-500 text-[10px]" />
                     <span className="hidden sm:inline">{sortLabel}</span>
                     <span className="sm:hidden">Sort</span>
-                    <FaChevronDown className={`text-[10px] text-white/50 transition-transform ${showSortMenu ? "rotate-180" : ""}`} />
+                    <FaChevronDown
+                      className={`text-[10px] text-slate-400 transition-transform duration-200 ${
+                        showSortMenu ? "rotate-180" : ""
+                      }`}
+                    />
                   </button>
                   {showSortMenu && (
-                    <motion.div 
-                      initial={{ opacity: 0, y: -10 }}
+                    <motion.div
+                      initial={{ opacity: 0, y: -8 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="absolute right-0 top-full mt-2 bg-[#12141d] border border-white/10 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.6)] z-30 w-48 py-1.5 overflow-hidden backdrop-blur-xl"
+                      className="absolute right-0 top-full mt-2 border border-slate-200 rounded-xl z-30 w-48 py-1.5 overflow-hidden"
+                      style={{
+                        background: "rgba(255,255,255,0.96)",
+                        backdropFilter: "blur(20px)",
+                        boxShadow: "0 8px 32px rgba(100,130,180,0.18)",
+                      }}
                     >
                       {SORT_OPTIONS.map((opt) => (
                         <button
@@ -607,8 +696,8 @@ function HotelPage() {
                           className={`w-full text-left px-4 py-2.5 text-xs transition-colors
                             ${
                               sortBy === opt.value
-                                ? "bg-[#3d6ef5]/10 text-[#3d6ef5] font-bold"
-                                : "text-white/70 hover:bg-white/5 hover:text-white"
+                                ? "bg-blue-50 text-blue-600 font-bold"
+                                : "text-slate-600 hover:bg-slate-50 hover:text-slate-800"
                             }`}
                         >
                           {sortBy === opt.value && <span className="mr-1.5">✓</span>}
@@ -621,23 +710,27 @@ function HotelPage() {
               </div>
             </motion.div>
 
-            {/* Flash deal */}
+            {/* Flash deal banner */}
             {!loading && pagedHotels.length > 0 && (
-              <motion.div 
-                initial={{ opacity: 0, x: 30 }}
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                className="flex items-center gap-2 bg-[#3d6ef5]/10 border border-[#3d6ef5]/20 backdrop-blur-md rounded-xl px-3 sm:px-4 py-2.5 mb-3 sm:mb-4 text-xs shadow-[0_4px_16px_rgba(61,110,245,0.05)]"
+                transition={{ duration: 0.5, delay: 0.25 }}
+                className="flex items-center gap-2 border border-blue-100 rounded-xl px-3 sm:px-4 py-2.5 mb-3 sm:mb-4 text-xs shadow-sm"
+                style={{
+                  background:
+                    "linear-gradient(90deg, rgba(219,234,254,0.7) 0%, rgba(224,231,255,0.5) 100%)",
+                }}
               >
-                <FaBolt className="text-[#3d6ef5] shrink-0 drop-shadow-[0_0_5px_rgba(61,110,245,0.6)]" />
-                <span className="font-bold text-white">Flash Sale:</span>
-                <span className="text-white/70 line-clamp-2 sm:line-clamp-1">
+                <FaBolt className="text-blue-500 shrink-0" />
+                <span className="font-bold text-slate-700">Flash Sale:</span>
+                <span className="text-slate-500 line-clamp-2 sm:line-clamp-1">
                   Up to 40% off on select properties today only!
                 </span>
               </motion.div>
             )}
 
-            {/* Cards */}
+            {/* Hotel Cards */}
             <div className="space-y-3">
               {loading ? (
                 [...Array(3)].map((_, i) => <SkeletonCard key={i} index={i} />)
@@ -661,16 +754,16 @@ function HotelPage() {
 
             {/* Pagination */}
             {!loading && totalPages > 1 && (
-              <motion.div 
-                initial={{ opacity: 0 }} 
-                whileInView={{ opacity: 1 }} 
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
                 className="flex justify-center items-center gap-1.5 mt-8 flex-wrap pb-10"
               >
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="px-3 sm:px-4 py-2 rounded-xl border border-white/10 text-xs font-semibold text-white/50 hover:text-white hover:bg-white/5 hover:border-white/20 disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+                  className="px-3 sm:px-4 py-2 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-500 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 disabled:opacity-30 disabled:hover:bg-white transition-all shadow-sm"
                 >
                   ← Prev
                 </button>
@@ -679,10 +772,10 @@ function HotelPage() {
                     <button
                       key={i}
                       onClick={() => setPage(i + 1)}
-                      className={`w-8 h-8 rounded-xl text-xs font-bold transition-all shrink-0 ${
+                      className={`w-8 h-8 rounded-xl text-xs font-bold transition-all duration-200 shrink-0 ${
                         page === i + 1
-                          ? "bg-[#3d6ef5] text-white shadow-[0_4px_12px_rgba(61,110,245,0.4)] border border-[#3d6ef5]"
-                          : "border border-white/10 text-white/50 hover:text-white hover:bg-white/5"
+                          ? "bg-gradient-to-br from-blue-500 to-indigo-500 text-white shadow-[0_4px_12px_rgba(99,102,241,0.35)] border border-blue-400"
+                          : "border border-slate-200 bg-white text-slate-500 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 shadow-sm"
                       }`}
                     >
                       {i + 1}
@@ -692,7 +785,7 @@ function HotelPage() {
                 <button
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
-                  className="px-3 sm:px-4 py-2 rounded-xl border border-white/10 text-xs font-semibold text-white/50 hover:text-white hover:bg-white/5 hover:border-white/20 disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+                  className="px-3 sm:px-4 py-2 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-500 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 disabled:opacity-30 disabled:hover:bg-white transition-all shadow-sm"
                 >
                   Next →
                 </button>
@@ -701,25 +794,36 @@ function HotelPage() {
           </main>
         </div>
 
-        {/* Mobile filter bottom sheet overlay */}
+        {/* ── Mobile filter bottom sheet ── */}
         {showMobileFilter && (
           <div className="fixed inset-0 z-50 lg:hidden">
-            <motion.div 
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} 
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm" 
-              onClick={() => setShowMobileFilter(false)} 
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="absolute inset-0 bg-slate-900/30 backdrop-blur-sm"
+              onClick={() => setShowMobileFilter(false)}
             />
-            <motion.div 
-              initial={{ y: "100%" }} animate={{ y: 0 }} transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="absolute right-0 top-0 bottom-0 w-[85vw] max-w-sm bg-[#0a0a10] border-l border-white/10 flex flex-col shadow-[-10px_0_30px_rgba(0,0,0,0.5)]"
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              transition={{ type: "spring", damping: 26, stiffness: 200 }}
+              className="absolute right-0 top-0 bottom-0 w-[85vw] max-w-sm border-l border-white/70 flex flex-col"
+              style={{
+                background: "rgba(241,247,255,0.97)",
+                backdropFilter: "blur(20px)",
+                boxShadow: "-8px 0 40px rgba(100,130,180,0.18)",
+              }}
             >
-              <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 shrink-0 bg-[#0a0a10]">
-                <h2 className="font-bold text-white">Filters</h2>
+              <div
+                className="flex items-center justify-between px-5 py-4 border-b border-slate-200 shrink-0"
+                style={{ background: "rgba(255,255,255,0.9)" }}
+              >
+                <h2 className="font-bold text-slate-800">Filters</h2>
                 <button
                   onClick={() => setShowMobileFilter(false)}
-                  className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 text-white/50 hover:text-white hover:bg-white/10 transition-colors"
+                  className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-400 hover:text-slate-700 hover:bg-slate-200 transition-colors"
                 >
-                  <FaTimes className="text-sm" />
+                  ✕
                 </button>
               </div>
               <div className="flex-1 overflow-y-auto">
@@ -740,6 +844,7 @@ function HotelPage() {
           </div>
         )}
 
+        {/* Map Modal – unchanged */}
         <MapModal
           isOpen={mapOpen}
           onClose={() => setMapOpen(false)}
