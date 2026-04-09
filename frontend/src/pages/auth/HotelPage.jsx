@@ -1,29 +1,29 @@
-import React, { useEffect, useState, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, useScroll, useSpring } from "framer-motion";
 import { ReactLenis } from "lenis/react";
-import HeroSearch from "../../components/Hotel/HotelSearch";
-import HotelFilter from "../../components/Hotel/HotelFilter";
-import MapModal from "../../components/Hotel/Mapmodal ";
+import { useEffect, useMemo, useState } from "react";
 import {
-  FaStar,
-  FaMapMarkerAlt,
-  FaWifi,
-  FaSwimmingPool,
-  FaCar,
-  FaUtensils,
-  FaHeart,
-  FaRegHeart,
-  FaFilter,
-  FaSortAmountDown,
-  FaChevronDown,
-  FaShieldAlt,
   FaBolt,
-  FaPercent,
+  FaCar,
+  FaChevronDown,
+  FaFilter,
+  FaHeart,
+  FaMapMarkerAlt,
   FaMoon,
+  FaPercent,
+  FaRegHeart,
+  FaShieldAlt,
+  FaSortAmountDown,
+  FaStar,
+  FaSwimmingPool,
+  FaUtensils,
+  FaWifi,
 } from "react-icons/fa";
-import { MdOutlineLocalOffer, MdAir, MdSpa } from "react-icons/md";
+import { MdAir, MdOutlineLocalOffer, MdSpa } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import HotelFilter from "../../components/Hotel/HotelFilter";
+import HeroSearch from "../../components/Hotel/HotelSearch";
+import MapModal from "../../components/Hotel/Mapmodal ";
 import {
   getPublicActiveHotels,
   getRoomsAvailabilityBulk,
@@ -59,13 +59,21 @@ const sortHotels = (hotels, sortBy) => {
   const arr = [...hotels];
   switch (sortBy) {
     case "price_asc":
-      return arr.sort((a, b) => (a.pricePerNight ?? 0) - (b.pricePerNight ?? 0));
+      return arr.sort(
+        (a, b) => (a.pricePerNight ?? 0) - (b.pricePerNight ?? 0),
+      );
     case "price_desc":
-      return arr.sort((a, b) => (b.pricePerNight ?? 0) - (a.pricePerNight ?? 0));
+      return arr.sort(
+        (a, b) => (b.pricePerNight ?? 0) - (a.pricePerNight ?? 0),
+      );
     case "rating":
-      return arr.sort((a, b) => (b.averageRating ?? 0) - (a.averageRating ?? 0));
+      return arr.sort(
+        (a, b) => (b.averageRating ?? 0) - (a.averageRating ?? 0),
+      );
     case "newest":
-      return arr.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+      return arr.sort(
+        (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0),
+      );
     default:
       return arr;
   }
@@ -82,7 +90,9 @@ const applyFilters = (
   if (filters.locality) {
     const q = filters.locality.toLowerCase();
     result = result.filter(
-      (h) => h.name?.toLowerCase().includes(q) || h.address?.toLowerCase().includes(q),
+      (h) =>
+        h.name?.toLowerCase().includes(q) ||
+        h.address?.toLowerCase().includes(q),
     );
   }
   if (filters.price?.length > 0) {
@@ -126,7 +136,11 @@ const SkeletonCard = ({ index = 0 }) => (
     initial={{ opacity: 0, y: 30, scale: 0.97 }}
     whileInView={{ opacity: 1, y: 0, scale: 1 }}
     viewport={{ once: true, margin: "-50px" }}
-    transition={{ duration: 0.5, delay: index * 0.08, ease: [0.25, 0.1, 0.25, 1] }}
+    transition={{
+      duration: 0.5,
+      delay: index * 0.08,
+      ease: [0.25, 0.1, 0.25, 1],
+    }}
     className="bg-white rounded-2xl overflow-hidden border border-slate-200/80 flex flex-col sm:flex-row animate-pulse min-h-80 sm:min-h-42.5 shadow-sm"
   >
     <div className="w-full sm:w-52 h-44 sm:h-full bg-slate-100 shrink-0" />
@@ -174,13 +188,16 @@ const HotelCard = ({
 
   const images = hotel.images?.length
     ? hotel.images
-    : ["https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80"];
+    : [
+        "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80",
+      ];
   const price = hotel.pricePerNight ?? hotel.price ?? 0;
   const totalPrice = price * nights;
   const rating = hotel.averageRating ?? hotel.rating ?? null;
   const totalReviews = hotel.totalReviews ?? 0;
   const facilities = hotel.facilities?.slice(0, 4) || [];
-  const cityName = hotel.city?.name || (typeof hotel.city === "string" ? hotel.city : "");
+  const cityName =
+    hotel.city?.name || (typeof hotel.city === "string" ? hotel.city : "");
   const discount =
     hotel.originalPrice && price
       ? Math.round(((hotel.originalPrice - price) / hotel.originalPrice) * 100)
@@ -192,7 +209,11 @@ const HotelCard = ({
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -16, scale: 0.98 }}
       viewport={{ once: false, margin: "-10% 0px -10% 0px" }}
-      transition={{ duration: 0.5, delay: (index % 10) * 0.07, ease: [0.25, 0.1, 0.25, 1] }}
+      transition={{
+        duration: 0.5,
+        delay: (index % 10) * 0.07,
+        ease: [0.25, 0.1, 0.25, 1],
+      }}
       className="group bg-white rounded-2xl overflow-hidden border border-slate-200/70 hover:border-blue-200 transition-all duration-300 flex flex-col sm:flex-row cursor-pointer shadow-[0_2px_12px_rgba(100,130,180,0.08)] hover:shadow-[0_8px_32px_rgba(99,130,200,0.18)] will-change-transform"
       onClick={() => navigate(`/hotels/${hotel._id}`)}
     >
@@ -227,7 +248,7 @@ const HotelCard = ({
         )}
 
         {discount > 0 && (
-          <div className="absolute top-3 left-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-[10px] font-bold px-2 py-1 rounded-lg flex items-center gap-1 z-10 shadow-md">
+          <div className="absolute top-3 left-3 bg-linear-to-r from-blue-500 to-indigo-500 text-white text-[10px] font-bold px-2 py-1 rounded-lg flex items-center gap-1 z-10 shadow-md">
             <FaPercent className="text-[8px]" />
             {discount}% OFF
           </div>
@@ -245,7 +266,7 @@ const HotelCard = ({
         <div>
           <div className="flex items-start justify-between gap-2 mb-1">
             <div className="min-w-0">
-              <h3 className="font-bold text-slate-800 text-sm sm:text-base leading-snug group-hover:text-blue-600 transition-colors line-clamp-1">
+              <h3 className="font-bold text-slate-800 text-sm sm:text-base leading-snug group-hover:text-[#c67c4e] transition-colors duration-200 line-clamp-1">
                 {hotel.name}
               </h3>
               {hotel.starCategory && <StarDisplay count={hotel.starCategory} />}
@@ -269,7 +290,8 @@ const HotelCard = ({
           <p className="text-xs text-slate-400 flex items-center gap-1.5 mb-2.5">
             <FaMapMarkerAlt className="text-blue-400 text-[10px] shrink-0" />
             <span className="line-clamp-1">
-              {[hotel.address, cityName].filter(Boolean).join(", ") || "City Centre"}
+              {[hotel.address, cityName].filter(Boolean).join(", ") ||
+                "City Centre"}
             </span>
           </p>
 
@@ -300,25 +322,29 @@ const HotelCard = ({
               if (adultsPerRoom > maxCapacityPerRoom) {
                 return (
                   <p className="text-[10px] text-rose-500 mt-1 flex items-center gap-1">
-                    <span>⚠️</span> Room capacity: {maxCapacityPerRoom} adults max
+                    <span>⚠️</span> Room capacity: {maxCapacityPerRoom} adults
+                    max
                   </p>
                 );
               }
               return null;
             })()}
 
-          {availableRooms !== undefined && availableRooms > 0 && availableRooms <= 7 && (
-            <span
-              className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border mt-1.5
+          {availableRooms !== undefined &&
+            availableRooms > 0 &&
+            availableRooms <= 7 && (
+              <span
+                className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border mt-1.5
                 ${
                   availableRooms <= 3
                     ? "text-rose-600 bg-rose-50 border-rose-200"
                     : "text-amber-600 bg-amber-50 border-amber-200"
                 }`}
-            >
-              {availableRooms <= 3 ? "🔥 " : ""}Only {availableRooms} rooms left!
-            </span>
-          )}
+              >
+                {availableRooms <= 3 ? "🔥 " : ""}Only {availableRooms} rooms
+                left!
+              </span>
+            )}
 
           {hotel.tags?.length > 0 && (
             <div className="flex flex-wrap gap-1 mt-1.5">
@@ -343,7 +369,7 @@ const HotelCard = ({
       </div>
 
       {/* Price panel */}
-      <div className="sm:w-44 p-4 border-t sm:border-t-0 sm:border-l border-slate-100 group-hover:border-blue-100 flex flex-row sm:flex-col justify-between sm:justify-start items-start sm:items-end gap-3 transition-colors bg-gradient-to-b from-white to-slate-50/60">
+      <div className="sm:w-44 p-4 border-t sm:border-t-0 sm:border-l border-slate-100 group-hover:border-blue-100 flex flex-row sm:flex-col justify-between sm:justify-start items-start sm:items-end gap-3 transition-colors bg-linear-to-b from-white to-slate-50/60">
         <div className="text-left sm:text-right">
           {hotel.originalPrice && (
             <p className="text-[11px] text-slate-400 line-through">
@@ -351,14 +377,20 @@ const HotelCard = ({
             </p>
           )}
 
-          <p className="text-xl sm:text-2xl font-extrabold text-slate-800 tracking-tight" style={{ fontFamily: "'DM Sans', 'Inter', sans-serif" }}>
+          <p
+            className="text-xl sm:text-2xl font-extrabold text-slate-800 tracking-tight"
+            style={{ fontFamily: "'DM Sans', 'Inter', sans-serif" }}
+          >
             {price > 0 ? `₹${price.toLocaleString()}` : "On request"}
           </p>
-          {price > 0 && <p className="text-[10px] text-slate-400">per night + taxes</p>}
+          {price > 0 && (
+            <p className="text-[10px] text-slate-400">per night + taxes</p>
+          )}
 
           {price > 0 && nights > 1 && (
             <p className="text-[11px] text-blue-500 font-semibold mt-1 flex items-center justify-end gap-1">
-              <FaMoon className="text-[9px]" />₹{totalPrice.toLocaleString()} · {nights} nights
+              <FaMoon className="text-[9px]" />₹{totalPrice.toLocaleString()} ·{" "}
+              {nights} nights
             </p>
           )}
         </div>
@@ -379,7 +411,7 @@ const HotelCard = ({
             ${
               isSoldOut
                 ? "bg-slate-200 text-slate-400 cursor-not-allowed"
-                : "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 active:scale-95 shadow-[0_4px_14px_rgba(99,102,241,0.35)] hover:shadow-[0_6px_20px_rgba(99,102,241,0.45)]"
+                : "bg-linear-to-r from-[#c67c4e] to-[#b86c3d] hover:from-[#b06d42] hover:to-[#9e5b33] active:scale-95 shadow-[0_8px_24px_rgba(198,124,78,0.35)] hover:shadow-[0_8px_24px_rgba(198,124,78,0.5)]"
             }`}
           >
             {isSoldOut ? "Sold Out" : "Book Now"}
@@ -415,7 +447,11 @@ const EmptyState = ({ cityParam }) => (
 function HotelPage() {
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
-  const { hotels = [], loading, bulkAvailability = {} } = useSelector((s) => s.hotel);
+  const {
+    hotels = [],
+    loading,
+    bulkAvailability = {},
+  } = useSelector((s) => s.hotel);
 
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
@@ -448,7 +484,15 @@ function HotelPage() {
     } else {
       dispatch(getPublicActiveHotels());
     }
-  }, [cityParam, checkInParam, checkOutParam, roomsParam, adultsParam, childrenParam, dispatch]);
+  }, [
+    cityParam,
+    checkInParam,
+    checkOutParam,
+    roomsParam,
+    adultsParam,
+    childrenParam,
+    dispatch,
+  ]);
 
   useEffect(() => {
     if (hotels.length > 0 && checkInParam && checkOutParam) {
@@ -475,14 +519,30 @@ function HotelPage() {
   const processedHotels = useMemo(
     () =>
       sortHotels(
-        applyFilters(hotels, filters, bulkAvailability, requestedRooms, requestedAdults),
+        applyFilters(
+          hotels,
+          filters,
+          bulkAvailability,
+          requestedRooms,
+          requestedAdults,
+        ),
         sortBy,
       ),
-    [hotels, filters, sortBy, bulkAvailability, requestedRooms, requestedAdults],
+    [
+      hotels,
+      filters,
+      sortBy,
+      bulkAvailability,
+      requestedRooms,
+      requestedAdults,
+    ],
   );
   const totalCount = processedHotels.length;
   const totalPages = Math.ceil(totalCount / PER_PAGE);
-  const pagedHotels = processedHotels.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+  const pagedHotels = processedHotels.slice(
+    (page - 1) * PER_PAGE,
+    page * PER_PAGE,
+  );
 
   const handleFilters = (f) => {
     setFilters(f);
@@ -508,7 +568,8 @@ function HotelPage() {
       <div
         className="min-h-screen font-sans selection:bg-blue-200/60 relative overflow-hidden"
         style={{
-          background: "linear-gradient(145deg, #eef3fb 0%, #e8f0f9 40%, #dfe9f5 70%, #d8e4f2 100%)",
+          background:
+            "linear-gradient(145deg, #eef3fb 0%, #e8f0f9 40%, #dfe9f5 70%, #d8e4f2 100%)",
         }}
       >
         {/* Soft floating ambient blobs – very low opacity, no interactivity */}
@@ -544,7 +605,7 @@ function HotelPage() {
 
         {/* Scroll progress bar – blue gradient */}
         <motion.div
-          className="fixed top-0 left-0 right-0 h-[3px] origin-left z-[100]"
+          className="fixed top-0 left-0 right-0 h-0.75 origin-left z-100"
           style={{
             scaleX,
             background: "linear-gradient(90deg, #3b82f6, #6366f1)",
@@ -570,7 +631,6 @@ function HotelPage() {
 
         {/* ── Main Layout ── */}
         <div className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-6 flex gap-5 items-start relative z-10">
-
           {/* Desktop Sidebar */}
           <motion.aside
             initial={{ opacity: 0, x: -24 }}
@@ -590,13 +650,15 @@ function HotelPage() {
                 boxShadow: "0 4px 24px rgba(100,130,180,0.10)",
               }}
             >
-              <HotelFilter onFilterChange={handleFilters} onMapOpen={() => setMapOpen(true)} />
+              <HotelFilter
+                onFilterChange={handleFilters}
+                onMapOpen={() => setMapOpen(true)}
+              />
             </div>
           </motion.aside>
 
           {/* Main content */}
           <main className="flex-1 min-w-0">
-
             {/* Results header */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
@@ -610,7 +672,8 @@ function HotelPage() {
                 ) : (
                   <>
                     <h1 className="text-base sm:text-lg font-extrabold text-slate-800">
-                      <span className="text-blue-600">{totalCount}</span> Hotels Found
+                      <span className="text-[#c67c4e]">{totalCount}</span> Hotels
+                      Found
                       {cityParam && (
                         <span className="text-slate-400 font-normal text-sm sm:text-base ml-2">
                           in <span className="text-slate-700">{cityParam}</span>
@@ -621,13 +684,19 @@ function HotelPage() {
                       <p className="text-[11px] text-slate-400 mt-1 font-medium">
                         {checkInParam &&
                           checkOutParam &&
-                          `${new Date(checkInParam).toLocaleDateString("en-IN", {
-                            day: "numeric",
-                            month: "short",
-                          })} → ${new Date(checkOutParam).toLocaleDateString("en-IN", {
-                            day: "numeric",
-                            month: "short",
-                          })} · `}
+                          `${new Date(checkInParam).toLocaleDateString(
+                            "en-IN",
+                            {
+                              day: "numeric",
+                              month: "short",
+                            },
+                          )} → ${new Date(checkOutParam).toLocaleDateString(
+                            "en-IN",
+                            {
+                              day: "numeric",
+                              month: "short",
+                            },
+                          )} · `}
                         {nights > 1 && `${nights} nights · `}
                         {roomsParam && `${roomsParam} Room · `}
                         {adultsParam && `${adultsParam} Adults`}
@@ -636,7 +705,8 @@ function HotelPage() {
                     )}
                     {!cityParam && (
                       <p className="text-[10px] sm:text-[11px] text-slate-400 mt-1 hidden sm:block">
-                        Prices include taxes · Free cancellation available on select rates
+                        Prices include taxes · Free cancellation available on
+                        select rates
                       </p>
                     )}
                   </>
@@ -644,7 +714,6 @@ function HotelPage() {
               </div>
 
               <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-
                 {/* Mobile filter button */}
                 <button
                   onClick={() => setShowMobileFilter(true)}
@@ -653,7 +722,7 @@ function HotelPage() {
                   <FaFilter className="text-blue-500 text-[10px]" />
                   Filters
                   {Object.values(filters).flat().filter(Boolean).length > 0 && (
-                    <span className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
+                    <span className="bg-linear-to-r from-blue-500 to-indigo-500 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
                       {Object.values(filters).flat().filter(Boolean).length}
                     </span>
                   )}
@@ -700,7 +769,9 @@ function HotelPage() {
                                 : "text-slate-600 hover:bg-slate-50 hover:text-slate-800"
                             }`}
                         >
-                          {sortBy === opt.value && <span className="mr-1.5">✓</span>}
+                          {sortBy === opt.value && (
+                            <span className="mr-1.5">✓</span>
+                          )}
                           {opt.label}
                         </button>
                       ))}
@@ -744,7 +815,9 @@ function HotelPage() {
                     nights={nights}
                     index={i}
                     availableRooms={bulkAvailability[h._id]?.availableRooms}
-                    maxCapacityPerRoom={bulkAvailability[h._id]?.maxCapacityPerRoom}
+                    maxCapacityPerRoom={
+                      bulkAvailability[h._id]?.maxCapacityPerRoom
+                    }
                     requestedRooms={requestedRooms}
                     requestedAdults={requestedAdults}
                   />
@@ -774,7 +847,7 @@ function HotelPage() {
                       onClick={() => setPage(i + 1)}
                       className={`w-8 h-8 rounded-xl text-xs font-bold transition-all duration-200 shrink-0 ${
                         page === i + 1
-                          ? "bg-gradient-to-br from-blue-500 to-indigo-500 text-white shadow-[0_4px_12px_rgba(99,102,241,0.35)] border border-blue-400"
+                          ? "bg-linear-to-br from-blue-500 to-indigo-500 text-white shadow-[0_4px_12px_rgba(99,102,241,0.35)] border border-blue-400"
                           : "border border-slate-200 bg-white text-slate-500 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 shadow-sm"
                       }`}
                     >

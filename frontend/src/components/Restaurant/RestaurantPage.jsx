@@ -33,60 +33,66 @@ function RestaurantPage() {
     foods[0]?.restaurantId?.city?.name ?? "City";
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-linear-to-b from-[#fffdfb] via-[#faf5ef] to-[#f5ebe0] text-[#2d1f16]">
       <div className="ui-container py-6 sm:py-8">
-        <div className="ui-card mb-6 p-6">
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
+        <div className="ui-card mb-8 p-10 mt-6 relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-linear-to-r from-[#c67c4e] to-[#eadccf]" />
+          <h1 className="text-4xl font-black text-[#2d1f16] tracking-tight">
             {restaurantName}
           </h1>
-          <p className="text-gray-500 dark:text-gray-400">
+          <p className="text-sm font-bold text-[#a07d63] uppercase tracking-widest mt-2 flex items-center gap-2">
+            <span className="w-4 h-px bg-[#eadccf]" />
             {cityName}
           </p>
         </div>
 
-        <div className="mb-6 flex flex-wrap gap-3">
-          <input
-            type="text"
-            placeholder="Search food..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="ui-input min-w-[220px] flex-1"
-          />
+        <div className="mb-10 flex flex-wrap items-center gap-4">
+          <div className="relative flex-1 min-w-75">
+            <input
+              type="text"
+              placeholder="Search dishes..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="ui-input rounded-2xl! pl-12!"
+            />
+            <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#a07d63]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+          </div>
 
-          <button
-            type="button"
-            onClick={() => setVegFilter(null)}
-            className={`ui-btn-secondary !rounded-xl !px-4 !py-2 ${
-              vegFilter === null
-                ? "bg-gray-800 text-white dark:bg-gray-200 dark:text-gray-900"
-                : "bg-gray-200 dark:bg-gray-800 dark:text-gray-200"
-            }`}
-          >
-            All
-          </button>
-          <button
-            type="button"
-            onClick={() => setVegFilter(true)}
-            className={`ui-btn-secondary !rounded-xl !px-4 !py-2 ${
-              vegFilter === true
-                ? "bg-green-500 text-white"
-                : "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200"
-            }`}
-          >
-            Veg
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setVegFilter(false)}
-            className={`ui-btn-secondary !rounded-xl !px-4 !py-2 ${
-              vegFilter === false
-                ? "bg-red-500 text-white"
-                : "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200"
-            }`}
-          >
-            Non-Veg
-          </button>
+          <div className="flex bg-white/50 p-1.5 rounded-2xl border border-[#eadccf] gap-1">
+            <button
+              type="button"
+              onClick={() => setVegFilter(null)}
+              className={`rounded-xl! px-6! py-2.5! text-xs! font-black! uppercase! tracking-widest! transition-all ${
+                vegFilter === null
+                  ? "bg-[#2d1f16] text-white shadow-lg"
+                  : "text-[#6f5a4b] hover:bg-white"
+              }`}
+            >
+              All
+            </button>
+            <button
+              type="button"
+              onClick={() => setVegFilter(true)}
+              className={`rounded-xl! px-6! py-2.5! text-xs! font-black! uppercase! tracking-widest! transition-all ${
+                vegFilter === true
+                  ? "bg-emerald-600 text-white shadow-lg"
+                  : "text-[#6f5a4b] hover:bg-white"
+              }`}
+            >
+              Veg
+            </button>
+            <button
+              type="button"
+              onClick={() => setVegFilter(false)}
+              className={`rounded-xl! px-6! py-2.5! text-xs! font-black! uppercase! tracking-widest! transition-all ${
+                vegFilter === false
+                  ? "bg-red-600 text-white shadow-lg"
+                  : "text-[#6f5a4b] hover:bg-white"
+              }`}
+            >
+              Non-Veg
+            </button>
+          </div>
         </div>
 
         {loading ? (
@@ -96,29 +102,32 @@ function RestaurantPage() {
             {filteredFoods.map((item) => (
               <div
                 key={item._id}
-                className="ui-card-soft p-4 transition-all duration-300 ease-in-out hover:-translate-y-0.5"
+                className="ui-card p-0 overflow-hidden group hover:scale-[1.02] transition-all duration-500"
               >
-                <img
-                  src={item.images?.[0] || "/no-image.jpg"}
-                  alt=""
-                  className="h-40 w-full rounded-xl object-cover"
-                />
+                <div className="relative aspect-16/10 overflow-hidden">
+                  <img
+                    src={item.images?.[0] || "/no-image.jpg"}
+                    alt=""
+                    className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  />
+                  <div className={`absolute top-4 left-4 px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border border-white/40 backdrop-blur-md bg-white/20 text-white`}>
+                    {item.isVeg ? "Veg" : "Non-Veg"}
+                  </div>
+                </div>
 
-                <h3 className="mt-3 font-semibold text-gray-800 dark:text-white">
-                  {item.name}
-                </h3>
-
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  ₹{item.price}
-                </p>
-
-                <p
-                  className={`mt-1 text-xs ${
-                    item.isVeg ? "text-green-600" : "text-red-600"
-                  }`}
-                >
-                  {item.isVeg ? "Veg" : "Non-Veg"}
-                </p>
+                <div className="p-6">
+                  <h3 className="text-xl font-black text-[#2d1f16] tracking-tight">
+                    {item.name}
+                  </h3>
+                  <div className="mt-4 flex items-center justify-between">
+                    <p className="text-2xl font-black text-[#c67c4e]">
+                      ₹{item.price}
+                    </p>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-[#a07d63] bg-[#faf5ef] px-3 py-1 rounded-full border border-[#eadccf]">
+                      View Detail
+                    </span>
+                  </div>
+                </div>
               </div>
             ))}
           </div>

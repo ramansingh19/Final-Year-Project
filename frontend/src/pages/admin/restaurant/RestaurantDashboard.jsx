@@ -1,14 +1,13 @@
-import React from "react";
-import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import {
-  FaUserSecret,
-  FaCity,
-  FaUtensils,
-  FaClipboardList,
   FaArrowRight,
+  FaCity,
+  FaClipboardList,
+  FaUserSecret,
+  FaUtensils,
 } from "react-icons/fa";
 import { MdRestaurantMenu } from "react-icons/md";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 function RestaurantDashboard() {

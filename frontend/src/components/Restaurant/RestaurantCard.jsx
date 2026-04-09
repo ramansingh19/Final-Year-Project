@@ -1,7 +1,7 @@
-import { memo } from "react";
-import { motion } from "framer-motion";
-import { MapPinIcon, StarIcon } from "@heroicons/react/24/solid";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import { MapPinIcon, StarIcon } from "@heroicons/react/24/solid";
+import { motion } from "framer-motion";
+import { memo } from "react";
 
 function RestaurantCard({
   restaurant,
@@ -16,7 +16,7 @@ function RestaurantCard({
       ? restaurant.rating.toFixed(1)
       : null;
 
-  const id = restaurant?._id;
+  const id = restaurant?._id || restaurant?.id;
 
   return (
     <motion.article
@@ -28,8 +28,14 @@ function RestaurantCard({
         delay: Math.min(index * 0.05, 0.4),
         ease: [0.25, 0.46, 0.45, 0.94],
       }}
-      className="group ui-card-soft flex h-full flex-col overflow-hidden border-gray-200/80 bg-white transition-all duration-300 ease-in-out hover:shadow-xl hover:shadow-blue-500/15 dark:border-gray-700/80 dark:bg-gray-900/80 dark:shadow-black/20 dark:hover:shadow-blue-500/20"
+      className="group relative ui-card flex h-full flex-col overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
+      whileHover={{ y: -8 }}
     >
+      {/* Top Accent Line */}
+      <div className="pointer-events-none absolute top-0 left-0 right-0 h-0.75 bg-linear-to-r from-[#c67c4e] via-[#d8b79d] to-transparent opacity-100" />
+      
+      {/* Hover Glow Effect */}
+      <div className="pointer-events-none absolute -inset-1 bg-linear-to-r from-[#c67c4e]/5 to-[#b86c3d]/5 opacity-0 group-hover:opacity-100 blur-2xl transition-opacity duration-500" />
       <button
         type="button"
         onClick={() => id && onOpenRestaurant?.(id)}
@@ -37,57 +43,68 @@ function RestaurantCard({
         aria-label={`Open ${restaurant?.name ?? "restaurant"} details`}
       >
         <motion.div
-          className="relative aspect-16/10 overflow-hidden bg-gray-100 dark:bg-gray-800"
-          whileHover={{ scale: 1.02 }}
-          transition={{ duration: 0.35, ease: "easeOut" }}
+          className="relative aspect-16/10 overflow-hidden bg-[#faf5ef]"
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
         >
           <img
             src={img || "https://placehold.co/640x400/f3f4f6/9ca3af?text=Food"}
             alt={restaurant?.name ?? "Restaurant"}
-            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
             loading="lazy"
           />
-          <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent opacity-80" />
+          <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-60" />
           {rating != null && (
-            <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm backdrop-blur-sm dark:bg-gray-900/90 dark:text-white">
-              <StarIcon className="h-3.5 w-3.5 text-amber-400" />
+            <span className="absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3.5 py-2 text-xs font-black text-[#2d1f16] shadow-xl backdrop-blur-md border border-white/50">
+              <StarIcon className="h-4 w-4 text-[#c67c4e]" />
               {rating}
             </span>
           )}
         </motion.div>
 
-        <div className="flex flex-1 flex-col p-4 sm:p-5">
-          <h3 className="line-clamp-1 text-lg font-semibold tracking-tight text-gray-900 dark:text-white">
+        <div className="flex flex-1 flex-col p-6">
+          <h3 className="line-clamp-1 text-xl font-black tracking-tight text-[#2d1f16] group-hover:text-[#c67c4e] transition-colors">
             {restaurant?.name ?? "Restaurant"}
           </h3>
-          <p className="mt-1 flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400">
-            <MapPinIcon className="h-4 w-4 shrink-0 text-orange-500/90" />
+          <div className="mt-2 flex items-center gap-2 text-sm font-bold text-[#6f5a4b]">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-linear-to-br from-[#f3e5d8] to-[#ead4c0] text-[#b86c3d] group-hover:scale-110 transition-transform">
+              <MapPinIcon className="h-4 w-4" />
+            </div>
             <span className="line-clamp-1">{cityName}</span>
-          </p>
-          <p className="mt-2 line-clamp-2 text-sm text-gray-600 dark:text-gray-300">
-            <span className="font-medium text-gray-700 dark:text-gray-200">
+          </div>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <span className="text-sm font-black text-[#2d1f16]">
               {restaurant?.foodType ?? "Multi-cuisine"}
             </span>
-            <span className="mx-1.5 text-gray-300 dark:text-gray-600">·</span>
-            <span>₹{restaurant?.avgCostForOne ?? "—"} for one</span>
-          </p>
+            <span className="text-sm font-medium text-[#a07d63]">
+              • ₹{restaurant?.avgCostForOne ?? "—"} for one
+            </span>
+          </div>
         </div>
       </button>
 
       <div className="mt-auto px-4 pb-4 sm:px-5 sm:pb-5">
-        <motion.button
+        <button
           type="button"
           onClick={(e) => {
             e.stopPropagation();
-            if (id) onViewMenu?.(id);
+            const restaurantId = restaurant?._id || restaurant?.id;
+            console.log("View Menu button clicked. Restaurant ID:", restaurantId);
+            if (restaurantId) {
+              onViewMenu?.(restaurantId);
+            } else {
+              console.warn("View Menu clicked but no ID found for:", restaurant?.name);
+            }
           }}
+          className="ui-btn-primary w-full rounded-xl! px-4! py-3! font-bold! relative z-50 cursor-pointer"
+          style={{ isolation: 'isolate' }}
           className="ui-btn-primary w-full rounded-xl! px-4! py-2.5! font-semibold!"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
           View Menu
-          <ArrowRightIcon className="h-4 w-4" />
-        </motion.button>
+          <ArrowRightIcon className="h-4 w-4 ml-2 inline" />
+        </button>
       </div>
     </motion.article>
   );

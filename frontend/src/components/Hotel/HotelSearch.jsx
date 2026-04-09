@@ -1,16 +1,15 @@
-import { useState, useEffect, useRef } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import {
-  FaSearch,
-  FaMapMarkerAlt,
   FaCalendarAlt,
-  FaUsers,
   FaChevronDown,
-  FaTimes,
+  FaMapMarkerAlt,
   FaMinus,
   FaPlus,
+  FaSearch,
+  FaTimes,
+  FaUsers,
 } from "react-icons/fa";
-import apiClient from "../../pages/services/apiClient";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const getToday = () => new Date().toISOString().split("T")[0];
 const getTomorrow = () => {
@@ -161,7 +160,7 @@ const HeroSearch = () => {
   const onSearch = () => {
     if (!searchData.city.trim()) {
       setCityError("Enter a city or property");
-      cityInputRef.current?.focus(); 
+      cityInputRef.current?.focus();
       return;
     }
     const params = new URLSearchParams({
@@ -268,7 +267,7 @@ const HeroSearch = () => {
                 value={searchData.checkIn}
                 min={getToday()}
                 onChange={onChange}
-                className={`${inputCls} [color-scheme:light]`}
+                className={`${inputCls} scheme-light`}
               />
             </Field>
             <Field icon={<FaCalendarAlt />} label="Check-out">
@@ -278,7 +277,7 @@ const HeroSearch = () => {
                 value={searchData.checkOut}
                 min={searchData.checkIn}
                 onChange={onChange}
-                className={`${inputCls} [color-scheme:light]`}
+                className={`${inputCls} scheme-light`}
               />
             </Field>
           </div>
@@ -340,7 +339,7 @@ const HeroSearch = () => {
                           setShowGuests(false);
                           if (searchData.city.trim()) onSearch();
                         }}
-                        className="mt-4 w-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-bold py-2.5 rounded-xl text-sm shadow-[0_4px_16px_rgba(99,102,241,0.2)] transition-all"
+                        className="mt-4 w-full bg-linear-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-bold py-2.5 rounded-xl text-sm shadow-[0_4px_16px_rgba(99,102,241,0.2)] transition-all"
                       >
                         Apply
                       </button>
@@ -356,7 +355,7 @@ const HeroSearch = () => {
               </p>
               <button
                 onClick={onSearch}
-                className="h-[46px] px-6 sm:px-7 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 active:scale-95 text-white font-bold text-sm rounded-xl shadow-[0_4px_16px_rgba(99,102,241,0.3)] hover:shadow-[0_6px_24px_rgba(99,102,241,0.45)] transition-all flex items-center gap-2 whitespace-nowrap"
+                className="h-11.5 px-6 sm:px-7 bg-linear-to-r from-[#c67c4e] to-[#b86c3d] hover:from-[#b06d42] hover:to-[#9e5b33]  active:scale-95 text-white font-bold text-sm rounded-xl shadow-[0_8px_24px_rgba(198,124,78,0.35)] hover:shadow-[0_8px_24px_rgba(198,124,78,0.5) transition-all flex items-center gap-2 whitespace-nowrap"
               >
                 <FaSearch className="text-xs" />
                 <span className="hidden sm:inline">Search</span>

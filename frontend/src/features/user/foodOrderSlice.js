@@ -170,8 +170,7 @@ const foodOrderSlice = createSlice({
       .addCase(getMyOrders.fulfilled, (state, action) => {
         state.loading = false;
         state.orders = action.payload;
-        state.page = action.payload;
-        state.totalPages = action.payload;
+        // Skip pagination if the endpoint only returns an array
       })
       .addCase(getMyOrders.rejected, (state, action) => {
         state.loading = false;

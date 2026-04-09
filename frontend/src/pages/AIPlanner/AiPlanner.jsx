@@ -1,13 +1,13 @@
-import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import { FaBars, FaTrash } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { getActiveCities } from "../../features/user/citySlice";
 import {
   generatePlan,
   loadAiPlan,
   loadPlanHistory,
 } from "../../features/user/placeSlice";
-import { useNavigate } from "react-router-dom";
-import { FaBars, FaTrash } from "react-icons/fa";
 import AiPlannerDetails from "./AiPlannerDetails";
 
 /* ── Only pseudo-elements, keyframes & font import stay here ── */
@@ -157,12 +157,18 @@ function AiPlanner() {
                 {item.plan.length} Day{item.plan.length !== 1 ? "s" : ""}
               </div>
             </div>
+
             <button
-              className="ml-auto bg-transparent border-none text-[#6b7280] cursor-pointer p-1.5 rounded-lg shrink-0 transition-all duration-200 hover:text-red-500 hover:bg-red-500/10"
-              onClick={() => handleDelete(item.id)}
-              aria-label="Delete plan"
+              className="ml-auto w-12 h-11 grid place-items-center rounded-[10px] border border-white/[0.07] bg-transparent text-[#f5efe6] cursor-pointer transition-all duration-200 hover:border-[#c9922a] hover:bg-[#c9922a]/8"
+              onClick={() => navigate("/assistantChat")}
+              aria-label="Open AI Assistant"
+              title="Chat with AI Assistant"
             >
-              <FaTrash size={11} />
+              <img
+                src="/robot.png"
+                alt="AI Assistant"
+                className="w-20 h-8 object-contain"
+              />
             </button>
           </div>
         ))

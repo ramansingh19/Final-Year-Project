@@ -14,8 +14,8 @@ const userMarkerIcon = L.divIcon({
     <div style="position:relative;width:48px;height:48px;">
       <div style="
         position:absolute;inset:0;border-radius:50%;
-        background:radial-gradient(circle at 35% 35%, #60a5fa, #2563eb);
-        box-shadow:0 0 0 4px rgba(37,99,235,0.25), 0 4px 16px rgba(37,99,235,0.5);
+        background:radial-gradient(circle at 35% 35%, #2d1f16, #1a1512);
+        box-shadow:0 0 0 4px rgba(45,31,22,0.1), 0 4px 16px rgba(45,31,22,0.3);
         display:flex;align-items:center;justify-content:center;
       ">
         <svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='white'>
@@ -24,7 +24,7 @@ const userMarkerIcon = L.divIcon({
       </div>
       <div style="
         position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);
-        width:10px;height:10px;background:#2563eb;
+        width:10px;height:10px;background:#2d1f16;
         clip-path:polygon(50% 100%, 0 0, 100% 0);
       "></div>
     </div>
@@ -50,8 +50,8 @@ const deliveryMarkerIcon = L.divIcon({
       </style>
       <div style="
         position:absolute;inset:4px;border-radius:50%;
-        background:radial-gradient(circle at 35% 35%, #f97316, #dc2626);
-        box-shadow:0 0 0 3px rgba(220,38,38,0.3), 0 4px 20px rgba(220,38,38,0.5);
+        background:radial-gradient(circle at 35% 35%, #c67c4e, #9f5b31);
+        box-shadow:0 0 0 3px rgba(198,124,78,0.2), 0 4px 20px rgba(198,124,78,0.4);
         display:flex;align-items:center;justify-content:center;z-index:2;
       ">
         <svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='white'>
@@ -60,7 +60,7 @@ const deliveryMarkerIcon = L.divIcon({
       </div>
       <div style="
         position:absolute;inset:0;border-radius:50%;
-        border:2px solid rgba(220,38,38,0.5);
+        border:2px solid rgba(198,124,78,0.4);
         animation:ring-pulse 1.8s ease-out infinite;
       "></div>
     </div>
@@ -140,7 +140,6 @@ function OrderDetailsPage() {
   const [lastUpdated, setLastUpdated] = useState(null);
 
   const { currentOrder, loading } = useSelector((state) => state.foodOrder);
-  // console.log(currentOrder);
 
   useEffect(() => {
     if (!orderId) return;
@@ -235,18 +234,18 @@ function OrderDetailsPage() {
 
   if (loading && !currentOrder)
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: "#0a0a0f" }}>
+      <div className="min-h-screen flex items-center justify-center bg-[#fffdfb]">
         <div className="text-center space-y-4">
-          <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-gray-400 font-medium">Loading your order...</p>
+          <div className="w-12 h-12 border-4 border-[#c67c4e] border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-[#a07d63] font-bold uppercase tracking-widest text-[10px]">Loading your creation...</p>
         </div>
       </div>
     );
 
   if (!currentOrder)
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: "#0a0a0f" }}>
-        <p className="text-gray-400 text-lg">Order not found</p>
+      <div className="min-h-screen flex items-center justify-center bg-[#fffdfb]">
+        <p className="text-[#6f5a4b] text-lg font-bold">Order not found</p>
       </div>
     );
 
@@ -256,75 +255,74 @@ function OrderDetailsPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
-
-        * { box-sizing: border-box; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital,wght@0,400;1,400&display=swap');
 
         .od-root {
           min-height: 100vh;
-          background: #0a0a0f;
-          font-family: 'DM Sans', sans-serif;
-          color: #f0f0f5;
-          padding: 24px 16px 80px;
+          background: linear-gradient(to bottom, #fffdfb, #faf5ef, #f5ebe0);
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          color: #2d1f16;
+          padding: 40px 16px 100px;
         }
 
-        .od-container { max-width: 780px; margin: 0 auto; }
+        .od-container { max-width: 800px; margin: 0 auto; }
 
         .od-card {
-          background: #13131a;
-          border: 1px solid rgba(255,255,255,0.06);
-          border-radius: 20px;
-          padding: 24px;
-          margin-bottom: 16px;
+          background: white;
+          border: 1px solid #eadccf;
+          border-radius: 28px;
+          padding: 32px;
+          margin-bottom: 24px;
           position: relative;
           overflow: hidden;
+          box-shadow: 0 12px 35px rgba(186,140,102,0.06);
         }
 
         .od-card::before {
-          content:'';
-          position:absolute;
-          top:0;left:0;right:0;
-          height:1px;
-          background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);
+          content: '';
+          position: absolute;
+          top: 0; left: 0; right: 0;
+          height: 3px;
+          background: linear-gradient(90deg, #c67c4e, #d8b79d, transparent);
+          z-index: 10;
         }
 
         .od-title {
-          font-family: 'Syne', sans-serif;
-          font-weight: 800;
-          font-size: 28px;
-          letter-spacing: -0.5px;
+          font-family: 'Instrument Serif', serif;
+          font-weight: 400;
+          font-size: 32px;
+          font-style: italic;
+          color: #2d1f16;
         }
 
         .od-section-title {
-          font-family: 'Syne', sans-serif;
-          font-weight: 700;
-          font-size: 16px;
-          letter-spacing: -0.2px;
-          color: #f0f0f5;
-          margin-bottom: 16px;
+          font-size: 14px;
+          font-weight: 800;
+          letter-spacing: 0.1em;
+          color: #a07d63;
+          margin-bottom: 20px;
+          text-transform: uppercase;
         }
 
         /* ── Status Badge ── */
         .status-badge {
-          padding: 6px 14px;
+          padding: 8px 16px;
           border-radius: 100px;
-          font-size: 12px;
-          font-weight: 600;
-          letter-spacing: 0.3px;
-          text-transform: capitalize;
+          font-size: 11px;
+          font-weight: 800;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
         }
-        .status-badge.delivered { background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.25); }
-        .status-badge.cancelled { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.25); }
-        .status-badge.active { background: rgba(251,146,60,0.15); color: #fb923c; border: 1px solid rgba(251,146,60,0.25); animation: badge-pulse 2s ease-in-out infinite; }
-
-        @keyframes badge-pulse { 0%,100%{opacity:1;} 50%{opacity:0.7;} }
+        .status-badge.delivered { background: #10b981; color: white; box-shadow: 0 8px 20px rgba(16,185,129,0.25); }
+        .status-badge.cancelled { background: #ef4444; color: white; box-shadow: 0 8px 20px rgba(239,68,68,0.25); }
+        .status-badge.active { background: #2d1f16; color: white; box-shadow: 0 8px 20px rgba(45,31,22,0.25); }
 
         /* ── Progress Steps ── */
         .steps-row {
           display: flex;
           align-items: flex-start;
           position: relative;
-          margin-top: 8px;
+          margin-top: 20px;
         }
 
         .step-item {
@@ -337,73 +335,71 @@ function OrderDetailsPage() {
         }
 
         .step-circle {
-          width: 40px;
-          height: 40px;
+          width: 44px;
+          height: 44px;
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 16px;
-          transition: all 0.4s ease;
-          position: relative;
+          font-size: 18px;
+          transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         .step-circle.done {
-          background: linear-gradient(135deg, #22c55e, #16a34a);
-          box-shadow: 0 0 16px rgba(34,197,94,0.4);
+          background: #2d1f16;
+          color: white;
+          box-shadow: 0 0 16px rgba(45,31,22,0.15);
         }
 
         .step-circle.active {
-          background: linear-gradient(135deg, #f97316, #ea580c);
-          box-shadow: 0 0 20px rgba(249,115,22,0.5);
-          animation: step-pulse 1.5s ease-in-out infinite;
+          background: #c67c4e;
+          color: white;
+          box-shadow: 0 0 25px rgba(198,124,78,0.4);
+          transform: scale(1.1);
         }
 
         .step-circle.pending {
-          background: #1e1e2a;
-          border: 1px solid rgba(255,255,255,0.08);
-        }
-
-        @keyframes step-pulse {
-          0%,100%{box-shadow:0 0 20px rgba(249,115,22,0.5);}
-          50%{box-shadow:0 0 32px rgba(249,115,22,0.8);}
+          background: white;
+          border: 1px solid #eadccf;
+          color: #eadccf;
         }
 
         .step-label {
-          font-size: 10px;
-          font-weight: 500;
-          margin-top: 8px;
-          color: #6b6b80;
+          font-size: 11px;
+          font-weight: 800;
+          margin-top: 12px;
+          color: #eadccf;
           text-align: center;
-          transition: color 0.3s;
         }
-        .step-label.done, .step-label.active { color: #c0c0d0; }
+        .step-label.done, .step-label.active { color: #2d1f16; }
 
         .step-connector {
           position: absolute;
-          top: 20px;
+          top: 22px;
           left: 50%;
           width: 100%;
           height: 2px;
+          background: #f5ebe0;
           z-index: 1;
         }
 
         .step-connector-fill {
           height: 100%;
+          background: #c67c4e;
           transition: width 0.6s ease;
-          background: linear-gradient(90deg, #22c55e, #16a34a);
         }
 
         /* ── ETA Bar ── */
         .eta-bar {
-          background: linear-gradient(135deg, rgba(249,115,22,0.12), rgba(234,88,12,0.08));
-          border: 1px solid rgba(249,115,22,0.2);
-          border-radius: 16px;
-          padding: 16px 20px;
+          background: white;
+          border: 1px solid #eadccf;
+          border-radius: 24px;
+          padding: 24px;
           display: flex;
           align-items: center;
           gap: 20px;
-          margin-bottom: 16px;
+          margin-bottom: 24px;
+          box-shadow: 0 10px 30px rgba(186,140,102,0.08);
         }
 
         .eta-item {
@@ -414,51 +410,50 @@ function OrderDetailsPage() {
         }
 
         .eta-value {
-          font-family: 'Syne', sans-serif;
-          font-size: 26px;
-          font-weight: 800;
-          color: #fb923c;
-          line-height: 1;
+          font-family: 'Instrument Serif', serif;
+          font-size: 32px;
+          font-weight: 400;
+          font-style: italic;
+          color: #c67c4e;
         }
 
         .eta-label {
-          font-size: 11px;
-          color: #6b6b80;
-          margin-top: 4px;
-          font-weight: 500;
-          letter-spacing: 0.3px;
+          font-size: 10px;
+          color: #a07d63;
+          font-weight: 800;
           text-transform: uppercase;
+          letter-spacing: 0.1em;
+          margin-top: 4px;
         }
 
         .eta-divider {
           width: 1px;
-          height: 40px;
-          background: rgba(255,255,255,0.08);
+          height: 48px;
+          background: #f5ebe0;
         }
 
         /* ── Delivery Partner ── */
         .partner-row {
           display: flex;
           align-items: center;
-          gap: 14px;
-          padding: 16px;
-          background: #1a1a24;
-          border-radius: 16px;
-          border: 1px solid rgba(255,255,255,0.05);
-          margin-bottom: 14px;
+          gap: 16px;
+          padding: 20px;
+          background: #faf5ef;
+          border-radius: 20px;
+          border: 1px solid #eadccf;
+          margin-bottom: 20px;
         }
 
         .partner-avatar {
-          width: 52px;
-          height: 52px;
+          width: 60px;
+          height: 60px;
           border-radius: 50%;
-          background: linear-gradient(135deg, #f97316, #ea580c);
+          background: linear-gradient(135deg, #c67c4e, #b86c3d);
           display: flex;
           align-items: center;
           justify-content: center;
-          font-family: 'Syne', sans-serif;
-          font-size: 20px;
-          font-weight: 800;
+          font-family: 'Instrument Serif', serif;
+          font-size: 24px;
           color: white;
           flex-shrink: 0;
           position: relative;
@@ -466,305 +461,182 @@ function OrderDetailsPage() {
 
         .online-dot {
           position: absolute;
-          bottom: 2px;
-          right: 2px;
-          width: 12px;
-          height: 12px;
+          bottom: 3px;
+          right: 3px;
+          width: 14px;
+          height: 14px;
           border-radius: 50%;
-          border: 2px solid #13131a;
+          border: 3px solid #faf5ef;
         }
+        .online-dot.online { background: #10b981; }
+        .online-dot.offline { background: #eadccf; }
 
-        .online-dot.online { background: #4ade80; animation: online-pulse 2s ease-in-out infinite; }
-        .online-dot.offline { background: #6b6b80; }
-        @keyframes online-pulse { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
-
-        /* ── Track Button ── */
         .track-btn {
           width: 100%;
-          padding: 16px;
-          background: linear-gradient(135deg, #f97316, #ea580c);
+          padding: 18px;
+          background: #2d1f16;
           border: none;
-          border-radius: 14px;
+          border-radius: 20px;
           color: white;
-          font-family: 'Syne', sans-serif;
-          font-size: 15px;
-          font-weight: 700;
-          letter-spacing: 0.3px;
+          font-size: 14px;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
           cursor: pointer;
-          transition: all 0.2s ease;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 10px;
-          position: relative;
-          overflow: hidden;
+          transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+          box-shadow: 0 10px 25px rgba(45,31,22,0.2);
         }
-
-        .track-btn::after {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
-          opacity: 0;
-          transition: opacity 0.2s;
-        }
-
-        .track-btn:hover::after { opacity: 1; }
-        .track-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(249,115,22,0.4); }
-        .track-btn:active { transform: translateY(0); }
+        .track-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(45,31,22,0.3); }
 
         /* ── Items ── */
         .item-row {
           display: flex;
           align-items: center;
-          gap: 14px;
-          padding: 14px;
-          background: #1a1a24;
-          border-radius: 14px;
-          border: 1px solid rgba(255,255,255,0.04);
-          margin-bottom: 10px;
-          transition: border-color 0.2s;
+          gap: 16px;
+          padding: 16px;
+          background: white;
+          border-radius: 18px;
+          border: 1px solid #eadccf;
+          margin-bottom: 12px;
+          transition: all 0.2s;
         }
-        .item-row:hover { border-color: rgba(249,115,22,0.2); }
+        .item-row:hover { border-color: #c67c4e; transform: translateX(6px); }
 
-        /* ── Modal Overlay ── */
         .modal-overlay {
           position: fixed;
           inset: 0;
           z-index: 9999;
-          background: rgba(0,0,0,0.85);
+          background: rgba(45, 31, 22, 0.4);
           backdrop-filter: blur(8px);
-          display: flex;
-          align-items: flex-end;
-          animation: overlay-in 0.25s ease;
-        }
-
-        @keyframes overlay-in { from{opacity:0;} to{opacity:1;} }
-
-        .modal-sheet {
-          width: 100%;
-          height: 96vh;
-          background: #0e0e16;
-          border-radius: 24px 24px 0 0;
-          overflow: hidden;
-          display: flex;
-          flex-direction: column;
-          animation: sheet-up 0.35s cubic-bezier(0.34,1.56,0.64,1);
-          border-top: 1px solid rgba(255,255,255,0.08);
-        }
-
-        @media (min-width: 768px) {
-          .modal-overlay { align-items: center; justify-content: center; }
-          .modal-sheet { width: 95%; max-width: 1100px; height: 92vh; border-radius: 24px; }
-        }
-
-        @keyframes sheet-up { from{transform:translateY(100%);} to{transform:translateY(0);} }
-
-        .modal-header {
-          padding: 18px 20px 16px;
-          background: #0e0e16;
-          border-bottom: 1px solid rgba(255,255,255,0.06);
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          flex-shrink: 0;
-        }
-
-        .modal-close {
-          width: 36px;
-          height: 36px;
-          border-radius: 50%;
-          background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(255,255,255,0.1);
-          color: #9090a8;
-          font-size: 20px;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.2s;
-        }
-        .modal-close:hover { background: rgba(255,255,255,0.12); color: white; }
-
-        .map-wrapper { flex: 1; position: relative; min-height: 0; }
-
-        .leaflet-container { width: 100%; height: 100%; background: #1a1a2e; }
-
-        /* Dark map tiles filter */
-        .leaflet-tile-pane { filter: brightness(0.75) saturate(0.6) hue-rotate(200deg); }
-
-        /* ── Bottom Info Panel ── */
-        .bottom-panel {
-          position: absolute;
-          bottom: 16px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: calc(100% - 32px);
-          max-width: 680px;
-          background: rgba(14,14,22,0.95);
-          backdrop-filter: blur(20px);
-          border: 1px solid rgba(255,255,255,0.1);
-          border-radius: 20px;
-          padding: 16px 18px;
-          z-index: 1000;
-        }
-
-        .panel-top {
-          display: flex;
-          align-items: center;
-          gap: 14px;
-          margin-bottom: 14px;
-          padding-bottom: 14px;
-          border-bottom: 1px solid rgba(255,255,255,0.06);
-        }
-
-        .panel-stats {
-          display: grid;
-          grid-template-columns: 1fr 1px 1fr 1px 1fr;
-          gap: 0;
-        }
-
-        .stat-cell {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          padding: 0 12px;
-        }
-
-        .stat-divider { background: rgba(255,255,255,0.08); }
-
-        .stat-value {
-          font-family: 'Syne', sans-serif;
-          font-size: 18px;
-          font-weight: 700;
-          color: #fb923c;
-        }
-
-        .stat-label {
-          font-size: 10px;
-          color: #6b6b80;
-          margin-top: 2px;
-          text-transform: uppercase;
-          letter-spacing: 0.4px;
-        }
-
-        /* ── Live Pulse Indicator ── */
-        .live-indicator {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          background: rgba(239,68,68,0.12);
-          border: 1px solid rgba(239,68,68,0.2);
-          border-radius: 100px;
-          padding: 4px 10px;
-          font-size: 11px;
-          font-weight: 600;
-          color: #f87171;
-          letter-spacing: 0.3px;
-        }
-
-        .live-dot {
-          width: 7px;
-          height: 7px;
-          border-radius: 50%;
-          background: #f87171;
-          animation: live-blink 1s ease-in-out infinite;
-        }
-
-        @keyframes live-blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
-
-        /* ── Cancel Modal ── */
-        .cancel-overlay {
-          position: fixed;
-          inset: 0;
-          z-index: 99999;
-          background: rgba(0,0,0,0.8);
           display: flex;
           align-items: center;
           justify-content: center;
           padding: 20px;
         }
 
-        .cancel-card {
-          background: #13131a;
-          border: 1px solid rgba(255,255,255,0.08);
-          border-radius: 20px;
-          padding: 28px;
+        .modal-sheet {
+          background: white;
+          border-radius: 32px;
           width: 100%;
-          max-width: 420px;
+          max-width: 1000px;
+          height: 85vh;
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+          box-shadow: 0 30px 100px rgba(0,0,0,0.15);
+        }
+
+        .modal-header {
+          padding: 24px 32px;
+          border-bottom: 1px solid #f5ebe0;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .modal-close {
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
+          background: #faf5ef;
+          color: #2d1f16;
+          border: none;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 24px;
+        }
+
+        .bottom-panel {
+          position: absolute;
+          bottom: 24px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 90%;
+          background: white;
+          border-radius: 24px;
+          padding: 24px;
+          box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+          border: 1px solid #eadccf;
+          z-index: 1000;
+        }
+
+        .stat-value {
+          font-family: 'Instrument Serif', serif;
+          font-size: 24px;
+          color: #c67c4e;
+        }
+
+        .stat-label {
+          font-size: 10px;
+          font-weight: 800;
+          text-transform: uppercase;
+          color: #a07d63;
+        }
+
+        .cancel-card {
+          background: white;
+          border-radius: 32px;
+          padding: 40px;
+          width: 100%;
+          max-width: 440px;
+          border: 1px solid #eadccf;
         }
 
         .cancel-textarea {
           width: 100%;
-          background: #1a1a24;
-          border: 1px solid rgba(255,255,255,0.08);
-          border-radius: 12px;
-          color: #f0f0f5;
-          padding: 12px;
-          font-family: 'DM Sans', sans-serif;
-          font-size: 14px;
-          resize: none;
+          background: #faf5ef;
+          border: 1px solid #eadccf;
+          border-radius: 20px;
+          padding: 16px;
+          font-family: inherit;
+          margin: 16px 0 24px;
           outline: none;
-          margin-top: 10px;
-          margin-bottom: 18px;
-          transition: border-color 0.2s;
         }
-        .cancel-textarea:focus { border-color: rgba(249,115,22,0.4); }
+        .cancel-textarea:focus { border-color: #c67c4e; }
 
         .btn-danger {
-          width: 100%;
-          padding: 14px;
-          background: linear-gradient(135deg, #ef4444, #dc2626);
-          border: none;
-          border-radius: 12px;
+          background: #ef4444;
           color: white;
-          font-family: 'Syne', sans-serif;
-          font-weight: 700;
-          font-size: 14px;
+          padding: 16px;
+          border: none;
+          border-radius: 20px;
+          font-weight: 800;
           cursor: pointer;
-          margin-bottom: 10px;
-          transition: all 0.2s;
-        }
-        .btn-danger:hover { opacity: 0.9; transform: translateY(-1px); }
-
-        .btn-ghost {
           width: 100%;
-          padding: 14px;
-          background: transparent;
-          border: 1px solid rgba(255,255,255,0.08);
-          border-radius: 12px;
-          color: #9090a8;
-          font-family: 'Syne', sans-serif;
-          font-weight: 600;
-          font-size: 14px;
-          cursor: pointer;
-          transition: all 0.2s;
+          margin-bottom: 12px;
         }
-        .btn-ghost:hover { border-color: rgba(255,255,255,0.2); color: #f0f0f5; }
+        .btn-ghost {
+          background: transparent;
+          border: 1px solid #eadccf;
+          color: #6f5a4b;
+          padding: 16px;
+          border-radius: 20px;
+          font-weight: 800;
+          cursor: pointer;
+          width: 100%;
+        }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        /* Dark map tiles filter */
+        .leaflet-tile-pane { filter: brightness(0.95) saturate(0.8) sepia(0.2) hue-rotate(-20deg); }
       `}</style>
 
       <div className="od-root">
         <div className="od-container">
 
           {/* ── Header ── */}
-          <div className="od-card" style={{ marginBottom: 16 }}>
+          <div className="od-card">
             <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
               <div>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
-                  <button
-                    onClick={() => navigate(-1)}
-                    style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: "6px 10px", color: "#9090a8", cursor: "pointer", fontSize: 14, fontFamily: "'DM Sans', sans-serif" }}
-                  >
-                    ← Back
-                  </button>
-                </div>
-                <h1 className="od-title" style={{ fontSize: 24, margin: 0 }}>Order Details</h1>
-                <p style={{ fontSize: 12, color: "#6b6b80", marginTop: 4, fontFamily: "'DM Sans', sans-serif" }}>
+                <button
+                  onClick={() => navigate(-1)}
+                  className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#faf5ef] px-4 py-2 text-[10px] font-black uppercase tracking-widest text-[#6f5a4b] border border-[#eadccf]"
+                >
+                  ← Back to Orders
+                </button>
+                <h1 className="od-title">Order Journey</h1>
+                <p style={{ fontSize: 13, color: "#a07d63", fontWeight: 700, marginTop: 4 }}>
                   #{currentOrder._id.slice(-8).toUpperCase()} · {new Date(currentOrder.createdAt || Date.now()).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
                 </p>
               </div>
@@ -772,7 +644,7 @@ function OrderDetailsPage() {
                 <span className={`status-badge ${currentOrder.status === "delivered" ? "delivered" : currentOrder.status === "cancelled" ? "cancelled" : "active"}`}>
                   {currentOrder.status.replaceAll("_", " ")}
                 </span>
-                {loading && <span style={{ fontSize: 11, color: "#fb923c", fontWeight: 500 }}>● Refreshing</span>}
+                {loading && <span style={{ fontSize: 10, color: "#c67c4e", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em" }}>● Live Syncing</span>}
               </div>
             </div>
           </div>
@@ -782,7 +654,7 @@ function OrderDetailsPage() {
             <div className="eta-bar">
               <div className="eta-item">
                 <span className="eta-value">{eta}</span>
-                <span className="eta-label">Min ETA</span>
+                <span className="eta-label">Min Arrival</span>
               </div>
               <div className="eta-divider" />
               <div className="eta-item">
@@ -791,18 +663,18 @@ function OrderDetailsPage() {
               </div>
               <div className="eta-divider" />
               <div className="eta-item">
-                <span className="live-indicator" style={{ fontSize: 12 }}>
-                  <span className="live-dot" />
+                <div style={{ display: "flex", alignItems: "center", gap: 6, background: "#ef4444", color: "white", padding: "4px 10px", borderRadius: "100px", fontSize: 10, fontWeight: 800 }}>
+                  <div style={{ width: 6, height: 6, background: "white", borderRadius: "50%", animation: "pulse 1s infinite" }} />
                   LIVE
-                </span>
-                <span className="eta-label" style={{ marginTop: 6 }}>Tracking</span>
+                </div>
+                <span className="eta-label" style={{ marginTop: 8 }}>Tracking</span>
               </div>
             </div>
           )}
 
           {/* ── Order Progress ── */}
           <div className="od-card">
-            <p className="od-section-title" style={{ marginBottom: 20 }}>Order Progress</p>
+            <p className="od-section-title">Preparation Journey</p>
             <div className="steps-row">
               {statusSteps.map((step, idx) => {
                 const state = getStepState(step.key);
@@ -811,13 +683,12 @@ function OrderDetailsPage() {
                   <div className="step-item" key={step.key}>
                     <div style={{ position: "relative", width: "100%", display: "flex", justifyContent: "center" }}>
                       {!isLast && (
-                        <div className="step-connector" style={{ left: "50%" }}>
+                        <div className="step-connector">
                           <div className="step-connector-fill" style={{ width: state === "done" ? "100%" : state === "active" ? "50%" : "0%" }} />
-                          <div style={{ height: "100%", background: "#1e1e2a", position: "absolute", top: 0, left: 0, right: 0, zIndex: -1 }} />
                         </div>
                       )}
                       <div className={`step-circle ${state}`}>
-                        <span style={{ fontSize: state === "pending" ? 14 : 16 }}>{step.icon}</span>
+                        <span style={{ fontSize: state === "pending" ? 14 : 18 }}>{step.icon}</span>
                       </div>
                     </div>
                     <span className={`step-label ${state}`}>{step.label}</span>
@@ -838,36 +709,35 @@ function OrderDetailsPage() {
                   <span className={`online-dot ${currentOrder.deliveryBoy?.isOnline ? "online" : "offline"}`} />
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 15, margin: 0, marginBottom: 2 }}>
-                    {currentOrder.deliveryBoy?.user?.userName || currentOrder.deliveryBoy?.name || "Delivery Partner"}
+                  <p style={{ fontWeight: 800, fontSize: 18, color: "#2d1f16", margin: 0 }}>
+                    {currentOrder.deliveryBoy?.user?.userName || currentOrder.deliveryBoy?.name || "Premium Partner"}
                   </p>
-                  <p style={{ fontSize: 13, color: "#6b6b80", margin: 0 }}>
-                    {currentOrder.deliveryBoy?.user?.contactNumber || currentOrder.deliveryBoy?.phone || "Not Available"}
+                  <p style={{ fontSize: 13, color: "#a07d63", fontWeight: 600, margin: 0 }}>
+                    {currentOrder.deliveryBoy?.user?.contactNumber || currentOrder.deliveryBoy?.phone || "Private Line"}
                   </p>
                 </div>
                 <a
                   href={`tel:${currentOrder.deliveryBoy?.user?.contactNumber || currentOrder.deliveryBoy?.phone}`}
                   style={{
-                    width: 40, height: 40, borderRadius: "50%",
-                    background: "rgba(34,197,94,0.15)", border: "1px solid rgba(34,197,94,0.25)",
+                    width: 48, height: 48, borderRadius: "50%",
+                    background: "#2d1f16", color: "white",
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    textDecoration: "none", fontSize: 18, flexShrink: 0
+                    textDecoration: "none", fontSize: 20, flexShrink: 0,
+                    boxShadow: "0 8px 20px rgba(45,31,22,0.2)"
                   }}
                 >📞</a>
               </div>
 
               {deliveryLocation.lat && deliveryLocation.lng && userLocation ? (
                 <button className="track-btn" onClick={() => setShowTrackingModal(true)}>
-                  <span style={{ fontSize: 18 }}>🛵</span>
-                  Track Live Location
-                  {eta && <span style={{ fontSize: 12, opacity: 0.8, fontWeight: 500 }}>· {eta} min away</span>}
+                  🛵 Open Live Tracking Map
                 </button>
               ) : (
                 <div style={{
-                  borderRadius: 14, border: "1px dashed rgba(255,255,255,0.08)",
-                  padding: "16px", textAlign: "center", color: "#6b6b80", fontSize: 13
+                  borderRadius: 20, border: "2px dashed #eadccf",
+                  padding: "24px", textAlign: "center", color: "#a07d63", fontSize: 13, fontWeight: 700
                 }}>
-                  Waiting for live location...
+                  Locating partner on GPS...
                 </div>
               )}
             </div>
@@ -875,30 +745,32 @@ function OrderDetailsPage() {
 
           {/* ── Ordered Items ── */}
           <div className="od-card">
-            <p className="od-section-title">Ordered Items</p>
-            {currentOrder.items?.map((item, index) => (
-              <div className="item-row" key={index}>
-                <img
-                  src={item.food?.image || "https://placehold.co/80x80/1a1a24/fb923c?text=🍽"}
-                  alt={item.food?.name}
-                  style={{ width: 56, height: 56, borderRadius: 12, objectFit: "cover", flexShrink: 0 }}
-                />
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontWeight: 600, fontSize: 14, margin: 0, marginBottom: 3, fontFamily: "'Syne', sans-serif" }}>
-                    {item.food?.name}
+            <p className="od-section-title">Culinaries Selected</p>
+            <div style={{ marginBottom: 24 }}>
+              {currentOrder.items?.map((item, index) => (
+                <div className="item-row" key={index}>
+                  <img
+                    src={item.food?.image || "https://placehold.co/80x80/faf5ef/c67c4e?text=🍽"}
+                    alt={item.food?.name}
+                    style={{ width: 64, height: 64, borderRadius: 16, objectFit: "cover", flexShrink: 0, border: "1px solid #eadccf" }}
+                  />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontWeight: 800, fontSize: 15, color: "#2d1f16", margin: 0, marginBottom: 4 }}>
+                      {item.food?.name}
+                    </p>
+                    <p style={{ fontSize: 11, fontWeight: 800, color: "#a07d63", textTransform: "uppercase" }}>Qty: {item.food?.quantity || item.quantity}</p>
+                  </div>
+                  <p style={{ fontWeight: 800, color: "#c67c4e", fontSize: 18, flexShrink: 0 }}>
+                    ₹{(item.food?.price || 0) * (item.food?.quantity || item.quantity || 1)}
                   </p>
-                  <p style={{ fontSize: 12, color: "#6b6b80", margin: 0 }}>Qty: {item.food?.quantity || item.quantity}</p>
                 </div>
-                <p style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, color: "#fb923c", fontSize: 15, flexShrink: 0 }}>
-                  ₹{(item.food?.price || 0) * (item.food?.quantity || item.quantity || 1)}
-                </p>
-              </div>
-            ))}
+              ))}
+            </div>
 
             {/* Total */}
-            <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", marginTop: 12, paddingTop: 14, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ color: "#9090a8", fontSize: 13 }}>Total Amount</span>
-              <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 18, color: "#f0f0f5" }}>
+            <div style={{ borderTop: "2px dashed #eadccf", paddingTop: 24, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ color: "#6f5a4b", fontWeight: 800, textTransform: "uppercase", fontSize: 12, letterSpacing: "0.1em" }}>Investment in Taste</span>
+              <span style={{ fontWeight: 800, fontSize: 32, color: "#2d1f16", tracking: "-0.05em" }}>
                 ₹{currentOrder.totalAmount || currentOrder.total || "—"}
               </span>
             </div>
@@ -908,184 +780,77 @@ function OrderDetailsPage() {
           {["pending", "confirmed"].includes(currentOrder.status) && (
             <button
               onClick={() => setShowCancelModal(true)}
-              style={{
-                width: "100%", padding: "14px",
-                background: "transparent", border: "1px solid rgba(239,68,68,0.3)",
-                borderRadius: 14, color: "#f87171",
-                fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 14,
-                cursor: "pointer", transition: "all 0.2s",
-              }}
-              onMouseEnter={e => { e.target.style.background = "rgba(239,68,68,0.08)"; e.target.style.borderColor = "rgba(239,68,68,0.5)"; }}
-              onMouseLeave={e => { e.target.style.background = "transparent"; e.target.style.borderColor = "rgba(239,68,68,0.3)"; }}
+              className="ui-btn-secondary rounded-2xl! py-4! shadow-sm w-full"
             >
-              Cancel Order
+              Request Cancellation
             </button>
           )}
         </div>
       </div>
 
-      {/* ══════════════════════════════════════════
-          TRACKING MODAL
-      ══════════════════════════════════════════ */}
+      {/* TRACKING MODAL */}
       {showTrackingModal && userLocation && deliveryLocation.lat && deliveryLocation.lng && (
-        <div className="modal-overlay">
-          <div className="modal-sheet">
-
-            {/* Header */}
+        <div className="modal-overlay" onClick={() => setShowTrackingModal(false)}>
+          <div className="modal-sheet" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <div>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
-                  <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 20, margin: 0, color: "#f0f0f5" }}>
-                    Live Tracking
-                  </h2>
-                  <span className="live-indicator"><span className="live-dot" />LIVE</span>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <h2 style={{ fontFamily: "'Instrument Serif', serif", fontStyle: "italic", fontSize: 24, margin: 0 }}>Live Journey</h2>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6, background: "#ef4444", color: "white", padding: "4px 10px", borderRadius: "100px", fontSize: 10, fontWeight: 800 }}>
+                    <div style={{ width: 6, height: 6, background: "white", borderRadius: "50%", animation: "pulse 1s infinite" }} />
+                    LIVE Tracking
+                  </div>
                 </div>
-                <p style={{ fontSize: 12, color: "#6b6b80", margin: 0 }}>
-                  {currentOrder.deliveryBoy?.user?.userName || "Your partner"} is heading your way
-                </p>
               </div>
               <button className="modal-close" onClick={() => setShowTrackingModal(false)}>×</button>
             </div>
 
-            {/* Map */}
             <div className="map-wrapper">
-              <MapContainer
-                center={[deliveryLocation.lat, deliveryLocation.lng]}
-                zoom={14}
-                zoomControl={true}
-                style={{ width: "100%", height: "100%" }}
-              >
-                <TileLayer
-                  attribution="&copy; OpenStreetMap contributors"
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-
-                {/* Route breadcrumb */}
-                {routePoints.length > 1 && (
-                  <Polyline
-                    positions={routePoints}
-                    color="#f97316"
-                    weight={3}
-                    opacity={0.6}
-                    dashArray="6,8"
-                  />
-                )}
-
-                {/* Straight-line connector */}
-                <Polyline
-                  positions={[
-                    [userLocation.lat, userLocation.lng],
-                    [deliveryLocation.lat, deliveryLocation.lng],
-                  ]}
-                  color="#3b82f6"
-                  weight={2}
-                  opacity={0.35}
-                  dashArray="4,8"
-                />
-
-                <SmoothMarker position={[userLocation.lat, userLocation.lng]} icon={userMarkerIcon}>
-                  <Popup>
-                    <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13 }}>
-                      <strong>📍 Your Location</strong>
-                    </div>
-                  </Popup>
-                </SmoothMarker>
-
-                <SmoothMarker position={[deliveryLocation.lat, deliveryLocation.lng]} icon={deliveryMarkerIcon}>
-                  <Popup>
-                    <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13 }}>
-                      <strong>🛵 {currentOrder.deliveryBoy?.user?.userName || "Delivery Partner"}</strong><br />
-                      <span style={{ color: "#888" }}>{deliveryAddress?.slice(0, 60)}...</span>
-                    </div>
-                  </Popup>
-                </SmoothMarker>
-
+              <MapContainer center={[deliveryLocation.lat, deliveryLocation.lng]} zoom={14} style={{ width: "100%", height: "100%" }}>
+                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                {routePoints.length > 1 && <Polyline positions={routePoints} color="#c67c4e" weight={4} dashArray="8,12" />}
+                <SmoothMarker position={[userLocation.lat, userLocation.lng]} icon={userMarkerIcon} />
+                <SmoothMarker position={[deliveryLocation.lat, deliveryLocation.lng]} icon={deliveryMarkerIcon} />
                 <FitBounds userLocation={userLocation} deliveryLocation={deliveryLocation} />
               </MapContainer>
 
-              {/* ── Bottom Info Panel ── */}
               <div className="bottom-panel">
-                {/* Partner row */}
-                <div className="panel-top">
-                  <div style={{ position: "relative", flexShrink: 0 }}>
-                    <div style={{
-                      width: 46, height: 46, borderRadius: "50%",
-                      background: "linear-gradient(135deg, #f97316, #ea580c)",
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 18, color: "white"
-                    }}>
-                      {(currentOrder.deliveryBoy?.user?.userName || "D").charAt(0).toUpperCase()}
-                    </div>
-                    <span className={`online-dot ${currentOrder.deliveryBoy?.isOnline ? "online" : "offline"}`}
-                      style={{ position: "absolute", bottom: 1, right: 1, width: 11, height: 11, borderRadius: "50%", border: "2px solid #0e0e16" }}
-                    />
+                <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
+                  <div className="partner-avatar" style={{ width: 50, height: 50, fontSize: 18 }}>
+                    {(currentOrder.deliveryBoy?.user?.userName || "D").charAt(0).toUpperCase()}
                   </div>
-
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 14, margin: 0, marginBottom: 2, color: "#f0f0f5" }}>
-                      {currentOrder.deliveryBoy?.user?.userName || "Delivery Partner"}
-                    </p>
-                    <p style={{ fontSize: 11, color: "#6b6b80", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                      {locationLoading ? "Locating..." : (deliveryAddress?.split(",").slice(0, 3).join(", ") || "—")}
-                    </p>
-                  </div>
-
-                  <div style={{ textAlign: "right", flexShrink: 0 }}>
-                    <p style={{ fontSize: 11, color: "#6b6b80", margin: 0, marginBottom: 2 }}>Status</p>
-                    <p style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 13, color: "#4ade80", margin: 0, textTransform: "capitalize" }}>
-                      {currentOrder.status.replaceAll("_", " ")}
-                    </p>
+                  <div style={{ flex: 1 }}>
+                    <p style={{ fontWeight: 800, fontSize: 16, margin: 0 }}>{currentOrder.deliveryBoy?.user?.userName || "Partner"}</p>
+                    <p style={{ fontSize: 11, color: "#a07d63", margin: 0 }}>{locationLoading ? "Tracking satellite..." : (deliveryAddress?.split(",").slice(0, 2).join(", ") || "Active Journey")}</p>
                   </div>
                 </div>
 
-                {/* Stats row */}
-                <div className="panel-stats">
-                  <div className="stat-cell">
-                    <span className="stat-value">{eta ? `${eta}` : "—"}</span>
-                    <span className="stat-label">Min ETA</span>
+                <div className="panel-stats" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
+                  <div className="stat-cell" style={{ textAlign: "center" }}>
+                    <span className="stat-value">{eta ? `${eta} min` : "—"}</span>
+                    <span className="stat-label">Arrival</span>
                   </div>
-                  <div className="stat-divider" />
-                  <div className="stat-cell">
-                    <span className="stat-value">
-                      {distance
-                        ? distance < 1
-                          ? `${Math.round(distance * 1000)}m`
-                          : `${distance.toFixed(1)}km`
-                        : "—"}
-                    </span>
+                  <div className="stat-cell" style={{ textAlign: "center" }}>
+                    <span className="stat-value">{distance ? (distance < 1 ? `${Math.round(distance * 1000)}m` : `${distance.toFixed(1)}km`) : "—"}</span>
                     <span className="stat-label">Distance</span>
                   </div>
-                  <div className="stat-divider" />
-                  <div className="stat-cell">
-                    <span className="stat-value" style={{ fontSize: 13 }}>~25</span>
-                    <span className="stat-label">km/h speed</span>
+                  <div className="stat-cell" style={{ textAlign: "center" }}>
+                    <span className="stat-value" style={{ fontSize: 18 }}>Active</span>
+                    <span className="stat-label">Status</span>
                   </div>
                 </div>
-
-                {/* Last updated */}
-                {lastUpdated && (
-                  <p style={{ textAlign: "center", fontSize: 10, color: "#4b4b60", marginTop: 10, marginBottom: 0 }}>
-                    Updated {lastUpdated.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", second: "2-digit" })} · refreshes every 5s
-                  </p>
-                )}
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* ══════════════════════════════════════════
-          CANCEL MODAL
-      ══════════════════════════════════════════ */}
+      {/* CANCEL MODAL */}
       {showCancelModal && (
-        <div className="cancel-overlay">
-          <div className="cancel-card">
-            <h3 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 20, margin: "0 0 6px", color: "#f0f0f5" }}>
-              Cancel Order?
-            </h3>
-            <p style={{ fontSize: 13, color: "#6b6b80", marginBottom: 0 }}>
-              Tell us why you want to cancel (optional)
-            </p>
+        <div className="modal-overlay" style={{ background: "rgba(45, 31, 22, 0.6)" }} onClick={() => setShowCancelModal(false)}>
+          <div className="cancel-card" onClick={e => e.stopPropagation()}>
+            <h3 style={{ fontFamily: "'Instrument Serif', serif", fontStyle: "italic", fontSize: 28, margin: "0 0 12px" }}>Cancel Journey?</h3>
+            <p style={{ fontSize: 14, color: "#6f5a4b", fontWeight: 500 }}>Please let us know the reason for cancellation.</p>
             <textarea
               className="cancel-textarea"
               rows={3}
@@ -1093,12 +858,8 @@ function OrderDetailsPage() {
               value={cancelReason}
               onChange={(e) => setCancelReason(e.target.value)}
             />
-            <button className="btn-danger" onClick={handleCancelOrder}>
-              Yes, Cancel Order
-            </button>
-            <button className="btn-ghost" onClick={() => setShowCancelModal(false)}>
-              Keep Order
-            </button>
+            <button className="btn-danger" onClick={handleCancelOrder}>Confirm Cancellation</button>
+            <button className="btn-ghost" onClick={() => setShowCancelModal(false)}>Keep Order</button>
           </div>
         </div>
       )}
