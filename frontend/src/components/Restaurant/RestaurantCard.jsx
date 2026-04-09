@@ -98,6 +98,9 @@ function RestaurantCard({
           }}
           className="ui-btn-primary w-full rounded-xl! px-4! py-3! font-bold! relative z-50 cursor-pointer"
           style={{ isolation: 'isolate' }}
+          className="ui-btn-primary w-full rounded-xl! px-4! py-2.5! font-semibold!"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
         >
           View Menu
           <ArrowRightIcon className="h-4 w-4 ml-2 inline" />

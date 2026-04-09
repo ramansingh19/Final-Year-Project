@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   activeRoomAction,
   inactiveRoomAction,
   getAllRoomsByID,
 } from "../../../features/user/roomSlice";
+import { getAllHotels } from "../../../features/user/hotelSlice";
 import { Link, useParams } from "react-router-dom";
 
 function GetAllRooms() {
@@ -12,87 +13,110 @@ function GetAllRooms() {
   const dispatch = useDispatch();
 
   const { rooms = [], loading } = useSelector((state) => state.room);
+  const { hotels = [] } = useSelector((state) => state.hotel);
 
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeType, setActiveType] = useState("All");
 
-  // Fetch rooms
   useEffect(() => {
-    if (id) dispatch(getAllRoomsByID(id));
+    if (id) {
+      dispatch(getAllRoomsByID(id));
+    }
+
+    dispatch(getAllHotels());
   }, [dispatch, id]);
 
-  // Extract unique room types
-  const types = ["All", ...new Set(rooms.map((r) => r.roomType))];
+  const getHotelName = (hotel) => {
+    if (!hotel) return "N/A";
 
-  // Filter rooms based on search and type
-  const filteredRooms = rooms.filter((room) => {
-    const matchesType = activeType === "All" ? true : room.roomType === activeType;
-    const matchesSearch = !searchTerm || room.roomNumber.toString().includes(searchTerm);
-    return matchesType && matchesSearch;
-  });
+    if (typeof hotel === "object") {
+      return hotel.name || "N/A";
+    }
+
+    const matchedHotel = hotels.find((h) => h._id === hotel);
+    return matchedHotel?.name || "N/A";
+  };
+
+  const roomTypes = useMemo(() => {
+    return ["All", ...new Set(rooms.map((room) => room.roomType))];
+  }, [rooms]);
+
+  const filteredRooms = useMemo(() => {
+    return rooms.filter((room) => {
+      const matchesType =
+        activeType === "All" || room.roomType === activeType;
+
+      const matchesSearch =
+        searchTerm === "" ||
+        room.roomNumber?.toString().includes(searchTerm);
+
+      return matchesType && matchesSearch;
+    });
+  }, [rooms, activeType, searchTerm]);
 
   return (
-    <div className="min-h-screen bg-black text-white relative overflow-hidden">
-      {/* Background Glow */}
-      <div className="absolute top-0 left-0 h-72 w-72 bg-orange-500/10 blur-3xl rounded-full" />
-      <div className="absolute bottom-0 right-0 h-80 w-80 bg-blue-500/10 blur-3xl rounded-full" />
+    <div className="relative min-h-screen overflow-hidden bg-[#f6f8fc] text-slate-900">
+      <div className="absolute left-0 top-0 h-72 w-72 rounded-full bg-orange-200/40 blur-3xl" />
+      <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-sky-200/40 blur-3xl" />
 
       <div className="relative z-10 p-4 sm:p-6 lg:p-8">
         {/* Header */}
-        <div className="mb-8 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-2xl p-6 md:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.45)] flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+        <div className="mb-8 flex flex-col gap-6 rounded-3xl border border-white/70 bg-white/80 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-2xl lg:flex-row lg:items-center lg:justify-between md:p-8">
           <div>
-            <p className="text-orange-400 text-sm font-semibold uppercase tracking-[0.35em] mb-2">
+            <p className="mb-2 text-sm font-bold uppercase tracking-[0.35em] text-orange-500">
               Rooms Dashboard
             </p>
-            <h1 className="text-3xl md:text-4xl font-bold text-white">
+
+            <h1 className="text-3xl font-black text-slate-900 md:text-4xl">
               Room Management
             </h1>
-            <p className="text-gray-400 mt-2 text-sm md:text-base max-w-2xl">
+
+            <p className="mt-2 max-w-2xl text-sm text-slate-500 md:text-base">
               View, manage and update all rooms of this hotel.
             </p>
           </div>
 
           <div className="flex flex-wrap gap-4">
-            <div className="rounded-2xl border border-orange-500/20 bg-orange-500/10 px-5 py-4 min-w-35">
-              <p className="text-xs uppercase tracking-widest text-orange-300 mb-1">
+            <div className="min-w-37.5 rounded-2xl border border-orange-200 bg-orange-50 px-5 py-4 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
+              <p className="mb-1 text-xs font-semibold uppercase tracking-[0.25em] text-orange-500">
                 Total Rooms
               </p>
-              <h2 className="text-3xl font-bold text-white">{rooms.length}</h2>
+              <h2 className="text-3xl font-black text-slate-900">
+                {rooms.length}
+              </h2>
             </div>
 
-            <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-5 py-4 min-w-35">
-              <p className="text-xs uppercase tracking-widest text-emerald-300 mb-1">
+            <div className="min-w-37.5 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
+              <p className="mb-1 text-xs font-semibold uppercase tracking-[0.25em] text-emerald-500">
                 Active Rooms
               </p>
-              <h2 className="text-3xl font-bold text-white">
-                {rooms.filter((r) => r.status === "active").length}
+              <h2 className="text-3xl font-black text-slate-900">
+                {rooms.filter((room) => room.status === "active").length}
               </h2>
             </div>
           </div>
         </div>
 
-        {/* Search & Type Filters */}
-        <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          {/* Search */}
+        {/* Search + Filter */}
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <input
             type="text"
             placeholder="Search room by number..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="ui-input w-full sm:w-64"
+            className="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100 sm:w-72"
           />
 
-          {/* Type Buttons */}
           <div className="flex flex-wrap gap-3">
-            {types.map((type) => (
+            {roomTypes.map((type) => (
               <button
                 key={type}
                 onClick={() => setActiveType(type)}
-                  className={`px-4 py-2 rounded-2xl border font-medium text-sm transition-all duration-300 ease-in-out ${
+                className={`rounded-2xl border px-4 py-2 text-sm font-semibold transition-all duration-300 ${
                   activeType === type
-                    ? "bg-orange-500 text-black border-orange-500"
-                    : "bg-white/5 text-white border-white/10 hover:bg-orange-500/10"
+                    ? "border-orange-500 bg-linear-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-200"
+                    : "border-slate-200 bg-white text-slate-600 hover:border-orange-300 hover:bg-orange-50 hover:text-orange-600"
                 }`}
               >
                 {type}
@@ -101,61 +125,44 @@ function GetAllRooms() {
           </div>
         </div>
 
-        {/* Loading */}
-        {loading && (
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 animate-pulse overflow-hidden">
-            <div className="space-y-4">
-              {[...Array(6)].map((_, i) => (
-                <div
-                  key={i}
-                  className="h-16 rounded-2xl bg-white/5 border border-white/5"
-                />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Empty */}
+        {/* Empty State */}
         {!loading && filteredRooms.length === 0 && (
-          <div className="rounded-3xl border border-dashed border-white/10 bg-white/5 py-20 text-center backdrop-blur-xl">
-            <div className="text-6xl mb-4">🏨</div>
-            <h2 className="text-2xl font-bold text-white mb-2">
+          <div className="rounded-3xl border border-dashed border-slate-300 bg-white/80 py-20 text-center shadow-[0_20px_50px_rgba(15,23,42,0.05)] backdrop-blur-2xl">
+            <div className="mb-4 text-6xl">🏨</div>
+            <h2 className="mb-2 text-2xl font-black text-slate-900">
               No Rooms Found
             </h2>
-            <p className="text-gray-400">
-              Try adding rooms or changing the filters/search.
+            <p className="text-slate-500">
+              Try adding rooms or changing the filters.
             </p>
           </div>
         )}
 
-        {/* Table */}
+        {/* Rooms Table */}
         {!loading && filteredRooms.length > 0 && (
-          <div className="ui-table-wrap">
+          <div className="overflow-hidden rounded-3xl border border-white/70 bg-white/80 shadow-[0_20px_50px_rgba(15,23,42,0.06)] backdrop-blur-2xl">
             <div className="overflow-x-auto">
-              <table className="w-full min-w-212.5">
-                <thead className="bg-white/5 border-b border-white/10">
+              <table className="w-full min-w-237.5">
+                <thead className="border-b border-slate-200 bg-slate-50">
                   <tr>
-                    <th className="ui-th">
-                      Room Number
-                    </th>
-                    <th className="ui-th">
-                      Type
-                    </th>
-                    <th className="ui-th">
-                      Price
-                    </th>
-                    <th className="ui-th">
-                      Capacity
-                    </th>
-                    <th className="ui-th">
-                      Status
-                    </th>
-                    <th className="ui-th">
-                      Hotel
-                    </th>
-                    <th className="ui-th text-right">
-                      Details
-                    </th>
+                    {[
+                      "Room Number",
+                      "Type",
+                      "Price",
+                      "Capacity",
+                      "Status",
+                      "Hotel",
+                      "Details",
+                    ].map((head) => (
+                      <th
+                        key={head}
+                        className={`px-6 py-4 text-xs font-bold uppercase tracking-[0.25em] text-slate-500 ${
+                          head === "Details" ? "text-right" : "text-left"
+                        }`}
+                      >
+                        {head}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
 
@@ -163,27 +170,43 @@ function GetAllRooms() {
                   {filteredRooms.map((room) => (
                     <tr
                       key={room._id}
-                      className="border-b border-white/5 hover:bg-white/5 transition-all duration-300 cursor-pointer"
                       onClick={() => setSelectedRoom(room)}
+                      className="cursor-pointer border-b border-slate-100 transition hover:bg-orange-50/60"
                     >
-                      <td className="ui-td">{room.roomNumber}</td>
-                      <td className="ui-td">{room.roomType}</td>
-                      <td className="ui-td">₹{room.pricePerNight}</td>
-                      <td className="ui-td">{room.capacity}</td>
-                      <td className="ui-td">
+                      <td className="px-6 py-5 text-sm font-semibold text-slate-800">
+                        #{room.roomNumber}
+                      </td>
+
+                      <td className="px-6 py-5 text-sm font-medium text-slate-600">
+                        {room.roomType}
+                      </td>
+
+                      <td className="px-6 py-5 text-sm font-semibold text-orange-600">
+                        ₹{room.pricePerNight}
+                      </td>
+
+                      <td className="px-6 py-5 text-sm font-medium text-slate-600">
+                        {room.capacity}
+                      </td>
+
+                      <td className="px-6 py-5">
                         <span
-                          className={`inline-flex rounded-xl px-3 py-1 text-xs font-semibold border ${
+                          className={`inline-flex rounded-xl border px-3 py-1 text-xs font-bold capitalize ${
                             room.status === "active"
-                              ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
-                              : "bg-red-500/10 text-red-300 border-red-500/20"
+                              ? "border-emerald-200 bg-emerald-100 text-emerald-600"
+                              : "border-red-200 bg-red-100 text-red-500"
                           }`}
                         >
                           {room.status}
                         </span>
                       </td>
-                      <td className="ui-td">{room.hotel?.name || "N/A"}</td>
-                      <td className="ui-td text-right">
-                        <button className="ui-btn-secondary !rounded-xl !px-4 !py-2 !text-sm !text-gray-300 hover:!text-white">
+
+                      <td className="px-6 py-5 text-sm font-medium text-slate-600">
+                        {room.hotelId.name}
+                      </td>
+
+                      <td className="px-6 py-5 text-right">
+                        <button className="rounded-xl bg-orange-50 px-4 py-2 text-sm font-semibold text-orange-600 transition hover:bg-orange-500 hover:text-white">
                           View Details →
                         </button>
                       </td>
@@ -196,86 +219,64 @@ function GetAllRooms() {
         )}
       </div>
 
-      {/* Sidebar Details */}
+      {/* Sidebar */}
       <div
-        className={`fixed top-0 right-0 z-50 h-full w-full sm:w-105 md:w-120 transform border-l border-white/10 bg-[#090909]/95 backdrop-blur-3xl shadow-[-20px_0_60px_rgba(0,0,0,0.7)] transition-transform duration-500 ${
+        className={`fixed right-0 top-0 z-50 h-full w-full border-l border-white/70 bg-white/95 shadow-[-20px_0_60px_rgba(15,23,42,0.12)] backdrop-blur-3xl transition-transform duration-500 sm:w-105 md:w-120 ${
           selectedRoom ? "translate-x-0" : "translate-x-full"
         }`}
       >
         {selectedRoom && (
           <div className="flex h-full flex-col overflow-y-auto">
-            {/* Sidebar Header */}
-            <div className="sticky top-0 z-10 border-b border-white/10 bg-[#090909]/90 backdrop-blur-2xl p-5 flex items-center justify-between">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white/90 p-5 backdrop-blur-2xl">
               <div>
-                <p className="text-xs uppercase tracking-[0.3em] text-orange-400 mb-1">
+                <p className="mb-1 text-xs font-bold uppercase tracking-[0.3em] text-orange-500">
                   Room Details
                 </p>
-                <h2 className="text-2xl font-bold text-white capitalize">
+
+                <h2 className="text-2xl font-black text-slate-900">
                   {selectedRoom.roomType} - Room {selectedRoom.roomNumber}
                 </h2>
-                <p className="text-gray-400 mt-1 text-sm">
-                  Hotel: {selectedRoom.hotel?.name || "N/A"}
+
+                <p className="mt-1 text-sm text-slate-500">
+                  Hotel: {getHotelName(selectedRoom.hotel)}
                 </p>
               </div>
 
               <button
                 onClick={() => setSelectedRoom(null)}
-                className="h-11 w-11 rounded-2xl border border-white/10 bg-white/5 text-gray-400 hover:text-red-400 hover:border-red-500/30 transition-all"
+                className="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-500 transition hover:border-red-200 hover:bg-red-50 hover:text-red-500"
               >
                 ✕
               </button>
             </div>
 
-            {/* Details */}
-            <div className="p-5 space-y-4">
+            <div className="space-y-5 p-5">
               <div className="grid grid-cols-2 gap-4">
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <p className="text-xs uppercase tracking-widest text-gray-500 mb-2">
-                    Room Type
-                  </p>
-                  <p className="font-semibold text-white">{selectedRoom.roomType}</p>
-                </div>
-
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <p className="text-xs uppercase tracking-widest text-gray-500 mb-2">
-                    Price
-                  </p>
-                  <p className="font-semibold text-orange-300">₹{selectedRoom.pricePerNight}</p>
-                </div>
-
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <p className="text-xs uppercase tracking-widest text-gray-500 mb-2">
-                    Capacity
-                  </p>
-                  <p className="font-semibold text-white">{selectedRoom.capacity}</p>
-                </div>
-
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <p className="text-xs uppercase tracking-widest text-gray-500 mb-2">
-                    Status
-                  </p>
-                  <p className={`${selectedRoom.status === "active" ? "text-emerald-300" : "text-red-300"} font-semibold`}>
-                    {selectedRoom.status}
-                  </p>
-                </div>
+                <InfoCard title="Room Type" value={selectedRoom.roomType} />
+                <InfoCard title="Price" value={`₹${selectedRoom.pricePerNight}`} accent />
+                <InfoCard title="Capacity" value={selectedRoom.capacity} />
+                <InfoCard
+                  title="Status"
+                  value={selectedRoom.status}
+                  status={selectedRoom.status}
+                />
               </div>
 
-              <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
-                <h3 className="text-lg font-semibold text-white mb-3">
+              <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+                <h3 className="mb-3 text-lg font-bold text-slate-900">
                   Description
                 </h3>
-                <p className="text-sm leading-7 text-gray-400">
+                <p className="text-sm leading-7 text-slate-500">
                   {selectedRoom.description || "No description available."}
                 </p>
               </div>
             </div>
 
-            {/* Footer Actions */}
-            <div className="mt-auto sticky bottom-0 border-t border-white/10 bg-[#090909]/95 p-5 backdrop-blur-2xl">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="mt-auto border-t border-slate-200 bg-white/95 p-5">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <Link
                   to={`/admin/update-room/${selectedRoom._id}`}
-                  className="rounded-2xl bg-blue-600 px-4 py-3 text-center text-sm font-semibold text-white transition-all duration-300 hover:bg-blue-700"
+                  className="rounded-2xl bg-linear-to-r from-sky-500 to-blue-600 px-4 py-3 text-center text-sm font-semibold text-white transition hover:scale-[1.02]"
                 >
                   Update Room
                 </Link>
@@ -283,14 +284,14 @@ function GetAllRooms() {
                 {selectedRoom.status === "active" ? (
                   <button
                     onClick={() => dispatch(inactiveRoomAction(selectedRoom._id))}
-                    className="rounded-2xl px-4 py-3 bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition-all duration-300"
+                    className="rounded-2xl bg-red-500 px-4 py-3 text-sm font-semibold text-white transition hover:scale-[1.02] hover:bg-red-600"
                   >
                     Make Inactive
                   </button>
                 ) : (
                   <button
                     onClick={() => dispatch(activeRoomAction(selectedRoom._id))}
-                    className="rounded-2xl px-4 py-3 bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 transition-all duration-300"
+                    className="rounded-2xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-white transition hover:scale-[1.02] hover:bg-emerald-600"
                   >
                     Make Active
                   </button>
@@ -301,13 +302,36 @@ function GetAllRooms() {
         )}
       </div>
 
-      {/* Overlay */}
       {selectedRoom && (
         <div
           onClick={() => setSelectedRoom(null)}
-          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
+          className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
         />
       )}
+    </div>
+  );
+}
+
+function InfoCard({ title, value, accent, status }) {
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+      <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
+        {title}
+      </p>
+
+      <p
+        className={`font-semibold capitalize ${
+          accent
+            ? "text-orange-600"
+            : status === "active"
+            ? "text-emerald-600"
+            : status === "inactive"
+            ? "text-red-500"
+            : "text-slate-800"
+        }`}
+      >
+        {value}
+      </p>
     </div>
   );
 }

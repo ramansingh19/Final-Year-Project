@@ -153,7 +153,7 @@ function Navbar() {
   return (
     <>
       <nav
-        className="sticky top-0 z-50 border-b border-white/10 bg-black/95 backdrop-blur-xl"
+        className="sticky top-0 z-50  bg-[#f9fffe] font-['Poppins'] backdrop-blur-xl"
         ref={dropdownRef}
       >
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
@@ -163,9 +163,9 @@ function Navbar() {
               {/* Logo */}
               <Link
                 to="/"
-                className="text-2xl font-black tracking-tight text-white transition hover:text-blue-400"
+                className="text-2xl font-black tracking-tight text-amber-950 transition hover:text-amber-600"
               >
-                <span className="bg-linear-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-amber-500 to-orange-400 bg-clip-text text-transparent">
                   NotDefine
                 </span>
               </Link>
@@ -174,24 +174,24 @@ function Navbar() {
               {(token || adminToken) && (
                 <Link
                   to={"/updateUserLocation"}
-                  className="hidden sm:flex items-center gap-2 rounded-2xl border border-white/10 bg-zinc-900 px-3 py-2 text-sm text-zinc-300 transition hover:border-blue-500/30 hover:bg-zinc-800 hover:text-white"
+                  className="hidden sm:flex items-center gap-2 rounded-2xl border border-amber-200 bg-white px-3 py-2 text-sm text-amber-900 transition hover:border-amber-400 hover:bg-amber-50 hover:text-amber-950"
                 >
-                  <GrLocationPin className="text-blue-400" />
+                  <GrLocationPin className="text-amber-500" />
 
-                  <span className="max-w-37.5 truncate">
+                  <span className="max-w-37.5 truncate font-medium">
                     {currentUser?.location?.city
                       ? `${currentUser.location.city}, ${currentUser.location.state}`
                       : "Add Location"}
                   </span>
                 </Link>
               )}
+
               {/* global map section */}
               {token && (
                 <Link to={"/globalMap"} className="hidden sm:block">
-                  <div className="flex items-center gap-1 p-1 rounded-full bg-linear-to-br from-gray-600 via-gray-600 to-gray-300 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group">
-                    {/* Icon Circle */}
-                    <div className="flex items-center justify-center h-8 w-8 rounded-full bg-white/20 text-white shadow-md group-hover:scale-110 transition-transform duration-300">
-                      <LuMapPinned className="h-5 w-5 text-white" />
+                  <div className="group flex cursor-pointer items-center gap-1 rounded-full bg-linear-to-br from-gray-800 via-gray-300 to-gray-800 p-1 shadow-lg transition-all duration-300 hover:shadow-2xl">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/60 text-amber-700 shadow-md transition-transform duration-300 group-hover:scale-110">
+                      <LuMapPinned className="h-5 w-5 text-amber-700" />
                     </div>
                   </div>
                 </Link>
@@ -227,10 +227,10 @@ function Navbar() {
                     key={item.to}
                     to={item.to}
                     className={({ isActive }) =>
-                      `rounded-2xl px-4 py-2 text-sm font-medium transition-all duration-300 ${
+                      `rounded-2xl px-4 py-2 text-sm font-semibold transition-all duration-300 ${
                         isActive
-                          ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20"
-                          : "text-zinc-300 hover:bg-zinc-900 hover:text-white"
+                          ? "bg-amber-500 text-white shadow-lg shadow-amber-500/20"
+                          : "text-amber-800 hover:bg-amber-100 hover:text-amber-950"
                       }`
                     }
                   >
@@ -238,15 +238,15 @@ function Navbar() {
                   </NavLink>
                 ))}
 
-                <div className="mx-2 h-6 w-px bg-white/10" />
+                <div className="mx-2 h-6 w-px bg-amber-300" />
 
                 <NavLink
                   to="/superadmin/adminApprovel"
                   className={({ isActive }) =>
-                    `flex items-center gap-2 rounded-2xl px-4 py-2 text-sm font-medium transition-all duration-300 ${
+                    `flex items-center gap-2 rounded-2xl px-4 py-2 text-sm font-semibold transition-all duration-300 ${
                       isActive
-                        ? "bg-orange-600 text-white shadow-lg shadow-orange-600/20"
-                        : "bg-orange-500/10 text-orange-400 hover:bg-orange-500 hover:text-white"
+                        ? "bg-orange-500 text-white shadow-lg shadow-orange-500/20"
+                        : "bg-orange-100 text-orange-700 hover:bg-orange-500 hover:text-white"
                     }`
                   }
                 >
@@ -263,14 +263,14 @@ function Navbar() {
                   <div className="hidden md:flex items-center gap-3">
                     <Link
                       to="/loginPage"
-                      className="rounded-2xl border border-white/10 bg-zinc-900 px-5 py-2.5 text-sm font-medium text-zinc-300 transition-all duration-300 hover:border-white/20 hover:bg-zinc-800 hover:text-white"
+                      className="rounded-2xl border border-amber-200 bg-white px-5 py-2.5 text-sm font-semibold text-amber-900 transition-all duration-300 hover:border-amber-400 hover:bg-amber-50 hover:text-amber-950"
                     >
                       Login
                     </Link>
 
                     <Link
                       to="/signUp"
-                      className="rounded-2xl bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-blue-600/20 transition-all duration-300 hover:bg-blue-500"
+                      className="rounded-2xl bg-amber-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-amber-500/20 transition-all duration-300 hover:bg-amber-400"
                     >
                       Register
                     </Link>
@@ -282,7 +282,7 @@ function Navbar() {
                   <button
                     type="button"
                     onClick={() => setProfileOpen(!profileOpen)}
-                    className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-blue-600 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition-all duration-300 hover:scale-105"
+                    className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl border border-amber-200 bg-amber-500 text-sm font-bold text-white shadow-lg shadow-amber-500/20 transition-all duration-300 hover:scale-105"
                   >
                     {currentUser?.avatar ? (
                       <img
@@ -294,25 +294,23 @@ function Navbar() {
                       getInitials(currentUser?.userName || user?.userName)
                     )}
 
-                    <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-black bg-green-500" />
+                    <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-green-500" />
                   </button>
 
                   {/* PROFILE SIDEBAR */}
                   {profileOpen && (
                     <>
-                      {/* Overlay */}
                       <div
-                        className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm"
+                        className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
                         onClick={() => setProfileOpen(false)}
                       />
 
-                      {/* Sidebar */}
-                      <div className="fixed right-0 top-0 z-50 h-screen w-full max-w-sm overflow-y-auto border-l border-white/10 bg-black shadow-[0_0_60px_rgba(0,0,0,0.8)]">
+                      <div className="fixed right-0 top-0 z-50 h-screen w-full max-w-sm overflow-y-auto border-l border-amber-200 bg-[#fff8ed] font-['Poppins'] shadow-[0_0_60px_rgba(0,0,0,0.15)]">
                         {/* Header */}
-                        <div className="sticky top-0 border-b border-white/10 bg-black/95 p-6 backdrop-blur-xl">
+                        <div className="sticky top-0 border-b border-amber-200 bg-[#fff8ed] p-6 backdrop-blur-xl">
                           <div className="flex items-start justify-between">
                             <div className="flex items-center gap-4">
-                              <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl bg-linear-to-br from-blue-600 to-cyan-500 text-lg font-bold text-white">
+                              <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl bg-linear-to-br from-amber-500 to-orange-400 text-lg font-bold text-white">
                                 {currentUser?.avatar ? (
                                   <img
                                     src={currentUser.avatar}
@@ -327,13 +325,13 @@ function Navbar() {
                               </div>
 
                               <div>
-                                <h2 className="max-w-45 truncate text-lg font-semibold text-white">
+                                <h2 className="max-w-45 truncate text-lg font-bold text-amber-950">
                                   {currentUser?.userName ||
                                     user?.userName ||
                                     "User"}
                                 </h2>
 
-                                <p className="text-sm capitalize text-zinc-400">
+                                <p className="text-sm font-medium capitalize text-amber-700">
                                   {currentUser?.role ||
                                     admin?.host ||
                                     superAdmin?.role ||
@@ -344,126 +342,105 @@ function Navbar() {
 
                             <button
                               onClick={() => setProfileOpen(false)}
-                              className="rounded-xl border border-white/10 p-2 text-zinc-400 transition hover:bg-white/10 hover:text-white"
+                              className="rounded-xl border border-amber-200 p-2 text-amber-700 transition hover:bg-amber-100 hover:text-amber-950"
                             >
                               <MdOutlineCancel className="text-xl" />
                             </button>
                           </div>
-
-                          {(token || adminToken) && (
-                            <div className="mt-5 rounded-2xl border border-white/10 bg-zinc-900 p-4 mb-3">
-                              <div className="flex items-center gap-3">
-                                <div className="rounded-xl bg-blue-500/10 p-3 text-blue-400">
-                                  <GrLocationPin className="text-lg" />
-                                </div>
-
-                                <div className="flex-1">
-                                  <p className="text-[11px] uppercase tracking-wider text-zinc-500">
-                                    Current Location
-                                  </p>
-
-                                  <p className="mt-1 text-sm font-medium text-white">
-                                    {currentUser?.location?.city
-                                      ? `${currentUser.location.city}, ${currentUser.location.state}`
-                                      : "Location not added"}
-                                  </p>
-                                </div>
-
-                                <Link
-                                  to={"/updateUserLocation"}
-                                  className="rounded-xl border border-blue-500/30 bg-blue-500/10 px-3 py-1.5 text-xs font-medium text-blue-400 transition hover:bg-blue-600 hover:text-white"
-                                >
-                                  Update
-                                </Link>
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Hotel Admin Profile */}
-                          {admin?.host === "hotel" && (
-                            <Link
-                              to="/admin/adminProfile"
-                              onClick={() => setProfileOpen(false)}
-                              className="flex items-center gap-4 rounded-2xl border border-white/10 bg-zinc-900 p-4 transition hover:border-emerald-500/40 hover:bg-emerald-500/10"
-                            >
-                              <div className="rounded-xl bg-emerald-500/10 p-3 text-emerald-400">
-                                <FaRegUserCircle className="text-xl" />
-                              </div>
-
-                              <div>
-                                <p className="font-medium text-white">
-                                  Hotel Admin Profile
-                                </p>
-                                <p className="text-sm text-zinc-400">
-                                  Manage hotel admin account
-                                </p>
-                              </div>
-                            </Link>
-                          )}
-
-                          {/* Restaurant Admin Profile */}
-                          {admin?.host === "restaurant" && (
-                            <Link
-                              to="/admin/adminProfile"
-                              onClick={() => setProfileOpen(false)}
-                              className="flex items-center gap-4 rounded-2xl border border-white/10 bg-zinc-900 p-4 transition hover:border-yellow-500/40 hover:bg-yellow-500/10"
-                            >
-                              <div className="rounded-xl bg-yellow-500/10 p-3 text-yellow-400">
-                                <FaRegUserCircle className="text-xl" />
-                              </div>
-
-                              <div>
-                                <p className="font-medium text-white">
-                                  Restaurant Admin Profile
-                                </p>
-                                <p className="text-sm text-zinc-400">
-                                  Manage restaurant admin account
-                                </p>
-                              </div>
-                            </Link>
-                          )}
-
-                          {/* Delivery Boy Profile */}
-                          {admin?.host === "delivery_boy" && (
-                            <Link
-                              to="/admin/adminProfile"
-                              onClick={() => setProfileOpen(false)}
-                              className="flex items-center gap-4 rounded-2xl border border-white/10 bg-zinc-900 p-4 transition hover:border-indigo-500/40 hover:bg-indigo-500/10"
-                            >
-                              <div className="rounded-xl bg-indigo-500/10 p-3 text-indigo-400">
-                                <FaRegUserCircle className="text-xl" />
-                              </div>
-
-                              <div>
-                                <p className="font-medium text-white">
-                                  Delivery Profile
-                                </p>
-                                <p className="text-sm text-zinc-400">
-                                  Manage delivery account
-                                </p>
-                              </div>
-                            </Link>
-                          )}
                         </div>
 
-                        {/* Menu */}
-                        <div className="space-y-3 p-5">
-                          {token && (
-                            <>
+                        {/* PROFILE SIDEBAR */}
+                        <aside className="fixed right-0 top-0 z-50 flex h-screen w-full max-w-sm flex-col border-l border-slate-200 bg-white font-['Poppins'] shadow-[0_10px_40px_rgba(0,0,0,0.08)]">
+                          {/* Header */}
+                          <div className="border-b border-slate-200 bg-slate-50 p-6">
+                            <div className="flex items-start justify-between">
+                              <div className="flex min-w-0 items-center gap-4">
+                                <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-linear-to-br from-sky-500 to-indigo-500 text-lg font-bold text-white shadow-md">
+                                  {currentUser?.avatar ? (
+                                    <img
+                                      src={currentUser.avatar}
+                                      alt={currentUser?.userName}
+                                      className="h-full w-full object-cover"
+                                    />
+                                  ) : (
+                                    getInitials(
+                                      currentUser?.userName || user?.userName
+                                    )
+                                  )}
+                                </div>
+
+                                <div className="min-w-0">
+                                  <h2 className="truncate text-lg font-semibold tracking-tight text-slate-800">
+                                    {currentUser?.userName ||
+                                      user?.userName ||
+                                      "User"}
+                                  </h2>
+
+                                  <p className="text-sm font-medium capitalize text-slate-500">
+                                    {currentUser?.role ||
+                                      admin?.host ||
+                                      superAdmin?.role ||
+                                      "Member"}
+                                  </p>
+                                </div>
+                              </div>
+
+                              <button
+                                onClick={() => setProfileOpen(false)}
+                                className="rounded-xl border border-slate-200 bg-white p-2 text-slate-500 transition hover:border-slate-300 hover:bg-slate-100 hover:text-slate-700"
+                              >
+                                <MdOutlineCancel className="text-xl" />
+                              </button>
+                            </div>
+
+                            {(token || adminToken) && (
+                              <div className="mt-5 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                                <div className="flex items-center gap-3">
+                                  <div className="rounded-xl bg-sky-100 p-3 text-sky-600">
+                                    <GrLocationPin className="text-lg" />
+                                  </div>
+
+                                  <div className="min-w-0 flex-1">
+                                    <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400">
+                                      Current Location
+                                    </p>
+
+                                    <p className="mt-1 truncate text-sm font-medium text-slate-700">
+                                      {currentUser?.location?.city
+                                        ? `${currentUser.location.city}, ${currentUser.location.state}`
+                                        : "Location not added"}
+                                    </p>
+                                  </div>
+
+                                  <Link
+                                    to="/updateUserLocation"
+                                    onClick={() => setProfileOpen(false)}
+                                    className="rounded-xl bg-sky-500 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-sky-600"
+                                  >
+                                    Update
+                                  </Link>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Menu */}
+                          <div className="flex-1 overflow-y-auto bg-white p-5">
+                            <div className="space-y-3">
                               <Link
                                 to="/user-profile"
                                 onClick={() => setProfileOpen(false)}
-                                className="flex items-center gap-4 rounded-2xl border border-white/10 bg-zinc-900 p-4 transition hover:border-blue-500/40 hover:bg-blue-500/10"
+                                className="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-sky-300 hover:bg-sky-50"
                               >
-                                <div className="rounded-xl bg-blue-500/10 p-3 text-blue-400">
+                                <div className="rounded-xl bg-sky-100 p-3 text-sky-600">
                                   <FaRegUserCircle className="text-xl" />
                                 </div>
 
                                 <div>
-                                  <p className="font-medium text-white">
+                                  <p className="text-sm font-semibold text-slate-800">
                                     My Profile
                                   </p>
-                                  <p className="text-sm text-zinc-400">
+                                  <p className="text-xs text-slate-500">
                                     Manage your account
                                   </p>
                                 </div>
@@ -472,17 +449,17 @@ function Navbar() {
                               <Link
                                 to="/trips"
                                 onClick={() => setProfileOpen(false)}
-                                className="flex items-center gap-4 rounded-2xl border border-white/10 bg-zinc-900 p-4 transition hover:border-purple-500/40 hover:bg-purple-500/10"
+                                className="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-violet-300 hover:bg-violet-50"
                               >
-                                <div className="rounded-xl bg-purple-500/10 p-3 text-purple-400">
+                                <div className="rounded-xl bg-violet-100 p-3 text-violet-600">
                                   <BiTrip className="text-xl" />
                                 </div>
 
                                 <div>
-                                  <p className="font-medium text-white">
+                                  <p className="text-sm font-semibold text-slate-800">
                                     My Trips
                                   </p>
-                                  <p className="text-sm text-zinc-400">
+                                  <p className="text-xs text-slate-500">
                                     View travel history
                                   </p>
                                 </div>
@@ -491,17 +468,17 @@ function Navbar() {
                               <Link
                                 to="/wishlist"
                                 onClick={() => setProfileOpen(false)}
-                                className="flex items-center gap-4 rounded-2xl border border-white/10 bg-zinc-900 p-4 transition hover:border-pink-500/40 hover:bg-pink-500/10"
+                                className="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-pink-300 hover:bg-pink-50"
                               >
-                                <div className="rounded-xl bg-pink-500/10 p-3 text-pink-400">
+                                <div className="rounded-xl bg-pink-100 p-3 text-pink-600">
                                   <FaHeart className="text-xl" />
                                 </div>
 
                                 <div>
-                                  <p className="font-medium text-white">
+                                  <p className="text-sm font-semibold text-slate-800">
                                     Wishlist
                                   </p>
-                                  <p className="text-sm text-zinc-400">
+                                  <p className="text-xs text-slate-500">
                                     Saved favourites
                                   </p>
                                 </div>
@@ -510,176 +487,88 @@ function Navbar() {
                               <Link
                                 to="/My-Food-orders"
                                 onClick={() => setProfileOpen(false)}
-                                className="flex items-center gap-4 rounded-2xl border border-white/10 bg-zinc-900 p-4 transition hover:border-orange-500/40 hover:bg-orange-500/10"
+                                className="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-amber-300 hover:bg-amber-50"
                               >
-                                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/10 text-xl text-orange-400">
+                                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 text-lg text-amber-600">
                                   🍽️
                                 </div>
 
                                 <div>
-                                  <p className="font-medium text-white">
+                                  <p className="text-sm font-semibold text-slate-800">
                                     Food Orders
                                   </p>
-                                  <p className="text-sm text-zinc-400">
+                                  <p className="text-xs text-slate-500">
                                     Track food orders
                                   </p>
                                 </div>
                               </Link>
 
-                              {/* Cart */}
                               <Link
                                 to="/cart"
-                                className="flex items-center gap-4 rounded-2xl border border-white/10 bg-zinc-900 p-4 transition hover:border-orange-500/40 hover:bg-orange-500/10 relative"
-                                aria-label="Cart"
+                                onClick={() => setProfileOpen(false)}
+                                className="relative flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-orange-300 hover:bg-orange-50"
                               >
-                                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/10 text-xl text-orange-400">
-                                  🍽️
+                                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-100 text-lg text-orange-600">
+                                  🛒
                                 </div>
-                                <div className="flex flex-col">
-                                  <p className="font-medium text-white">
+
+                                <div>
+                                  <p className="text-sm font-semibold text-slate-800">
                                     Food Cart
                                   </p>
-                                  <p className="text-sm text-zinc-400">
-                                    Saved favourites
+                                  <p className="text-xs text-slate-500">
+                                    Your saved cart items
                                   </p>
-                                  {cartCount > 0 && (
-                                  <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-orange-500 px-1 text-[10px] font-bold text-white shadow-lg">
+                                </div>
+
+                                {cartCount > 0 && (
+                                  <span className="absolute right-4 top-4 flex h-6 min-w-6 items-center justify-center rounded-full bg-orange-500 px-1 text-[10px] font-bold text-white">
                                     {cartCount > 99 ? "99+" : cartCount}
                                   </span>
                                 )}
+                              </Link>
+
+                              <Link
+                                to="/settings"
+                                onClick={() => setProfileOpen(false)}
+                                className="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-slate-300 hover:bg-slate-100"
+                              >
+                                <div className="rounded-xl bg-slate-200 p-3 text-slate-600">
+                                  <IoMdSettings className="text-xl" />
+                                </div>
+
+                                <div>
+                                  <p className="text-sm font-semibold text-slate-800">
+                                    Settings
+                                  </p>
+                                  <p className="text-xs text-slate-500">
+                                    Manage preferences
+                                  </p>
                                 </div>
                               </Link>
-                            </>
-                          )}
-
-                          {/* Super Admin Profile */}
-                          {superAdmin?.role === "super_admin" && (
-                            <Link
-                              to="/superAdmin/superAdminProfile"
-                              onClick={() => setProfileOpen(false)}
-                              className="flex items-center gap-4 rounded-2xl border border-white/10 bg-zinc-900 p-4 transition hover:border-cyan-500/40 hover:bg-cyan-500/10"
-                            >
-                              <div className="rounded-xl bg-cyan-500/10 p-3 text-cyan-400">
-                                <FaRegUserCircle className="text-xl" />
-                              </div>
-
-                              <div>
-                                <p className="font-medium text-white">
-                                  Super Admin Profile
-                                </p>
-                                <p className="text-sm text-zinc-400">
-                                  Manage super admin account
-                                </p>
-                              </div>
-                            </Link>
-                          )}
-
-                          {superAdmin?.role === "super_admin" && (
-                            <Link
-                              to="/superAdmin/superAdminDashboard"
-                              onClick={() => setProfileOpen(false)}
-                              className="flex items-center gap-4 rounded-2xl border border-white/10 bg-zinc-900 p-4 transition hover:border-cyan-500/40 hover:bg-cyan-500/10"
-                            >
-                              <div className="rounded-xl bg-cyan-500/10 p-3 text-cyan-400">
-                                <RxDashboard className="text-xl" />
-                              </div>
-
-                              <div>
-                                <p className="font-medium text-white">
-                                  Super Admin Dashboard
-                                </p>
-                              </div>
-                            </Link>
-                          )}
-
-                          {admin?.host === "hotel" && (
-                            <Link
-                              to="/admin/adminDashboard"
-                              onClick={() => setProfileOpen(false)}
-                              className="flex items-center gap-4 rounded-2xl border border-white/10 bg-zinc-900 p-4 transition hover:border-emerald-500/40 hover:bg-emerald-500/10"
-                            >
-                              <div className="rounded-xl bg-emerald-500/10 p-3 text-emerald-400">
-                                <RxDashboard className="text-xl" />
-                              </div>
-
-                              <div>
-                                <p className="font-medium text-white">
-                                  Hotel Dashboard
-                                </p>
-                              </div>
-                            </Link>
-                          )}
-
-                          {admin?.host === "restaurant" && (
-                            <Link
-                              to="/admin/restaurantDashboard"
-                              onClick={() => setProfileOpen(false)}
-                              className="flex items-center gap-4 rounded-2xl border border-white/10 bg-zinc-900 p-4 transition hover:border-yellow-500/40 hover:bg-yellow-500/10"
-                            >
-                              <div className="rounded-xl bg-yellow-500/10 p-3 text-yellow-400">
-                                <RxDashboard className="text-xl" />
-                              </div>
-
-                              <div>
-                                <p className="font-medium text-white">
-                                  Restaurant Dashboard
-                                </p>
-                              </div>
-                            </Link>
-                          )}
-
-                          {admin?.host === "delivery_boy" && (
-                            <Link
-                              to="/admin/deliveryBoy-dashboard"
-                              onClick={() => setProfileOpen(false)}
-                              className="flex items-center gap-4 rounded-2xl border border-white/10 bg-zinc-900 p-4 transition hover:border-indigo-500/40 hover:bg-indigo-500/10"
-                            >
-                              <div className="rounded-xl bg-indigo-500/10 p-3 text-indigo-400">
-                                <RxDashboard className="text-xl" />
-                              </div>
-
-                              <div>
-                                <p className="font-medium text-white">
-                                  Delivery Dashboard
-                                </p>
-                              </div>
-                            </Link>
-                          )}
-
-                          <Link
-                            to="/settings"
-                            onClick={() => setProfileOpen(false)}
-                            className="flex items-center gap-4 rounded-2xl border border-white/10 bg-zinc-900 p-4 transition hover:border-white/20 hover:bg-zinc-800"
-                          >
-                            <div className="rounded-xl bg-zinc-700 p-3 text-zinc-300">
-                              <IoMdSettings className="text-xl" />
                             </div>
+                          </div>
 
-                            <div>
-                              <p className="font-medium text-white">Settings</p>
-                            </div>
-                          </Link>
-                        </div>
-
-                        {/* Logout */}
-                        <div className="sticky bottom-0 border-t border-white/10 bg-black p-5">
-                          <button
-                            type="button"
-                            onClick={
-                              token
-                                ? handelUserLogout
-                                : superAdminToken
-                                ? handeSuperAdminLogout
-                                : adminToken
-                                ? handelAdminLogout
-                                : null
-                            }
-                            className="flex w-full items-center justify-center gap-3 rounded-2xl border border-red-500/20 bg-red-500/10 px-4 py-4 font-medium text-red-400 transition hover:bg-red-500 hover:text-white"
-                          >
-                            <span>🚪</span>
-                            Logout
-                          </button>
-                        </div>
+                          {/* Footer */}
+                          <div className="border-t border-slate-200 bg-white p-5">
+                            <button
+                              type="button"
+                              onClick={
+                                token
+                                  ? handelUserLogout
+                                  : superAdminToken
+                                  ? handeSuperAdminLogout
+                                  : adminToken
+                                  ? handelAdminLogout
+                                  : null
+                              }
+                              className="flex w-full items-center justify-center gap-3 rounded-2xl bg-red-500 px-4 py-4 text-sm font-semibold text-white transition hover:bg-red-600"
+                            >
+                              <span>🚪</span>
+                              Logout
+                            </button>
+                          </div>
+                        </aside>
                       </div>
                     </>
                   )}
@@ -689,7 +578,7 @@ function Navbar() {
               {/* Mobile Menu Button */}
               <button
                 onClick={toggleMenu}
-                className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-zinc-900 text-zinc-300 transition hover:bg-zinc-800 md:hidden"
+                className="flex h-11 w-11 items-center justify-center rounded-2xl border border-amber-200 bg-white text-amber-800 transition hover:bg-amber-50 md:hidden"
                 aria-label={isOpen ? "Close menu" : "Open menu"}
                 aria-expanded={isOpen}
               >
@@ -706,7 +595,7 @@ function Navbar() {
         {/* MOBILE MENU */}
         <div
           className={[
-            "border-t border-white/10 bg-black md:hidden overflow-hidden transition-[max-height,opacity] duration-300 ease-out",
+            "border-t border-amber-200 bg-[#fff8ed] md:hidden overflow-hidden transition-[max-height,opacity] duration-300 ease-out",
             isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0",
           ].join(" ")}
         >
@@ -723,31 +612,11 @@ function Navbar() {
                 key={item.to}
                 to={item.to}
                 onClick={() => setIsOpen(false)}
-                className="block rounded-2xl px-4 py-3 text-sm font-medium text-zinc-300 transition hover:bg-zinc-900 hover:text-white"
+                className="block rounded-2xl px-4 py-3 text-sm font-semibold text-amber-800 transition hover:bg-amber-100 hover:text-amber-950"
               >
                 {item.label}
               </Link>
             ))}
-
-            {!token && !superAdminToken && !adminToken && (
-              <div className="mt-4 flex flex-col gap-3 border-t border-white/10 pt-4">
-                <Link
-                  to="/loginPage"
-                  onClick={() => setIsOpen(false)}
-                  className="rounded-2xl border border-white/10 bg-zinc-900 px-4 py-3 text-center text-sm font-medium text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
-                >
-                  Login
-                </Link>
-
-                <Link
-                  to="/signUp"
-                  onClick={() => setIsOpen(false)}
-                  className="rounded-2xl bg-blue-600 px-4 py-3 text-center text-sm font-medium text-white transition hover:bg-blue-500"
-                >
-                  Register
-                </Link>
-              </div>
-            )}
           </div>
         </div>
       </nav>

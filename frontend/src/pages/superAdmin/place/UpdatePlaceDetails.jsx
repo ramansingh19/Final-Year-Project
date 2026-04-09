@@ -128,130 +128,132 @@ function UpdatePlaceDetails() {
   };
 
   return (
-    <div className="min-h-screen p-6 bg-gray-100 dark:bg-gray-900">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white">
-        Update Place ✏️
-      </h1>
+<div className="min-h-screen p-6 bg-linear-to-br from-gray-50 via-gray-100 to-gray-50 text-gray-900">
 
-      <form
-        onSubmit={handleSubmit}
-        className="max-w-4xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-2xl shadow space-y-5"
-      >
-        {/* NAME */}
-        <input
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          placeholder="Place Name"
-          className="w-full border p-3 rounded-xl"
-        />
+<h1 className="text-3xl font-bold mb-6 text-gray-900">
+  Update Place ✏️
+</h1>
 
-        {/* CATEGORY */}
-        <input
-          name="category"
-          value={formData.category}
-          onChange={handleChange}
-          placeholder="Category"
-          className="w-full border p-3 rounded-xl"
-        />
+<form
+  onSubmit={handleSubmit}
+  className="max-w-4xl mx-auto bg-white p-6 rounded-2xl shadow-lg space-y-5 transition-all duration-300"
+>
+  {/* NAME */}
+  <input
+    name="name"
+    value={formData.name}
+    onChange={handleChange}
+    placeholder="Place Name"
+    className="w-full border border-gray-300 p-3 rounded-xl focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition"
+  />
 
-        {/* DESCRIPTION */}
-        <textarea
-          name="description"
-          value={formData.description}
-          onChange={handleChange}
-          className="w-full border p-3 rounded-xl"
-        />
+  {/* CATEGORY */}
+  <input
+    name="category"
+    value={formData.category}
+    onChange={handleChange}
+    placeholder="Category"
+    className="w-full border border-gray-300 p-3 rounded-xl focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition"
+  />
 
-        {/* TIME + FEES */}
-        <div className="grid grid-cols-2 gap-4">
-          <input
-            name="timeRequired"
-            value={formData.timeRequired}
-            onChange={handleChange}
-            placeholder="Time Required"
-            className="border p-3 rounded-xl"
-          />
-          <input
-            name="entryfees"
-            value={formData.entryfees}
-            onChange={handleChange}
-            placeholder="Entry Fees"
-            className="border p-3 rounded-xl"
-          />
-        </div>
+  {/* DESCRIPTION */}
+  <textarea
+    name="description"
+    value={formData.description}
+    onChange={handleChange}
+    placeholder="Description"
+    className="w-full border border-gray-300 p-3 rounded-xl focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition"
+  />
 
-        {/* BEST TIME */}
-        <input
-          name="bestTimeToVisit"
-          value={formData.bestTimeToVisit}
-          onChange={handleChange}
-          placeholder="Best Time"
-          className="w-full border p-3 rounded-xl"
-        />
+  {/* TIME + FEES */}
+  <div className="grid grid-cols-2 gap-4">
+    <input
+      name="timeRequired"
+      value={formData.timeRequired}
+      onChange={handleChange}
+      placeholder="Time Required"
+      className="border border-gray-300 p-3 rounded-xl focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition"
+    />
+    <input
+      name="entryfees"
+      value={formData.entryfees}
+      onChange={handleChange}
+      placeholder="Entry Fees"
+      className="border border-gray-300 p-3 rounded-xl focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition"
+    />
+  </div>
 
-        {/* POPULAR */}
-        <select
-          name="isPopular"
-          value={formData.isPopular}
-          onChange={handleChange}
-          className="w-full border p-3 rounded-xl"
-        >
-          <option value="false">Normal</option>
-          <option value="true">Popular</option>
-        </select>
+  {/* BEST TIME */}
+  <input
+    name="bestTimeToVisit"
+    value={formData.bestTimeToVisit}
+    onChange={handleChange}
+    placeholder="Best Time"
+    className="w-full border border-gray-300 p-3 rounded-xl focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition"
+  />
 
-        {/* LOCATION */}
-        <div className="grid grid-cols-2 gap-4">
-          <input
-            name="latitude"
-            value={formData.latitude}
-            onChange={handleChange}
-            placeholder="Latitude"
-            className="border p-3 rounded-xl"
-          />
-          <input
-            name="longitude"
-            value={formData.longitude}
-            onChange={handleChange}
-            placeholder="Longitude"
-            className="border p-3 rounded-xl"
-          />
-        </div>
+  {/* POPULAR */}
+  <select
+    name="isPopular"
+    value={formData.isPopular}
+    onChange={handleChange}
+    className="w-full border border-gray-300 p-3 rounded-xl focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition"
+  >
+    <option value="false">Normal</option>
+    <option value="true">Popular</option>
+  </select>
 
-        <button
-          type="button"
-          onClick={handleLiveLocation}
-          className="bg-green-500 text-white px-4 py-2 rounded-xl"
-        >
-          Get Live Location 📍
-        </button>
+  {/* LOCATION */}
+  <div className="grid grid-cols-2 gap-4">
+    <input
+      name="latitude"
+      value={formData.latitude}
+      onChange={handleChange}
+      placeholder="Latitude"
+      className="border border-gray-300 p-3 rounded-xl focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition"
+    />
+    <input
+      name="longitude"
+      value={formData.longitude}
+      onChange={handleChange}
+      placeholder="Longitude"
+      className="border border-gray-300 p-3 rounded-xl focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition"
+    />
+  </div>
 
-        {/* OLD IMAGES */}
-        <div className="flex gap-3 flex-wrap">
-          {formData.oldImages.map((img, i) => (
-            <img
-              key={i}
-              src={img}
-              className="w-24 h-24 object-cover rounded-xl"
-            />
-          ))}
-        </div>
+  <button
+    type="button"
+    onClick={handleLiveLocation}
+    className="bg-green-500 text-white px-4 py-2 rounded-xl hover:bg-green-600 transition"
+  >
+    Get Live Location 📍
+  </button>
 
-        {/* NEW IMAGES */}
-        <input
-          type="file"
-          multiple
-          onChange={handleImageChange}
-          className="w-full border p-3 rounded-xl"
-        />
+  {/* OLD IMAGES */}
+  <div className="flex gap-3 flex-wrap">
+    {formData.oldImages.map((img, i) => (
+      <img
+        key={i}
+        src={img}
+        className="w-24 h-24 object-cover rounded-xl border border-gray-200 shadow-sm transition hover:scale-105"
+      />
+    ))}
+  </div>
 
-        {/* SUBMIT */}
-        <button className="w-full bg-blue-600 text-white py-3 rounded-xl">
-          Update Place 🚀
-        </button>
-      </form>
-    </div>
+  {/* NEW IMAGES */}
+  <input
+    type="file"
+    multiple
+    onChange={handleImageChange}
+    className="w-full border border-gray-300 p-3 rounded-xl focus:border-blue-400 focus:ring-2 focus:ring-blue-200 transition"
+  />
+
+  {/* SUBMIT */}
+  <button className="w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition">
+    Update Place 🚀
+  </button>
+</form>
+</div>
   );
 }
 

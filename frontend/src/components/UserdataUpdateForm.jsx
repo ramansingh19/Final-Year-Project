@@ -60,49 +60,59 @@ function UserdataUpdateForm() {
   return (
 <form
   onSubmit={handleSubmit}
-  className="mx-auto w-full max-w-5xl overflow-hidden rounded-4xl border border-white/10 bg-[#0b0b0f] shadow-[0_30px_80px_rgba(0,0,0,0.65)]"
+  className="relative mx-auto w-full max-w-6xl overflow-hidden rounded-[38px] border border-white/70 bg-[#f7f9fc]/90 shadow-[0_35px_90px_rgba(15,23,42,0.08)] backdrop-blur-3xl"
 >
-  <div className="grid lg:grid-cols-[340px_1fr]">
+  {/* Ecommerce Style Background */}
+  <div className="absolute inset-0 overflow-hidden">
+    <div className="absolute -left-20 -top-16 h-72 w-72 rounded-full bg-orange-200/40 blur-3xl animate-pulse" />
+    <div className="absolute right-0 top-10 h-80 w-80 rounded-full bg-sky-200/40 blur-3xl animate-pulse [animation-delay:1s]" />
+    <div className="absolute bottom-0 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-pink-200/30 blur-3xl animate-pulse [animation-delay:2s]" />
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(251,146,60,0.10),transparent_45%)]" />
+    <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(255,255,255,0.55),transparent,rgba(255,255,255,0.35))]" />
+  </div>
+
+  <div className="relative z-10 grid lg:grid-cols-[360px_1fr]">
     {/* LEFT PANEL */}
-    <div className="relative border-b border-white/10 bg-linear-to-b from-[#111827] via-[#0f172a] to-[#020617] p-6 sm:p-8 lg:border-b-0 lg:border-r lg:border-white/10">
-      {/* subtle glow */}
-      <div className="absolute -left-20 top-0 h-56 w-56 rounded-full bg-cyan-500/10 blur-3xl" />
-      <div className="absolute bottom-0 right-0 h-48 w-48 rounded-full bg-blue-600/10 blur-3xl" />
+    <div className="relative border-b border-slate-200/80 bg-white/70 p-6 backdrop-blur-2xl sm:p-8 lg:border-b-0 lg:border-r">
+      <div className="absolute -left-10 top-10 h-40 w-40 rounded-full bg-orange-100 blur-3xl" />
+      <div className="absolute bottom-0 right-0 h-44 w-44 rounded-full bg-sky-100 blur-3xl" />
 
       <div className="relative z-10 flex h-full flex-col">
         <div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.25em] text-cyan-300">
-            <span className="h-2 w-2 rounded-full bg-cyan-400" />
+          <div className="inline-flex items-center gap-2 rounded-full border border-orange-200 bg-orange-50 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.28em] text-orange-500 shadow-sm">
+            <span className="h-2 w-2 animate-pulse rounded-full bg-orange-500" />
             Account Settings
           </div>
 
-          <h2 className="mt-5 text-3xl font-bold leading-tight text-white sm:text-4xl">
+          <h2 className="mt-5 bg-linear-to-r from-slate-900 via-orange-500 to-amber-500 bg-clip-text text-3xl font-black leading-tight text-transparent sm:text-4xl">
             Update Profile
           </h2>
 
-          <p className="mt-3 text-sm leading-7 text-zinc-400 sm:text-base">
-            Manage your personal details, upload a new profile image and keep
-            your account information up to date.
+          <p className="mt-4 text-sm leading-7 text-slate-500 sm:text-base">
+            Manage your profile details, upload a fresh photo and keep your
+            account information beautifully updated.
           </p>
         </div>
 
-        {/* Profile Preview Card */}
-        <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+        {/* Profile Card */}
+        <div className="mt-10 rounded-[30px] border border-white/80 bg-white/80 p-6 shadow-[0_20px_50px_rgba(15,23,42,0.05)] backdrop-blur-2xl transition duration-500 hover:-translate-y-1 hover:shadow-[0_25px_60px_rgba(15,23,42,0.08)]">
           <div className="flex flex-col items-center text-center">
             <div className="group relative">
+              <div className="absolute -inset-1 rounded-[30px] bg-linear-to-r from-orange-400 via-pink-400 to-sky-400 opacity-30 blur-md transition duration-500 group-hover:opacity-60" />
+
               {avatarPreview ? (
                 <img
                   src={avatarPreview}
                   alt="Avatar Preview"
-                  className="h-28 w-28 rounded-3xl object-cover ring-4 ring-cyan-500/20 transition duration-300 group-hover:scale-[1.02]"
+                  className="relative h-28 w-28 rounded-[28px] object-cover ring-4 ring-white shadow-[0_15px_40px_rgba(249,115,22,0.15)] transition duration-500 group-hover:scale-[1.04]"
                 />
               ) : (
-                <div className="flex h-28 w-28 items-center justify-center rounded-3xl bg-linear-to-br from-cyan-500 via-blue-600 to-indigo-700 text-4xl font-bold text-white ring-4 ring-cyan-500/20 transition duration-300 group-hover:scale-[1.02]">
+                <div className="relative flex h-28 w-28 items-center justify-center rounded-[28px] bg-linear-to-br from-orange-400 via-amber-400 to-pink-400 text-4xl font-black text-white ring-4 ring-white shadow-[0_15px_40px_rgba(249,115,22,0.15)] transition duration-500 group-hover:scale-[1.04]">
                   {user?.userName?.[0]?.toUpperCase() || "U"}
                 </div>
               )}
 
-              <label className="absolute -bottom-2 -right-2 flex h-10 w-10 cursor-pointer items-center justify-center rounded-2xl border border-white/10 bg-cyan-500 text-white shadow-lg transition hover:scale-105 hover:bg-cyan-400">
+              <label className="absolute -bottom-2 -right-2 flex h-11 w-11 cursor-pointer items-center justify-center rounded-2xl border border-white bg-orange-500 text-white shadow-lg shadow-orange-200 transition-all duration-300 hover:scale-105 hover:bg-orange-400">
                 <svg
                   className="h-5 w-5"
                   fill="none"
@@ -126,19 +136,22 @@ function UserdataUpdateForm() {
               </label>
             </div>
 
-            <h3 className="mt-5 text-xl font-semibold text-white">
+            <h3 className="mt-5 text-xl font-black text-slate-900">
               {formData.userName || "Your Name"}
             </h3>
 
-            <p className="mt-1 text-sm text-zinc-400">
+            <p className="mt-1 text-sm font-medium text-slate-500">
               {formData.email || "your@email.com"}
             </p>
 
-            <div className="mt-6 w-full rounded-2xl border border-white/10 bg-black/30 p-4">
+            <div className="mt-6 w-full rounded-2xl border border-slate-200 bg-slate-50/80 p-4">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-zinc-400">Status</span>
-                <span className="inline-flex items-center gap-2 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400">
-                  <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                <span className="text-sm font-medium text-slate-500">
+                  Status
+                </span>
+
+                <span className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-600">
+                  <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
                   Active
                 </span>
               </div>
@@ -147,28 +160,29 @@ function UserdataUpdateForm() {
         </div>
 
         <div className="mt-auto hidden pt-8 lg:block">
-          <p className="text-xs leading-6 text-zinc-500">
-            Tip: Use a professional profile photo and updated contact details
-            to make your account look more trustworthy.
-          </p>
+          <div className="rounded-2xl border border-orange-100 bg-orange-50/80 p-4 text-sm leading-7 text-orange-600">
+            Tip: A clean profile image and updated contact details make your
+            account look more professional and trustworthy.
+          </div>
         </div>
       </div>
     </div>
 
     {/* RIGHT PANEL */}
-    <div className="bg-[#0f1117] p-6 sm:p-8 lg:p-10">
-      <div className="mb-8 flex items-center justify-between border-b border-white/10 pb-5">
+    <div className="bg-[#fbfcff]/80 p-6 backdrop-blur-2xl sm:p-8 lg:p-10">
+      <div className="mb-8 flex flex-col gap-5 border-b border-slate-200 pb-6 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h3 className="text-2xl font-semibold text-white">
+          <h3 className="text-2xl font-black text-slate-900">
             Personal Information
           </h3>
-          <p className="mt-1 text-sm text-zinc-400">
+
+          <p className="mt-1 text-sm text-slate-500">
             Edit your account details below
           </p>
         </div>
 
-        <div className="hidden rounded-2xl border border-white/10 bg-white/5 px-4 py-3 sm:flex sm:items-center sm:gap-3">
-          <div className="h-10 w-10 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400">
+        <div className="hidden rounded-3xl border border-white bg-white/90 px-4 py-3 shadow-[0_10px_30px_rgba(15,23,42,0.05)] sm:flex sm:items-center sm:gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-sky-100 text-sky-500">
             <svg
               className="h-5 w-5"
               fill="none"
@@ -185,10 +199,11 @@ function UserdataUpdateForm() {
           </div>
 
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
               Secure Account
             </p>
-            <p className="text-sm font-medium text-white">
+
+            <p className="text-sm font-semibold text-slate-800">
               Information Protected
             </p>
           </div>
@@ -198,13 +213,13 @@ function UserdataUpdateForm() {
       <div className="grid gap-6 md:grid-cols-2">
         {/* Name */}
         <div className="md:col-span-2">
-          <label className="mb-2 block text-sm font-medium text-zinc-300">
+          <label className="mb-2 block text-sm font-bold text-slate-700">
             Full Name
           </label>
 
-          <div className="group flex items-center rounded-2xl border border-white/10 bg-[#151922] px-4 transition duration-300 focus-within:border-cyan-500/50 focus-within:ring-2 focus-within:ring-cyan-500/10">
+          <div className="group flex items-center rounded-3xl border border-slate-200 bg-white px-5 shadow-sm transition-all duration-300 focus-within:-translate-y-0.5 focus-within:border-orange-300 focus-within:shadow-[0_12px_30px_rgba(249,115,22,0.12)]">
             <svg
-              className="mr-3 h-5 w-5 text-zinc-500 transition group-focus-within:text-cyan-400"
+              className="mr-3 h-5 w-5 text-slate-400 transition group-focus-within:text-orange-500"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
@@ -223,20 +238,20 @@ function UserdataUpdateForm() {
               value={formData.userName}
               onChange={handleChange}
               placeholder="Enter your full name"
-              className="w-full bg-transparent py-4 text-white placeholder:text-zinc-500 focus:outline-none"
+              className="w-full bg-transparent py-4 text-[15px] font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none"
             />
           </div>
         </div>
 
         {/* Email */}
         <div>
-          <label className="mb-2 block text-sm font-medium text-zinc-300">
+          <label className="mb-2 block text-sm font-bold text-slate-700">
             Email Address
           </label>
 
-          <div className="group flex items-center rounded-2xl border border-white/10 bg-[#151922] px-4 transition duration-300 focus-within:border-cyan-500/50 focus-within:ring-2 focus-within:ring-cyan-500/10">
+          <div className="group flex items-center rounded-3xl border border-slate-200 bg-white px-5 shadow-sm transition-all duration-300 focus-within:-translate-y-0.5 focus-within:border-sky-300 focus-within:shadow-[0_12px_30px_rgba(14,165,233,0.12)]">
             <svg
-              className="mr-3 h-5 w-5 text-zinc-500 transition group-focus-within:text-cyan-400"
+              className="mr-3 h-5 w-5 text-slate-400 transition group-focus-within:text-sky-500"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
@@ -255,20 +270,20 @@ function UserdataUpdateForm() {
               value={formData.email}
               onChange={handleChange}
               placeholder="Enter your email"
-              className="w-full bg-transparent py-4 text-white placeholder:text-zinc-500 focus:outline-none"
+              className="w-full bg-transparent py-4 text-[15px] font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none"
             />
           </div>
         </div>
 
         {/* Contact */}
         <div>
-          <label className="mb-2 block text-sm font-medium text-zinc-300">
+          <label className="mb-2 block text-sm font-bold text-slate-700">
             Contact Number
           </label>
 
-          <div className="group flex items-center rounded-2xl border border-white/10 bg-[#151922] px-4 transition duration-300 focus-within:border-cyan-500/50 focus-within:ring-2 focus-within:ring-cyan-500/10">
+          <div className="group flex items-center rounded-3xl border border-slate-200 bg-white px-5 shadow-sm transition-all duration-300 focus-within:-translate-y-0.5 focus-within:border-emerald-300 focus-within:shadow-[0_12px_30px_rgba(16,185,129,0.12)]">
             <svg
-              className="mr-3 h-5 w-5 text-zinc-500 transition group-focus-within:text-cyan-400"
+              className="mr-3 h-5 w-5 text-slate-400 transition group-focus-within:text-emerald-500"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
@@ -287,27 +302,27 @@ function UserdataUpdateForm() {
               value={formData.contactNumber}
               onChange={handleChange}
               placeholder="Enter your contact number"
-              className="w-full bg-transparent py-4 text-white placeholder:text-zinc-500 focus:outline-none"
+              className="w-full bg-transparent py-4 text-[15px] font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none"
             />
           </div>
         </div>
       </div>
 
       {error && (
-        <div className="mt-6 rounded-2xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+        <div className="mt-6 rounded-3xl border border-red-200 bg-red-50 px-4 py-4 text-sm font-medium text-red-500 shadow-sm animate-[fadeIn_.4s_ease]">
           {error}
         </div>
       )}
 
-      <div className="mt-10 flex flex-col-reverse gap-4 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm text-zinc-500">
+      <div className="mt-10 flex flex-col-reverse gap-4 border-t border-slate-200 pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm font-medium text-slate-500">
           Changes are saved securely to your account.
         </p>
 
         <button
           type="submit"
           disabled={loading}
-          className="inline-flex items-center justify-center gap-3 rounded-2xl bg-cyan-500 px-7 py-4 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 transition duration-300 hover:bg-cyan-400 hover:shadow-cyan-500/30 disabled:cursor-not-allowed disabled:opacity-60"
+          className="group inline-flex items-center justify-center gap-3 rounded-3xl bg-linear-to-r from-orange-500 via-amber-500 to-pink-500 px-8 py-4 text-sm font-bold text-white shadow-[0_18px_40px_rgba(249,115,22,0.25)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_50px_rgba(249,115,22,0.35)] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loading ? (
             <>
@@ -318,7 +333,7 @@ function UserdataUpdateForm() {
             <>
               Save Changes
               <svg
-                className="h-5 w-5"
+                className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"

@@ -1,705 +1,657 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback, useEffect, useMemo, useRef, useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getActiveCities } from "../../features/user/citySlice";
 
-/* ─────────────────────────────────────────────────────────────
-   Placeholder image helper — inline SVG, zero network request
-───────────────────────────────────────────────────────────── */
+/* ─── Placeholder SVG ─── */
 const ph = (w, h, t) =>
   `data:image/svg+xml,${encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><rect width="${w}" height="${h}" fill="#13131a"/><text x="50%" y="50%" fill="#3d6ef5" text-anchor="middle" dy=".3em" font-size="14" font-family="sans-serif">${t}</text></svg>`
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">
+      <rect width="${w}" height="${h}" fill="#f1ede6"/>
+      <text x="50%" y="50%" fill="#b5a898" text-anchor="middle" dy=".3em"
+        font-size="13" font-family="sans-serif">${t}</text>
+    </svg>`
   )}`;
 
-/* ─────────────────────────────────────────────────────────────
-   Style injection — fonts + keyframe animations
-   Guards prevent duplicate injection on hot-reload
-───────────────────────────────────────────────────────────── */
-const injectMinimalStyles = () => {
-  if (!document.getElementById("fxc-font")) {
-    const link = document.createElement("link");
-    link.id = "fxc-font";
-    link.rel = "stylesheet";
-    link.href =
-      "https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@300;400;500&display=swap";
-    document.head.appendChild(link);
+/* ─── Style injection ─── */
+const injectStyles = () => {
+  if (!document.getElementById("pc-font")) {
+    const l = document.createElement("link");
+    l.id = "pc-font"; l.rel = "stylesheet";
+    l.href = "https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Outfit:wght@300;400;500;600&display=swap";
+    document.head.appendChild(l);
   }
-
-  if (document.getElementById("fxc-styles")) return;
+  if (document.getElementById("pc-styles")) return;
   const s = document.createElement("style");
-  s.id = "fxc-styles";
+  s.id = "pc-styles";
   s.textContent = `
-    @keyframes fxcSlideUp {
-      from { opacity: 0; transform: translateY(32px); }
-      to   { opacity: 1; transform: translateY(0); }
+    :root {
+      --pc-bg:      #f7f3ee;
+      --pc-sand:    #ede8df;
+      --pc-stone:   #c8c0b4;
+      --pc-ink:     #1a1714;
+      --pc-ink2:    #3d3830;
+      --pc-ink3:    #7a7469;
+      --pc-accent:  #e8622a;
+      --pc-white:   rgba(255,255,255,0.94);
     }
-    @keyframes fxcSlideDown {
-      from { opacity: 0; transform: translateY(-24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fxcFadeIn {
-      from { opacity: 0; transform: translateY(14px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fxcShimmer {
-      0%   { background-position: 100% 50%; }
-      100% { background-position:   0% 50%; }
-    }
-    @keyframes fxcProgress {
-      from { transform: scaleX(0); }
-      to   { transform: scaleX(1); }
-    }
-    @keyframes fxcFadeCard {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
-    @keyframes fxcKenBurns {
-      0%   { transform: scale(1.0); }
-      100% { transform: scale(1.08); }
-    }
-    .anim-ken-burns { animation: fxcKenBurns 20s ease-out forwards; }
-    .anim-slide-up   { animation: fxcSlideUp   0.55s cubic-bezier(0.22,1,0.36,1) forwards; }
-    .anim-slide-down { animation: fxcSlideDown 0.55s cubic-bezier(0.22,1,0.36,1) forwards; }
-    .anim-fade-in-1  { animation: fxcFadeIn 0.55s ease 0.10s both; }
-    .anim-fade-in-2  { animation: fxcFadeIn 0.55s ease 0.18s both; }
-    .anim-fade-in-3  { animation: fxcFadeIn 0.55s ease 0.28s both; }
-    .anim-shimmer {
-      animation: fxcShimmer 1.9s ease-in-out infinite;
-      background: linear-gradient(
-        90deg,
-        rgba(255,255,255,0.03) 0%,
-        rgba(255,255,255,0.09) 50%,
-        rgba(255,255,255,0.03) 100%
-      );
-      background-size: 400% 100%;
-      backdrop-filter: blur(12px);
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
-    }
-    .anim-progress {
-      animation: fxcProgress 3s linear forwards;
-      transform-origin: left center;
-    }
-    .anim-fade-card { animation: fxcFadeCard 0.42s ease forwards; }
-    .no-scrollbar   { scrollbar-width: none; }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
 
-    /* FIX: Respect OS reduced-motion preference */
-    @media (prefers-reduced-motion: reduce) {
-      .anim-slide-up, .anim-slide-down,
-      .anim-fade-in-1, .anim-fade-in-2, .anim-fade-in-3,
-      .anim-shimmer, .anim-progress, .anim-fade-card {
-        animation: none !important;
-        opacity: 1 !important;
-        transform: none !important;
+    @keyframes pcKenBurns { from{transform:scale(1)} to{transform:scale(1.09)} }
+    @keyframes pcSlideUp   { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:none} }
+    @keyframes pcSlideDown { from{opacity:0;transform:translateY(-28px)} to{opacity:1;transform:none} }
+    @keyframes pcFadeIn    { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+    @keyframes pcProgress  { from{width:0} to{width:100%} }
+    @keyframes pcShimmer {
+      0%  { background-position:200% 0 }
+      100%{ background-position:-200% 0 }
+    }
+    @keyframes pcPulse {
+      0%,100%{ box-shadow:0 0 0 0 rgba(232,98,42,.4) }
+      50%    { box-shadow:0 0 0 7px rgba(232,98,42,0) }
+    }
+    @keyframes pcTagSlide { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:none} }
+
+    .pc-ken      { animation:pcKenBurns 22s ease-out forwards }
+    .pc-slide-up { animation:pcSlideUp   .5s cubic-bezier(.22,1,.36,1) both }
+    .pc-slide-dn { animation:pcSlideDown .5s cubic-bezier(.22,1,.36,1) both }
+    .pc-fi1 { animation:pcFadeIn .5s ease .08s both }
+    .pc-fi2 { animation:pcFadeIn .5s ease .18s both }
+    .pc-fi3 { animation:pcFadeIn .5s ease .30s both }
+    .pc-fi4 { animation:pcFadeIn .5s ease .42s both }
+    .pc-tag-anim { animation:pcTagSlide .4s ease both }
+    .pc-card-fade{ animation:pcFadeIn .38s ease both }
+    .pc-noscroll { scrollbar-width:none }
+    .pc-noscroll::-webkit-scrollbar { display:none }
+    .pc-shimmer {
+      background:linear-gradient(90deg,#ede8df 0%,#e6e0d6 40%,#ede8df 80%);
+      background-size:400% 100%;
+      animation:pcShimmer 1.8s ease-in-out infinite;
+    }
+    .pc-progress-fill {
+      height:100%; background:var(--pc-accent); border-radius:2px;
+      animation:pcProgress 3s linear forwards;
+    }
+    .pc-dot {
+      width:7px; height:7px; border-radius:50%; border:none;
+      background:var(--pc-stone); cursor:pointer; padding:0; flex-shrink:0;
+      transition:all .32s cubic-bezier(.34,1.26,.64,1);
+    }
+    .pc-dot:hover { background:var(--pc-ink2); transform:scale(1.2) }
+    .pc-dot-active {
+      background:var(--pc-accent) !important;
+      transform:scaleY(3.2) scaleX(1) !important;
+      border-radius:4px !important;
+      animation:pcPulse 2s ease-in-out infinite;
+    }
+    .pc-card {
+      background:var(--pc-white);
+      border-radius:20px; overflow:hidden;
+      position:relative; flex-shrink:0; cursor:pointer;
+      border:1.5px solid rgba(255,255,255,.7);
+      transition:transform .45s cubic-bezier(.34,1.26,.64,1),
+                 box-shadow .45s ease, opacity .45s ease;
+    }
+    .pc-card:hover {
+      transform:translateY(-7px) scale(1.028) !important;
+      box-shadow: 0 8px 24px rgba(198, 124, 78, 0.35) !important;
+      opacity:1 !important; z-index:20 !important;
+    }
+    .pc-card img { transition:transform .55s ease }
+    .pc-card:hover img { transform:scale(1.08) }
+    .pc-bm {
+      position:absolute; top:10px; right:10px;
+      width:32px; height:32px; border-radius:50%; border:none;
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; z-index:5; transition:all .22s;
+      backdrop-filter:blur(8px);
+    }
+    .pc-bm:hover { transform:scale(1.14) }
+    .pc-btn-primary {
+      background:var(--pc-ink); color:#fff; border:none;
+      border-radius:100px; padding:14px 28px;
+      font-family:'Outfit',sans-serif; font-size:14px; font-weight:500;
+      letter-spacing:.02em; cursor:pointer;
+      display:inline-flex; align-items:center; gap:10px;
+      transition:background .22s, transform .22s, box-shadow .22s;
+    }
+    .pc-btn-primary:hover {
+      background: linear-gradient(to right, #c67c4e, #b86c3d); transform:translateY(-2px);
+      box-shadow:0 12px 32px rgba(232,98,42,.28);
+    }
+    .pc-btn-primary:active { transform:scale(.97) }
+    .pc-btn-ghost {
+      background:transparent; color:linear-gradient(to right, #c67c4e, #b86c3d);
+      border:1.5px solid var(--pc-stone); border-radius:100px;
+      padding:13px 22px; font-family:'Outfit',sans-serif; font-size:14px;
+      font-weight:500; cursor:pointer;
+      display:inline-flex; align-items:center; gap:8px;
+      transition:border-color .2s, color .2s, background .2s;
+    }
+    .pc-btn-ghost:hover { border-color:var(--pc-ink2); background:rgba(26,23,20,.04) }
+    .pc-btn-circle {
+      width:44px; height:44px; border-radius:50%;
+      border:1.5px solid var(--pc-stone); 
+      background:var(--pc-bg);
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; color:var(--pc-ink);
+      transition:all .22s;
+    }
+    .pc-btn-circle:hover {
+      border-color:var(--pc-ink); background:var(--pc-ink); color:#fff;
+      transform:scale(1.08);
+    }
+    .pc-btn-circle-accent {
+      width:44px; height:40px; border-radius:50%; border:none;
+
+      color:#fff;
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; box-shadow:0 6px 20px rgba(232,98,42,.3);
+      transition:all .22s;
+    }
+    .pc-btn-circle-accent:hover {
+      background:#cf5320; transform:scale(1.08);
+      box-shadow:0 10px 28px rgba(232,98,42,.42);
+    }
+    @media (prefers-reduced-motion:reduce) {
+      *, *::before, *::after {
+        animation-duration:.001ms !important;
+        transition-duration:.001ms !important;
       }
     }
   `;
   document.head.appendChild(s);
 };
+injectStyles();
 
-/* Run once at module load so Skeleton gets shimmer on first paint */
-injectMinimalStyles();
-
-/* ─────────────────────────────────────────────────────────────
-   Skeleton
-───────────────────────────────────────────────────────────── */
+/* ─── Skeleton ─── */
 function Skeleton() {
   return (
-    <div className="w-full min-h-screen bg-[#0a0a10] relative overflow-hidden">
-      <div className="anim-shimmer absolute inset-0" />
-      {/* Desktop shimmer blocks */}
-      <div className="hidden md:block">
-        <div className="anim-shimmer absolute left-[72px] bottom-[198px] w-[340px] h-[95px] rounded-md" />
-        <div className="anim-shimmer absolute left-[72px] bottom-[172px] w-[200px] h-[10px] rounded-sm" />
-        <div className="anim-shimmer absolute left-[72px] bottom-[156px] w-[160px] h-[10px] rounded-sm" />
-        <div className="anim-shimmer absolute left-[72px] bottom-[104px] w-[148px] h-[48px] rounded-full" />
-        <div className="anim-shimmer absolute right-[264px] top-1/2 -mt-[145px] w-[185px] h-[290px] rounded-[18px] opacity-50" />
-        <div className="anim-shimmer absolute right-8 top-1/2 -mt-[172px] w-[220px] h-[345px] rounded-[18px]" />
-      </div>
-      {/* Mobile shimmer blocks */}
-      <div className="block md:hidden">
-        <div className="anim-shimmer absolute left-9 bottom-[130px] w-[240px] h-[80px] rounded-md" />
-        <div className="anim-shimmer absolute left-9 bottom-[108px] w-[160px] h-[8px] rounded-sm" />
-        <div className="anim-shimmer absolute left-9 bottom-[72px] w-[110px] h-[38px] rounded-full" />
-        <div className="anim-shimmer absolute bottom-[86px] left-4 w-[148px] h-[200px] rounded-[18px]" />
-        <div className="anim-shimmer absolute bottom-[86px] left-[164px] w-[148px] h-[200px] rounded-[18px] opacity-60" />
-      </div>
+    <div style={{ width:"100%", minHeight:"100vh", background:"var(--pc-bg)", position:"relative", overflow:"hidden" }}>
+      <div className="pc-shimmer" style={{ position:"absolute", inset:0 }} />
+      <div style={{ position:"absolute", top:0, left:0, right:0, height:68, background:"rgba(247,243,238,.8)" }} />
+      <div className="pc-shimmer" style={{ position:"absolute", left:60, bottom:220, width:300, height:68, borderRadius:10 }} />
+      <div className="pc-shimmer" style={{ position:"absolute", left:60, bottom:168, width:180, height:10, borderRadius:8 }} />
+      <div className="pc-shimmer" style={{ position:"absolute", left:60, bottom:124, width:136, height:44, borderRadius:100 }} />
+      <div className="pc-shimmer" style={{ position:"absolute", right:216, top:"50%", marginTop:-130, width:168, height:258, borderRadius:20, opacity:.55 }} />
+      <div className="pc-shimmer" style={{ position:"absolute", right:26, top:"50%", marginTop:-155, width:208, height:308, borderRadius:20 }} />
     </div>
   );
 }
 
-/* ─────────────────────────────────────────────────────────────
-   Star rating helper
-───────────────────────────────────────────────────────────── */
+/* ─── Stars ─── */
 const Stars = React.memo(({ rating = 4 }) => (
-  <div className="flex gap-[2px]">
-    {[1, 2, 3, 4, 5].map((s) => (
-      <span
-        key={s}
-        className={`text-[10px] ${s > rating ? "text-[#ddd]" : "text-[#f5a623]"}`}
-      >
-        ★
-      </span>
+  <div style={{ display:"flex", gap:2 }}>
+    {[1,2,3,4,5].map(s => (
+      <svg key={s} width="9" height="9" viewBox="0 0 12 12"
+        fill={s <= rating ? "#e8622a" : "#d4cfc7"}>
+        <path d="M6 1l1.3 2.7 3 .4-2.2 2.1.5 3L6 8l-2.6 1.2.5-3L1.7 4.1l3-.4z"/>
+      </svg>
     ))}
   </div>
 ));
 
-/* ─────────────────────────────────────────────────────────────
-   Card size / transform variants
-───────────────────────────────────────────────────────────── */
-const cardVariantClasses = {
-  sm: [
-    "w-[140px] h-[190px] md:w-[170px] md:h-[260px] lg:w-[185px] lg:h-[290px] xl:w-[200px] xl:h-[300px]",
-    "translate-x-0 md:translate-x-6 scale-100 md:scale-[0.94] opacity-100 md:opacity-[0.68] z-[1]",
-  ].join(" "),
-  md: [
-    "w-[140px] h-[190px] md:w-[200px] md:h-[300px] lg:w-[220px] lg:h-[345px] xl:w-[240px] xl:h-[360px]",
-    "scale-100 opacity-100 z-[2]",
-    "shadow-none md:shadow-[0_24px_60px_rgba(0,0,0,0.55)]",
-  ].join(" "),
-  xs: [
-    "w-[140px] h-[190px] md:w-[150px] md:h-[230px] lg:w-[165px] lg:h-[260px] xl:w-[180px] xl:h-[280px]",
-    "translate-x-0 md:-translate-x-5 scale-100 md:scale-[0.88] opacity-100 md:opacity-[0.42] z-0",
-  ].join(" "),
-};
-
-const cardHoverClasses = [
-  "hover:translate-x-0",
-  "hover:-translate-y-[1px]",
-  "hover:scale-[1.02]",
-  "hover:opacity-100",
-  "hover:z-20",
-  "hover:shadow-[0_30px_70px_rgba(0,0,0,0.65)]",
-].join(" ");
-
-/* ─────────────────────────────────────────────────────────────
-   localStorage bookmark helpers
-───────────────────────────────────────────────────────────── */
+/* ─── LocalStorage ─── */
 const SAVED_KEY = "popularCities_saved";
 const loadSaved = () => {
-  try {
-    const raw = localStorage.getItem(SAVED_KEY);
-    return raw ? new Set(JSON.parse(raw)) : new Set();
-  } catch {
-    return new Set();
-  }
+  try { const r = localStorage.getItem(SAVED_KEY); return r ? new Set(JSON.parse(r)) : new Set(); }
+  catch { return new Set(); }
 };
-const persistSaved = (set) => {
-  try {
-    localStorage.setItem(SAVED_KEY, JSON.stringify([...set]));
-  } catch { }
+const persistSaved = set => {
+  try { localStorage.setItem(SAVED_KEY, JSON.stringify([...set])); } catch {}
 };
 
-/* ─────────────────────────────────────────────────────────────
-   Main Component
-───────────────────────────────────────────────────────────── */
-function PopularCities() {
+/* ─── Card sizes ─── */
+const SZ = {
+  sm: { w:"190px", h:"298px", op:0.72, tx:"16px",  sc:0.93, z:1 },
+  md: { w:"228px", h:"356px", op:1,    tx:"0px",   sc:1,    z:2 },
+  xs: { w:"162px", h:"256px", op:0.44, tx:"-12px", sc:0.87, z:0 },
+};
+const SZ_MOB = { w:"138px", h:"196px" };
+
+/* ═══════════════════════════════════════════════════════════
+   MAIN COMPONENT
+═══════════════════════════════════════════════════════════ */
+export default function PopularCities() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  /* Granular selectors — each only re-renders when its own value changes */
-  const cities = useSelector((s) => s.city.cities);
-  const loading = useSelector((s) => s.city.loading);
-  const error = useSelector((s) => s.city.error);
 
-  /* ── UI state ── */
-  const [activeCityIndex, setActiveCityIndex] = useState(0);
-  const [animKey, setAnimKey] = useState(0);
-  const [direction, setDirection] = useState("next"); // "next" | "prev"
-  const [bgCurr, setBgCurr] = useState("");
-  const [bgPrev, setBgPrev] = useState("");
-  const [showPrev, setShowPrev] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-  const [isExiting, setIsExiting] = useState(false);
-  const [slideKey, setSlideKey] = useState(0); // bumped on manual nav to restart interval
-  const [savedCities, setSavedCities] = useState(loadSaved);
+  const cities  = useSelector(s => s.city.cities);
+  const loading = useSelector(s => s.city.loading);
+  const error   = useSelector(s => s.city.error);
 
-  const intervalRef = useRef(null);
-  const exitTimerRef = useRef(null);
-  const touchStartX = useRef(null);
-  const touchStartY = useRef(null);  // track vertical scroll vs horizontal swipe
-  const pauseTimerRef = useRef(null);
-  const isPointerOver = useRef(false); // true only when pointer is physically inside
-  /* Stable refs so the arrow-key listener never needs re-registration */
-  const goNextRef = useRef(null);
-  const goPrevRef = useRef(null);
+  const [activeIdx,   setActiveIdx]   = useState(0);
+  const [animKey,     setAnimKey]     = useState(0);
+  const [direction,   setDirection]   = useState("next");
+  const [bgCurr,      setBgCurr]      = useState("");
+  const [bgPrev,      setBgPrev]      = useState("");
+  const [showPrev,    setShowPrev]    = useState(false);
+  const [isPaused,    setIsPaused]    = useState(false);
+  const [isExiting,   setIsExiting]   = useState(false);
+  const [slideKey,    setSlideKey]    = useState(0);
+  const [saved,       setSaved]       = useState(loadSaved);
+  const [isMd,        setIsMd]        = useState(() => window.matchMedia("(min-width:768px)").matches);
 
-  /* ── On mount ── */
+  const timerInt  = useRef(null);
+  const timerExit = useRef(null);
+  const timerPause= useRef(null);
+  const touchX    = useRef(null);
+  const touchY    = useRef(null);
+  const ptrIn     = useRef(false);
+  const refNext   = useRef(null);
+  const refPrev   = useRef(null);
+
+  /* breakpoint */
   useEffect(() => {
-    injectMinimalStyles();
-    dispatch(getActiveCities());
+    const mq = window.matchMedia("(min-width:768px)");
+    const h = e => setIsMd(e.matches);
+    mq.addEventListener("change", h);
+    return () => mq.removeEventListener("change", h);
+  }, []);
 
-    /* FIX: Clean up injected styles on unmount */
-    return () => {
-      clearInterval(intervalRef.current);
-      clearTimeout(exitTimerRef.current);
-    };
+  /* bootstrap */
+  useEffect(() => {
+    injectStyles();
+    dispatch(getActiveCities());
+    return () => { clearInterval(timerInt.current); clearTimeout(timerExit.current); };
   }, [dispatch]);
 
-  /* FIX: Clamp index when cities list shrinks */
+  /* clamp index */
   useEffect(() => {
-    if (cities?.length && activeCityIndex >= cities.length) {
-      setActiveCityIndex(0);
-    }
-  }, [cities, activeCityIndex]);
+    if (cities?.length && activeIdx >= cities.length) setActiveIdx(0);
+  }, [cities, activeIdx]);
 
-  /* ── Bulk-preload ALL city images once the list loads ──
-     Runs once per city list update, not once per slide.       */
+  /* preload images */
   useEffect(() => {
     if (!cities?.length) return;
-    cities.forEach((city) => {
-      const src = city.images?.[0];
-      if (src) { const img = new window.Image(); img.src = src; }
-    });
+    cities.forEach(c => { if (c.images?.[0]) { const i = new Image(); i.src = c.images[0]; } });
   }, [cities]);
 
-  /* ── Auto-slide every 3 s ── */
+  /* auto-slide */
   useEffect(() => {
     if (!cities?.length || isPaused) return;
-    intervalRef.current = setInterval(() => {
-      clearTimeout(exitTimerRef.current);
-      setDirection("next");
-      setIsExiting(true);
-      exitTimerRef.current = setTimeout(() => {
-        setActiveCityIndex((i) => (i + 1) % cities.length);
+    timerInt.current = setInterval(() => {
+      clearTimeout(timerExit.current);
+      setDirection("next"); setIsExiting(true);
+      timerExit.current = setTimeout(() => {
+        setActiveIdx(i => (i + 1) % cities.length);
         setIsExiting(false);
-      }, 260);
+      }, 250);
     }, 3000);
-    return () => clearInterval(intervalRef.current);
-  }, [cities, isPaused, slideKey]); // slideKey restarts interval after manual nav
+    return () => clearInterval(timerInt.current);
+  }, [cities, isPaused, slideKey]);
 
-  /* ── Cross-fade background ── */
+  /* bg crossfade */
   useEffect(() => {
     if (!cities?.length) return;
-    const next = cities[activeCityIndex]?.images?.[0] || "";
-    if (next === bgCurr) return;
-    setBgPrev(bgCurr);
-    setShowPrev(true);
-    setBgCurr(next);
-    setAnimKey((k) => k + 1);
+    const nxt = cities[activeIdx]?.images?.[0] || "";
+    if (nxt === bgCurr) return;
+    setBgPrev(bgCurr); setShowPrev(true); setBgCurr(nxt); setAnimKey(k => k + 1);
     const t = setTimeout(() => setShowPrev(false), 900);
     return () => clearTimeout(t);
-  }, [activeCityIndex, cities]); // bgCurr intentionally omitted
+  }, [activeIdx, cities]);
 
-  /* ── Init first background ── */
   useEffect(() => {
     if (cities?.length && !bgCurr) setBgCurr(cities[0]?.images?.[0] || "");
   }, [cities]);
 
-  /* ── Arrow-key navigation — stable listener via refs ──
-     Never removes/re-adds the listener, zero allocation overhead.  */
+  /* keyboard */
   useEffect(() => {
-    const handler = (e) => {
-      if (e.key === "ArrowRight") goNextRef.current?.();
-      if (e.key === "ArrowLeft") goPrevRef.current?.();
+    const h = e => {
+      if (e.key === "ArrowRight") refNext.current?.();
+      if (e.key === "ArrowLeft")  refPrev.current?.();
     };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, []); // stable — deps are refs, not reactive values
+    window.addEventListener("keydown", h);
+    return () => window.removeEventListener("keydown", h);
+  }, []);
 
-  /* ── Shared transition helper ── */
-  const transitionTo = useCallback((getNextIndex, dir = "next") => {
-    clearTimeout(exitTimerRef.current);
-    // NOTE: do NOT clearInterval here — goNext/goPrev/goToIndex bump slideKey to restart it
-    setDirection(dir);
-    setIsExiting(true);
-    exitTimerRef.current = setTimeout(() => {
-      setActiveCityIndex(getNextIndex);
-      setIsExiting(false);
-    }, 260);
+  /* scroll resumes */
+  useEffect(() => {
+    const h = () => { if (!ptrIn.current) { clearTimeout(timerPause.current); setIsPaused(false); } };
+    window.addEventListener("scroll", h, { passive: true });
+    return () => window.removeEventListener("scroll", h);
+  }, []);
+
+  /* nav */
+  const go = useCallback((getFn, dir) => {
+    clearTimeout(timerExit.current);
+    setDirection(dir); setIsExiting(true);
+    timerExit.current = setTimeout(() => { setActiveIdx(getFn); setIsExiting(false); }, 250);
   }, []);
 
   const goNext = useCallback(() => {
     if (!cities?.length) return;
-    setIsPaused(false);
-    setSlideKey((k) => k + 1); // restarts the 3s interval from zero
-    transitionTo((i) => (i + 1) % cities.length, "next");
-  }, [cities, transitionTo]);
+    setIsPaused(false); setSlideKey(k => k + 1);
+    go(i => (i + 1) % cities.length, "next");
+  }, [cities, go]);
 
   const goPrev = useCallback(() => {
     if (!cities?.length) return;
-    setIsPaused(false);
-    setSlideKey((k) => k + 1);
-    transitionTo((i) => (i - 1 + cities.length) % cities.length, "prev");
-  }, [cities, transitionTo]);
+    setIsPaused(false); setSlideKey(k => k + 1);
+    go(i => (i - 1 + cities.length) % cities.length, "prev");
+  }, [cities, go]);
 
-  const goToIndex = useCallback((idx, current) => {
-    const dir = idx > current ? "next" : "prev";
-    setSlideKey((k) => k + 1);
-    transitionTo(() => idx, dir);
-  }, [transitionTo]);
+  const goTo = useCallback((idx, curr) => {
+    setSlideKey(k => k + 1);
+    go(() => idx, idx > curr ? "next" : "prev");
+  }, [go]);
 
-  /* ── Bookmark toggle — persisted to localStorage ── */
-  const toggleSave = useCallback((cityId, e) => {
+  const toggleSave = useCallback((id, e) => {
     e.stopPropagation();
-    setSavedCities((prev) => {
-      const next = new Set(prev);
-      next.has(cityId) ? next.delete(cityId) : next.add(cityId);
-      persistSaved(next);
-      return next;
+    setSaved(prev => {
+      const n = new Set(prev);
+      n.has(id) ? n.delete(id) : n.add(id);
+      persistSaved(n); return n;
     });
   }, []);
 
-  /* ── Touch / swipe handlers ──
-     Distinguish horizontal swipe (navigate) from vertical scroll (ignore) ── */
-  const onTouchStart = useCallback((e) => {
-    touchStartX.current = e.touches[0].clientX;
-    touchStartY.current = e.touches[0].clientY;
+  const onTouchStart = useCallback(e => {
+    touchX.current = e.touches[0].clientX;
+    touchY.current = e.touches[0].clientY;
   }, []);
-
-  const onTouchEnd = useCallback((e) => {
-    if (touchStartX.current === null) return;
-    const dx = touchStartX.current - e.changedTouches[0].clientX;
-    const dy = touchStartY.current - e.changedTouches[0].clientY;
-    // Only swipe if movement is more horizontal than vertical
-    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
-      if (dx > 0) goNext();
-      else goPrev();
-    }
-    touchStartX.current = null;
-    touchStartY.current = null;
+  const onTouchEnd = useCallback(e => {
+    if (touchX.current === null) return;
+    const dx = touchX.current - e.changedTouches[0].clientX;
+    const dy = touchY.current - e.changedTouches[0].clientY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 48) dx > 0 ? goNext() : goPrev();
+    touchX.current = null; touchY.current = null;
   }, [goNext, goPrev]);
 
-  /* ── Pause / resume ──
-     FIX: Use pointerenter/pointerleave (not mouse) so scroll doesn't trigger pause.
-     Also add a scroll listener that force-resumes if pointer isn't inside. ── */
-  const onPointerEnter = useCallback(() => {
-    isPointerOver.current = true;
-    clearTimeout(pauseTimerRef.current);
-    setIsPaused(true);
+  const onEnter = useCallback(() => { ptrIn.current = true; clearTimeout(timerPause.current); setIsPaused(true); }, []);
+  const onLeave = useCallback(() => {
+    ptrIn.current = false;
+    clearTimeout(timerPause.current);
+    timerPause.current = setTimeout(() => { if (!ptrIn.current) setIsPaused(false); }, 300);
   }, []);
 
-  const onPointerLeave = useCallback(() => {
-    isPointerOver.current = false;
-    clearTimeout(pauseTimerRef.current);
-    pauseTimerRef.current = setTimeout(() => {
-      if (!isPointerOver.current) setIsPaused(false);
-    }, 300);
-  }, []);
+  refNext.current = goNext;
+  refPrev.current = goPrev;
 
-  /* FIX: Scroll always resumes the slider (user is scrolling, not hovering) */
-  useEffect(() => {
-    const onScroll = () => {
-      if (!isPointerOver.current) {
-        clearTimeout(pauseTimerRef.current);
-        setIsPaused(false);
-      }
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  /* Keep refs current so arrow-key listener always calls latest callbacks */
-  goNextRef.current = goNext;
-  goPrevRef.current = goPrev;
-
-  /* ─────────────────────────────────────────────────────────────
-     ALL hooks must come BEFORE any early returns (Rules of Hooks)
-  ───────────────────────────────────────────────────────────── */
   const total = cities?.length ?? 0;
 
-  /* Memoised card slots — null-safe, returns [] when cities not loaded */
   const cardSlots = useMemo(() => {
     if (!total) return [];
-    const rawSlots = [
-      { idx: (activeCityIndex + 1) % total, cls: "sm" },
-      { idx: (activeCityIndex + 2) % total, cls: "md" },
-      { idx: (activeCityIndex + 3) % total, cls: "xs" },
+    const raw = [
+      { idx:(activeIdx+1)%total, cls:"sm" },
+      { idx:(activeIdx+2)%total, cls:"md" },
+      { idx:(activeIdx+3)%total, cls:"xs" },
     ];
-    return rawSlots.filter(
-      ({ idx }, pos, arr) =>
-        idx !== activeCityIndex &&
-        arr.findIndex((s) => s.idx === idx) === pos
+    return raw.filter(({ idx }, pos, arr) =>
+      idx !== activeIdx && arr.findIndex(s => s.idx === idx) === pos
     );
-  }, [activeCityIndex, total]);
+  }, [activeIdx, total]);
 
-  /* Memoised hero animation class */
-  const heroEntryClass = useMemo(
-    () => (direction === "prev" ? "anim-slide-down" : "anim-slide-up"),
-    [direction]
+  const heroClass = useMemo(() => direction === "prev" ? "pc-slide-dn" : "pc-slide-up", [direction]);
+
+  /* ── Guards ── */
+  if (loading) return <Skeleton />;
+  if (error) return (
+    <div style={{ minHeight:"100vh", background:"var(--pc-bg)", display:"flex", flexDirection:"column",
+      alignItems:"center", justifyContent:"center", gap:20, fontFamily:"'Outfit',sans-serif" }}>
+      <div style={{ width:52, height:52, borderRadius:14, background:"#fdecea",
+        display:"flex", alignItems:"center", justifyContent:"center", fontSize:22 }}>⚠</div>
+      <p style={{ fontFamily:"'Syne',sans-serif", fontSize:20, fontWeight:800, color:"#b91c1c", margin:0 }}>
+        Something went wrong
+      </p>
+      <p style={{ fontSize:13, color:"var(--pc-ink3)", maxWidth:280, textAlign:"center", lineHeight:1.65, margin:0 }}>
+        {error}
+      </p>
+    </div>
+  );
+  if (!cities?.length) return (
+    <div style={{ minHeight:"100vh", background:"var(--pc-bg)", display:"flex", flexDirection:"column",
+      alignItems:"center", justifyContent:"center", gap:20, fontFamily:"'Outfit',sans-serif" }}>
+      <div style={{ width:52, height:52, borderRadius:14, background:"rgba(232,98,42,.1)",
+        display:"flex", alignItems:"center", justifyContent:"center", fontSize:22 }}>✦</div>
+      <p style={{ fontFamily:"'Syne',sans-serif", fontSize:20, fontWeight:800, color:"var(--pc-ink)", margin:0 }}>
+        No Destinations Yet
+      </p>
+      <p style={{ fontSize:13, color:"var(--pc-ink3)", maxWidth:280, textAlign:"center", lineHeight:1.65, margin:0 }}>
+        We're curating extraordinary places. Check back soon.
+      </p>
+    </div>
   );
 
-  /* ── Render guards — must come AFTER all hooks ── */
-  if (loading) return <Skeleton />;
+  const city = cities[activeIdx];
 
-  if (error)
-    return (
-      <div className="w-full h-screen bg-[#0a0a10] flex flex-col items-center justify-center gap-[18px] font-['Inter',sans-serif]">
-        <div className="text-[48px] opacity-[0.35]">⚠</div>
-        <p className="font-['Barlow_Condensed',sans-serif] text-[28px] font-extrabold text-[#e07070] opacity-[0.55] uppercase tracking-[0.05em] m-0">
-          Something went wrong
-        </p>
-        <p className="text-[13px] text-white/35 max-w-[280px] text-center leading-[1.7] m-0">{error}</p>
-      </div>
-    );
-
-  if (!cities?.length)
-    return (
-      <div className="w-full h-screen bg-[#0a0a10] flex flex-col items-center justify-center gap-[18px] font-['Inter',sans-serif]">
-        <div className="text-[48px] opacity-[0.35]">✦</div>
-        <p className="font-['Barlow_Condensed',sans-serif] text-[28px] font-extrabold text-white opacity-[0.55] uppercase tracking-[0.05em] m-0">
-          No Destinations Yet
-        </p>
-        <p className="text-[13px] text-white/35 max-w-[280px] text-center leading-[1.7] m-0">
-          We're curating extraordinary places. Check back soon.
-        </p>
-      </div>
-    );
-
-  /* ── Derived values (safe — only reached after guards pass) ── */
-  const activeCity = cities[activeCityIndex];
-
+  /* ─── RENDER ─── */
   return (
     <div
-      className="relative w-full min-h-screen overflow-hidden font-['Inter',sans-serif] bg-[#0a0a10]"
-      onPointerEnter={onPointerEnter}
-      onPointerLeave={onPointerLeave}
-      onTouchStart={onTouchStart}
-      onTouchEnd={onTouchEnd}
+      style={{ position:"relative", width:"100%", minHeight:"100vh",
+        overflow:"hidden", background: "linear-gradient(135deg, #ffffff 0%, #fdf8f3 30%, #f6ede4 70%, #efe1d1 100%)", fontFamily:"'Outfit',sans-serif" }}
+      onPointerEnter={onEnter} onPointerLeave={onLeave}
+      onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}
     >
-      {/* ── Background images (cross-fade) ──
-          Uses <img> tags for GPU-accelerated opacity transitions. ── */}
-      {showPrev && bgPrev && (
-        <img
-          role="presentation"
-          aria-hidden="true"
-          src={bgPrev}
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover anim-ken-burns"
-          style={{ opacity: 0, transition: "opacity 0.85s cubic-bezier(0.4,0,0.2,1)", willChange: "opacity, transform", zIndex: 0 }}
-        />
-      )}
-      <img
-        key={bgCurr}
-        role="img"
-        aria-label={`${activeCity.name} background`}
-        src={bgCurr || ph(1600, 900, activeCity.name)}
-        alt={`${activeCity.name} cityscape`}
-        className="absolute inset-0 w-full h-full object-cover anim-ken-burns"
-        style={{ opacity: 1, transition: "opacity 0.85s cubic-bezier(0.4,0,0.2,1)", willChange: "opacity, transform", zIndex: 0 }}
-      />
 
-      {/* Gradient overlay */}
-      <div
-        className="absolute inset-0 z-[2]"
-        style={{
-          background: `
-            linear-gradient(to right,
-              rgba(0,0,0,0.82) 0%,
-              rgba(0,0,0,0.55) 38%,
-              rgba(0,0,0,0.15) 60%,
-              transparent 100%),
-            linear-gradient(to top,
-              rgba(0,0,0,0.5) 0%,
-              transparent 40%)
-          `,
-        }}
-      />
+      {/* Overlay — left clear, right exposed */}
+      <div style={{
+        position:"absolute", inset:0, zIndex:2,
+        background:`
+          linear-gradient(to right,
+            rgba(247,243,238,.97) 0%,
+            rgba(247,243,238,.9)  28%,
+            rgba(247,243,238,.55) 50%,
+            rgba(247,243,238,.08) 70%,
+            transparent 100%),
+          linear-gradient(to top,
+            rgba(247,243,238,.85) 0%,
+            transparent 40%)
+        `,
+      }} />
 
-      {/* ── Top Navigation ── */}
-      <nav className="absolute top-0 left-0 right-0 z-[40] flex items-center justify-between py-4 px-4 sm:py-5 sm:px-6 md:py-6 md:px-8 lg:py-8 lg:px-12">
-        <div className="flex items-center gap-[6px] md:gap-[10px] text-white">
-          <div className="w-7 h-7 md:w-[34px] md:h-[34px] bg-[#3d6ef5] rounded-lg flex items-center justify-center shrink-0">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="w-[14px] h-[14px] md:w-[18px] md:h-[18px]">
-              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="white" />
-              <circle cx="12" cy="9" r="2.5" fill="#3d6ef5" />
-            </svg>
-          </div>
-          <span className="font-['Barlow_Condensed',sans-serif] text-[18px] md:text-[20px] font-extrabold tracking-[0.04em]">
-            Popular Cities
-          </span>
-          {/* City count badge */}
-          <span className="ml-1 px-[8px] py-[2px] rounded-full bg-white/10 text-white/60 text-[10px] md:text-[11px] font-medium tracking-wide">
-            {total} destinations
-          </span>
-        </div>
+      {/* Subtle dot grid texture */}
+      <div style={{
+        position:"absolute", inset:0, zIndex:3, pointerEvents:"none",
+        opacity:.04,
+        backgroundImage:"radial-gradient(circle, rgba(26,23,20,.7) 1px, transparent 1px)",
+        backgroundSize:"28px 28px",
+      }} />
 
-        <div className="flex items-center gap-[14px]">
-          {/* Hamburger Menu for Mobile */}
-          <button className="flex md:hidden w-8 h-8 items-center justify-center text-white bg-white/10 rounded-full border-0 focus:outline-none focus:ring-2 focus:ring-white/40 active:bg-white/20">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
 
-          {/* Desktop Explore Icon */}
-          <div className="hidden md:flex w-9 h-9 rounded-full bg-white/[0.18] border-2 border-white/[0.18] items-center justify-center">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="rgba(255,255,255,0.8)" aria-hidden="true">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-              <circle cx="12" cy="7" r="4" />
-            </svg>
-          </div>
-          <span className="text-[13px] text-white/70 hidden md:block">Explore the World</span>
-        </div>
-      </nav>
 
-      {/* ── Left vertical dot tracker ── */}
-      <div className="absolute left-2 sm:left-3 md:left-5 lg:left-7 top-1/2 -translate-y-1/2 z-[40] flex flex-col items-center">
+      {/* ═══ DOT TRACKER ═══ */}
+      <div style={{
+        position:"absolute", left: isMd ? 18 : 10, top:"50%",
+        transform:"translateY(-50%)", zIndex:40,
+        display:"flex", flexDirection:"column", alignItems:"center", gap: isMd ? 8 : 6,
+      }}>
         {cities.map((_, i) => (
-          <React.Fragment key={i}>
-            {i > 0 && <div className="w-px h-[30px] bg-white/[0.18] shrink-0" />}
-            <button
-              className={[
-                "w-2 h-2 rounded-full border-0 p-0 cursor-pointer outline-none",
-                "transition-all duration-300 relative z-[1] shrink-0",
-                i === activeCityIndex 
-                  ? "bg-white scale-[1.3] ring-[3px] ring-white/30 ring-offset-2 ring-offset-transparent shadow-[0_0_12px_rgba(255,255,255,0.6)]" 
-                  : "bg-white/40 hover:bg-white/70 hover:scale-[1.1]",
-              ].join(" ")}
-              onClick={() => { if (i !== activeCityIndex) goToIndex(i, activeCityIndex); }}
-              aria-label={`Go to city ${i + 1}`}
-              aria-current={i === activeCityIndex ? "true" : undefined}
-            />
-          </React.Fragment>
+          <button
+            key={i}
+            className={`pc-dot ${i === activeIdx ? "pc-dot-active" : ""}`}
+            style={ isMd ? {} : { width:5, height:5 } }
+            onClick={() => { if (i !== activeIdx) goTo(i, activeIdx); }}
+            aria-label={`City ${i+1}`}
+            aria-current={i === activeIdx ? "true" : undefined}
+          />
         ))}
       </div>
 
-      {/* ── Left hero content ── */}
-      <div
-        className="absolute left-6 bottom-[279px] w-[calc(100vw-48px)] z-[30] md:left-[50px] md:bottom-[120px] md:w-[60vw] lg:left-[72px] lg:bottom-[130px] lg:max-w-[520px]"
-        style={{
-          opacity: isExiting ? 0 : 1,
-          transform: isExiting
-            ? (direction === "prev" ? "translateY(18px)" : "translateY(-18px)")
-            : "translateY(0)",
-          transition: "opacity 0.25s cubic-bezier(0.4,0,1,1), transform 0.25s cubic-bezier(0.4,0,1,1)",
-          willChange: "opacity, transform",
-        }}
-      >
+      {/* ═══ HERO CONTENT ═══ */}
+      <div style={{
+        // border: "1px solid black",
+        position:"absolute", zIndex:30,
+        left:  isMd ? 64 : 20,
+        bottom: isMd ? 250 : 268,
+        right: isMd ? "auto" : 20,
+        maxWidth: isMd ? 520 : "none",
+        opacity: isExiting ? 0 : 1,
+        transform: isExiting
+          ? (direction === "prev" ? "translateY(16px)" : "translateY(-16px)") : "none",
+        transition:"opacity .22s cubic-bezier(.4,0,1,1), transform .22s cubic-bezier(.4,0,1,1)",
+        willChange:"opacity,transform",
+      }}>
         <div key={animKey}>
-          <h2
-            className={`${heroEntryClass} font-['Barlow_Condensed',sans-serif] font-black leading-[0.88] tracking-[-0.01em] uppercase m-0 mb-[6px] text-transparent bg-clip-text bg-gradient-to-b from-white to-white/40 drop-shadow-lg`}
-            style={{ fontSize: "clamp(72px, 11vw, 148px)" }}
-          >
-            {activeCity.name}
-          </h2>
-
-          {/* Dashed divider */}
-          <div className="anim-fade-in-1 flex items-center gap-[5px] mb-[18px]">
-            {[...Array(8)].map((_, i) => (
-              <span
-                key={i}
-                className={[
-                  "inline-block h-[2px] rounded-[2px]",
-                  i === 0 ? "w-[28px] bg-white/70" : "w-[14px] bg-white/40",
-                ].join(" ")}
-              />
-            ))}
+          {/* Tag */}
+          <div className="pc-tag-anim" style={{
+            display:"inline-flex", alignItems:"center", gap:6,
+            background:"rgba(232,98,42,.1)", color:"var(--pc-accent)",
+            border:"1px solid rgba(232,98,42,.22)", borderRadius:100,
+            padding:"4px 14px", fontSize:11, fontWeight:600,
+            letterSpacing:".08em", textTransform:"uppercase", marginBottom:16,
+          }}>
+            <span className="bg-linear-to-r from-[#c67c4e] to-[#b86c3d]" style={{ width:5, height:5, borderRadius:"50%",
+              background:"", display:"inline-block" }} />
+            Featured destination
           </div>
 
-          <p className="anim-fade-in-2 text-[12px] md:text-[13px] font-light leading-[1.6] md:leading-[1.75] text-white/70 mt-0 mb-6 md:mb-8 max-w-[90%] lg:max-w-full">
-            {activeCity.description ||
-              `Discover the breathtaking landscapes, vibrant culture, and world-class
-               experiences that make ${activeCity.name} one of the most sought-after
-               destinations in the world.`}
+          {/* City name */}
+          <h1
+            className={heroClass}
+            style={{
+              fontFamily:"sans-serif", fontWeight:800,
+              fontSize: isMd ? "clamp(62px,8.2vw,100px)" : "clamp(50px,13vw,84px)",
+              lineHeight:.88, letterSpacing:"-.025em",
+              color:"var(--pc-ink)", margin:"0 0 18px",
+            }}
+          >
+            {city.name}
+          </h1>
+
+          {/* Accent bars */}
+          <div className="pc-fi1" style={{ display:"flex", alignItems:"center",
+            gap:5, marginBottom:18 }}>
+            <div style={{ height:3, width:40, background:"var(--pc-accent)", borderRadius:3 }} />
+            <div style={{ height:3, width:20, background:"rgba(232,98,42,.32)", borderRadius:3 }} />
+            <div style={{ height:3, width:10, background:"rgba(232,98,42,.14)", borderRadius:3 }} />
+          </div>
+
+          {/* Description */}
+          <p className="pc-fi2" style={{
+            fontSize:13, lineHeight:1.75, color:"var(--pc-ink3)",
+            margin:"0 0 30px", maxWidth:420,
+          }}>
+            {city.description ||
+              `Discover the breathtaking landscapes, vibrant culture, and world-class experiences that make ${city.name} one of the most sought-after destinations in the world.`}
           </p>
 
-          <button
-            className={[
-              "anim-fade-in-3 group",
-              "inline-flex items-center gap-[14px]",
-              "py-[14px] px-[30px]",
-              "bg-gradient-to-r from-blue-600 to-indigo-500 border-0 rounded-full",
-              "font-['Inter',sans-serif] text-sm font-medium text-white",
-              "cursor-pointer",
-              "transition-all duration-[250ms] ease-in-out",
-              "hover:-translate-y-[2px] hover:scale-[1.04]",
-              "shadow-[0_8px_20px_rgba(61,110,245,0.25)] hover:shadow-[0_14px_36px_rgba(61,110,245,0.55)] hover:from-blue-500 hover:to-indigo-400",
-              "active:scale-[0.98]",
-            ].join(" ")}
-            onClick={() => navigate(`/city/${activeCity._id}`)}
-          >
-            Explore
-            <span className="flex items-center justify-center w-7 h-7 bg-white/[0.22] rounded-full transition-transform duration-300 group-hover:translate-x-[3px]">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
-                aria-hidden="true">
-                <path d="M5 12h14M12 5l7 7-7 7" />
+          {/* CTA row */}
+          <div className="pc-fi3" style={{ display:"flex", alignItems:"center", gap:12, flexWrap:"wrap" }}>
+            <button className="pc-btn-primary" onClick={() => navigate(`/city/${city._id}`)}>
+              Explore city
+              <span style={{ width:26, height:26, borderRadius:"50%",
+                background:"rgba(255,255,255,.18)",
+                display:"flex", alignItems:"center", justifyContent:"center" }}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+              </span>
+            </button>
+            <button className="pc-btn-ghost"
+              onClick={e => toggleSave(city._id, e)}>
+              <svg width="13" height="13" viewBox="0 0 24 24"
+                fill={saved.has(city._id) ? "currentColor" : "none"}
+                stroke="currentColor" strokeWidth="2.2"
+                strokeLinecap="round" strokeLinejoin="round">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
               </svg>
-            </span>
-          </button>
+              {saved.has(city._id) ? "Saved" : "Save"}
+            </button>
+          </div>
+
+          {/* Info pills row (desktop) */}
+          {isMd && (
+            <div className="pc-fi4" style={{ display:"flex", alignItems:"center",
+              gap:18, marginTop:28 }}>
+              {[
+                { label: city.weather || "24°C avg" },
+                { label: city.flights || "Direct flights" },
+                { label: city.rating  ? `${city.rating}/5 rating` : "4.8/5 rating" },
+              ].map(({ label }) => (
+                <div key={label} style={{
+                  display:"flex", alignItems:"center", gap:6,
+                  padding:"5px 13px", borderRadius:100,
+                  background:"rgba(26,23,20,.055)",
+                  fontSize:11, color:"var(--pc-ink2)", fontWeight:500,
+                }}>
+                  {label}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
-      {/* ── Preview cards (right side) ── */}
+      {/* ═══ PREVIEW CARDS ═══ */}
       <div
-        className={[
-          "absolute pb-[86px] px-4 gap-3 overflow-x-auto items-end no-scrollbar left-0 right-0 bottom-0 top-auto translate-y-0",
-          "md:left-auto md:right-0 md:top-1/2 md:bottom-auto md:-translate-y-[46%] md:px-0 md:pr-4 md:pb-0 md:gap-4 md:overflow-x-visible",
-          "lg:pr-8 flex z-10",
-        ].join(" ")}
+        className="pc-noscroll"
+        style={{
+          position:"absolute", zIndex:10,
+          ...(isMd
+            ? { right:0, top:"50%", transform:"translateY(-46%)",
+                display:"flex", alignItems:"flex-end", gap:14, paddingRight:28, overflow:"visible" }
+            : { bottom:76, left:0, right:0, display:"flex", alignItems:"flex-end",
+                gap:10, paddingLeft:16, paddingBottom:0, overflowX:"auto" }),
+        }}
       >
         {cardSlots.map(({ idx, cls }) => {
-          const city = cities[idx];
-          const img = city.images?.[0] || ph(220, 345, city.name);
-          const rating = city.rating ?? 4;
-          const isSaved = savedCities.has(city._id);
+          const c       = cities[idx];
+          const img     = c.images?.[0] || ph(228, 356, c.name);
+          const isSaved = saved.has(c._id);
+          const sz      = SZ[cls];
 
           return (
             <div
               key={cls}
-              className={[
-                "group shrink-0 cursor-pointer rounded-[18px] overflow-hidden relative flex flex-col",
-                "transition-[transform,box-shadow,opacity] duration-[450ms] ease-[cubic-bezier(0.34,1.26,0.64,1)]",
-                cardVariantClasses[cls],
-                cardHoverClasses,
-              ].join(" ")}
-              onClick={() => {
-                idx !== activeCityIndex
-                  ? goToIndex(idx, activeCityIndex)
-                  : navigate(`/city/${city._id}`);
+              className="pc-card border-5"
+              style={{
+                ...(isMd
+                  ? { width:sz.w, height:sz.h, opacity:sz.op,
+                      transform:`translateX(${sz.tx}) scale(${sz.sc})`,
+                      boxShadow: cls === "md"
+                        ? "0 20px 52px rgba(26,23,20,.14)" : "none",
+                      zIndex:sz.z }
+                  : { width:SZ_MOB.w, height:SZ_MOB.h, opacity:1, zIndex:sz.z }),
               }}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key !== "Enter") return;
-                idx !== activeCityIndex
-                  ? goToIndex(idx, activeCityIndex)
-                  : navigate(`/city/${city._id}`);
-              }}
-              aria-label={`Preview ${city.name}`}
+              onClick={() => idx !== activeIdx ? goTo(idx, activeIdx) : navigate(`/city/${c._id}`)}
+              role="button" tabIndex={0}
+              onKeyDown={e => { if (e.key !== "Enter") return;
+                idx !== activeIdx ? goTo(idx, activeIdx) : navigate(`/city/${c._id}`); }}
+              aria-label={`Preview ${c.name}`}
             >
-              {/* Card header — fades in with new city */}
-              <div
-                key={city._id}
-                className="px-[14px] pt-3 pb-[10px] bg-white/95 backdrop-blur-[10px] shrink-0 anim-fade-card"
-              >
-                <div className="text-xs font-medium text-[#111] mb-[5px] whitespace-nowrap overflow-hidden text-ellipsis">
-                  {city.name}
+              {/* Card header */}
+              <div className="pc-card-fade" key={c._id} style={{
+                padding:"10px 12px 8px",
+                background:"rgba(255,255,255,.96)",
+                borderBottom:"1px solid rgba(200,192,180,.2)",
+                flexShrink:0, display:"flex", flexDirection:"column",
+              }}>
+                <div style={{ fontSize:10, fontWeight:600, color:"var(--pc-ink)",
+                  textTransform:"uppercase", letterSpacing:".07em",
+                  whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis",
+                  marginBottom:4 }}>
+                  {c.name}
                 </div>
-                <Stars rating={rating} />
+                <Stars rating={c.rating ?? 4} />
               </div>
 
-              {/* City image */}
-              <div className="flex-1 relative overflow-hidden rounded-b-[18px]">
-                <img
-                  key={img}
-                  src={img}
-                  alt={city.name}
-                  className="w-full h-full object-cover block anim-fade-card transition-transform duration-[550ms] group-hover:scale-[1.08]"
-                />
-                {/* Bookmark — persisted to localStorage */}
+              {/* Image */}
+              <div style={{ flex:1, position:"relative", overflow:"hidden" }}>
+                <img key={img} src={img} alt={c.name} className="pc-card-fade"
+                  style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }} />
+                <div style={{
+                  position:"absolute", bottom:0, left:0, right:0, height:"55%",
+                  background:"linear-gradient(to top,rgba(26,23,20,.2),transparent)",
+                  pointerEvents:"none",
+                }} />
+                {/* Bookmark */}
                 <button
-                  className={[
-                    "absolute top-3 right-3",
-                    "w-[34px] h-[34px] rounded-full",
-                    "border-0 flex items-center justify-center",
-                    "cursor-pointer z-[5]",
-                    "transition-[background,transform] duration-200",
-                    isSaved
-                      ? "bg-[#3d6ef5] hover:bg-[#2a55d4]"
-                      : "bg-white/[0.92] hover:bg-white hover:scale-[1.12]",
-                  ].join(" ")}
-                  onClick={(e) => toggleSave(city._id, e)}
-                  aria-label={isSaved ? `Unsave ${city.name}` : `Save ${city.name}`}
+                  className="pc-bm"
+                  style={{
+                    background: isSaved ? "var(--pc-accent)" : "rgba(255,255,255,.9)",
+                    color: isSaved ? "#fff" : "var(--pc-ink2)",
+                    boxShadow: isSaved ? "0 4px 12px rgba(232,98,42,.32)" : "0 2px 8px rgba(0,0,0,.1)",
+                  }}
+                  onClick={e => toggleSave(c._id, e)}
+                  aria-label={isSaved ? `Unsave ${c.name}` : `Save ${c.name}`}
                 >
-                  <svg
-                    width="14" height="14" viewBox="0 0 24 24"
-                    fill={isSaved ? "white" : "none"}
-                    stroke={isSaved ? "white" : "#333"}
-                    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                  <svg width="12" height="12" viewBox="0 0 24 24"
+                    fill={isSaved ? "currentColor" : "none"}
+                    stroke="currentColor" strokeWidth="2.2"
+                    strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
                   </svg>
                 </button>
               </div>
@@ -708,70 +660,59 @@ function PopularCities() {
         })}
       </div>
 
-      {/* ── Auto-slide progress bar + pause indicator ── */}
-      <div className="absolute bottom-[88px] left-1/2 -translate-x-1/2 z-[40] flex flex-col items-center gap-[6px]">
-        <div className="w-[120px] h-[2px] rounded-full bg-white/[0.15] overflow-hidden">
-          {isPaused ? (
-            /* Frozen bar while paused */
-            <div className="h-full w-full bg-white/30 rounded-full" />
-          ) : (
-            <div
-              key={`${activeCityIndex}-${animKey}`}
-              className="anim-progress h-full bg-white/60 rounded-full"
-            />
-          )}
-        </div>
-        {/* FIX: Pause indicator text */}
-        {isPaused && (
-          <span className="text-[10px] text-white/40 tracking-widest uppercase">paused</span>
-        )}
-      </div>
-
-      {/* ── Bottom arrow navigation ── */}
-      <div className="absolute bottom-0 left-0 right-0 z-[40] flex items-center justify-center gap-4 md:gap-6 py-5 md:py-7 px-6 md:px-12">
-        <button
-          className={[
-            "w-11 h-11 rounded-full",
-            "border border-white/[0.18] bg-white/10 backdrop-blur-[8px]",
-            "flex items-center justify-center cursor-pointer text-white",
-            "transition-[background,border-color,transform] duration-200",
-            "hover:bg-white/[0.22] hover:border-white/40 hover:scale-[1.08]",
-          ].join(" ")}
-          onClick={goPrev}
-          aria-label="Previous city"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-            aria-hidden="true">
-            <path d="M19 12H5M12 5l-7 7 7 7" />
+      {/* ═══ BOTTOM BAR ═══ */}
+      <div style={{
+        position:"absolute", bottom:0, left:0, right:0, zIndex:40,
+        display:"flex", alignItems:"center", justifyContent:"center",
+        gap:16, padding: isMd ? "18px 32px" : "14px 20px",
+        background:"rgba(247,243,238,.82)", backdropFilter:"blur(20px)",
+      }}>
+        {/* Prev */}
+        <button className="pc-btn-circle" onClick={goPrev} aria-label="Previous city">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M19 12H5M12 5l-7 7 7 7"/>
           </svg>
         </button>
 
-        <span className="font-['Barlow_Condensed',sans-serif] text-base font-bold tracking-[0.08em] text-white min-w-[52px] text-center">
-          {String(activeCityIndex + 1).padStart(2, "0")}
-          <span className="text-white/40"> / {String(total).padStart(2, "0")}</span>
-        </span>
+        {/* Progress + counter */}
+        <div style={{ flex:1, maxWidth:200, display:"flex", flexDirection:"column",
+          alignItems:"center", gap:7 }}>
+          <div style={{ width:"100%", height:2, background:"var(--pc-sand)",
+            borderRadius:2, overflow:"hidden" }}>
+            {isPaused
+              ? <div style={{ width:"65%", height:"100%",
+                  background:"var(--pc-stone)", borderRadius:2 }} />
+              : <div key={`${activeIdx}-${animKey}`} className="pc-progress-fill" />
+            }
+          </div>
+          <div style={{ display:"flex", alignItems:"center", gap:6 }}>
+            <span style={{ fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:15,
+              color:"var(--pc-ink)" }}>
+              {String(activeIdx+1).padStart(2,"0")}
+            </span>
+            <span style={{ fontSize:11, color:"var(--pc-stone)", fontWeight:400 }}>
+              / {String(total).padStart(2,"0")}
+            </span>
+            {isPaused && (
+              <span style={{ fontSize:10, color:"var(--pc-stone)",
+                letterSpacing:".08em", textTransform:"uppercase", marginLeft:4 }}>
+                paused
+              </span>
+            )}
+          </div>
+        </div>
 
-        <button
-          className={[
-            "w-11 h-11 rounded-full",
-            "border border-white/[0.18] bg-white/10 backdrop-blur-[8px]",
-            "flex items-center justify-center cursor-pointer text-white",
-            "transition-[background,border-color,transform] duration-200",
-            "hover:bg-white/[0.22] hover:border-white/40 hover:scale-[1.08]",
-          ].join(" ")}
-          onClick={goNext}
-          aria-label="Next city"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-            aria-hidden="true">
-            <path d="M5 12h14M12 5l7 7-7 7" />
+        {/* Next */}
+        <button className="pc-btn-circle-accent" onClick={goNext} aria-label="Next city" style={{
+          background: "linear-gradient(to right, #c67c4e, #b86c3d)"
+        }}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
           </svg>
         </button>
       </div>
     </div>
   );
 }
-
-export default PopularCities;

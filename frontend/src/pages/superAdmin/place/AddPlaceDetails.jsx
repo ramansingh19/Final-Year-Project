@@ -102,142 +102,142 @@ function AddPlaceDetails() {
   };
 
   return (
-    <div className="min-h-screen p-6 bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white">
-      
-      {/* HEADER */}
-      <div className="mb-8 flex items-center gap-4 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow">
-        <div className="p-4 bg-blue-600 text-white rounded-xl text-2xl">
-          <MdAddLocation />
-        </div>
-        <div>
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
-            Add New Place
-          </h1>
-          <p className="text-gray-500">Create travel destination</p>
-        </div>
-      </div>
-
-      {/* FORM */}
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white dark:bg-gray-800 max-w-5xl mx-auto p-8 rounded-2xl shadow space-y-6"
-      >
-        <input
-          name="name"
-          placeholder="Place Name"
-          onChange={handleChange}
-          className="w-full border p-3 rounded-xl"
-        />
-
-        {/* CITY DROPDOWN */}
-        <select
-          name="cityId"
-          onChange={handleChange}
-          className="w-full border p-3 rounded-xl"
-        >
-          <option value="">Select City</option>
-          {cities?.map((city) => (
-            <option key={city._id} value={city._id}>
-              {city.name}
-            </option>
-          ))}
-        </select>
-
-        <input
-          name="category"
-          placeholder="Category (historical, temple...)"
-          onChange={handleChange}
-          className="w-full border p-3 rounded-xl"
-        />
-
-        <textarea
-          name="description"
-          placeholder="Description"
-          onChange={handleChange}
-          className="w-full border p-3 rounded-xl"
-        />
-
-        <div className="grid grid-cols-2 gap-4">
-          <input
-            name="timeRequired"
-            placeholder="Time Required"
-            onChange={handleChange}
-            className="border p-3 rounded-xl"
-          />
-          <input
-            name="entryfees"
-            placeholder="Entry Fees"
-            onChange={handleChange}
-            className="border p-3 rounded-xl"
-          />
-        </div>
-
-        <input
-          name="bestTimeToVisit"
-          placeholder="Best Time"
-          onChange={handleChange}
-          className="w-full border p-3 rounded-xl"
-        />
-
-        <select
-          name="isPopular"
-          onChange={handleChange}
-          className="w-full border p-3 rounded-xl"
-        >
-          <option value="false">Normal</option>
-          <option value="true">Popular</option>
-        </select>
-
-        {/* LOCATION */}
-        <div className="grid grid-cols-2 gap-4">
-          <input
-            name="latitude"
-            value={formData.latitude}
-            placeholder="Latitude"
-            onChange={handleChange}
-            className="border p-3 rounded-xl"
-          />
-          <input
-            name="longitude"
-            value={formData.longitude}
-            placeholder="Longitude"
-            onChange={handleChange}
-            className="border p-3 rounded-xl"
-          />
-        </div>
-
-        <button
-          type="button"
-          onClick={handleLiveLocation}
-          className="bg-green-500 text-white px-4 py-2 rounded-xl"
-        >
-          Get Location 📍
-        </button>
-
-        {/* IMAGES */}
-        <input
-          type="file"
-          multiple
-          onChange={handleImageChange}
-          className="w-full border p-3 rounded-xl"
-        />
-
-        {/* PREVIEW */}
-        <div className="flex gap-3 flex-wrap">
-          {formData.images.map((img, i) => (
-            <img
-              key={i}
-              src={URL.createObjectURL(img)}
-              className="w-24 h-24 rounded-xl object-cover"
-            />
-          ))}
-        </div>
-
-        <button className="w-full bg-blue-600 text-white py-3 rounded-xl">
-          Add Place 🚀
-        </button>
-      </form>
+<div className="min-h-screen p-6 bg-linear-to-br from-gray-50 via-gray-100 to-gray-50 text-gray-900">
+  
+  {/* HEADER */}
+  <div className="mb-8 flex items-center gap-4 bg-white p-6 rounded-2xl shadow-lg">
+    <div className="p-4 bg-linear-to-br from-cyan-400 to-blue-400 text-white rounded-xl text-2xl shadow-md">
+      <MdAddLocation />
     </div>
+    <div>
+      <h1 className="text-3xl font-bold text-gray-900">
+        Add New Place
+      </h1>
+      <p className="text-gray-600">Create travel destination</p>
+    </div>
+  </div>
+
+  {/* FORM */}
+  <form
+    onSubmit={handleSubmit}
+    className="bg-white max-w-5xl mx-auto p-8 rounded-2xl shadow-lg space-y-6"
+  >
+    <input
+      name="name"
+      placeholder="Place Name"
+      onChange={handleChange}
+      className="w-full border border-gray-300 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
+    />
+
+    {/* CITY DROPDOWN */}
+    <select
+      name="cityId"
+      onChange={handleChange}
+      className="w-full border border-gray-300 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
+    >
+      <option value="">Select City</option>
+      {cities?.map((city) => (
+        <option key={city._id} value={city._id}>
+          {city.name}
+        </option>
+      ))}
+    </select>
+
+    <input
+      name="category"
+      placeholder="Category (historical, temple...)"
+      onChange={handleChange}
+      className="w-full border border-gray-300 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
+    />
+
+    <textarea
+      name="description"
+      placeholder="Description"
+      onChange={handleChange}
+      className="w-full border border-gray-300 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
+    />
+
+    <div className="grid grid-cols-2 gap-4">
+      <input
+        name="timeRequired"
+        placeholder="Time Required"
+        onChange={handleChange}
+        className="border border-gray-300 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
+      />
+      <input
+        name="entryfees"
+        placeholder="Entry Fees"
+        onChange={handleChange}
+        className="border border-gray-300 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
+      />
+    </div>
+
+    <input
+      name="bestTimeToVisit"
+      placeholder="Best Time"
+      onChange={handleChange}
+      className="w-full border border-gray-300 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
+    />
+
+    <select
+      name="isPopular"
+      onChange={handleChange}
+      className="w-full border border-gray-300 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
+    >
+      <option value="false">Normal</option>
+      <option value="true">Popular</option>
+    </select>
+
+    {/* LOCATION */}
+    <div className="grid grid-cols-2 gap-4">
+      <input
+        name="latitude"
+        value={formData.latitude}
+        placeholder="Latitude"
+        onChange={handleChange}
+        className="border border-gray-300 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
+      />
+      <input
+        name="longitude"
+        value={formData.longitude}
+        placeholder="Longitude"
+        onChange={handleChange}
+        className="border border-gray-300 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
+      />
+    </div>
+
+    <button
+      type="button"
+      onClick={handleLiveLocation}
+      className="bg-linear-to-br from-green-400 to-green-500 text-white px-4 py-2 rounded-xl shadow-md hover:scale-105 transition-transform"
+    >
+      Get Location 📍
+    </button>
+
+    {/* IMAGES */}
+    <input
+      type="file"
+      multiple
+      onChange={handleImageChange}
+      className="w-full border border-gray-300 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
+    />
+
+    {/* PREVIEW */}
+    <div className="flex gap-3 flex-wrap">
+      {formData.images.map((img, i) => (
+        <img
+          key={i}
+          src={URL.createObjectURL(img)}
+          className="w-24 h-24 rounded-xl object-cover shadow-md transition-transform hover:scale-105"
+        />
+      ))}
+    </div>
+
+    <button className="w-full bg-linear-to-br from-cyan-400 to-blue-400 text-white py-3 rounded-xl shadow-lg hover:scale-105 transition-transform">
+      Add Place 🚀
+    </button>
+  </form>
+</div>
   );
 }
 
