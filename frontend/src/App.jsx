@@ -64,7 +64,7 @@ const GetInactivePlaceCityWise = lazy(() => import("./pages/superAdmin/place/Get
 const UpdatePlaceDetails = lazy(() => import("./pages/superAdmin/place/UpdatePlaceDetails"))
 const AiPlanner = lazy(() => import("./pages/AIPlanner/AiPlanner"))
 const AiPlannerDetails = lazy(() => import("./pages/AIPlanner/AiPlannerDetails"))
-const RestaurantDashboard = lazy(() => import("./pages/admin/restaurant/restaurantDashboard"))
+const RestaurantDashboard = lazy(() => import("./pages/admin/restaurant/RestaurantDashboard"))
 const AddRestaurantDetails = lazy(() => import("./pages/admin/restaurant/AddRestaurantDetails"))
 const AdminActiveRestaurant = lazy(() => import("./pages/admin/restaurant/AdminActiveRestaurant"))
 const ShowRestaurantStatus = lazy(() => import("./pages/admin/restaurant/ShowRestaurantStatus"))
@@ -445,15 +445,15 @@ function App() {
         <Route
           path="/admin/restaurantDashboard"
           element={
-            <AdminProtectedRouter>
-              <RestaurantDashboard />
+            <AdminProtectedRouter allowedHosts={["restaurant"]}>
+              <RestaurantDashboard/>
             </AdminProtectedRouter>
           }
         />
         <Route
           path="/admin/add-restaurant"
           element={
-            <AdminProtectedRouter>
+            <AdminProtectedRouter  allowedHosts={["restaurant"]}>
               <AddRestaurantDetails />
             </AdminProtectedRouter>
           }
