@@ -10,6 +10,7 @@ import {
   FaBell,
   FaClock,
   FaChartLine,
+  FaMoneyBill
 } from "react-icons/fa";
 
 function SuperAdminDashboard() {
@@ -72,6 +73,15 @@ function SuperAdminDashboard() {
       border: "border-emerald-500/20",
       glow: "group-hover:shadow-emerald-500/20",
       status: true,
+    },
+    {
+      title: "Check Payouts",
+      value: "View",
+      icon: <FaMoneyBill className="text-xl text-pink-300" />,
+      iconBg: "from-pink-500/20 to-rose-500/20",
+      border: "border-pink-500/20",
+      glow: "group-hover:shadow-pink-500/20",
+      link: "/superadmin/payout-dashboard",
     },
   ];
 

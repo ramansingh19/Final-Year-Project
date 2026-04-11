@@ -52,7 +52,7 @@ function CreateRoom() {
     setFormData({ ...formData, images: Array.from(e.target.files) });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData();
 
@@ -65,8 +65,29 @@ function CreateRoom() {
         data.append(key, formData[key]);
       }
     });
+    try {
+      const res = await dispatch(createRoom(data)).unwrap();
 
-    dispatch(createRoom(data));
+    if (res) {
+      //  SUCCESS
+      alert("Room created successfully");
+
+      setFormData({
+        hotelId: "",
+        roomType: "",
+        pricePerNight: "",
+        capacity: "",
+        totalRooms: "",
+        amenities: [],
+        description: "",
+        images: [],
+      });
+      }
+    } catch (error) {
+      console.error(error)
+    }
+
+    
   };
 
   return (

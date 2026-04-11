@@ -7,6 +7,7 @@ const initialState = {
   error: null,
   createSuccess: false,
   room: null,
+  publicRooms: [],
 };
 
 /* -------- Create room -------- */
@@ -158,11 +159,7 @@ export const getPublicRooms = createAsyncThunk(
 
 const roomSlice = createSlice({
   name: "room",
-  initialState: {
-    publicRooms: [],
-    loading: false,
-    error: null,
-  },
+  initialState,
   reducers: {},
 
   extraReducers: (builder) => {

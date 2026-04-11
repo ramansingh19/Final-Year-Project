@@ -1,7 +1,7 @@
 import "./App.css";
 // import Header from './components/Header'
 import { Suspense, lazy } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 const Register = lazy(() => import("./pages/auth/Register"))
 const About = lazy(() => import("./pages/localPages/About"))
 const VerifyEmail = lazy(() => import("./pages/localPages/VerifyEmail"))
@@ -110,11 +110,15 @@ import PayoutDashboard from "./pages/admin/finance/PayoutDashboard";
 
 
 function App() {
+  const location = useLocation();
+  const hiddenRoutes  = ["/AiPlanner" , "/AiPlanner-details" ]
+  const hideAibutton = hiddenRoutes.includes(location.pathname)
+
   return (
     <>
     <Suspense fallback={<DelayedFallback/>}>
     <Navbar />
-      <FloatingAIButton />
+      {!hideAibutton && <FloatingAIButton />}
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/explore" element={<WorldMapPage />} />
@@ -679,11 +683,11 @@ function App() {
         />
         {/* payouts */}
         <Route
-          path="/admin/payout-dashboard"
+          path="/superadmin/payout-dashboard"
           element={
-            <AdminProtectedRouter>
+            <SuperAdminProtectedRouter>
               <PayoutDashboard />
-            </AdminProtectedRouter>
+            </SuperAdminProtectedRouter>
           }
         />
         <Route path="/updateUserLocation" element={<UpdateUserLocation/>}/>

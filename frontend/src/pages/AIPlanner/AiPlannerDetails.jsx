@@ -15,6 +15,7 @@ import {
   Polyline,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import { useNavigate } from "react-router-dom";
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -97,6 +98,7 @@ const STYLES = `
 
 function AiPlannerDetails({ embedded = false } = {}) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [modalData, setModalData] = useState(null);
 
   const { aiPlan } = useSelector((state) => state.place);
@@ -127,37 +129,37 @@ function AiPlannerDetails({ embedded = false } = {}) {
   const content = (
     <div className="max-w-275 mx-auto">
       {/* ── HEADER ── */}
-      <div
-        className={`animate-fade-up bg-white border border-gray-200 rounded-[18px] flex items-center justify-between flex-wrap gap-4 mb-6 ${
-          embedded ? "px-5 py-4.5" : "px-6.5 py-5.5"
-        }`}
-      >
+      <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
         <div>
           <div className="text-[10px] tracking-[.18em] uppercase text-[#c9922a] font-semibold mb-1.5">
             ✦ Itinerary
           </div>
-          <div
-            className={`font-cormorant font-semibold text-[#1f2937] leading-[1.1] ${
-              embedded ? "text-[20px]" : "text-[28px]"
-            }`}
-          >
+          <div className="font-cormorant font-semibold text-[#1f2937] text-[28px] leading-[1.1]">
             Plan Overview
           </div>
           <div className="text-[12px] text-gray-500 mt-1">
-            Tap a place to see details, images & nearby hotels
+            Tap a place to see details
           </div>
         </div>
-        <div>
+
+        {/* RIGHT SIDE */}
+        <div className="flex items-center gap-3">
+          {/* status badge */}
           {safeAiPlan?.length ? (
-            <span className="inline-flex items-center gap-2 text-[12px] font-medium px-3.5 py-2 rounded-full border border-gray-300 bg-gray-100 text-gray-800 whitespace-nowrap shadow-sm">
-              <span className="w-1.75 h-1.75 rounded-full bg-green-400 shadow-[0_0_6px_rgba(52,211,153,0.4)] shrink-0" />
-              {safeAiPlan.length} day plan loaded
+            <span className="inline-flex items-center gap-2 text-[12px] font-medium px-3 py-2 rounded-full border border-gray-300 bg-gray-100 text-gray-800">
+              {safeAiPlan.length} day plan
             </span>
-          ) : (
-            <span className="inline-flex items-center gap-2 text-[12px] font-medium px-3.5 py-2 rounded-full border border-gray-300 bg-gray-100 text-gray-500 whitespace-nowrap shadow-sm">
-              <span className="w-1.75 h-1.75 rounded-full bg-gray-400 shrink-0" />
-              No plan loaded
-            </span>
+          ) : null}
+
+          {/* 🤖 AI BUTTON */}
+          {!embedded && (
+            <button
+              onClick={() => navigate("/assistantChat")}
+              className="w-10 h-10 grid place-items-center rounded-xl border border-gray-300 bg-white hover:border-[#c9922a] hover:bg-[#c9922a]/10 transition-all duration-200 shadow-sm hover:shadow-md"
+              title="Ask AI about this plan"
+            >
+              <img src="/robot.png" className="w-6 h-6" />
+            </button>
           )}
         </div>
       </div>
@@ -209,7 +211,7 @@ function AiPlannerDetails({ embedded = false } = {}) {
               {day.places?.map((p, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center gap-3 p-3 mb-2 last:mb-0 rounded-xl border border-gray-200 bg-gray-50 cursor-pointer transition-all duration-200 hover:border-yellow-300 hover:bg-yellow-50 hover:translate-x-0.5"
+                  className="flex items-center gap-3 p-3 mb-2 last:mb-0 rounded-xl  border-gray-200 bg-gray-50 cursor-pointer transition-all duration-200  "
                   onClick={() => setModalData({ type: "place", data: p, day })}
                 >
                   {p.images?.[0] ? (
@@ -290,7 +292,7 @@ function AiPlannerDetails({ embedded = false } = {}) {
                     {loc.type}
                   </Popup>
                 </Marker>
-              ))
+              )),
             )}
             <Polyline
               positions={coordinates}
@@ -403,7 +405,7 @@ function AiPlannerDetails({ embedded = false } = {}) {
               </div>
             </div>
           </div>,
-          document.body
+          document.body,
         )}
     </div>
   );

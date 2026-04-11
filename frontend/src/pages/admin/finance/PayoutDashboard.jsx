@@ -210,12 +210,12 @@ const PayoutDashboard = () => {
         </div>
 
         <div className="flex items-center gap-3 w-full md:w-auto">
-          <div className="flex items-center gap-2 text-sm text-slate-500 mr-2 hidden sm:flex">
+          <div className="items-center gap-2 text-sm text-slate-500 mr-2 hidden sm:flex">
             <Filter className="w-4 h-4" />
             <span>Filter:</span>
           </div>
           <select
-            className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all cursor-pointer w-full md:w-auto min-w-[140px]"
+            className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all cursor-pointer w-full md:w-auto min-w-35"
             value={statusFilter}
             onChange={(e) => {
               setStatusFilter(e.target.value);
@@ -287,13 +287,13 @@ const PayoutDashboard = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="space-y-1.5">
-                          <div className="flex items-center gap-2 justify-between max-w-[140px]">
+                          <div className="flex items-center gap-2 justify-between max-w-35">
                             <span className="text-[11px] text-slate-400 uppercase font-black">Admin</span>
                             <span className="text-[13px] text-indigo-600 font-bold">
                               ₹{(b.commission || 0).toLocaleString("en-IN")}
                             </span>
                           </div>
-                          <div className="flex items-center gap-2 justify-between max-w-[140px]">
+                          <div className="flex items-center gap-2 justify-between max-w-35">
                             <span className="text-[11px] text-slate-400 uppercase font-black">Vendor</span>
                             <span className="text-[13px] text-emerald-600 font-bold">
                               ₹{(b.hotelAmount || 0).toLocaleString("en-IN")}
@@ -361,7 +361,7 @@ const PayoutDashboard = () => {
               {[...Array(totalPages)].map((_, i) => (
                 <button
                   key={i}
-                  className={`min-w-[32px] h-8 rounded-lg text-sm font-bold transition-all ${currentPage === i + 1
+                  className={`min-w-8 h-8 rounded-lg text-sm font-bold transition-all ${currentPage === i + 1
                     ? "bg-indigo-600 text-white shadow-md shadow-indigo-100"
                     : "text-slate-600 hover:bg-white border border-transparent hover:border-slate-200"
                     }`}
@@ -395,7 +395,7 @@ const StatsCard = ({ title, value, icon, trend, color }) => {
   };
 
   return (
-    <div className={`bg-gradient-to-br ${colorMap[color]} shadow-lg rounded-3xl p-6 border flex flex-col justify-between relative overflow-hidden group`}>
+    <div className={`bg-linear-to-br ${colorMap[color]} shadow-lg rounded-3xl p-6 border flex flex-col justify-between relative overflow-hidden group`}>
       <div className="absolute right-[-10%] top-[-10%] opacity-5 group-hover:scale-125 transition-transform duration-700">
         {icon}
       </div>
