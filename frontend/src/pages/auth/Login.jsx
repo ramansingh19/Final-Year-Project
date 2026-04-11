@@ -27,10 +27,7 @@ function Login() {
 
     const { email, password } = formData;
 
-    if (!email || !password) {
-      error;
-      return;
-    }
+    if (!email || !password) return;
 
     dispatch(userLogin({ email, password }));
   };
@@ -42,12 +39,12 @@ function Login() {
   }, [loginSuccess, navigate]);
 
   return (
-    <div className=" flex items-center justify-center  p-6 text-gray-800 dark:text-white">
-      <div className="w-full">
-        <form onSubmit={handelFormSubmit} className="space-y-4">
+    <div className="flex items-center justify-center px-3 sm:px-6 py-4 sm:py-6 text-gray-800 dark:text-white">
+      <div className="w-full max-w-md">
+        <form onSubmit={handelFormSubmit} className="space-y-4 sm:space-y-5">
+          
           {/* Email */}
           <div>
-
             <input
               type="email"
               name="email"
@@ -55,17 +52,16 @@ function Login() {
               placeholder="Enter your email"
               value={formData.email}
               onChange={handelChange}
-              className="h-14 w-full border-0 bg-[#ececeb] px-5 text-[15px] text-gray-900 placeholder:text-gray-500 outline-none transition focus:ring-2 focus:ring-emerald-700 rounded-full"
+              className="h-12 sm:h-14 w-full rounded-full border-0 bg-[#ececeb] px-4 sm:px-5 text-sm sm:text-[15px] text-gray-900 placeholder:text-gray-500 outline-none transition focus:ring-2 focus:ring-emerald-700"
             />
           </div>
 
           {/* Password */}
           <div>
             <div className="mb-2 flex items-center justify-end">
-
               <Link
                 to="/forgot-password"
-                className="text-sm font-medium text-emerald-700 transition hover:text-emerald-800"
+                className="text-xs sm:text-sm font-medium text-emerald-700 transition hover:text-emerald-800"
               >
                 Forgot?
               </Link>
@@ -79,13 +75,13 @@ function Login() {
                 placeholder="Enter your password"
                 value={formData.password}
                 onChange={handelChange}
-                className="h-14 w-full rounded-full border-0 bg-[#ececeb] px-5 pr-12 text-[15px] text-gray-900 placeholder:text-gray-500 outline-none transition focus:ring-2 focus:ring-emerald-700"
+                className="h-12 sm:h-14 w-full rounded-full border-0 bg-[#ececeb] px-4 sm:px-5 pr-12 text-sm sm:text-[15px] text-gray-900 placeholder:text-gray-500 outline-none transition focus:ring-2 focus:ring-emerald-700"
               />
 
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 transition hover:text-gray-700"
+                className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 text-gray-500 transition hover:text-gray-700"
               >
                 {showPassword ? (
                   <IoEyeSharp size={18} />
@@ -100,17 +96,17 @@ function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="mt-2 h-14 w-full rounded-full bg-emerald-800 text-base font-semibold text-white shadow-lg transition hover:bg-emerald-900 disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-2 h-12 sm:h-14 w-full rounded-full bg-emerald-800 text-sm sm:text-base font-semibold text-white shadow-lg transition hover:bg-emerald-900 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loading ? "Logging in..." : "Start"}
           </button>
 
           {/* Footer */}
-          <p className="pt-2 text-center text-sm text-gray-200 lg:text-left">
+          <p className="pt-2 text-center text-xs sm:text-sm text-gray-700 lg:text-left">
             Don’t have an account?{" "}
             <Link
               to="/signUp"
-              className="font-semibold text-white transition hover:text-emerald-700"
+              className="font-semibold text-gray-600 transition hover:text-emerald-700"
             >
               Sign up
             </Link>
@@ -118,7 +114,7 @@ function Login() {
 
           {/* Error */}
           {error && (
-            <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-center text-sm text-red-600">
+            <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-center text-xs sm:text-sm text-red-600">
               {error}
             </div>
           )}
