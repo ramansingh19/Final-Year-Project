@@ -323,7 +323,7 @@ const RoomImageSlider = ({ images }) => {
       ];
 
   return (
-    <div className="relative w-full sm:w-44 h-48 sm:h-full shrink-0 overflow-hidden bg-slate-100 group">
+    <div className="relative w-full h-full shrink-0 overflow-hidden bg-slate-100 group">
       <img
         src={imgs[idx]}
         alt="room"
@@ -673,7 +673,7 @@ const BookingWidget = ({
                 bookingLoading ||
                 (selectedRoom && guests > selectedRoom.capacity)
                   ? "bg-slate-200 cursor-not-allowed text-slate-400"
-                  : "bg-linear-to-r from-[#3d6ef5] to-[#6366f1] hover:from-[#3461d9] hover:to-[#5558e6] text-white shadow-lg shadow-[#3d6ef5]/20 hover:shadow-[#3d6ef5]/30"
+                  : "bg-linear-to-r from-[#c67c4e] to-[#b86c3d] hover:from-[#b06d42] hover:to-[#9e5b33] text-white shadow-lg shadow-[#c67c4e]/20 hover:shadow-[#c67c4e]/30"
               }`}
           >
             {bookingLoading
@@ -833,14 +833,14 @@ const RoomCard = ({ room, isSelected, onSelect, onPreview, availability }) => {
     <div
       className={`border-2 rounded-2xl overflow-hidden transition-all duration-300 ${
         isSelected
-          ? "border-[#3d6ef5] shadow-xl shadow-[#3d6ef5]/10 scale-[1.01] bg-white"
+          ? "border-[#c67c4e] shadow-xl shadow-[#3d6ef5]/10 scale-[1.01] bg-white"
           : isSoldOut
             ? "border-slate-100 opacity-60 bg-slate-50"
-            : "border-slate-200 bg-white hover:border-[#3d6ef5]/30 hover:shadow-lg hover:shadow-slate-200/50"
+            : "border-slate-200 bg-white hover:border-[#c67c4e]/30 hover:shadow-lg hover:shadow-slate-200/50"
       }`}
     >
       {isSelected && (
-        <div className="bg-linear-to-r from-[#3d6ef5] to-[#6366f1] px-4 py-2 flex items-center gap-2">
+        <div className="bg-linear-to-r from-[#c67c4e] to-[#b86c3d] px-4 py-2 flex items-center gap-2">
           <FaCheckCircle className="text-white text-[10px]" />
           <span className="text-white text-[10px] font-bold tracking-widest uppercase">
             Currently Selected Room
@@ -850,7 +850,7 @@ const RoomCard = ({ room, isSelected, onSelect, onPreview, availability }) => {
 
       <div className="flex flex-col sm:flex-row">
         <div
-          className="relative w-full sm:w-44 shrink-0 cursor-pointer group"
+          className="relative w-full h-48 sm:w-44 shrink-0 cursor-pointer group"
           onClick={() => onPreview(room)}
         >
           <RoomImageSlider images={room.images} />
