@@ -177,6 +177,21 @@ color: transparent;
     @media (max-width: 1024px) { .wcu-grid { grid-template-columns: repeat(2,1fr); } }
     @media (max-width: 640px) { .wcu-grid { grid-template-columns: 1fr; } }
 
+    /* Only for mobile screens */
+  @media (max-width: 767px) {
+  .wcu-grid {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 10px;
+    text: 10px;
+  }
+
+  .wcu-grid > * {
+    flex: 1 1 calc(100% - 10px);  /* 2 small cards */
+    max-width: calc(100% - 10px);
+  }
+}
+
     /* Card */
     .wcu-card { background: #fff; border: 1px solid rgba(45,31,22,0.15); border-radius: 20px; padding: 32px 28px; cursor: pointer; position: relative; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s ease, box-shadow 0.3s ease; color: #2d1f16; }
     .wcu-card-topbar { position: absolute; top:0; left:0; right:0; height:3px; background: var(--card-color); opacity:0.5; transition: opacity 0.3s ease; }
@@ -322,7 +337,7 @@ export default function WhyChooseUs() {
       <div className="wcu-inner">
         <div className="wcu-header">
           <RevealDiv delay={0}>
-            <div className="wcu-eyebrow">
+            <div className="wcu-eyebrow ">
               <svg
                 width="12"
                 height="12"

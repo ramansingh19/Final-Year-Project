@@ -162,7 +162,7 @@ function Navbar() {
   return (
     <>
       <nav
-        className="sticky top-0 z-50  bg-[#f9fffe] font-['Poppins'] backdrop-blur-xl"
+        className="sticky top-0 z-50  bg-transparent font-['Poppins'] backdrop-blur-xl"
         ref={dropdownRef}
       >
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
@@ -205,9 +205,9 @@ function Navbar() {
                  className="
                    group flex items-center justify-center
                    rounded-full 
-                   bg-linear-to-br from-gray-800 via-gray-400 to-gray-800
+                   bg-white
                    p-1.5 sm:p-2 md:p-2
-                   shadow-md sm:shadow-lg
+                   
                    transition-all duration-300 
                    hover:shadow-2xl active:scale-95
                  "
