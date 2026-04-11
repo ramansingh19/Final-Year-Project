@@ -107,8 +107,9 @@ function AdminsDetails() {
   </div>
 </div>
 
+
 {/* Host Type Filters */}
-<div className="mb-8 flex flex-wrap gap-3">
+<div className="mb-8 grid grid-cols-3 gap-2 sm:flex sm:flex-wrap sm:gap-3">
   {[
     {
       key: "all",
@@ -132,13 +133,14 @@ function AdminsDetails() {
     <button
       key={filter.key}
       onClick={() => setHostTypeFilter(filter.key)}
-      className={`rounded-2xl border px-5 py-3 text-sm font-semibold transition-all duration-300 ${
+      className={`flex flex-col items-center justify-center rounded-2xl border px-3 py-3 text-xs font-semibold transition-all duration-300 sm:flex-row sm:px-5 sm:text-sm ${
         hostTypeFilter === filter.key
           ? filter.active
           : "border-gray-200 bg-white/10 text-gray-600 hover:border-gray-300 hover:bg-white/20 hover:text-gray-900"
       }`}
     >
-      {filter.label} ({filter.count})
+      <span>{filter.label}</span>
+      <span className="mt-0.5 text-[11px] opacity-70 sm:mt-0 sm:ml-1">({filter.count})</span>
     </button>
   ))}
 </div>

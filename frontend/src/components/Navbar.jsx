@@ -159,6 +159,24 @@ function Navbar() {
     ? "/superAdmin/superAdminProfile"
     : null;
 
+  const mobileMenuItems =
+  superAdmin?.role === "super_admin"
+    ? [
+        { to: "/superAdmin/superAdminDashboard", label: "Dashboard", icon: "📊" },
+        { to: "/superAdmin/cityDashboard", label: "City", icon: "🌆" },
+        { to: "/superAdmin/hotelDashboard", label: "Hotel", icon: "🏨" },
+        { to: "/superAdmin/place-dashboard", label: "Place", icon: "📍" },
+        { to: "/superAdmin/restaurant-dashboard", label: "Restaurant", icon: "🍽️" },
+        { to: "/superadmin/adminApprovel", label: "Admin Approval", icon: "🛡️" },
+      ]
+    : [
+        { to: "/", label: "Home", icon: "🏠" },
+        { to: "/explore", label: "Cities", icon: "🌆" },
+        { to: "/hotels", label: "Hotels", icon: "🏨" },
+        { to: "/RestaurantLandingPage", label: "Restaurants", icon: "🍽️" },
+        { to: "/travel", label: "Travel", icon: "✈️" },
+      ];
+
   return (
     <>
       <nav
@@ -674,18 +692,8 @@ function Navbar() {
             </div>
 
             {/* MENU */}
-            <div className="p-4 space-y-2">
-              {[
-                { to: "/", label: "Home", icon: "🏠" },
-                { to: "/explore", label: "Cities", icon: "🌆" },
-                { to: "/hotels", label: "Hotels", icon: "🏨" },
-                {
-                  to: "/RestaurantLandingPage",
-                  label: "Restaurants",
-                  icon: "🍽️",
-                },
-                { to: "/travel", label: "Travel", icon: "✈️" },
-              ].map((item) => (
+            <div className="p-4 space-y-2"> 
+              {mobileMenuItems.map((item) =>  (
                 <NavLink
                   key={item.to}
                   to={item.to}
