@@ -52,7 +52,7 @@ function CreateRoom() {
     setFormData({ ...formData, images: Array.from(e.target.files) });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData();
 
@@ -65,8 +65,29 @@ function CreateRoom() {
         data.append(key, formData[key]);
       }
     });
+    try {
+      const res = await dispatch(createRoom(data)).unwrap();
 
-    dispatch(createRoom(data));
+    if (res) {
+      //  SUCCESS
+      alert("Room created successfully");
+
+      setFormData({
+        hotelId: "",
+        roomType: "",
+        pricePerNight: "",
+        capacity: "",
+        totalRooms: "",
+        amenities: [],
+        description: "",
+        images: [],
+      });
+      }
+    } catch (error) {
+      console.error(error)
+    }
+
+    
   };
 
   return (
@@ -85,13 +106,13 @@ function CreateRoom() {
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="mb-8 overflow-hidden rounded-[2rem] border border-white/70 bg-white/80 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-2xl"
+          className="mb-8 overflow-hidden rounded-4xl border border-white/70 bg-white/80 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-2xl"
         >
           <div className="flex flex-col gap-6 p-6 md:flex-row md:items-center md:justify-between md:p-8">
             <div className="flex items-start gap-5">
               <motion.div
                 whileHover={{ rotate: 8, scale: 1.05 }}
-                className="flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-orange-500 via-amber-500 to-red-500 text-3xl text-white shadow-[0_15px_35px_rgba(249,115,22,0.35)]"
+                className="flex h-16 w-16 items-center justify-center rounded-3xl bg-linear-to-br from-orange-500 via-amber-500 to-red-500 text-3xl text-white shadow-[0_15px_35px_rgba(249,115,22,0.35)]"
               >
                 🛏️
               </motion.div>
@@ -128,9 +149,9 @@ function CreateRoom() {
           initial={{ opacity: 0, y: 35 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55 }}
-          className="overflow-hidden rounded-[2rem] border border-white/70 bg-white/85 shadow-[0_30px_80px_rgba(15,23,42,0.10)] backdrop-blur-2xl"
+          className="overflow-hidden rounded-4xl border border-white/70 bg-white/85 shadow-[0_30px_80px_rgba(15,23,42,0.10)] backdrop-blur-2xl"
         >
-          <div className="border-b border-slate-200 bg-gradient-to-r from-orange-50 via-white to-sky-50 px-6 py-6 md:px-8">
+          <div className="border-b border-slate-200 bg-linear-to-r from-orange-50 via-white to-sky-50 px-6 py-6 md:px-8">
             <h2 className="text-2xl font-bold text-slate-900">
               Room Information
             </h2>
@@ -183,7 +204,7 @@ function CreateRoom() {
             </div>
 
             {/* Price / Capacity / Rooms */}
-            <div className="rounded-[2rem] border border-slate-200 bg-gradient-to-br from-orange-50 via-white to-amber-50 p-6">
+            <div className="rounded-4xl border border-slate-200 bg-linear-to-br from-orange-50 via-white to-amber-50 p-6">
               <div className="mb-6">
                 <h3 className="text-xl font-bold text-slate-900">
                   Pricing & Capacity
@@ -268,7 +289,7 @@ function CreateRoom() {
                     onClick={() => toggleAmenity(a)}
                     className={`cursor-pointer rounded-2xl border px-4 py-4 text-center text-sm font-semibold transition-all duration-300 ${
                       formData.amenities.includes(a)
-                        ? "border-orange-300 bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-[0_12px_30px_rgba(249,115,22,0.30)]"
+                        ? "border-orange-300 bg-linear-to-r from-orange-500 to-amber-500 text-white shadow-[0_12px_30px_rgba(249,115,22,0.30)]"
                         : "border-slate-200 bg-white text-slate-700 hover:border-orange-300 hover:bg-orange-50"
                     }`}
                   >
@@ -279,7 +300,7 @@ function CreateRoom() {
             </div>
 
             {/* Description */}
-            <div className="rounded-[2rem] border border-slate-200 bg-gradient-to-br from-sky-50 via-white to-cyan-50 p-6">
+            <div className="rounded-4xl border border-slate-200 bg-linear-to-br from-sky-50 via-white to-cyan-50 p-6">
               <div className="mb-5">
                 <h3 className="text-xl font-bold text-slate-900">
                   Room Description
@@ -300,7 +321,7 @@ function CreateRoom() {
             </div>
 
             {/* Room Images Upload */}
-            <div className="rounded-[2rem] border border-slate-200 bg-white/80 p-6 shadow-sm backdrop-blur-xl">
+            <div className="rounded-4xl border border-slate-200 bg-white/80 p-6 shadow-sm backdrop-blur-xl">
               <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                 <div>
                   <h3 className="text-xl font-bold text-slate-900">
@@ -363,7 +384,7 @@ function CreateRoom() {
                       </>
                     ) : (
                       <div className="flex flex-col items-center justify-center text-center">
-                        <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-100 to-orange-200 text-3xl text-orange-500 transition-all duration-300 group-hover:scale-110 group-hover:from-orange-500 group-hover:to-red-500 group-hover:text-white">
+                        <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-orange-100 to-orange-200 text-3xl text-orange-500 transition-all duration-300 group-hover:scale-110 group-hover:from-orange-500 group-hover:to-red-500 group-hover:text-white">
                           +
                         </div>
 
@@ -405,7 +426,7 @@ function CreateRoom() {
                 whileHover={{ y: -3, scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
                 disabled={loading}
-                className="w-full rounded-3xl bg-gradient-to-r from-orange-500 via-amber-500 to-red-500 py-5 text-lg font-bold text-white shadow-[0_20px_50px_rgba(249,115,22,0.35)] transition-all duration-300 hover:shadow-[0_25px_60px_rgba(249,115,22,0.45)] disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full rounded-3xl bg-linear-to-r from-orange-500 via-amber-500 to-red-500 py-5 text-lg font-bold text-white shadow-[0_20px_50px_rgba(249,115,22,0.35)] transition-all duration-300 hover:shadow-[0_25px_60px_rgba(249,115,22,0.45)] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? (
                   <span className="flex items-center justify-center gap-3">

@@ -683,11 +683,11 @@ function App() {
         />
         {/* payouts */}
         <Route
-          path="/admin/payout-dashboard"
+          path="/superadmin/payout-dashboard"
           element={
-            <AdminProtectedRouter>
+            <SuperAdminProtectedRouter>
               <PayoutDashboard />
-            </AdminProtectedRouter>
+            </SuperAdminProtectedRouter>
           }
         />
         <Route path="/updateUserLocation" element={<UpdateUserLocation/>}/>
