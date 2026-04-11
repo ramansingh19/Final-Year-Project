@@ -217,7 +217,7 @@ const HotelCard = ({
       className="group bg-white rounded-2xl overflow-hidden border border-slate-200/70 hover:border-blue-200 transition-all duration-300 flex flex-col sm:flex-row cursor-pointer shadow-[0_2px_12px_rgba(100,130,180,0.08)] hover:shadow-[0_8px_32px_rgba(99,130,200,0.18)] will-change-transform"
       onClick={() => navigate(`/hotels/${hotel._id}`)}
     >
-      {/* Image */}
+      {/* Image */} 
       <div className="relative w-full sm:w-52 h-48 sm:h-48 shrink-0 overflow-hidden bg-slate-100">
         <img
           src={images[0]}
