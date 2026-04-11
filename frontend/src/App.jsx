@@ -251,7 +251,7 @@ function App() {
         <Route
           path="/admin/create-hotel"
           element={
-            <AdminProtectedRouter>
+            <AdminProtectedRouter allowedHosts={["hotel"]}>
               <AddHotelDetails />
             </AdminProtectedRouter>
           }
@@ -307,7 +307,7 @@ function App() {
         <Route
           path="/admin/update-hotel-details/:id"
           element={
-            <AdminProtectedRouter>
+            <AdminProtectedRouter allowedHosts={["hotel"]}>
               <UpdateHotelDetails />
             </AdminProtectedRouter>
           }
@@ -315,7 +315,7 @@ function App() {
         <Route
           path="/admin/hotel-dashboard"
           element={
-            <AdminProtectedRouter>
+            <AdminProtectedRouter allowedHosts={["hotel"]}>
               <AdminHotelDashBoard />
             </AdminProtectedRouter>
           }
@@ -323,7 +323,7 @@ function App() {
         <Route
           path="/admin/show-hotel-status"
           element={
-            <AdminProtectedRouter>
+            <AdminProtectedRouter allowedHosts={["hotel"]}>
               <ShowHotelStatus />
             </AdminProtectedRouter>
           }
@@ -331,7 +331,7 @@ function App() {
         <Route
           path="/admin/create-room"
           element={
-            <AdminProtectedRouter>
+            <AdminProtectedRouter allowedHosts={["hotel"]}>
               <CreateRoom />
             </AdminProtectedRouter>
           }
@@ -339,7 +339,7 @@ function App() {
         <Route
           path="/admin/rooms/:id"
           element={
-            <AdminProtectedRouter>
+            <AdminProtectedRouter allowedHosts={["hotel"]}>
               <GetAllRooms />
             </AdminProtectedRouter>
           }
@@ -347,7 +347,7 @@ function App() {
         <Route
           path="/admin/update-room/:hotelId"
           element={
-            <AdminProtectedRouter>
+            <AdminProtectedRouter allowedHosts={["hotel"]}>
               <UpdateRoom />
             </AdminProtectedRouter>
           }
@@ -371,7 +371,7 @@ function App() {
         <Route
           path="/admin/hotel-booking-dashboard"
           element={
-            <AdminProtectedRouter>
+            <AdminProtectedRouter allowedHosts={["hotel"]}>
               <HotelBookingDashboard />
             </AdminProtectedRouter>
           }
@@ -379,7 +379,7 @@ function App() {
         <Route
           path="/admin/booked-hotels/:hotelId"
           element={
-            <AdminProtectedRouter>
+            <AdminProtectedRouter allowedHosts={["hotel"]}>
               <BookedHotels />
             </AdminProtectedRouter>
           }
@@ -445,15 +445,15 @@ function App() {
         <Route
           path="/admin/restaurantDashboard"
           element={
-            <AdminProtectedRouter>
-              <RestaurantDashboard />
+            <AdminProtectedRouter allowedHosts={["restaurant"]}>
+              <RestaurantDashboard/>
             </AdminProtectedRouter>
           }
         />
         <Route
           path="/admin/add-restaurant"
           element={
-            <AdminProtectedRouter>
+            <AdminProtectedRouter  allowedHosts={["restaurant"]}>
               <AddRestaurantDetails />
             </AdminProtectedRouter>
           }
@@ -461,7 +461,7 @@ function App() {
         <Route
           path="/admin/admin-active-restaurant"
           element={
-            <AdminProtectedRouter>
+            <AdminProtectedRouter allowedHosts={["restaurant"]}>
               <AdminActiveRestaurant />
             </AdminProtectedRouter>
           }
@@ -469,7 +469,7 @@ function App() {
         <Route
           path="/admin/show-restaurant-status"
           element={
-            <AdminProtectedRouter>
+            <AdminProtectedRouter allowedHosts={["restaurant"]}>
               <ShowRestaurantStatus />
             </AdminProtectedRouter>
           }
@@ -477,7 +477,7 @@ function App() {
         <Route
           path="/admin/update-restaurant/:id"
           element={
-            <AdminProtectedRouter>
+            <AdminProtectedRouter allowedHosts={["restaurant"]}>
               <UpdateRestaurantDetails />
             </AdminProtectedRouter>
           }
@@ -529,7 +529,7 @@ function App() {
         <Route
           path="/admin/create-food"
           element={
-            <AdminProtectedRouter>
+            <AdminProtectedRouter allowedHosts={["restaurant"]}>
               <CreateFood />
             </AdminProtectedRouter>
           }
@@ -537,7 +537,7 @@ function App() {
         <Route
           path="/admin/get-All-Food/:id"
           element={
-            <AdminProtectedRouter>
+            <AdminProtectedRouter allowedHosts={["restaurant"]}>
               <GetAllFood />
             </AdminProtectedRouter>
           }
@@ -545,7 +545,7 @@ function App() {
         <Route
           path="/admin/update-food/:id"
           element={
-            <AdminProtectedRouter>
+            <AdminProtectedRouter allowedHosts={["restaurant"]}>
               <UpdateFood />
             </AdminProtectedRouter>
           }
@@ -592,7 +592,7 @@ function App() {
         <Route
           path="/admin/ordersDashboard"
           element={
-            <AdminProtectedRouter>
+            <AdminProtectedRouter allowedHosts={["restaurant"]}>
               <OrdersDashboard />
             </AdminProtectedRouter>
           }
@@ -600,7 +600,7 @@ function App() {
         <Route
           path="/admin/manage-orders"
           element={
-            <AdminProtectedRouter>
+            <AdminProtectedRouter allowedHosts={["restaurant"]}>
               <ManageOrder />
             </AdminProtectedRouter>
           }
@@ -608,7 +608,7 @@ function App() {
         <Route
           path="/admin/AdminOrderDetails/:orderId"
           element={
-            <AdminProtectedRouter>
+            <AdminProtectedRouter allowedHosts={["restaurant"]}>
               <AdminOrderDetails />
             </AdminProtectedRouter>
           }
@@ -616,7 +616,7 @@ function App() {
         <Route
           path="/admin/ViewUsers"
           element={
-            <AdminProtectedRouter>
+            <AdminProtectedRouter allowedHosts={["restaurant"]}>
               <ViewUsers />
             </AdminProtectedRouter>
           }
@@ -632,7 +632,7 @@ function App() {
         <Route
           path="/admin/deliveryBoy-dashboard"
           element={
-            <AdminProtectedRouter>
+            <AdminProtectedRouter allowedHosts={["delivery_boy"]}>
               <DeliveryBoyDeshboard />
             </AdminProtectedRouter>
           }
@@ -640,7 +640,7 @@ function App() {
         <Route
           path="/admin/livelocation-update"
           element={
-            <AdminProtectedRouter>
+            <AdminProtectedRouter allowedHosts={["delivery_boy"]}>
               <LiveLocationUpdate />
             </AdminProtectedRouter>
           }
@@ -648,7 +648,7 @@ function App() {
         <Route
           path="/admin/pending-orders"
           element={
-            <AdminProtectedRouter>
+            <AdminProtectedRouter allowedHosts={["delivery_boy"]}>
               <PendingOrders />
             </AdminProtectedRouter>
           }

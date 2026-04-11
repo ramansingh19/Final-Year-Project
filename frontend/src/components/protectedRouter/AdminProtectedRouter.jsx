@@ -1,26 +1,69 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
-import { Navigate } from 'react-router-dom';
+import React from "react";
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 
-function AdminProtectedRouter({children}) {
-  const {adminToken, loading} = useSelector((state) => state.adminAuth)
-  const {admin} = useSelector((state) => state.admin)
+function AdminProtectedRouter({
+  children,
+  allowedHosts = [],
+}) {
+  const { adminToken, loading } = useSelector(
+    (state) => state.adminAuth
+  );
 
-  // console.log("adminToken", adminToken);
-  // console.log("admin", admin);
+  const { admin } = useSelector((state) => state.admin);
 
-  if(loading){
+  if (loading || !admin) {
     return <div>Loading...</div>;
   }
 
-  const authToken = adminToken || localStorage.getItem("adminToken")
+  const authToken =
+    adminToken || localStorage.getItem("adminToken");
 
-  if(!authToken){
-    return <Navigate to="/loginPage" replace/>
+  // Not logged in
+  if (!authToken) {
+    return <Navigate to="/loginPage" replace />;
   }
 
+  // Prevent access if host is not allowed
+  if (
+    allowedHosts.length > 0 &&
+    !allowedHosts.includes(admin.host)
+  ) {
+    return <Navigate to="/unauthorized" replace />;
+  }
 
-  return children
+  return children;
 }
 
-export default AdminProtectedRouter
+export default AdminProtectedRouter;
+
+
+
+
+// import React from 'react'
+// import { useSelector } from 'react-redux'
+// import { Navigate } from 'react-router-dom';
+
+// function AdminProtectedRouter({children}) {
+//   const {adminToken, loading} = useSelector((state) => state.adminAuth)
+//   const {admin} = useSelector((state) => state.admin)
+
+
+//   console.log("adminToken", adminToken);
+//   // console.log("admin", admin);
+
+//   if(loading){
+//     return <div>Loading...</div>;
+//   }
+
+//   const authToken = adminToken || localStorage.getItem("adminToken")
+
+//   if(!authToken){
+//     return <Navigate to="/loginPage" replace/>
+//   }
+
+
+//   return children
+// }
+
+// export default AdminProtectedRouter
