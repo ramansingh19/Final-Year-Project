@@ -19,23 +19,45 @@ const IMAGES = [
 ];
 
 const HEADLINE_MAP = {
-  cities: { title: "Discover Your Next City", sub: "Explore urban wonders around the globe" },
-  hotels: { title: "Stay in Luxury", sub: "Hand-picked hotels for every journey" },
-  places: { title: "Find Hidden Gems", sub: "Off-the-beaten-path destinations await" },
-  restaurants: { title: "Taste the World", sub: "Authentic flavours at every destination" },
-  travel: { title: "The World is Yours", sub: "Plan the adventure of a lifetime" },
+  cities: {
+    title: "Discover Your Next City",
+    sub: "Explore urban wonders around the globe",
+  },
+  hotels: {
+    title: "Stay in Luxury",
+    sub: "Hand-picked hotels for every journey",
+  },
+  places: {
+    title: "Find Hidden Gems",
+    sub: "Off-the-beaten-path destinations await",
+  },
+  restaurants: {
+    title: "Taste the World",
+    sub: "Authentic flavours at every destination",
+  },
+  travel: {
+    title: "The World is Yours",
+    sub: "Plan the adventure of a lifetime",
+  },
 };
 
 export default function HeroSection() {
   const [activeTab, setActiveTab] = useState("cities");
   const [currentImage, setCurrentImage] = useState(0);
-  const [formData, setFormData] = useState({ city: "", checkIn: "", checkOut: "" });
+  const [formData, setFormData] = useState({
+    city: "",
+    checkIn: "",
+    checkOut: "",
+  });
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   // Slideshow
   useEffect(() => {
-    const id = setInterval(() => setCurrentImage((p) => (p + 1) % IMAGES.length), 10000);
+    const id = setInterval(
+      () => setCurrentImage((p) => (p + 1) % IMAGES.length),
+      10000
+    );
     return () => clearInterval(id);
   }, []);
 
@@ -47,12 +69,24 @@ export default function HeroSection() {
   const handleSearch = () => {
     if (!formData.city?.trim()) return alert("Please enter city");
 
-    let query = "", route = "";
-    if (activeTab === "hotels") { query = `${formData.city.trim()} hotels`; route = "/hotels"; }
-    else if (activeTab === "places") { query = `${formData.city.trim()} places`; route = "/places"; }
-    else if (activeTab === "cities") { query = formData.city.trim(); route = "/cities"; }
-    else if (activeTab === "restaurants") { query = `${formData.city.trim()} restaurants`; route = "/restaurants"; }
-    else { query = formData.city.trim(); route = "/travel"; }
+    let query = "",
+      route = "";
+    if (activeTab === "hotels") {
+      query = `${formData.city.trim()} hotels`;
+      route = "/hotels";
+    } else if (activeTab === "places") {
+      query = `${formData.city.trim()} places`;
+      route = "/places";
+    } else if (activeTab === "cities") {
+      query = formData.city.trim();
+      route = "/cities";
+    } else if (activeTab === "restaurants") {
+      query = `${formData.city.trim()} restaurants`;
+      route = "/restaurants";
+    } else {
+      query = formData.city.trim();
+      route = "/travel";
+    }
 
     dispatch(smartSearch(query))
       .unwrap()
@@ -62,7 +96,13 @@ export default function HeroSection() {
 
   const handleTabClick = (key) => {
     setActiveTab(key);
-    const sectionMap = { cities: "popular-cities", hotels: "why-choose-us", places: "why-choose-us", restaurants: "why-choose-us", travel: "why-choose-us" };
+    const sectionMap = {
+      cities: "popular-cities",
+      hotels: "why-choose-us",
+      places: "why-choose-us",
+      restaurants: "why-choose-us",
+      travel: "why-choose-us",
+    };
     const el = document.getElementById(sectionMap[key]);
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
@@ -76,7 +116,9 @@ export default function HeroSection() {
         {IMAGES.map((img, i) => (
           <div
             key={i}
-            className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1200 ease-in-out ${i === currentImage ? "opacity-100" : "opacity-0"}`}
+            className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1200 ease-in-out ${
+              i === currentImage ? "opacity-100" : "opacity-0"
+            }`}
             style={{ backgroundImage: `url(${img})` }}
           />
         ))}
@@ -88,40 +130,74 @@ export default function HeroSection() {
       <div className="relative z-20 flex min-h-screen flex-col justify-center px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
         <div className="mx-auto w-full max-w-6xl">
           {/* Eyebrow */}
-          <div className="flex items-center gap-3">
-            <div className="h-px w-8 bg-black" />
-            <span className="text-black text-xs font-semibold tracking-widest uppercase">World-Class Travel Planning</span>
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+            <div className="h-px w-6 sm:w-8 bg-black shrink-0" />
+
+            <span
+              className="text-black 
+                   text-[10px] sm:text-xs 
+                   font-semibold 
+                   tracking-[0.15em] sm:tracking-widest 
+                   uppercase 
+                   leading-tight"
+            >
+              World-Class Travel Planning
+            </span>
           </div>
 
           {/* Headline */}
-          <div key={activeTab} className="animate-fadeUp mt-5">
-            <h1 className="font-serif font-light leading-[1.05] text-gray-900 text-[clamp(40px,7vw,84px)]">{title}</h1>
-            <p className="mt-3 max-w-xl text-black text-[clamp(14px,2vw,17px)]">{sub}</p>
+          <div key={activeTab} className="animate-fadeUp mt-4 sm:mt-5">
+            <h1
+              className="font-serif font-light leading-tight sm:leading-[1.05] 
+                 text-gray-900 
+                 text-[clamp(32px,6vw,84px)]"
+            >
+              {title}
+            </h1>
+
+            <p
+              className="mt-2 sm:mt-3 
+                max-w-full sm:max-w-xl 
+                text-black 
+                text-[clamp(13px,2vw,17px)] 
+                leading-relaxed"
+            >
+              {sub}
+            </p>
           </div>
 
           {/* Tabs */}
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-6 sm:mt-8 flex flex-wrap gap-2 sm:gap-3">
             {TABS.map(({ key, label, icon }) => (
               <button
                 key={key}
                 onClick={() => handleTabClick(key)}
-                className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium border backdrop-blur-md transition-all duration-300 ease-in-out ${
-                  activeTab === key
-                    ? "bg-blue-100 border-blue-200 text-blue-800 shadow-lg"
-                    : "bg-white/50 border-gray-300 text-gray-700 hover:bg-white/70 hover:border-gray-400"
-                }`}
+                className={`flex items-center gap-2 rounded-full 
+      px-3 py-2 sm:px-5 sm:py-2.5 
+      text-xs sm:text-sm font-medium 
+      border backdrop-blur-md 
+      transition-all duration-300 ease-in-out 
+      ${
+        activeTab === key
+          ? "bg-blue-100 border-blue-200 text-blue-800 shadow-lg"
+          : "bg-white/50 border-gray-300 text-gray-700 hover:bg-white/70 hover:border-gray-400 active:scale-95"
+      }`}
               >
-                <span className="text-base leading-none">{icon}</span>
-                {label}
+                <span className="text-sm sm:text-base leading-none">
+                  {icon}
+                </span>
+                <span className="truncate">{label}</span>
               </button>
             ))}
           </div>
 
           {/* Search Card */}
-          <div className="mt-10 bg-white/90 p-6 sm:p-8 rounded-lg shadow-md flex flex-wrap gap-4 items-end">
+          <div className="mt-6 sm:mt-8 md:mt-10 bg-white/50 p-3 sm:p-5 md:p-8 rounded-2xl shadow-lg flex flex-col gap-3 sm:gap-4 md:flex-row md:items-end">
             {/* Destination */}
-            <div className="flex flex-col gap-2 flex-1 min-w-50">
-              <span className="text-xs font-semibold uppercase text-gray-500 tracking-wide">Destination</span>
+            <div className="flex flex-col gap-1.5 sm:gap-2 w-full md:flex-1">
+              <span className="text-[9px] sm:text-xs font-semibold uppercase text-gray-900 tracking-wide">
+                Destination
+              </span>
               <div className="relative">
                 <input
                   type="text"
@@ -129,48 +205,52 @@ export default function HeroSection() {
                   placeholder="City or destination"
                   value={formData.city}
                   onChange={handleChange}
-                  className="w-full rounded-md border border-gray-300 px-4 py-3 pl-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition"
+                  className="w-full rounded-xl border border-gray-700 px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 text-xs sm:text-sm md:text-base pl-9 sm:pl-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition"
                 />
               </div>
             </div>
 
             {/* Check-in */}
-            <div className="flex flex-col gap-2 flex-1 min-w-50">
-              <span className="text-xs font-semibold uppercase text-gray-500 tracking-wide">Check-in</span>
+            <div className="flex flex-col gap-1.5 sm:gap-2 w-full md:flex-1">
+              <span className="text-[9px] sm:text-xs font-semibold uppercase text-gray-900 tracking-wide">
+                Check-in
+              </span>
               <input
                 type="date"
                 name="checkIn"
                 value={formData.checkIn}
                 onChange={handleChange}
-                className="w-full rounded-md border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition"
+                className="w-full rounded-xl border border-gray-700 px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 text-xs sm:text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition"
               />
             </div>
 
             {/* Check-out */}
-            <div className="flex flex-col gap-2 flex-1 min-w-50">
-              <span className="text-xs font-semibold uppercase text-gray-500 tracking-wide">Check-out</span>
+            <div className="flex flex-col gap-1.5 sm:gap-2 w-full md:flex-1">
+              <span className="text-[9px] sm:text-xs font-semibold uppercase text-gray-900 tracking-wide">
+                Check-out
+              </span>
               <input
                 type="date"
                 name="checkOut"
                 value={formData.checkOut}
                 onChange={handleChange}
-                className="w-full rounded-md border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition"
+                className="w-full rounded-xl border border-gray-700 px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 text-xs sm:text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition"
               />
             </div>
 
-            {/* Search Button */}
-            <div className="w-full sm:w-auto sm:ml-auto">
+            {/* Button */}
+            <div className="w-full md:w-auto">
               <button
                 onClick={handleSearch}
-                className="bg-[linear-gradient(135deg,#c67c4e_0%,#b86c3d_100%)] text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 shadow-[0_10px_24px_rgba(198,124,78,0.28)] border border-[#d8a07a]/30 transition-all duration-300 hover:scale-105 hover:shadow-[0_16px_36px_rgba(198,124,78,0.4)] hover:-translate-y-0.5 active:scale-[0.98]"
+                className="w-full md:w-auto bg-linear-to-br from-[#c67c4e] to-[#b86c3d] text-white px-4 sm:px-6 py-2 sm:py-2.5 md:py-3 rounded-xl text-xs sm:text-sm md:text-base font-semibold flex items-center justify-center gap-2 shadow-lg transition-all duration-300 hover:scale-[1.03] hover:shadow-xl active:scale-[0.97]"
               >
-                <span>Search</span>
+                Search
               </button>
             </div>
           </div>
 
           {/* Stats */}
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-6 sm:mt-8 flex flex-wrap gap-2 sm:gap-3">
             {[
               { label: "Destinations", value: "500+" },
               { label: "Happy Travellers", value: "2M+" },
@@ -178,10 +258,17 @@ export default function HeroSection() {
             ].map(({ label, value }) => (
               <div
                 key={label}
-                className="flex items-center gap-2 rounded-full border border-gray-300 bg-white/50 px-4 py-2 text-sm text-gray-700 hover:bg-white/70 transition"
+                className="flex items-center gap-1.5 sm:gap-2 rounded-full border border-gray-300 bg-white/50 
+                 px-3 sm:px-4 py-1.5 sm:py-2 
+                 text-xs sm:text-sm text-gray-700 
+                 hover:bg-white/70 transition whitespace-nowrap"
               >
-                <strong className="font-semibold text-gray-900">{value}</strong>
-                <span>{label}</span>
+                <strong className="font-semibold text-gray-900 text-xs sm:text-sm">
+                  {value}
+                </strong>
+                <span className="truncate max-w-22.5 sm:max-w-none">
+                  {label}
+                </span>
               </div>
             ))}
           </div>
@@ -194,7 +281,9 @@ export default function HeroSection() {
               key={i}
               onClick={() => setCurrentImage(i)}
               className={`h-1.5 rounded-full cursor-pointer transition-all duration-300 ${
-                i === currentImage ? "w-7 bg-blue-500" : "w-1.5 bg-gray-400 hover:bg-gray-600"
+                i === currentImage
+                  ? "w-7 bg-blue-500"
+                  : "w-1.5 bg-gray-400 hover:bg-gray-600"
               }`}
               aria-label={`Go to image ${i + 1}`}
             />
