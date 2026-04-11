@@ -12,7 +12,7 @@ function AdminProtectedRouter({
 
   const { admin } = useSelector((state) => state.admin);
 
-  if (loading) {
+  if (loading || !admin) {
     return <div>Loading...</div>;
   }
 
@@ -27,7 +27,7 @@ function AdminProtectedRouter({
   // Prevent access if host is not allowed
   if (
     allowedHosts.length > 0 &&
-    !allowedHosts.includes(admin?.host)
+    !allowedHosts.includes(admin.host)
   ) {
     return <Navigate to="/unauthorized" replace />;
   }

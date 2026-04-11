@@ -22,6 +22,7 @@ import { IoMdSettings } from "react-icons/io";
 import { MdOutlineCancel } from "react-icons/md";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
 import { LuMapPinned } from "react-icons/lu";
+import { GiCancel } from "react-icons/gi";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -150,6 +151,14 @@ function Navbar() {
     };
   }, [location.pathname]);
 
+  const profilePath = token
+    ? "/user-profile"
+    : adminToken
+    ? "/admin/adminProfile"
+    : superAdminToken
+    ? "/superAdmin/superAdminProfile"
+    : null;
+
   return (
     <>
       <nav
@@ -165,7 +174,10 @@ function Navbar() {
                 to="/"
                 className="text-2xl font-black tracking-tight text-amber-950 transition hover:text-amber-600"
               >
-                <span className="bg-linear-to-r from-amber-500 to-orange-400 bg-clip-text text-transparent">
+                <span
+                  className="bg-linear-to-r from-amber-500 to-orange-400 bg-clip-text text-transparent 
+                             text-lg sm:text-xl md:text-2xl lg:text-3xl font-extrabold tracking-tight"
+                >
                   NotDefine
                 </span>
               </Link>
@@ -187,14 +199,35 @@ function Navbar() {
               )}
 
               {/* global map section */}
-              {token && (
-                <Link to={"/globalMap"} className="hidden sm:block">
-                  <div className="group flex cursor-pointer items-center gap-1 rounded-full bg-linear-to-br from-gray-800 via-gray-300 to-gray-800 p-1 shadow-lg transition-all duration-300 hover:shadow-2xl">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/60 text-amber-700 shadow-md transition-transform duration-300 group-hover:scale-110">
-                      <LuMapPinned className="h-5 w-5 text-amber-700" />
-                    </div>
-                  </div>
-                </Link>
+              {(token || adminToken || superAdminToken) && (
+               <Link to={"/globalMap"} className="block">
+               <div
+                 className="
+                   group flex items-center justify-center
+                   rounded-full 
+                   bg-linear-to-br from-gray-800 via-gray-400 to-gray-800
+                   p-1.5 sm:p-2 md:p-2
+                   shadow-md sm:shadow-lg
+                   transition-all duration-300 
+                   hover:shadow-2xl active:scale-95
+                 "
+               >
+                 <div
+                   className="
+                     flex items-center justify-center 
+                     rounded-full 
+                     bg-white 
+                     text-amber-700 
+                     shadow-sm sm:shadow-md
+                     h-5 w-5 sm:h-5 sm:w-5 md:h-5 md:w-5
+                     transition-transform duration-300 
+                     group-hover:scale-110
+                   "
+                 >
+                   <LuMapPinned className="h-3 w-3 sm:h-5 sm:w-5 md:h-3 md:w-3" />
+                 </div>
+               </div>
+             </Link>
               )}
             </div>
 
@@ -256,7 +289,7 @@ function Navbar() {
               </div>
             )}
 
-            {/* RIGHT */}
+            {/* RIGHT Login and SignUp Links */}
             <div className="flex items-center gap-3">
               {!token && !superAdminToken && !adminToken ? (
                 <>
@@ -427,106 +460,112 @@ function Navbar() {
                           {/* Menu */}
                           <div className="flex-1 overflow-y-auto bg-white p-5">
                             <div className="space-y-3">
-                              <Link
-                                to="/user-profile"
-                                onClick={() => setProfileOpen(false)}
-                                className="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-sky-300 hover:bg-sky-50"
-                              >
-                                <div className="rounded-xl bg-sky-100 p-3 text-sky-600">
-                                  <FaRegUserCircle className="text-xl" />
-                                </div>
+                              {profilePath && (
+                                <Link
+                                  to={profilePath}
+                                  onClick={() => setProfileOpen(false)}
+                                  className="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-sky-300 hover:bg-sky-50"
+                                >
+                                  <div className="rounded-xl bg-sky-100 p-3 text-sky-600">
+                                    <FaRegUserCircle className="text-xl" />
+                                  </div>
 
-                                <div>
-                                  <p className="text-sm font-semibold text-slate-800">
-                                    My Profile
-                                  </p>
-                                  <p className="text-xs text-slate-500">
-                                    Manage your account
-                                  </p>
-                                </div>
-                              </Link>
+                                  <div>
+                                    <p className="text-sm font-semibold text-slate-800">
+                                      My Profile
+                                    </p>
+                                    <p className="text-xs text-slate-500">
+                                      Manage your account
+                                    </p>
+                                  </div>
+                                </Link>
+                              )}
 
-                              <Link
-                                to="/trips"
-                                onClick={() => setProfileOpen(false)}
-                                className="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-violet-300 hover:bg-violet-50"
-                              >
-                                <div className="rounded-xl bg-violet-100 p-3 text-violet-600">
-                                  <BiTrip className="text-xl" />
-                                </div>
+                              {token && (
+                                <>
+                                  <Link
+                                    to="/trips"
+                                    onClick={() => setProfileOpen(false)}
+                                    className="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-violet-300 hover:bg-violet-50"
+                                  >
+                                    <div className="rounded-xl bg-violet-100 p-3 text-violet-600">
+                                      <BiTrip className="text-xl" />
+                                    </div>
 
-                                <div>
-                                  <p className="text-sm font-semibold text-slate-800">
-                                    My Trips
-                                  </p>
-                                  <p className="text-xs text-slate-500">
-                                    View travel history
-                                  </p>
-                                </div>
-                              </Link>
+                                    <div>
+                                      <p className="text-sm font-semibold text-slate-800">
+                                        My Trips
+                                      </p>
+                                      <p className="text-xs text-slate-500">
+                                        View travel history
+                                      </p>
+                                    </div>
+                                  </Link>
 
-                              <Link
-                                to="/wishlist"
-                                onClick={() => setProfileOpen(false)}
-                                className="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-pink-300 hover:bg-pink-50"
-                              >
-                                <div className="rounded-xl bg-pink-100 p-3 text-pink-600">
-                                  <FaHeart className="text-xl" />
-                                </div>
+                                  <Link
+                                    to="/wishlist"
+                                    onClick={() => setProfileOpen(false)}
+                                    className="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-pink-300 hover:bg-pink-50"
+                                  >
+                                    <div className="rounded-xl bg-pink-100 p-3 text-pink-600">
+                                      <FaHeart className="text-xl" />
+                                    </div>
 
-                                <div>
-                                  <p className="text-sm font-semibold text-slate-800">
-                                    Wishlist
-                                  </p>
-                                  <p className="text-xs text-slate-500">
-                                    Saved favourites
-                                  </p>
-                                </div>
-                              </Link>
+                                    <div>
+                                      <p className="text-sm font-semibold text-slate-800">
+                                        Wishlist
+                                      </p>
+                                      <p className="text-xs text-slate-500">
+                                        Saved favourites
+                                      </p>
+                                    </div>
+                                  </Link>
 
-                              <Link
-                                to="/My-Food-orders"
-                                onClick={() => setProfileOpen(false)}
-                                className="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-amber-300 hover:bg-amber-50"
-                              >
-                                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 text-lg text-amber-600">
-                                  🍽️
-                                </div>
+                                  <Link
+                                    to="/My-Food-orders"
+                                    onClick={() => setProfileOpen(false)}
+                                    className="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-amber-300 hover:bg-amber-50"
+                                  >
+                                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 text-lg text-amber-600">
+                                      🍽️
+                                    </div>
 
-                                <div>
-                                  <p className="text-sm font-semibold text-slate-800">
-                                    Food Orders
-                                  </p>
-                                  <p className="text-xs text-slate-500">
-                                    Track food orders
-                                  </p>
-                                </div>
-                              </Link>
+                                    <div>
+                                      <p className="text-sm font-semibold text-slate-800">
+                                        Food Orders
+                                      </p>
+                                      <p className="text-xs text-slate-500">
+                                        Track food orders
+                                      </p>
+                                    </div>
+                                  </Link>
 
-                              <Link
-                                to="/cart"
-                                onClick={() => setProfileOpen(false)}
-                                className="relative flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-orange-300 hover:bg-orange-50"
-                              >
-                                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-100 text-lg text-orange-600">
-                                  🛒
-                                </div>
+                                  <Link
+                                    to="/cart"
+                                    onClick={() => setProfileOpen(false)}
+                                    className="relative flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-orange-300 hover:bg-orange-50"
+                                  >
+                                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-100 text-lg text-orange-600">
+                                      🛒
+                                    </div>
 
-                                <div>
-                                  <p className="text-sm font-semibold text-slate-800">
-                                    Food Cart
-                                  </p>
-                                  <p className="text-xs text-slate-500">
-                                    Your saved cart items
-                                  </p>
-                                </div>
+                                    <div>
+                                      <p className="text-sm font-semibold text-slate-800">
+                                        Food Cart
+                                      </p>
+                                      <p className="text-xs text-slate-500">
+                                        Your saved cart items
+                                      </p>
+                                    </div>
 
-                                {cartCount > 0 && (
-                                  <span className="absolute right-4 top-4 flex h-6 min-w-6 items-center justify-center rounded-full bg-orange-500 px-1 text-[10px] font-bold text-white">
-                                    {cartCount > 99 ? "99+" : cartCount}
-                                  </span>
-                                )}
-                              </Link>
+                                    {cartCount > 0 && (
+                                      <span className="absolute right-4 top-4 flex h-6 min-w-6 items-center justify-center rounded-full bg-orange-500 px-1 text-[10px] font-bold text-white">
+                                        {cartCount > 99 ? "99+" : cartCount}
+                                      </span>
+                                    )}
+                                  </Link>
+                                </>
+                              )}
 
                               <Link
                                 to="/settings"
@@ -576,9 +615,10 @@ function Navbar() {
               )}
 
               {/* Mobile Menu Button */}
+              
               <button
                 onClick={toggleMenu}
-                className="flex h-11 w-11 items-center justify-center rounded-2xl border border-amber-200 bg-white text-amber-800 transition hover:bg-amber-50 md:hidden"
+                className="flex h-9 w-11 items-center justify-center rounded-2xl border border-amber-200 bg-white text-amber-800 transition hover:bg-amber-50 md:hidden"
                 aria-label={isOpen ? "Close menu" : "Open menu"}
                 aria-expanded={isOpen}
               >
@@ -588,37 +628,91 @@ function Navbar() {
                   <HiOutlineMenuAlt3 className="text-xl" />
                 )}
               </button>
+              {!token && !adminToken && !superAdminToken && (
+                <Link
+                  to="/loginPage"
+                  className="rounded-2xl border border-amber-200 bg-white px-2 py-1.5 text-sm font-semibold text-amber-900 transition-all duration-300 hover:border-amber-400 hover:bg-amber-50 hover:text-amber-950 md:hidden"
+                >
+                  Login
+                </Link>
+              )}
             </div>
           </div>
         </div>
 
         {/* MOBILE MENU */}
-        <div
-          className={[
-            "border-t border-amber-200 bg-[#fff8ed] md:hidden overflow-hidden transition-[max-height,opacity] duration-300 ease-out",
-            isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0",
-          ].join(" ")}
-        >
-          <div className="space-y-2 px-4 py-4">
-            {[
-              { to: "/", label: "Home" },
-              { to: "/cities", label: "Cities" },
-              { to: "/places", label: "Places" },
-              { to: "/hotels", label: "Hotels" },
-              { to: "/restaurants", label: "Restaurants" },
-              { to: "/travel", label: "Travel Option" },
-            ].map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
+        <>
+          {/* OVERLAY */}
+          <div
+            onClick={() => setIsOpen(false)}
+            className={`fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${
+              isOpen ? "opacity-100 visible" : "opacity-0 invisible"
+            }`}
+          />
+
+          {/* DRAWER */}
+          <div
+            className={`fixed top-0 left-0 z-50 h-screen w-[75%] max-w-xs 
+     bg-linear-to-br from-[#d99434] to-[#fff3e0] 
+     shadow-2xl border-r border-amber-100 
+     transform transition-transform duration-300 ease-in-out border-5 ${
+       isOpen ? "translate-x-0" : "-translate-x-full"
+     }`}
+          >
+            {/* HEADER */}
+            <div className="flex items-center justify-between px-4 py-4 border-b border-amber-100 bg-white/60 backdrop-blur-md">
+              <h2 className="text-lg font-bold text-amber-900 tracking-wide">
+                Menu
+              </h2>
+
+              <button
                 onClick={() => setIsOpen(false)}
-                className="block rounded-2xl px-4 py-3 text-sm font-semibold text-amber-800 transition hover:bg-amber-100 hover:text-amber-950"
+                className="rounded-full  flex items-center justify-center hover:bg-amber-100 active:scale-95 transition cursor-pointer border border-[#d38212] p-1 text-[#a87022]"
               >
-                {item.label}
-              </Link>
-            ))}
+                <GiCancel />
+              </button>
+            </div>
+
+            {/* MENU */}
+            <div className="p-4 space-y-2">
+              {[
+                { to: "/", label: "Home", icon: "🏠" },
+                { to: "/explore", label: "Cities", icon: "🌆" },
+                { to: "/hotels", label: "Hotels", icon: "🏨" },
+                {
+                  to: "/RestaurantLandingPage",
+                  label: "Restaurants",
+                  icon: "🍽️",
+                },
+                { to: "/travel", label: "Travel", icon: "✈️" },
+              ].map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  onClick={() => setIsOpen(false)}
+                  className={({ isActive }) =>
+                    `group flex items-center justify-between rounded-2xl px-4 py-3 text-sm font-semibold transition-all duration-300 ${
+                      isActive
+                        ? "bg-[#d0861e] text-white shadow-lg"
+                        : "text-amber-900 hover:bg-white hover:shadow-md active:scale-[0.97]"
+                    }`
+                  }
+                >
+                  {/* LEFT */}
+                  <div className="flex items-center gap-3">
+                    <span className="text-lg">{item.icon}</span>
+                    <span className="tracking-wide">{item.label}</span>
+                  </div>
+
+                  {/* RIGHT ARROW */}
+                  <span className="text-sm transition-transform group-hover:translate-x-1">
+                    →
+                  </span>
+                </NavLink>
+              ))}
+            </div>
           </div>
-        </div>
+        </>
       </nav>
     </>
   );

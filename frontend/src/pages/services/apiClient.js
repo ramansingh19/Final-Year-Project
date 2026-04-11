@@ -1,8 +1,7 @@
 import axios from "axios";
 
 export const apiClient = axios.create({
-  // baseURL: "http://localhost:3000" || "https://travel-b.onrender.com", // backend URL
-  baseURL: "https://travel-b.onrender.com",
+  baseURL: "http://localhost:3000" || "https://travel-b.onrender.com", // backend URL
   withCredentials: true,
   headers: {
     "Content-Type": "application/json"
