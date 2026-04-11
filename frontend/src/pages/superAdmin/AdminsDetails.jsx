@@ -56,83 +56,71 @@ function AdminsDetails() {
   }, [admins, search, hostTypeFilter]);
 
   return (
-<div className="min-h-screen bg-gray-50 p-4 md:p-8 text-gray-900 relative overflow-hidden">
+<div className="min-h-screen bg-gray-50 px-3 sm:px-4 md:px-8 py-5 sm:py-6 text-gray-900 relative overflow-hidden">
 
 {/* Background Glow */}
 <div className="pointer-events-none fixed inset-0 overflow-hidden">
-  <div className="absolute -top-32 left-0 h-72 w-72 rounded-full bg-blue-200/30 blur-3xl animate-pulse" />
-  <div className="absolute top-1/3 right-0 h-80 w-80 rounded-full bg-purple-200/30 blur-3xl animate-pulse" />
-  <div className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-cyan-200/30 blur-3xl animate-pulse" />
+  <div className="absolute -top-32 left-0 h-56 w-56 sm:h-72 sm:w-72 rounded-full bg-blue-200/30 blur-3xl animate-pulse" />
+  <div className="absolute top-1/3 right-0 h-64 w-64 sm:h-80 sm:w-80 rounded-full bg-purple-200/30 blur-3xl animate-pulse" />
+  <div className="absolute bottom-0 left-1/3 h-56 w-56 sm:h-72 sm:w-72 rounded-full bg-cyan-200/30 blur-3xl animate-pulse" />
 </div>
 
 {/* Header */}
-<div className="mb-8 rounded-3xl border border-gray-200 bg-white/80 p-6 md:p-8 shadow-lg backdrop-blur-xl">
-  <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-    <div>
-      <span className="mb-4 inline-flex rounded-full border border-blue-300/40 bg-blue-200/20 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-blue-600">
+<div className="mb-6 sm:mb-8 rounded-3xl border border-gray-200 bg-white/80 p-4 sm:p-6 md:p-8 shadow-lg backdrop-blur-xl">
+  <div className="flex flex-col gap-5 sm:gap-6 lg:flex-row lg:items-center lg:justify-between">
+
+    <div className="text-center lg:text-left">
+      <span className="mb-3 inline-flex rounded-full border border-blue-300/40 bg-blue-200/20 px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-blue-600">
         Admin Management
       </span>
 
-      <h1 className="text-3xl md:text-5xl font-black">
+      <h1 className="text-2xl sm:text-3xl md:text-5xl font-black leading-tight">
         Welcome back,{" "}
         <span className="bg-linear-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
           {superAdmin?.userName}
         </span>
       </h1>
 
-      <p className="mt-3 text-gray-600">
+      <p className="mt-2 sm:mt-3 text-sm sm:text-base text-gray-600">
         Search and filter admins by host type.
       </p>
     </div>
 
-    <div className="rounded-2xl border border-gray-200 bg-white/10 px-6 py-5 backdrop-blur-sm">
-      <p className="text-sm text-gray-600">Total Admins</p>
-      <h2 className="mt-1 text-3xl font-bold text-gray-900">{filteredAdmins.length}</h2>
+    <div className="mx-auto lg:mx-0 rounded-2xl border border-gray-200 bg-white/10 px-5 sm:px-6 py-4 sm:py-5 backdrop-blur-sm text-center">
+      <p className="text-xs sm:text-sm text-gray-600">Total Admins</p>
+      <h2 className="mt-1 text-2xl sm:text-3xl font-bold text-gray-900">
+        {filteredAdmins.length}
+      </h2>
     </div>
   </div>
 </div>
 
 {/* Search */}
-<div className="mb-6 rounded-3xl border border-gray-200 bg-white/50 p-4 backdrop-blur-sm">
+<div className="mb-5 sm:mb-6 rounded-3xl border border-gray-200 bg-white/50 p-3 sm:p-4 backdrop-blur-sm">
   <div className="relative">
-    <FaSearch className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" />
+    <FaSearch className="absolute left-4 sm:left-5 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
 
     <input
       type="text"
       placeholder="Search admin by name, email or phone..."
       value={search}
       onChange={(e) => setSearch(e.target.value)}
-      className="w-full rounded-2xl border border-gray-200 bg-white/30 py-4 pl-14 pr-4 text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-blue-400"
+      className="w-full rounded-2xl border border-gray-200 bg-white/30 py-3 sm:py-4 pl-12 sm:pl-14 pr-4 text-sm sm:text-base text-gray-900 outline-none placeholder:text-gray-400 focus:border-blue-400"
     />
   </div>
 </div>
 
-{/* Host Type Filters */}
-<div className="mb-8 flex flex-wrap gap-3">
+{/* Filters */}
+<div className="mb-6 sm:mb-8 flex flex-wrap gap-2 sm:gap-3 justify-center sm:justify-start">
   {[
-    {
-      key: "all",
-      label: "All",
-      count: hostTypeCounts.all,
-      active: "border-blue-400/40 bg-blue-200/20 text-blue-600",
-    },
-    {
-      key: "hotel",
-      label: "Hotel",
-      count: hostTypeCounts.hotel,
-      active: "border-cyan-400/40 bg-cyan-200/20 text-cyan-600",
-    },
-    {
-      key: "restaurant",
-      label: "Restaurant",
-      count: hostTypeCounts.restaurant,
-      active: "border-purple-400/40 bg-purple-200/20 text-purple-600",
-    },
+    { key: "all", label: "All", count: hostTypeCounts.all, active: "border-blue-400/40 bg-blue-200/20 text-blue-600" },
+    { key: "hotel", label: "Hotel", count: hostTypeCounts.hotel, active: "border-cyan-400/40 bg-cyan-200/20 text-cyan-600" },
+    { key: "restaurant", label: "Restaurant", count: hostTypeCounts.restaurant, active: "border-purple-400/40 bg-purple-200/20 text-purple-600" },
   ].map((filter) => (
     <button
       key={filter.key}
       onClick={() => setHostTypeFilter(filter.key)}
-      className={`rounded-2xl border px-5 py-3 text-sm font-semibold transition-all duration-300 ${
+      className={`rounded-xl sm:rounded-2xl border px-3 sm:px-5 py-2 sm:py-3 text-xs sm:text-sm font-semibold transition-all duration-300 ${
         hostTypeFilter === filter.key
           ? filter.active
           : "border-gray-200 bg-white/10 text-gray-600 hover:border-gray-300 hover:bg-white/20 hover:text-gray-900"
@@ -145,21 +133,24 @@ function AdminsDetails() {
 
 {/* Error */}
 {error && (
-  <div className="mb-6 rounded-2xl border border-red-300 bg-red-100 px-5 py-4 text-red-600">
+  <div className="mb-5 sm:mb-6 rounded-2xl border border-red-300 bg-red-100 px-4 sm:px-5 py-3 sm:py-4 text-sm text-red-600 text-center">
     {error}
   </div>
 )}
 
 {/* Table */}
 <div className="overflow-hidden rounded-3xl border border-gray-200 bg-white/80 shadow-lg backdrop-blur-xl">
-  <div className="overflow-x-auto">
-    <table className="min-w-250 w-full">
+  
+  {/* Mobile scroll fix */}
+  <div className="w-full overflow-x-auto">
+    <table className="min-w-200 w-full">
+
       <thead className="border-b border-gray-200 bg-white/30">
         <tr>
           {["Admin", "Host Type", "Contact", "Location", "Status", "Action"].map((header) => (
             <th
               key={header}
-              className="px-6 py-5 text-left text-xs font-bold uppercase tracking-widest text-gray-500"
+              className="px-4 sm:px-6 py-4 sm:py-5 text-left text-[10px] sm:text-xs font-bold uppercase tracking-widest text-gray-500"
             >
               {header}
             </th>
@@ -172,120 +163,96 @@ function AdminsDetails() {
           [...Array(5)].map((_, index) => (
             <tr key={index} className="border-b border-gray-200 animate-pulse">
               {[...Array(6)].map((_, i) => (
-                <td key={i} className="px-6 py-5">
-                  <div className="h-6 w-full rounded bg-gray-200" />
+                <td key={i} className="px-4 sm:px-6 py-4 sm:py-5">
+                  <div className="h-5 sm:h-6 w-full rounded bg-gray-200" />
                 </td>
               ))}
             </tr>
           ))
         ) : filteredAdmins.length > 0 ? (
           filteredAdmins.map((admin) => (
-            <tr
-              key={admin._id}
-              className="border-b border-gray-200 transition hover:bg-gray-100"
-            >
+            <tr key={admin._id} className="border-b border-gray-200 hover:bg-gray-100 transition">
+
               {/* Admin */}
-              <td className="px-6 py-5">
-                <div className="flex items-center gap-4">
-                  <div className="relative h-12 w-12 overflow-hidden rounded-2xl border border-gray-200 bg-gray-100">
+              <td className="px-4 sm:px-6 py-4 sm:py-5">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div className="relative h-10 w-10 sm:h-12 sm:w-12 rounded-2xl overflow-hidden border bg-gray-100">
                     {admin.avatar ? (
-                      <img
-                        src={admin.avatar}
-                        alt={admin.userName}
-                        className="h-full w-full object-cover"
-                      />
+                      <img src={admin.avatar} className="h-full w-full object-cover" />
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-blue-400 to-cyan-300 text-sm font-bold text-white">
+                      <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-blue-400 to-cyan-300 text-xs sm:text-sm font-bold text-white">
                         {admin.userName?.charAt(0)?.toUpperCase()}
                       </div>
                     )}
-                    <div
-                      className={`absolute bottom-0 right-0 h-3 w-3 rounded-full border border-white ${
-                        admin.isLoggedIn
-                          ? "bg-emerald-400"
-                          : "bg-gray-400"
-                      }`}
-                    />
+                    <div className={`absolute bottom-0 right-0 h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-full border border-white ${admin.isLoggedIn ? "bg-emerald-400" : "bg-gray-400"}`} />
                   </div>
+
                   <div>
-                    <h3 className="font-semibold text-gray-900">{admin.userName}</h3>
-                    <p className="mt-1 text-sm text-gray-500">{admin.email}</p>
+                    <h3 className="text-sm sm:text-base font-semibold text-gray-900">
+                      {admin.userName}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-gray-500">
+                      {admin.email}
+                    </p>
                   </div>
                 </div>
               </td>
 
-              {/* Host Type */}
-              <td className="px-6 py-5">
-                <span
-                  className={`inline-flex rounded-full px-3 py-1.5 text-xs font-semibold uppercase tracking-wide ${
-                    admin.host?.toLowerCase() === "hotel"
-                      ? "bg-cyan-200/20 text-cyan-600 border border-cyan-400/40"
-                      : "bg-purple-200/20 text-purple-600 border border-purple-400/40"
-                  }`}
-                >
-                  {admin.host || "Unknown"}
+              {/* Host */}
+              <td className="px-4 sm:px-6 py-4 sm:py-5">
+                <span className={`text-[10px] sm:text-xs px-2.5 sm:px-3 py-1 rounded-full font-semibold ${
+                  admin.host?.toLowerCase() === "hotel"
+                    ? "bg-cyan-200/20 text-cyan-600 border border-cyan-400/40"
+                    : "bg-purple-200/20 text-purple-600 border border-purple-400/40"
+                }`}>
+                  {admin.host}
                 </span>
               </td>
 
               {/* Contact */}
-              <td className="px-6 py-5 text-sm text-gray-600">{admin.contactNumber}</td>
+              <td className="px-4 sm:px-6 py-4 sm:py-5 text-xs sm:text-sm text-gray-600">
+                {admin.contactNumber}
+              </td>
 
               {/* Location */}
-              <td className="px-6 py-5 text-sm text-gray-600">
-                {admin.location?.city || "Unknown"}, {admin.location?.state || "Unknown"}
+              <td className="px-4 sm:px-6 py-4 sm:py-5 text-xs sm:text-sm text-gray-600">
+                {admin.location?.city}, {admin.location?.state}
               </td>
 
               {/* Status */}
-              <td className="px-6 py-5">
-                <div className="flex flex-wrap gap-2">
-                  <span
-                    className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${
-                      admin.isActive ? "bg-emerald-200/20 text-emerald-600" : "bg-red-200/20 text-red-600"
-                    }`}
-                  >
-                    <FaCircle className="text-[8px]" />
+              <td className="px-4 sm:px-6 py-4 sm:py-5">
+                <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                  <span className={`text-[10px] sm:text-xs px-2.5 py-1 rounded-full ${
+                    admin.isActive ? "bg-emerald-200/20 text-emerald-600" : "bg-red-200/20 text-red-600"
+                  }`}>
                     {admin.isActive ? "Active" : "Inactive"}
                   </span>
-
-                  {admin.isVerified && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-yellow-200/20 px-3 py-1 text-xs font-semibold text-yellow-600">
-                      <FaCheckCircle className="text-[10px]" />
-                      Verified
-                    </span>
-                  )}
                 </div>
               </td>
 
               {/* Action */}
-              <td className="px-6 py-5">
+              <td className="px-4 sm:px-6 py-4 sm:py-5">
                 <Link
                   to={`/superAdmin/admin-products/${admin._id}`}
-                  className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all ${
-                    selectedAdminId === admin._id
-                      ? "bg-linear-to-r from-blue-400 to-cyan-300 text-white"
-                      : "border border-gray-200 bg-white/10 text-gray-700 hover:border-blue-400/30 hover:bg-blue-200/20 hover:text-gray-900"
-                  }`}
+                  className="text-xs sm:text-sm px-3 sm:px-4 py-2 rounded-xl border border-gray-200 hover:bg-blue-200/20"
                 >
-                  View Items
-                  <FaArrowRight className="text-xs" />
+                  View
                 </Link>
               </td>
             </tr>
           ))
         ) : (
           <tr>
-            <td colSpan="6" className="px-6 py-16 text-center">
-              <div className="flex flex-col items-center">
-                <FaSearch className="mb-4 text-3xl text-gray-400" />
-                <h3 className="text-lg font-semibold text-gray-900">No admins found</h3>
-                <p className="mt-2 text-sm text-gray-500">
-                  Try another search or host type filter.
-                </p>
-              </div>
+            <td colSpan="6" className="px-4 sm:px-6 py-12 sm:py-16 text-center">
+              <FaSearch className="mx-auto mb-3 text-2xl sm:text-3xl text-gray-400" />
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900">
+                No admins found
+              </h3>
             </td>
           </tr>
         )}
       </tbody>
+
     </table>
   </div>
 </div>

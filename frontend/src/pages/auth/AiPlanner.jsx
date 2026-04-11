@@ -8,7 +8,7 @@ export default function FloatingAIButton() {
       onClick={() => navigate("/AiPlanner")}
       className="fixed bottom-6 right-6 z-50 group flex items-center gap-0 
         overflow-hidden rounded-full
-        bg-linear-to-r from-orange-700 to-orange-800
+        bg-transparent
         text-white shadow-sm shadow-gray-400
         hover:shadow-sm hover:shadow-purple-gray/50
         w-10 h-10 hover:w-auto hover:px-5

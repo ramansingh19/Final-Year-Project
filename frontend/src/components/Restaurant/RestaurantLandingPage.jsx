@@ -1,7 +1,7 @@
 import {
   MagnifyingGlassIcon,
   MapPinIcon,
-  SignalIcon
+  SignalIcon,
 } from "@heroicons/react/24/outline";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -65,15 +65,7 @@ function RestaurantLandingPage() {
   const [isNearbyMode, setIsNearbyMode] = useState(false);
   const [geoLoading, setGeoLoading] = useState(false);
   const [geoDenied, setGeoDenied] = useState(false);
-
-  // const [dark, setDark] = useState(() => {
-  //   if (typeof window === "undefined") return false;
-  //   return window.matchMedia?.("(prefers-color-scheme: dark)")?.matches ?? false;
-  // });
-
-  // useEffect(() => {
-  //   document.documentElement.classList.toggle("dark", dark);
-  // }, [dark]);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     dispatch(getActiveCities());
@@ -88,6 +80,15 @@ function RestaurantLandingPage() {
 
     dispatch(getAllRestaurantsForUser(params));
   }, [city, debouncedSearch, isNearbyMode, dispatch]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 80);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const displayRestaurants = useMemo(() => {
     const list = Array.isArray(restaurants) ? restaurants : [];
@@ -185,79 +186,89 @@ function RestaurantLandingPage() {
         <div className="absolute -bottom-[10%] -left-[5%] h-150 w-150 rounded-full bg-[#eadccf]/10 blur-[150px]" />
       </div>
 
-      <header className="sticky top-6 z-40 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="rounded-4xl border border-white/60 bg-white/70 shadow-[0_25px_80px_rgba(186,140,102,0.12)] backdrop-blur-2xl px-6 py-8 sm:px-10">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <p className="text-xs font-black uppercase tracking-[0.3em] text-[#c67c4e]">
+      <header className="sticky top-17 lg:top-3 z-50 mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
+        <div
+          className={`rounded-3xl border border-white/60 bg-white/70 backdrop-blur-2xl 
+    shadow-[0_20px_60px_rgba(186,140,102,0.12)]
+    transition-all duration-300
+    ${isScrolled ? "px-3 py-3 sm:px-6 sm:py-4" : "px-5 py-6 sm:px-10 sm:py-8"}
+    `}
+        >
+          {/* 🔥 TOP CONTENT (HIDE ON MOBILE SCROLL) */}
+          <div
+            className={`transition-all duration-300 overflow-hidden 
+      ${
+        isScrolled
+          ? "max-h-0 opacity-0 sm:max-h-full sm:opacity-100"
+          : "max-h-75 opacity-100"
+      }
+      `}
+          >
+            <div className="mb-4 sm:mb-6">
+              <p className="text-[10px] sm:text-xs font-black uppercase tracking-[0.3em] text-[#c67c4e]">
                 Premium Selection
               </p>
-              <h1 className="mt-2 text-3xl font-black tracking-tight text-[#2d1f16] sm:text-5xl lg:text-4xl">
+
+              <h1 className="mt-2 text-2xl sm:text-5xl lg:text-4xl font-black tracking-tight text-[#2d1f16]">
                 <span className="bg-linear-to-r from-[#c67c4e] via-[#b86c3d] to-[#9f5b31] bg-clip-text text-transparent">
                   Restaurants
                 </span>{" "}
                 near you
               </h1>
-              <p className="mt-4 max-w-lg text-base font-medium leading-relaxed text-[#6f5a4b]">
-                Discover curated flavours and premium menus. Minimal, fast, and 
+
+              <p className="mt-3 sm:mt-4 max-w-lg text-sm sm:text-base font-medium leading-relaxed text-[#6f5a4b]">
+                Discover curated flavours and premium menus. Minimal, fast, and
                 designed for an elegant ordering experience.
               </p>
             </div>
-            {/* <button
-              type="button"
-              onClick={() => setDark((d) => !d)}
-              className="inline-flex items-center gap-2 rounded-2xl border border-gray-200/80 bg-white/80 px-4 py-2 text-sm font-medium text-gray-800 shadow-sm transition hover:border-orange-200 hover:shadow-md dark:border-gray-700 dark:bg-gray-900/80 dark:text-gray-100 dark:hover:border-orange-500/40"
-              aria-label="Toggle dark mode"
-            >
-              {dark ? (
-                <SunIcon className="h-5 w-5 text-amber-400" />
-              ) : (
-                <MoonIcon className="h-5 w-5 text-indigo-500" />
-              )}
-              {dark ? "Light" : "Dark"}
-            </button> */}
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          {/* 🔍 SEARCH + LOCATION (ALWAYS VISIBLE) */}
+          <div className="flex flex-col gap-2 sm:gap-3 sm:flex-row sm:items-center">
+            {/* Search */}
             <div className="relative flex-1 group">
-              <MagnifyingGlassIcon className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-[#a07d63] transition-colors group-focus-within:text-[#c67c4e]" />
+              <MagnifyingGlassIcon className="absolute left-4 sm:left-5 top-1/2 h-4 w-4 sm:h-5 sm:w-5 -translate-y-1/2 text-[#a07d63]" />
+
               <input
                 type="search"
                 placeholder="Find your favorite cuisine..."
                 value={searchInput}
-                onChange={(e) => {
-                  setSearchInput(e.target.value);
-                }}
-                className="ui-input rounded-[22px]! py-5! pl-14! pr-6! text-base! shadow-sm! transition-all hover:border-[#c67c4e]/30"
-                aria-label="Search restaurants"
+                onChange={(e) => setSearchInput(e.target.value)}
+                className="ui-input w-full rounded-[18px]! py-3! sm:py-5! pl-12! sm:pl-14! pr-4! sm:pr-6! 
+          text-sm sm:text-base shadow-sm! transition-all hover:border-[#c67c4e]/30"
               />
             </div>
+
+            {/* Location Button */}
             <motion.button
               type="button"
               onClick={handleDetectLocation}
               disabled={geoLoading}
-              className="ui-btn-primary rounded-2xl! px-6! py-4! disabled:cursor-not-allowed disabled:opacity-70 shadow-lg"
+              className="ui-btn-primary flex items-center justify-center gap-2 
+        rounded-xl px-4 py-3 sm:px-6 sm:py-4 text-sm sm:text-base shadow-md 
+        disabled:opacity-70"
               whileHover={{ scale: geoLoading ? 1 : 1.02 }}
               whileTap={{ scale: geoLoading ? 1 : 0.98 }}
             >
               {geoLoading ? (
-                <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
               ) : (
-                <MapPinIcon className="h-5 w-5" />
+                <MapPinIcon className="h-4 w-4 sm:h-5 sm:w-5" />
               )}
-              Use my location
+              <span className="hidden sm:inline">Use my location</span>
             </motion.button>
           </div>
 
+          {/* ✅ Nearby badge */}
           {isNearbyMode && (
             <motion.div
               initial={{ opacity: 0, y: -6 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex items-center gap-2 rounded-xl bg-[#e6f4ea] px-4 py-2 text-xs font-semibold text-[#22c55e] border border-[#22c55e]/10 shadow-sm"
+              className="mt-3 flex items-center gap-2 rounded-xl bg-[#e6f4ea] px-3 py-2 
+        text-[11px] sm:text-xs font-semibold text-[#22c55e] border border-[#22c55e]/10"
             >
               <SignalIcon className="h-4 w-4" />
-              Showing restaurants within ~5 km of your location. City filters
-              were cleared.
+              Showing nearby restaurants (~5 km)
             </motion.div>
           )}
         </div>
@@ -280,46 +291,88 @@ function RestaurantLandingPage() {
           </div>
 
           <div className="relative">
-            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-linear-to-r from-[#f6f1eb]/95 to-transparent lg:w-12" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-linear-to-l from-[#f1ebe4]/95 to-transparent lg:w-12" />
+            {/* Left fade */}
+            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-6 sm:w-8 lg:w-12 bg-linear-to-r from-[#f6f1eb]/95 to-transparent" />
 
-            <div className="scrollbar-thin flex gap-3 overflow-x-auto pb-2 pt-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {/* Right fade */}
+            <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-6 sm:w-8 lg:w-12 bg-linear-to-l from-[#f1ebe4]/95 to-transparent" />
+
+            <div
+              className="
+      flex gap-2 sm:gap-3 
+      overflow-x-auto 
+      pb-2 pt-1
+      px-1
+      scroll-smooth
+      [-ms-overflow-style:none] 
+      [scrollbar-width:none] 
+      [&::-webkit-scrollbar]:hidden
+    "
+            >
+              {/* All Regions */}
               <motion.button
                 type="button"
                 onClick={() => handleCitySelect("")}
-                className={`shrink-0 rounded-[22px] border px-7 py-5 text-left text-sm font-black transition-all ${!city && !isNearbyMode
-                  ? "border-[#c67c4e] bg-linear-to-br from-[#c67c4e] to-[#b86c3d] text-white shadow-[0_12px_25px_rgba(198,124,78,0.25)]"
-                  : "border-[#eadccf] bg-white/80 text-[#6f5a4b] hover:border-[#c67c4e]/40 hover:bg-white hover:text-[#2d1f16]"
-                  }`}
-                whileHover={{ y: -4 }}
-                whileTap={{ scale: 0.97 }}
+                className={`
+        shrink-0 rounded-[18px] sm:rounded-[22px]
+        border 
+        px-4 py-2.5 sm:px-7 sm:py-5
+        text-xs sm:text-sm
+        font-black 
+        transition-all
+        ${
+          !city && !isNearbyMode
+            ? "border-[#c67c4e] bg-linear-to-br from-[#c67c4e] to-[#b86c3d] text-white shadow-[0_10px_20px_rgba(198,124,78,0.25)]"
+            : "border-[#eadccf] bg-white/80 text-[#6f5a4b] hover:border-[#c67c4e]/40 hover:bg-white hover:text-[#2d1f16]"
+        }
+      `}
+                whileHover={{ y: -3 }}
+                whileTap={{ scale: 0.95 }}
               >
                 All Regions
               </motion.button>
+
+              {/* Cities */}
               {cities.map((c) => {
                 const name = c?.name ?? "";
                 const active = !isNearbyMode && city === name;
+
                 return (
                   <motion.button
                     key={c?._id ?? name}
                     type="button"
                     onClick={() => handleCitySelect(name)}
-                    className={`min-w-40 shrink-0 rounded-[22px] border px-7 py-3 text-left transition-all ${active
-                      ? "border-[#c67c4e] bg-linear-to-br from-[#c67c4e] to-[#b86c3d] text-white shadow-[0_12px_25px_rgba(198,124,78,0.25)]"
-                      : "border-[#eadccf] bg-white/80 text-[#6f5a4b] hover:border-[#c67c4e]/40 hover:bg-white hover:text-[#2d1f16]"
-                      }`}
-                    whileHover={{ y: -4 }}
-                    whileTap={{ scale: 0.97 }}
+                    className={`
+            min-w-30 sm:min-w-40
+            shrink-0 
+            rounded-[18px] sm:rounded-[22px]
+            border 
+            px-4 py-2.5 sm:px-7 sm:py-3
+            text-left 
+            transition-all
+            ${
+              active
+                ? "border-[#c67c4e] bg-linear-to-br from-[#c67c4e] to-[#b86c3d] text-white shadow-[0_10px_20px_rgba(198,124,78,0.25)]"
+                : "border-[#eadccf] bg-white/80 text-[#6f5a4b] hover:border-[#c67c4e]/40 hover:bg-white hover:text-[#2d1f16]"
+            }
+          `}
+                    whileHover={{ y: -3 }}
+                    whileTap={{ scale: 0.95 }}
                   >
                     <span
-                      className={`block text-[10px] font-black uppercase tracking-[0.15em] ${active
-                        ? "text-white/70"
-                        : "text-[#a07d63]"
-                        }`}
+                      className={`
+              block 
+              text-[9px] sm:text-[10px]
+              font-black 
+              uppercase 
+              tracking-[0.12em] sm:tracking-[0.15em]
+              ${active ? "text-white/70" : "text-[#a07d63]"}
+            `}
                     >
-                      {active ? "Currently" : "Location"}
+                      {active ? "Current" : "Location"}
                     </span>
-                    <span className="mt-1 block text-base font-black">
+
+                    <span className="mt-1 block text-sm sm:text-base font-black truncate">
                       {name || "—"}
                     </span>
                   </motion.button>
@@ -411,8 +464,9 @@ function RestaurantLandingPage() {
                   variants={listContainer}
                   initial="hidden"
                   animate="show"
-                  className={`grid grid-cols-1 gap-5 transition-opacity duration-300 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ${loading ? "opacity-70" : "opacity-100"
-                    }`}
+                  className={`grid grid-cols-1 gap-5 transition-opacity duration-300 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ${
+                    loading ? "opacity-70" : "opacity-100"
+                  }`}
                 >
                   {displayRestaurants.map((r, i) => (
                     <RestaurantCard
