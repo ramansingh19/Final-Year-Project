@@ -276,7 +276,3 @@ Final Year Project — 2025
 [GitHub](https://github.com/ramansingh19)
 
 ---
-
-## 📄 License
-
-This project is licensed under the MIT License.
