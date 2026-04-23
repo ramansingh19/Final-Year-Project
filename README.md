@@ -4,7 +4,7 @@
 
 A full-stack travel guide web application that helps budget and first-time travelers discover nearby places, hotels, local food, and travel options — all in one platform.
 
-🔗 **Live Demo:** [travel-planner-delta-vert.vercel.app](https://travel-planner-delta-vert.vercel.app/)  
+
 📁 **GitHub:** [ramansingh19/Final-Year-Project](https://github.com/ramansingh19/Final-Year-Project)
 
 ---
@@ -131,27 +131,6 @@ Final-Year-Project/
 
 ## 🔌 API Endpoints
 
-### Public APIs
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/cities` | Get all active cities |
-| GET | `/api/cities/:id` | Get city overview |
-| GET | `/api/places?cityId=&type=&distance=` | Get filtered nearby places |
-| GET | `/api/hotels?cityId=&budget=` | Get filtered hotels |
-| GET | `/api/foods?cityId=` | Get food listings |
-| GET | `/api/travel?from=&to=` | Get travel options |
-
-### Admin APIs
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/api/admin/login` | Admin login |
-| POST/GET/PUT/DELETE | `/api/admin/cities` | City CRUD |
-| POST/PUT/DELETE | `/api/admin/places/:id` | Place CRUD |
-| POST/PUT/DELETE | `/api/admin/hotels/:id` | Hotel CRUD |
-| POST | `/api/admin/foods` | Add food/restaurant |
-| GET/PUT/DELETE | `/api/admin/reviews/:id` | Review moderation |
-| GET/PUT | `/api/admin/users/:id/block` | User management |
-| GET | `/api/admin/stats` | Analytics |
 
 ---
 
@@ -196,15 +175,7 @@ cd ../client
 npm install
 ```
 
-### Environment Variables
 
-Create `.env` in the `/server` folder:
-```env
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-GOOGLE_MAPS_API_KEY=your_google_api_key
-```
 
 ### Run the App
 
